@@ -1,0 +1,2 @@
+# TradingStation
+Trading Station app contains tools to build and run working trading bots, backtest strategies, assist on trading, define simple trading fuctionality independent of Tinkoff base functionality which meanwhile can be used to take a view to the market. This app works with data directly from Tinkoff Investment API and using it's own resources to store statistics and additional data required to serve improved functionality. Can be used for data-driven and event-driven systems.
