@@ -13,15 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Integrations\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBaseService", "Services\DataBaseService\DataBaseService.csproj", "{E37485DB-4CE1-4B37-ADF5-319D13192AD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBaseService", "Services\DataBaseService\DataBaseService.csproj", "{E37485DB-4CE1-4B37-ADF5-319D13192AD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationService", "Services\OperationService\OperationService.csproj", "{30725E19-EA8D-4190-BEB6-46283B9E4743}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationService", "Services\OperationService\OperationService.csproj", "{30725E19-EA8D-4190-BEB6-46283B9E4743}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "Services\UserService\UserService.csproj", "{AD5FA204-3F65-4ABE-9F8F-73253AF38DB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "Services\UserService\UserService.csproj", "{AD5FA204-3F65-4ABE-9F8F-73253AF38DB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrokerServices", "Services\BrokerServices\BrokerServices.csproj", "{F56CEEEA-AB92-4021-903F-2249A75DE529}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrokerServices", "Services\BrokerServices\BrokerServices.csproj", "{F56CEEEA-AB92-4021-903F-2249A75DE529}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentralBankIntegration", "Integrations\CentralBankIntegration\CentralBankIntegration.csproj", "{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralBankIntegrationLib", "Integrations\CentralBankIntegration\CentralBankIntegrationLib.csproj", "{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
