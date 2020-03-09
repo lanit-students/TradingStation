@@ -12,15 +12,14 @@ namespace AuthentificationService.Controllers
         /// Storage for tokens 
         /// May be used until database is created
         /// </summary>
-        private List<string> tokens;
 
         /// <summary>
         /// Constructor for lulz and some data to play with
         /// </summary>
-        public AuthentificationController()
+       /* public AuthentificationController()
         {
-            tokens = new List<string>() { "secret", "supersecret", "megasecret" };
-        }
+            tokens = new List<string>();
+        }*/
 
         /// <summary>
         /// Generates and returns an active token
@@ -55,7 +54,7 @@ namespace AuthentificationService.Controllers
                 );
 
             var index = BinarySearch(guid.ToString());
-            tokens.Insert(index, guid.ToString());
+            TokensStorage.Tokens.Insert(index, guid.ToString());
             return guid.ToString();
         }
             
@@ -66,6 +65,40 @@ namespace AuthentificationService.Controllers
         [Route("[controller]/check")]
         [HttpGet]
         public string CheckToken(string token)
-            => tokens.Contains(token).ToString();
+            => TokensStorage.Tokens.Contains(token).ToString();
+
+        [Route("[controller]/delete")]
+        [HttpGet]
+        public void DeleteToken(string token)
+        {
+            int index = BinarySearch(token);
+            TokensStorage.Tokens.RemoveAt(index);
+        }
+        private int BinarySearch(string token)
+        {
+            int left = 0;
+            int right = TokensStorage.Tokens.Count - 1;
+            int middle;
+            int compare;
+            while (left < right)
+            {
+                middle = (left + right) / 2;
+
+                compare = String.Compare(TokensStorage.Tokens[middle], token);
+                if (compare < 0)
+                {
+                    left = middle + 1;
+                }
+                if (compare > 0)
+                {
+                    right = middle - 1;
+                }
+                if (compare == 0)
+                {
+                    return middle;
+                }
+            }
+            return left;
+        }
     }
 }
