@@ -7,6 +7,6 @@ namespace AuthentificationService
 {
     public static class TokensStorage
     {
-        public static List<string> Tokens = new List<string>();
+        public static List<string> Tokens = new List<string>() { null };
     }
 }

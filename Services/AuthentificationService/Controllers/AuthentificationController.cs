@@ -52,8 +52,15 @@ namespace AuthentificationService.Controllers
                 (short)valueForToken3,
                 byteArrayForGuid
                 );
+            var guidString = guid.ToString();
+            var index = BinarySearch(guidString);
+            int compare = String.Compare(TokensStorage.Tokens[index],guidString);
 
-            var index = BinarySearch(guid.ToString());
+            if (compare < 0)
+            {
+                index++;
+            }
+
             TokensStorage.Tokens.Insert(index, guid.ToString());
             return guid.ToString();
         }
@@ -65,7 +72,16 @@ namespace AuthentificationService.Controllers
         [Route("[controller]/check")]
         [HttpGet]
         public string CheckToken(string token)
-            => TokensStorage.Tokens.Contains(token).ToString();
+        {
+            var index = BinarySearch(token);
+            int compare = String.Compare(TokensStorage.Tokens[index], token);
+            if (compare != 0)
+            {
+                return "false";
+            }
+            return "true";
+        }
+
 
         [Route("[controller]/delete")]
         [HttpGet]
