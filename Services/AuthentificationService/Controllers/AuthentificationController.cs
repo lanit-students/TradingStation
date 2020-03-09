@@ -10,12 +10,12 @@ namespace AuthentificationService.Controllers
     {
         /// <summary>
         /// Storage for tokens 
-        /// May use it untils BD is created
+        /// May be used until database is created
         /// </summary>
         private List<string> tokens;
 
         /// <summary>
-        /// Constructor for lulz
+        /// Constructor for lulz and some data to play with
         /// </summary>
         public AuthentificationController()
         {
@@ -23,11 +23,11 @@ namespace AuthentificationService.Controllers
         }
 
         /// <summary>
-        /// Generates and return an active token
+        /// Generates and returns an active token
         /// </summary>
         [Route("[controller]/get")]
         [HttpGet]
-        public string Get()
+        public string GetToken()
             => tokens[new Random().Next(0, tokens.Count())];
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace AuthentificationService.Controllers
         /// </summary>
         [Route("[controller]/check")]
         [HttpGet]
-        public string Get(string token)
+        public string CheckToken(string token)
             => tokens.Contains(token).ToString();
     }
 }
