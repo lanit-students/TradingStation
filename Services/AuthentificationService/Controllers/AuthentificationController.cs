@@ -6,37 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthentificationService.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class AuthentificationController : ControllerBase
     {
         /// <summary>
         /// Storage for tokens 
-        /// May use it before BD is created
+        /// May use it untils BD is created
         /// </summary>
         private List<string> tokens;
 
         /// <summary>
-        /// Temporary constructortor logic
-        /// to see some outupt
+        /// Constructor for lulz
         /// </summary>
         public AuthentificationController()
         {
-            tokens = new List<string>();
-
-            for (var i = 0; i < 100; ++i)
-            {
-                tokens.Add("token" + i.ToString());
-            }
+            tokens = new List<string>() { "secret", "supersecret", "megasecret" };
         }
 
         /// <summary>
-        /// Returns list of existing tokens (just an example)
+        /// Generates and return an active token
         /// </summary>
+        [Route("[controller]/get")]
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return Enumerable.Range(0, tokens.Count - 1).Select(index => tokens[index])
-            .ToArray();
-        }
+        public string Get()
+            => tokens[new Random().Next(0, tokens.Count())];
+
+        /// <summary>
+        /// Checks if token is active
+        /// </summary>
+        [Route("[controller]/check")]
+        [HttpGet]
+        public string Get(string token)
+            => tokens.Contains(token).ToString();
     }
 }
