@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrokerServices", "Services\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralBankIntegrationLib", "Integrations\CentralBankIntegration\CentralBankIntegrationLib.csproj", "{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthentificationService", "AuthentificationService\AuthentificationService.csproj", "{690D99E4-C070-40C6-B5DB-FB7187D82B44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{690D99E4-C070-40C6-B5DB-FB7187D82B44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{690D99E4-C070-40C6-B5DB-FB7187D82B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{690D99E4-C070-40C6-B5DB-FB7187D82B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{690D99E4-C070-40C6-B5DB-FB7187D82B44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +80,7 @@ Global
 		{AD5FA204-3F65-4ABE-9F8F-73253AF38DB6} = {C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}
 		{F56CEEEA-AB92-4021-903F-2249A75DE529} = {C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}
 		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71} = {5FD6BC94-2E65-41F9-B36B-91D91F15EF53}
+		{690D99E4-C070-40C6-B5DB-FB7187D82B44} = {C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6D82083-4A32-48DC-BD04-F40E561E5F7B}
