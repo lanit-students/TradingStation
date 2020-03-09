@@ -28,41 +28,12 @@ namespace AuthentificationService.Controllers
         [HttpGet]
         public string GetToken()
         {
-            var date = DateTime.Now;
-            var randomDigit = new Random();
-            var valueForToken1 = randomDigit.Next(-400000000, 400000000);
-            var valueForToken2 = randomDigit.Next(-60000, 60000);
-            var valueForToken3 = randomDigit.Next(-60000, 60000);
-            var valueForToken4 = randomDigit.Next(-200, 200);
-            var byteArrayForGuid = new byte[]
-            {
-                (byte)date.Day,
-                (byte)date.Month,
-                (byte)(date.Year % 100),
-                (byte)(date.Year / 100),
-                (byte)date.Second,
-                (byte)date.Minute,
-                (byte)date.Hour,
-                (byte)valueForToken4,
-            };
-            Guid guid = new Guid
-                (
-                valueForToken1,
-                (short)valueForToken2,
-                (short)valueForToken3,
-                byteArrayForGuid
-                );
-            var guidString = guid.ToString();
-            var index = BinarySearch(guidString);
-            int compare = String.Compare(TokensStorage.Tokens[index],guidString);
-
-            if (compare < 0)
-            {
-                index++;
-            }
-
-            TokensStorage.Tokens.Insert(index, guid.ToString());
-            return guid.ToString();
+            string token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            var index = BinarySearch(token);
+            int compare = String.Compare(TokensStorage.Tokens[index], token);
+            if (compare < 0) { index++; }          
+            TokensStorage.Tokens.Insert(index, token);
+            return token;
         }
             
 
