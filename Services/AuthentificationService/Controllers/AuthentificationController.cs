@@ -9,8 +9,16 @@ namespace AuthentificationService.Controllers
     [Route("[controller]")]
     public class AuthentificationController : ControllerBase
     {
+        /// <summary>
+        /// Storage for tokens 
+        /// May use it before BD is created
+        /// </summary>
         private List<string> tokens;
 
+        /// <summary>
+        /// Temporary constructortor logic
+        /// to see some outupt
+        /// </summary>
         public AuthentificationController()
         {
             tokens = new List<string>();
@@ -27,7 +35,6 @@ namespace AuthentificationService.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            var rng = new Random();
             return Enumerable.Range(0, tokens.Count - 1).Select(index => tokens[index])
             .ToArray();
         }
