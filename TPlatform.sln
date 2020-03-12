@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrokerServices", "Services\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralBankIntegrationLib", "Integrations\CentralBankIntegration\CentralBankIntegrationLib.csproj", "{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationService", "Services\AuthentificationService\AuthenticationService.csproj", "{6477F925-68D0-4E48-AAD9-30D0502EBF90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationService", "Services\AuthenticationService\AuthenticationService.csproj", "{6477F925-68D0-4E48-AAD9-30D0502EBF90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
