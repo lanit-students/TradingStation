@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace BrokerServices
+namespace AuthenticationService
 {
     public class Program
     {
