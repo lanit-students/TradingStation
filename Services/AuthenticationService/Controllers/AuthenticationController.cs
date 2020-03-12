@@ -13,20 +13,23 @@ namespace AuthenticationService.Controllers
         /// </summary>
         [Route("[controller]/get")]
         [HttpGet]
-        public string GetToken()
-            => TokensStorage.Get();
+        public string Login(int id)
+            => TokensStorage.GetToken(id);
 
         /// <summary>
         /// Checks if token is active
         /// </summary>
         [Route("[controller]/check")]
         [HttpGet]
-        public bool CheckToken(string token)
-            => TokensStorage.Check(token);
+        public bool CheckToken(int id,string token)
+            => TokensStorage.CheckToken(id,token);
 
+        /// <summary>
+        /// Deletes a token
+        /// </summary>
         [Route("[controller]/delete")]
         [HttpGet]
-        public void DeleteToken(string token)
-            => TokensStorage.Delete(token);
+        public void Logout(int id,string token)
+            => TokensStorage.DeleteToken(id,token);
     }
 }
