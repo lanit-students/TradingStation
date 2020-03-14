@@ -17,6 +17,7 @@ namespace CentralBankIntegration
         {
             var valutes = getTopValutes();
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Top - 5 exchange rates: ");
             foreach (Valute valute in valutes)
             {
                 sb.AppendLine(valute.Description());

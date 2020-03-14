@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralBankIntegrationLib",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationService", "Services\AuthenticationService\AuthenticationService.csproj", "{6477F925-68D0-4E48-AAD9-30D0502EBF90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsService", "Services\NewsService\NewsService.csproj", "{64542F76-2C88-4ECE-B433-9B119E8CCFB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsService", "Services\NewsService\NewsService.csproj", "{64542F76-2C88-4ECE-B433-9B119E8CCFB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
