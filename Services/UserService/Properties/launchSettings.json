@@ -3,7 +3,7 @@
     "windowsAuthentication": false, 
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5901/NewsService/get?newsPublisherType=CentralBank",
+      "applicationUrl": "http://localhost:5901",
       "sslPort": 44302
     }
   },
@@ -17,8 +17,7 @@
     },
     "UserService": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:5001/NewsService/get?newsPublisherType=CentralBank;http://localhost:5000/NewsService/get?newsPublisherType=CentralBank",
+      "applicationUrl": "https://localhost:5011;http://localhost:5010",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

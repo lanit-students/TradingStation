@@ -1,35 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using AuthenticationService.Interfaces;
+
+using DTO;
+using Kernel;
 
 namespace AuthenticationService.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        /// <summary>
-        /// Generates and returns an active token
-        /// </summary>
-        [Route("[controller]/get")]
-        [HttpGet]
-        public string Login(int id)
-            => TokensStorage.GetToken(id);
+        private readonly ITokensEngine tokenEngine;
 
         /// <summary>
-        /// Checks if token is active
+        /// Constructor.
         /// </summary>
-        [Route("[controller]/check")]
-        [HttpGet]
-        public bool CheckToken(int id,string token)
-            => TokensStorage.CheckToken(id,token);
+        public AuthenticationController([FromServices] ITokensEngine tokenEngine)
+        {
+            this.tokenEngine = tokenEngine;
+        }
 
         /// <summary>
-        /// Deletes a token
+        /// Login user in system.
+        /// Generates and returns an active token.
         /// </summary>
-        [Route("[controller]/delete")]
+        [Route("login")]
+        [HttpPost]
+        public string Login([FromServices] ICommand<User, string> command, [FromBody] User user)
+        {
+            return command.Execute(user);
+        }
+
+        /// <summary>
+        /// Checks if token exist.
+        /// </summary>
+        [Route("check")]
         [HttpGet]
-        public void Logout(int id,string token)
-            => TokensStorage.DeleteToken(id,token);
+        public bool CheckToken([FromQuery] int userId, [FromQuery] string token)
+        {
+            CommonValidations.ValidateId(userId);
+
+            return tokenEngine.CheckToken(userId, token);
+        }
+
+        /// <summary>
+        /// Deletes a token.
+        /// </summary>
+        [Route("logout")]
+        [HttpDelete]
+        public void Logout([FromServices] ICommand<int> command, [FromQuery] int userId)
+        {
+            command.Execute(userId);
+        }
     }
 }
