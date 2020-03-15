@@ -1,5 +1,6 @@
-﻿using Kernel.Properties;
-using System;
+﻿using System;
+
+using Kernel.Properties;
 
 namespace Kernel
 {
