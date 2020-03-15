@@ -1,6 +1,6 @@
 using System;
 
-namespace ClientGUI.Data
+namespace GUI.Data
 {
     public class WeatherForecast
     {

@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ClientService.Data;
+using GUI.Data;
 
-namespace ClientService
+namespace GUI
 {
     public class Startup
     {
