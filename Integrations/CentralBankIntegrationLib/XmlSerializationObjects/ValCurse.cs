@@ -7,21 +7,12 @@ namespace CentralBankIntegrationLib.XmlSerializationObjects
     /// This class supposed to deserialise information about exchange rate from central bank website.
     /// Example of objects : http://www.cbr.ru/scripts/XML_daily.asp?date_req=02/03/2002
     /// </summary>
-    /// 
-
-    [XmlRootAttribute("ValCurs")]
+    [XmlRoot("ValCurs")]
     public class ValCurs
     {
         [XmlElement("Valute")]
+        public List<Valute> Valutes { get; set; }
 
-        public List<Valute> ValutesList { get; set; }
-        
-        private readonly List<string> topValutesCharCode = new List<string>{ "EUR", "USD", "GBP", "CNY", "JPY" };
-        
-        public List<string> GetTopValutesCharCode
-        {
-            get => topValutesCharCode;
-        }
-        }
+        public List<string> TopValutesCharCode => new List<string> { "EUR", "USD", "GBP", "CNY", "JPY" };
     }
-
+}

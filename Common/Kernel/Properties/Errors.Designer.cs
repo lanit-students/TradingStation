@@ -61,6 +61,15 @@ namespace Kernel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t get currency rate from Central Bank..
+        /// </summary>
+        public static string CanNotGetCurrencyRateFromCB {
+            get {
+                return ResourceManager.GetString("CanNotGetCurrencyRateFromCB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ID can&apos;t be less than 0..
         /// </summary>
         public static string IdCanNotBeLessThanZero {

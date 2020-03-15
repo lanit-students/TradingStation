@@ -5,6 +5,8 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Text;
 using CentralBankIntegrationLib.XmlSerializationObjects;
+using System.Linq;
+using Kernel.Properties;
 
 namespace CentralBankIntegration
 {
@@ -15,42 +17,33 @@ namespace CentralBankIntegration
     {
         public string GetNews()
         {
-            var valutes = getTopValutes();
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Top - 5 exchange rates: ");
-            foreach (Valute valute in valutes)
-            {
-                sb.AppendLine(valute.Description());
-            }
+            List<Valute> valutes = GetTopValutes();
+
+            var sb = new StringBuilder();
+            sb.AppendLine("Top - 5 exchange rates:");
+            sb.AppendLine(valutes != null ? string.Join('\n', valutes) : Errors.CanNotGetCurrencyRateFromCB);
+
             return sb.ToString();
         }
 
         // Connect to Central Bank Exchange Rates, get the most popular valutes.
-        private List<Valute> getTopValutes()
+        private List<Valute> GetTopValutes()
         {
             var url = "http://www.cbr.ru/scripts/XML_daily.asp";
 
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            Stream responseStream = httpWebResponse.GetResponseStream();
+
+            using Stream responseStream = httpWebResponse.GetResponseStream();
+            using StreamReader streamReader = new StreamReader(responseStream);
+
             var top5Valutes = new List<Valute>();
-            
-            using (StreamReader streamReader = new StreamReader(responseStream))
-            {
-                var xmlSerializer = new XmlSerializer(typeof(ValCurs));
-                var valCurs = (ValCurs)xmlSerializer.Deserialize(streamReader);
-                var topValutesCharCode = valCurs.GetTopValutesCharCode;
 
-                foreach(Valute valute in valCurs.ValutesList)
-                {
-                    if (topValutesCharCode.Contains(valute.CharCode))
-                    {
-                        top5Valutes.Add(valute);
-                    }
-                }
+            var xmlSerializer = new XmlSerializer(typeof(ValCurs));
 
-                return top5Valutes;
-            }
+            var valCurs = (ValCurs)xmlSerializer.Deserialize(streamReader);
+
+            return valCurs?.Valutes?.Where(v => valCurs.TopValutesCharCode.Contains(v.CharCode)).ToList();
         }
     }
 }
