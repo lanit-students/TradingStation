@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using GUI.Data;
 
-namespace GUI
+
+namespace BlazorApp3
 {
     public class Startup
     {
@@ -28,7 +28,7 @@ namespace GUI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
