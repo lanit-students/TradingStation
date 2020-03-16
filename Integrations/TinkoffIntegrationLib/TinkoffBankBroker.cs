@@ -14,7 +14,7 @@ namespace TinkoffIntegrationLib
         private readonly Context tinkoffContext;
         private const int CDefaultDepth = 10;
 
-        private static List<IMarketInstrument> GetInstruments(Task<MarketInstrumentList> getInstrumentsTask, Context context, int depth)
+        private List<IMarketInstrument> GetInstruments(Task<MarketInstrumentList> getInstrumentsTask, Context context, int depth)
         {
             List<IMarketInstrument> instruments = new List<IMarketInstrument>();
 
@@ -33,6 +33,7 @@ namespace TinkoffIntegrationLib
             return instruments;
         }
 
+
         public TinkoffBankBroker(CreateBrokerData data)
         {
             Connection conn = ConnectionFactory.GetConnection(data.Token);
@@ -43,8 +44,22 @@ namespace TinkoffIntegrationLib
                 Depth = data.Depth;
         }
 
+
+        /*
+         * After create broker, if you want receive responce to request
+         * with another depth, you must change depth here and make
+         * a request again
+        */
+        /// <summary>
+        /// Depth by market glass
+        /// </summary>
         public int Depth { get; set; }
 
+        /// <summary>
+        /// Method returns specific bond
+        /// </summary>
+        /// <param name="idBond">Id required bond, e.g. figi</param>
+        /// <returns>Required bond</returns>
         public IMarketInstrument GetBond(string idBond)
         {
             return GetBonds()
@@ -52,16 +67,29 @@ namespace TinkoffIntegrationLib
                 .Single();
         }
 
+        /// <summary>
+        /// Method returns list with all bonds from bank broker
+        /// </summary>
+        /// <returns>List with bonds</returns>
         public List<IMarketInstrument> GetBonds()
         {
             return GetInstruments(tinkoffContext.MarketBondsAsync(), tinkoffContext, Depth);
         }
 
+        /// <summary>
+        /// Method returns list with all curencies from bank broker
+        /// </summary>
+        /// <returns>List with currencies</returns>
         public List<IMarketInstrument> GetCurrencies()
         {
             return GetInstruments(tinkoffContext.MarketCurrenciesAsync(), tinkoffContext, Depth);
         }
 
+        /// <summary>
+        /// Method returns specific currency
+        /// </summary>
+        /// <param name="idCurrency">Id required currency, e.g. figi</param>
+        /// <returns>Required currency</returns>
         public IMarketInstrument GetCurrency(string idCurrency)
         {
             return GetCurrencies()
@@ -69,6 +97,11 @@ namespace TinkoffIntegrationLib
                 .Single();
         }
 
+        /// <summary>
+        /// Method returns specific stock
+        /// </summary>
+        /// <param name="idStock">Id required stock, e.g. figi</param>
+        /// <returns>Required stock</returns>
         public IMarketInstrument GetStock(string idStock)
         {
             return GetStocks()
@@ -76,6 +109,10 @@ namespace TinkoffIntegrationLib
                 .Single();
         }
 
+        /// <summary>
+        /// Method returns list with all stocks from bank broker
+        /// </summary>
+        /// <returns>List with stocks</returns>
         public List<IMarketInstrument> GetStocks()
         {
             return GetInstruments(tinkoffContext.MarketStocksAsync(), tinkoffContext, Depth);
