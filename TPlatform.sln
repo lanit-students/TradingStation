@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "Services\Use
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrokerServices", "Services\BrokerServices\BrokerServices.csproj", "{F56CEEEA-AB92-4021-903F-2249A75DE529}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralBankIntegrationLib", "Integrations\CentralBankIntegration\CentralBankIntegrationLib.csproj", "{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralBankIntegrationLib", "Integrations\CentralBankIntegrationLib\CentralBankIntegrationLib.csproj", "{F2471B00-7545-4317-8751-5F7E99F3FCA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +57,10 @@ Global
 		{F56CEEEA-AB92-4021-903F-2249A75DE529}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F56CEEEA-AB92-4021-903F-2249A75DE529}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F56CEEEA-AB92-4021-903F-2249A75DE529}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2471B00-7545-4317-8751-5F7E99F3FCA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2471B00-7545-4317-8751-5F7E99F3FCA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2471B00-7545-4317-8751-5F7E99F3FCA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2471B00-7545-4317-8751-5F7E99F3FCA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,7 +73,7 @@ Global
 		{30725E19-EA8D-4190-BEB6-46283B9E4743} = {C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}
 		{AD5FA204-3F65-4ABE-9F8F-73253AF38DB6} = {C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}
 		{F56CEEEA-AB92-4021-903F-2249A75DE529} = {C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}
-		{5EB3A146-DB59-41C2-AA92-63BF69FE9A71} = {5FD6BC94-2E65-41F9-B36B-91D91F15EF53}
+		{F2471B00-7545-4317-8751-5F7E99F3FCA0} = {5FD6BC94-2E65-41F9-B36B-91D91F15EF53}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6D82083-4A32-48DC-BD04-F40E561E5F7B}

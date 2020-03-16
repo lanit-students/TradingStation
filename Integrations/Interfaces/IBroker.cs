@@ -6,6 +6,11 @@ namespace Interfaces
 {
     public interface IBroker
     {
-        List<ExchangeRate> GetExchangeRates();
+        List<IMarketInstrument> GetCurrencies();
+        IMarketInstrument GetCurrency(string idCurrency);
+        List<IMarketInstrument> GetStocks();
+        IMarketInstrument GetStock(string idStock);
+        List<IMarketInstrument> GetBonds();
+        IMarketInstrument GetBond(string idBond);
     }
 }
