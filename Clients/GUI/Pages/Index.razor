@@ -1,52 +1,7 @@
 ﻿@page "/"
 
-<div class="container">
-    <!-- Codrops top bar -->
-    <section>
-        <div id="container_demo">
-            <div id="wrapper">
-                <div id="login" class="animate form">
-                    <EditForm Model="user">
-                        <form autocomplete="on">
-                            <h1>Log in</h1>
-                            <p>
-                                <h4>Your login</h4>
-                                <InputText class="form-control" @bind-Value="user.mail" placeholder="example@gmail.com"></InputText>
-                            </p>
-                            <p>
-                                <h4>Your password</h4>
-                                <InputText class="form-control" @bind-Value="user.password" placeholder="example123"></InputText>
-                            </p>
-                            <button @onclick="isValidData">GO!</button>
-                            <p class="change_link">
-                                Not a member yet ?
-                                <a href="/signup" class="to_register">Join us</a>
-                            </p>
-                        </form>
-                    </EditForm>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
+<h3>Index</h3>
 
-@code {      
-    public void isValidData()
-    {
-        if (true) { } else { } //Взаимодействие с UserService(Переход на нужную страницу отправка данных
-    }
+@code {
 
-
-    public User user;
-    public class User
-    {
-        public string mail;
-        public string password;
-        public User() { }
-
-    }
-    protected override void OnInitialized()
-    {
-        user = new User();
-    }
 }

@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using GUI.Auth;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 
-namespace BlazorApp3
+namespace GUI
 {
     public class Startup
     {
@@ -28,7 +24,8 @@ namespace BlazorApp3
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            
+            services.AddAuthenticationCore();
+            services.AddScoped<AuthenticationStateProvider, DummyAuthStateProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

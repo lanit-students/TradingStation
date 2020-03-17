@@ -1,0 +1,37 @@
+﻿@page "/userinfo"
+@attribute [Authorize]
+
+<div class="col-12">
+    <h3><b>User Info</b></h3>
+</div>
+
+
+@code {
+    //[CascadingParameter]
+    //private Task<AuthenticationState> authenticationState { get; set; }
+    //
+    //[Parameter]
+    //public int UserId { get; set; }
+    //
+    ////public User user { get; set; }
+    //protected override void OnInitialized()
+    //{
+    //    //userInput = new SignInData();
+    //}
+    //
+    //async Task DoSomething()
+    //{
+    //    var authState = await authenticationState;
+    //    var user = authState.User;
+    //
+    //    if (user.Identity.IsAuthenticated)
+    //    {
+    //        var name = user.Identity.Name;
+    //        // etc.
+    //    }
+    //    else
+    //    {
+    //        // something else
+    //    }
+    //}
+}

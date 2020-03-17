@@ -1,7 +1,59 @@
 ﻿@page "/signup"
+@using GUIModels
 
-<h3>SignUp</h3>
+    <div class="col-12">
+        <h3><b>Sign up</b></h3>
+        <hr />
+
+        <EditForm Model="@userInput" OnValidSubmit="@TrySignUp">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <label for="Login">Login</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Login" placeholder="ololololo" />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Password" placeholder="*****" />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="ConfirmPassword">Confirm Password</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+            </div>
+            <br />
+
+            <!--Эта штука всегда выводит ошибку в случае ConfirmPassword, а с Message бага-->
+            <ValidationSummary />
+            <br />
+
+            <input type="submit" class="form-control col-1 button btn-primary" value="Sign up" />
+
+        </EditForm>
+    </div>
+
 
 @code {
+    public void TrySignUp()
+    {
+        // if we will use Newtonsoft.Json, sth like that ?
+        //var payload = "{\"Login\": \"x\",\"Email\": \"x\", \"Password\": \"x\"}";
+        //
+        //var content = new StringContent(payload, Encoding.UTF8, "application/json");
+        // injecting httpclient as http
+        //await http.PostAsync("ednpoint where the user will be created", content);
+    }
 
+    private SignUpData userInput;
+
+    protected override void OnInitialized()
+    {
+        userInput = new SignUpData();
+    }
 }
