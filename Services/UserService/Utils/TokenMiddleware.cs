@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using UserService.Properties;
 
 namespace UserService.Utils
 {
@@ -15,27 +14,27 @@ namespace UserService.Utils
         {
             this.next = next;
         }
+        
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.Request.Method == "POST")
+            if (context.Request.Method == "POST" & string.Compare(context.Request.Path, StringCons.UrlCreateUser, StringComparison.OrdinalIgnoreCase) == 0)
             {
                 await next.Invoke(context);
                 return;
             }
-            Console.WriteLine("1");
 
             string token = context.Request.Query["token"];
             string userId = context.Request.Query["userId"];
 
             if (checkToken(userId, token))
             {
-                context.Response.StatusCode = 403;
-                await context.Response.WriteAsync("Token is invalid");
+                await next.Invoke(context);
             }
             else
             {
-                await next.Invoke(context);
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(StringCons.TokenError);
             }
         }
 
@@ -44,12 +43,18 @@ namespace UserService.Utils
             string ans;
             using (var client = new HttpClient())
             {
-                ans = client.GetStringAsync($"https://localhost:5001/Authentication/check?userId={userId}&token={token}").Result;
+                try
+                {
+                    ans = client
+                        .GetStringAsync($"https://localhost:5001/Authentication/check?userId={userId}&token={token}")
+                        .Result;
+                }
+                catch (Exception)
+                {
+                    ans = null;
+                }
             }
-
-            return ans == "true";
+            return string.Compare(ans, StringCons.UrlCreateUser, StringComparison.OrdinalIgnoreCase) == 0 ;
         }
-
-
     }
 }
