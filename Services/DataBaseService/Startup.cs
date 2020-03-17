@@ -20,6 +20,8 @@ namespace DataBaseService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var migrationEngine = new MigrationEngine(Configuration);
+            migrationEngine.Migrate();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +45,7 @@ namespace DataBaseService
 
                 endpoints.MapGet("/1/", async context =>
                 {
-                    await context.Response.WriteAsync(MigrationEngine.Write());
+                    await context.Response.WriteAsync("Okay");
                 });
             });
         }

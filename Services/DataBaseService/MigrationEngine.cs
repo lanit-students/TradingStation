@@ -12,40 +12,76 @@ namespace DataBaseService
 {
     public class MigrationEngine
     {
-        public static string Write()
+        private readonly IConfiguration configuration;
+
+        public MigrationEngine(IConfiguration configuration)
         {
-            //var connectionString = ConfigurationManager.ConnectionStrings["DefaultString"].ConnectionString;
-            //var connectionString = "Server=.\\SQLEXPRESS;Database=TradingStation;Trusted_Connection=True;MultipleActiveResultSets=true";
-            var connectionString = GetConnectionString();
-            var scriptString = File.ReadAllText("MigrationScripts/03.2020/01_TradingStationDBCreate.sql");
-            
+            this.configuration = configuration;
+        }
+
+        public void Migrate()
+        {
+            var connectionString = configuration.GetConnectionString("MigrationString");
+            var location = configuration.GetSection("Locations")["MigrationScripts"];
+            var fileNames = Directory.GetFiles(location, "*.sql");
+            var executedScripts = new Dictionary<string, string>();
+
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using (var command = new SqlCommand("InsertNewScriptRow", conn) 
-                    { CommandType = CommandType.StoredProcedure })
+                foreach (string fileName in fileNames)
                 {
-                    command.Parameters.AddWithValue("@Code", scriptString);
-                    command.ExecuteNonQuery();
+                    bool exists = false;
+                    try
+                    {
+                        SqlCommand command = new SqlCommand("USE [TradingStation]; SELECT (FileName) FROM [dbo].[ExecutedScripts] WHERE (FileName = @fileName);", conn);
+                        command.Parameters.AddWithValue("@fileName", fileName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            exists = reader.Read();
+                        }
+                    }
+                    catch
+                    {
+                        
+                    }
+
+                    if (!exists)
+                    {
+                        var scriptString = File.ReadAllText(fileName);
+                        try
+                        {
+                            using (var command = new SqlCommand(scriptString, conn))
+                            {
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                        catch
+                        {
+                            throw;
+                        }
+
+                        try
+                        {
+                            using (var command = new SqlCommand($"USE [TradingStation]; INSERT INTO [dbo].[ExecutedScripts] (FileName, Code) VALUES('{fileName}', 'scriptString');", conn))
+                            {
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                        catch
+                        {
+                            executedScripts.Add(fileName, scriptString);
+                        }
+                    }
+                }
+                foreach (var script in executedScripts)
+                {
+                    using (var command = new SqlCommand($"USE [TradingStation]; INSERT INTO [dbo].[ExecutedScripts] (FileName, Code) VALUES('{script.Key}', 'scriptString');", conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
-
-            return connectionString;
-        }
-
-        static string GetConnectionString()
-
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder().Build();
-            var connectionString = configuration.GetConnectionString("MigrationString");
-            //var connectionString = ConfigurationManager.ConnectionStrings["MigrationString"].ConnectionString;
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine(connectionString);
-            Console.WriteLine();
-            Console.WriteLine();
-            return connectionString;
-
         }
     }
 }
