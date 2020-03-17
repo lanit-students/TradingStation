@@ -62,7 +62,7 @@ namespace TinkoffIntegrationLib
         /// <returns>Required bond</returns>
         public IMarketInstrument GetBond(string idBond)
         {
-            return GetBonds()
+            return GetAllBonds()
                 .Where(b => b.Id == idBond)
                 .Single();
         }
@@ -71,7 +71,7 @@ namespace TinkoffIntegrationLib
         /// Method returns list with all bonds from bank broker
         /// </summary>
         /// <returns>List with bonds</returns>
-        public List<IMarketInstrument> GetBonds()
+        public List<IMarketInstrument> GetAllBonds()
         {
             return GetInstruments(tinkoffContext.MarketBondsAsync(), tinkoffContext, Depth);
         }
@@ -80,7 +80,7 @@ namespace TinkoffIntegrationLib
         /// Method returns list with all curencies from bank broker
         /// </summary>
         /// <returns>List with currencies</returns>
-        public List<IMarketInstrument> GetCurrencies()
+        public List<IMarketInstrument> GetAllCurrencies()
         {
             return GetInstruments(tinkoffContext.MarketCurrenciesAsync(), tinkoffContext, Depth);
         }
@@ -92,7 +92,7 @@ namespace TinkoffIntegrationLib
         /// <returns>Required currency</returns>
         public IMarketInstrument GetCurrency(string idCurrency)
         {
-            return GetCurrencies()
+            return GetAllCurrencies()
                 .Where(c => c.Id == idCurrency)
                 .Single();
         }
@@ -104,7 +104,7 @@ namespace TinkoffIntegrationLib
         /// <returns>Required stock</returns>
         public IMarketInstrument GetStock(string idStock)
         {
-            return GetStocks()
+            return GetAllStocks()
                 .Where(st => st.Id == idStock)
                 .Single();
         }
@@ -113,7 +113,7 @@ namespace TinkoffIntegrationLib
         /// Method returns list with all stocks from bank broker
         /// </summary>
         /// <returns>List with stocks</returns>
-        public List<IMarketInstrument> GetStocks()
+        public List<IMarketInstrument> GetAllStocks()
         {
             return GetInstruments(tinkoffContext.MarketStocksAsync(), tinkoffContext, Depth);
         }

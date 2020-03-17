@@ -10,7 +10,7 @@ namespace Interfaces
         /// Method returns list with all curencies from bank broker
         /// </summary>
         /// <returns>List with currencies</returns>
-        List<IMarketInstrument> GetCurrencies();
+        List<IMarketInstrument> GetAllCurrencies();
 
         /// <summary>
         /// Method returns specific currency
@@ -23,7 +23,7 @@ namespace Interfaces
         /// Method returns list with all stocks from bank broker
         /// </summary>
         /// <returns>List with stocks</returns>
-        List<IMarketInstrument> GetStocks();
+        List<IMarketInstrument> GetAllStocks();
 
         /// <summary>
         /// Method returns specific stock
@@ -36,7 +36,7 @@ namespace Interfaces
         /// Method returns list with all bonds from bank broker
         /// </summary>
         /// <returns>List with bonds</returns>
-        List<IMarketInstrument> GetBonds();
+        List<IMarketInstrument> GetAllBonds();
 
         /// <summary>
         /// Method returns specific bond
