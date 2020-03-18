@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace DataBaseService
+namespace AuthenticationService
 {
     public class Program
     {
