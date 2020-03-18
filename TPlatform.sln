@@ -33,7 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserServiceTests", "Tests\U
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{A655E349-D714-40B5-AE63-625BEB8917E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kernel", "Common\Kernel\Kernel.csproj", "{E71E0705-C89D-4F5E-BAF6-5578F3B0399A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kernel", "Common\Kernel\Kernel.csproj", "{E71E0705-C89D-4F5E-BAF6-5578F3B0399A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServiceTests", "AuthServiceTests\AuthServiceTests.csproj", "{BB6196EF-7062-424D-B09F-A3ACE51DCB86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationServiceTests", "Tests\AuthenticationServiceTests\AuthenticationServiceTests\AuthenticationServiceTests.csproj", "{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +93,14 @@ Global
 		{E71E0705-C89D-4F5E-BAF6-5578F3B0399A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E71E0705-C89D-4F5E-BAF6-5578F3B0399A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E71E0705-C89D-4F5E-BAF6-5578F3B0399A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB6196EF-7062-424D-B09F-A3ACE51DCB86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB6196EF-7062-424D-B09F-A3ACE51DCB86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB6196EF-7062-424D-B09F-A3ACE51DCB86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB6196EF-7062-424D-B09F-A3ACE51DCB86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
