@@ -50,9 +50,9 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    public async Task Logout()
+    public void Logout()
     {
-        await AuthenticationProvider.MarkSignedOut();
+        AuthenticationProvider.MarkSignedOut();
         NavigationManager.NavigateTo("signin");
     }
 }
