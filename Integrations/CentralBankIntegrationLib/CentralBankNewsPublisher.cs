@@ -6,8 +6,6 @@ using System.Xml.Serialization;
 using System.Text;
 using CentralBankIntegrationLib.XmlSerializationObjects;
 using System.Linq;
-using Kernel.Properties;
-using System;
 
 namespace CentralBankIntegration
 {
@@ -21,7 +19,6 @@ namespace CentralBankIntegration
             List<Valute> valutes = GetTopValutes();
 
             var sb = new StringBuilder();
-            // sb.AppendLine(valutes != null ? string.Join('\n', valutes) : Errors.CanNotGetCurrencyRateFromCB);
             if (valutes.Count == 0)
             {
                 sb.AppendLine("Valutes are not founded");
@@ -31,7 +28,8 @@ namespace CentralBankIntegration
                 sb.AppendLine("Top - 5 exchange rates:");
                 foreach (Valute valute in valutes)
                 {
-                    sb.AppendLine(valute.Description());
+                    var description = valute.Description();
+                    sb.AppendLine(description);
                 }
             }
 
