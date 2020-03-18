@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-
 namespace GUI
 {
     public class Startup
@@ -24,8 +23,10 @@ namespace GUI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddAuthenticationCore();
-            services.AddScoped<AuthenticationStateProvider, DummyAuthStateProvider>();
+
+            services.AddScoped<AuthStateProvider>();
+            services.AddScoped<AuthenticationStateProvider>(
+                    provider => provider.GetRequiredService<AuthStateProvider>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

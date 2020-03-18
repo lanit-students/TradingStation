@@ -2,6 +2,7 @@
 
 namespace GUI.GUIModels
 {
+    // Model for user input in SignIn page
     public class SignInData
     {
         [Required (ErrorMessage = "Email is required")]

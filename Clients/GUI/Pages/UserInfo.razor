@@ -3,35 +3,50 @@
 
 <div class="col-12">
     <h3><b>User Info</b></h3>
+    <hr />
+
+    <div class="form-group">
+        <label for="Name">@user.Name</label>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="Email">@user.Email</label>
+    </div>
+    <br />
+
 </div>
 
 
 @code {
-    //[CascadingParameter]
-    //private Task<AuthenticationState> authenticationState { get; set; }
-    //
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
     //[Parameter]
     //public int UserId { get; set; }
-    //
-    ////public User user { get; set; }
-    //protected override void OnInitialized()
-    //{
-    //    //userInput = new SignInData();
-    //}
-    //
-    //async Task DoSomething()
-    //{
-    //    var authState = await authenticationState;
-    //    var user = authState.User;
-    //
-    //    if (user.Identity.IsAuthenticated)
-    //    {
-    //        var name = user.Identity.Name;
-    //        // etc.
-    //    }
-    //    else
-    //    {
-    //        // something else
-    //    }
-    //}
+
+    public class User
+    {
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; }
+    }
+
+    public User user { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await authenticationState;
+        var authUser = authState.User;
+
+        if (authUser.Identity.IsAuthenticated)
+        {
+            user = new User()
+            {
+                Name = authUser.Identity.Name
+            };
+        }
+        else
+        {
+            // something else
+        }
+    }
 }

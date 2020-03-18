@@ -1,11 +1,14 @@
 ﻿@page "/signin"
 @using GUIModels
+@using Auth
+@inject AuthStateProvider AuthenticationProvider
+@inject NavigationManager NavigationManager
 
 <div class="col-12">
     <h3><b>Sign In</b></h3>
     <hr />
 
-    <EditForm Model="@userInput" OnValidSubmit="@TrySignIn">
+    <EditForm EditContext="@_editContext" OnValidSubmit="@TrySignIn">
         <DataAnnotationsValidator />
 
         <div class="form-group">
@@ -27,16 +30,38 @@
 
 
 @code {
-    private void TrySignIn()
-    {
-        if (true) { } else { } //Взаимодействие с UserService(Переход на нужную страницу, отправка данных)
-    }
+    [CascadingParameter]
+    private Task<AuthenticationState> authState { get; set; }
 
     private SignInData userInput;
+    private EditContext _editContext;
 
-    //public User user { get; set; }
-    protected override void OnInitialized()
+    private void TrySignIn()
+    {
+        // var checkedUser = await UserService.Check(user)
+        // if != null
+        if (userInput.Email == "root" && userInput.Password == "root")
+        {
+            AuthenticationProvider.MarkSignedIn();
+            NavigationManager.NavigateTo("userinfo");
+        }
+        else
+        {
+            // handle incorrect input
+            // TODO: add custom validator? 
+        }
+    }
+
+    protected async override Task OnInitializedAsync()
     {
         userInput = new SignInData();
+        _editContext = new EditContext(userInput);
+
+        var claims = (await authState).User;
+
+        if (claims.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/userinfo");
+        }
     }
 }

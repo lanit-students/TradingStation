@@ -2,6 +2,7 @@
 
 namespace GUI.GUIModels
 {
+    // Model for user input in SignUp page
     public class SignUpData
     {
         [Required(ErrorMessage = "Login is required")]
