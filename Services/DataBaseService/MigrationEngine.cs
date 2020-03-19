@@ -19,6 +19,12 @@ namespace DataBaseService
             this.configuration = configuration;
         }
 
+        /// <summary>
+        /// Migration method. 
+        /// Runs through all the .sql in the directory (configure in the appsettings.json).
+        /// Checks (by its name) if a script was already executed, executes it, 
+        /// and marks as executed (by adding a row to the table).
+        /// </summary>
         public void Migrate()
         {
             var connectionString = configuration.GetConnectionString("MigrationString");
@@ -34,7 +40,8 @@ namespace DataBaseService
                     bool alreadyExecuted = false;
                     try
                     {
-                        SqlCommand command = new SqlCommand("USE [TradingStation]; SELECT (FileName) FROM [dbo].[ExecutedScripts] WHERE (FileName = @fileName);", conn);
+                        SqlCommand command = new SqlCommand("USE [TradingStation]; SELECT (FileName) " +
+                            "FROM [dbo].[ExecutedScripts] WHERE (FileName = @fileName);", conn);
                         command.Parameters.AddWithValue("@fileName", fileName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -59,16 +66,19 @@ namespace DataBaseService
                         }
                         catch (SqlException e)
                         {
-                            Console.WriteLine(e.Message + $"\n\tError in the {fileName} script,\nor the connection is broken.");
+                            Console.WriteLine(e.Message + $"\n\tError in the {fileName} script," +
+                                "\nor the connection is broken.");
                             throw;
                         }
                     }
                 }
+
                 foreach (var script in scriptsToWriteDown)
                 {
                     try
                     {
-                        SqlCommand command = new SqlCommand("USE [TradingStation]; INSERT INTO [dbo].[ExecutedScripts] (FileName, Code) VALUES(@fileName, @code);", conn);
+                        SqlCommand command = new SqlCommand("USE [TradingStation]; INSERT INTO " +
+                            "[dbo].[ExecutedScripts] (FileName, Code) VALUES (@fileName, @code);", conn);
                         command.Parameters.AddWithValue("@fileName", script.Key);
                         command.Parameters.AddWithValue("@code", script.Value);
                         using (command)
@@ -78,7 +88,8 @@ namespace DataBaseService
                     }
                     catch (SqlException e)
                     {
-                        Console.WriteLine(e.Message + $"\n\tWarning!\n{script.Key} script cannot be marked as executed.");
+                        Console.WriteLine(e.Message + $"\n\tWarning!\n{script.Key} " +
+                            "script cannot be marked as executed.");
                         throw;
                     }
                 }
