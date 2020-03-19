@@ -39,10 +39,7 @@ namespace DataBaseService
                         SqlCommand command = new SqlCommand("USE [TradingStation]; SELECT (FileName) " +
                             "FROM [dbo].[ExecutedScripts] WHERE (FileName = @fileName);", conn);
                         command.Parameters.AddWithValue("@fileName", fileName);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            alreadyExecuted = reader.Read();
-                        }
+                        alreadyExecuted = (command.ExecuteScalar() is null) ? false : true;
                     }
                     catch (SqlException e)
                     {
