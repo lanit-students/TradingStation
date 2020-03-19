@@ -26,7 +26,7 @@ namespace DataBaseService
             var connectionString = configuration.GetConnectionString("MigrationString");
             var scriptsLocation = configuration.GetSection("Locations")["MigrationScripts"];
             var scriptsToExecute = Directory.GetFiles(scriptsLocation, "*.sql");
-            var scriptsToWriteDown = new Dictionary<string, string>();
+            var scriptsToWriteDown = new Dictionary<string, (DateTime, string)>();
 
             using (var conn = new SqlConnection(connectionString))
             {
@@ -56,7 +56,7 @@ namespace DataBaseService
                         {
                             using (var command = new SqlCommand(scriptString, conn))
                                 command.ExecuteNonQuery();
-                            scriptsToWriteDown.Add(fileName, scriptString);
+                            scriptsToWriteDown.Add(fileName, (DateTime.Now, scriptString));
                         }
                         catch (SqlException e)
                         {
@@ -73,10 +73,12 @@ namespace DataBaseService
                     try
                     {
                         using (SqlCommand command = new SqlCommand("USE [TradingStation]; INSERT INTO " +
-                            "[dbo].[ExecutedScripts] (FileName, Code) VALUES (@fileName, @code);", conn))
+                            "[dbo].[ExecutedScripts] (FileName, ExecutionTime, Code) " +
+                            "VALUES (@fileName, @executionTime, @code);", conn))
                         {
                             command.Parameters.AddWithValue("@fileName", script.Key);
-                            command.Parameters.AddWithValue("@code", script.Value);
+                            command.Parameters.AddWithValue("@executionTime", script.Value.Item1);
+                            command.Parameters.AddWithValue("@code", script.Value.Item2);
                             command.ExecuteNonQuery();
                         }
                     }

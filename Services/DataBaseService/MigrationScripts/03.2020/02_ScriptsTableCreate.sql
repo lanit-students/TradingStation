@@ -5,9 +5,10 @@ IF OBJECT_ID('dbo.ExecutedScripts', 'U') IS NOT NULL
 
 CREATE TABLE [dbo].[ExecutedScripts]
     (
-        Id	    INT IDENTITY     NOT NULL,
-		FileName    NVARCHAR(100)     NOT NULL,
-        Code    NVARCHAR(MAX)    NOT NULL,
+        Id	             INT IDENTITY      NOT NULL,
+		FileName         NVARCHAR(100)     NOT NULL,
+		ExecutionTime    DATETIME          NOT NULL,
+        Code             NVARCHAR(MAX)     NOT NULL,
         CONSTRAINT PKscripts
             PRIMARY KEY CLUSTERED (Id),
     );	
