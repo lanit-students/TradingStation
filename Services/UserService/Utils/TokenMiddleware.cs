@@ -18,7 +18,8 @@ namespace UserService.Utils
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.Request.Method == "POST" & string.Compare(context.Request.Path, StringCons.UrlCreateUser, StringComparison.OrdinalIgnoreCase) == 0)
+            if (context.Request.Method == "POST" 
+                & context.Request.Path == StringConstants.UrlCreateUser)
             {
                 await next.Invoke(context);
                 return;
@@ -34,7 +35,7 @@ namespace UserService.Utils
             else
             {
                 context.Response.StatusCode = 403;
-                await context.Response.WriteAsync(StringCons.TokenError);
+                await context.Response.WriteAsync(StringConstants.TokenError);
             }
         }
 
@@ -54,7 +55,7 @@ namespace UserService.Utils
                     ans = null;
                 }
             }
-            return string.Compare(ans, StringCons.UrlCreateUser, StringComparison.OrdinalIgnoreCase) == 0 ;
+            return string.Compare(ans, StringConstants.UrlCreateUser, StringComparison.OrdinalIgnoreCase) == 0 ;
         }
     }
 }

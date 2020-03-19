@@ -120,9 +120,6 @@
   <data name="AuthServiceAns" xml:space="preserve">
     <value>true</value>
   </data>
-  <data name="AuthServiceCheckToken" xml:space="preserve">
-    <value>https://localhost:5001/Authentication/check?userId={userId}&amp;token={token}</value>
-  </data>
   <data name="TokenError" xml:space="preserve">
     <value>Token is invalid</value>
   </data>

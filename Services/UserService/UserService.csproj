@@ -5,21 +5,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Content Remove="Controllers\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <None Remove="Controllers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\StringCons.Designer.cs">
+    <Compile Update="Properties\StringConstants.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>StringCons.resx</DependentUpon>
+      <DependentUpon>StringConstants.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\StringCons.resx">
+    <EmbeddedResource Update="Properties\StringConstants.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>StringCons.Designer.cs</LastGenOutput>
+      <LastGenOutput>StringConstants.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
