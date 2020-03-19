@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServiceTests", "AuthSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationServiceTests", "Tests\AuthenticationServiceTests\AuthenticationServiceTests\AuthenticationServiceTests.csproj", "{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseServiceTests", "Tests\DatabaseServiceTests\DatabaseServiceTests.csproj", "{A09B5CB0-7852-49F7-9261-652E60874485}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DED9CA3-5E66-4872-A1F9-013DFC819EAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A09B5CB0-7852-49F7-9261-652E60874485}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A09B5CB0-7852-49F7-9261-652E60874485}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A09B5CB0-7852-49F7-9261-652E60874485}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A09B5CB0-7852-49F7-9261-652E60874485}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
