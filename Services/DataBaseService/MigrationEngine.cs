@@ -24,8 +24,8 @@ namespace DataBaseService
         public void Migrate()
         {
             var connectionString = configuration.GetConnectionString("MigrationString");
-            var location = configuration.GetSection("Locations")["MigrationScripts"];
-            var scriptsToExecute = Directory.GetFiles(location, "*.sql");
+            var scriptsLocation = configuration.GetSection("Locations")["MigrationScripts"];
+            var scriptsToExecute = Directory.GetFiles(scriptsLocation, "*.sql");
             var scriptsToWriteDown = new Dictionary<string, string>();
 
             using (var conn = new SqlConnection(connectionString))
@@ -36,13 +36,16 @@ namespace DataBaseService
                     bool alreadyExecuted = false;
                     try
                     {
-                        SqlCommand command = new SqlCommand("USE [TradingStation]; SELECT (FileName) " +
-                            "FROM [dbo].[ExecutedScripts] WHERE (FileName = @fileName);", conn);
-                        command.Parameters.AddWithValue("@fileName", fileName);
-                        alreadyExecuted = (command.ExecuteScalar() is null) ? false : true;
+                        using (SqlCommand command = new SqlCommand("USE [TradingStation]; SELECT (FileName) " +
+                            "FROM [dbo].[ExecutedScripts] WHERE (FileName = @fileName);", conn))
+                        {
+                            command.Parameters.AddWithValue("@fileName", fileName);
+                            alreadyExecuted = (command.ExecuteScalar() is null) ? false : true;
+                        }
                     }
                     catch (SqlException e)
                     {
+                        // TODO replace with logs
                         Console.WriteLine(e.Message + "\n\tThe DB or the table is to be created now.");
                     }
 
@@ -52,13 +55,12 @@ namespace DataBaseService
                         try
                         {
                             using (var command = new SqlCommand(scriptString, conn))
-                            {
                                 command.ExecuteNonQuery();
-                            }
                             scriptsToWriteDown.Add(fileName, scriptString);
                         }
                         catch (SqlException e)
                         {
+                            // TODO replace with logs
                             Console.WriteLine(e.Message + $"\n\tError in the {fileName} script," +
                                 "\nor the connection is broken.");
                             throw;
@@ -70,17 +72,17 @@ namespace DataBaseService
                 {
                     try
                     {
-                        SqlCommand command = new SqlCommand("USE [TradingStation]; INSERT INTO " +
-                            "[dbo].[ExecutedScripts] (FileName, Code) VALUES (@fileName, @code);", conn);
-                        command.Parameters.AddWithValue("@fileName", script.Key);
-                        command.Parameters.AddWithValue("@code", script.Value);
-                        using (command)
+                        using (SqlCommand command = new SqlCommand("USE [TradingStation]; INSERT INTO " +
+                            "[dbo].[ExecutedScripts] (FileName, Code) VALUES (@fileName, @code);", conn))
                         {
+                            command.Parameters.AddWithValue("@fileName", script.Key);
+                            command.Parameters.AddWithValue("@code", script.Value);
                             command.ExecuteNonQuery();
                         }
                     }
                     catch (SqlException e)
                     {
+                        // TODO replace with logs
                         Console.WriteLine(e.Message + $"\n\tWarning!\n{script.Key} " +
                             "script cannot be marked as executed.");
                         throw;
