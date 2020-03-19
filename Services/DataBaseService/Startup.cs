@@ -40,11 +40,6 @@ namespace DataBaseService
                 {
                     await context.Response.WriteAsync("Hello World!");
                 });
-
-                endpoints.MapGet("/1/", async context =>
-                {
-                    await context.Response.WriteAsync("Okay");
-                });
             });
         }
     }
