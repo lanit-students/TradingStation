@@ -23,30 +23,30 @@ namespace DataBaseService
         {
             var connectionString = configuration.GetConnectionString("MigrationString");
             var location = configuration.GetSection("Locations")["MigrationScripts"];
-            var fileNames = Directory.GetFiles(location, "*.sql");
-            var executedScripts = new Dictionary<string, string>();
+            var scriptsToExecute = Directory.GetFiles(location, "*.sql");
+            var scriptsToWriteDown = new Dictionary<string, string>();
 
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                foreach (string fileName in fileNames)
+                foreach (var fileName in scriptsToExecute)
                 {
-                    bool exists = false;
+                    bool alreadyExecuted = false;
                     try
                     {
                         SqlCommand command = new SqlCommand("USE [TradingStation]; SELECT (FileName) FROM [dbo].[ExecutedScripts] WHERE (FileName = @fileName);", conn);
                         command.Parameters.AddWithValue("@fileName", fileName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            exists = reader.Read();
+                            alreadyExecuted = reader.Read();
                         }
                     }
-                    catch
+                    catch (SqlException e)
                     {
-                        
+                        Console.WriteLine(e.Message + "\n\tThe DB or the table is to be created now.");
                     }
 
-                    if (!exists)
+                    if (!alreadyExecuted)
                     {
                         var scriptString = File.ReadAllText(fileName);
                         try
@@ -55,30 +55,31 @@ namespace DataBaseService
                             {
                                 command.ExecuteNonQuery();
                             }
+                            scriptsToWriteDown.Add(fileName, scriptString);
                         }
-                        catch
+                        catch (SqlException e)
                         {
+                            Console.WriteLine(e.Message + $"\n\tError in the {fileName} script,\nor the connection is broken.");
                             throw;
-                        }
-
-                        try
-                        {
-                            using (var command = new SqlCommand($"USE [TradingStation]; INSERT INTO [dbo].[ExecutedScripts] (FileName, Code) VALUES('{fileName}', 'scriptString');", conn))
-                            {
-                                command.ExecuteNonQuery();
-                            }
-                        }
-                        catch
-                        {
-                            executedScripts.Add(fileName, scriptString);
                         }
                     }
                 }
-                foreach (var script in executedScripts)
+                foreach (var script in scriptsToWriteDown)
                 {
-                    using (var command = new SqlCommand($"USE [TradingStation]; INSERT INTO [dbo].[ExecutedScripts] (FileName, Code) VALUES('{script.Key}', 'scriptString');", conn))
+                    try
                     {
-                        command.ExecuteNonQuery();
+                        SqlCommand command = new SqlCommand("USE [TradingStation]; INSERT INTO [dbo].[ExecutedScripts] (FileName, Code) VALUES(@fileName, @code);", conn);
+                        command.Parameters.AddWithValue("@fileName", script.Key);
+                        command.Parameters.AddWithValue("@code", script.Value);
+                        using (command)
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    catch (SqlException e)
+                    {
+                        Console.WriteLine(e.Message + $"\n\tWarning!\n{script.Key} script cannot be marked as executed.");
+                        throw;
                     }
                 }
             }
