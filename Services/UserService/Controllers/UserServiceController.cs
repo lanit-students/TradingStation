@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DTO;
 using UserService.Interfaces;
-
+using UserService.Commands;
 
 namespace UserService.Controllers
 {
