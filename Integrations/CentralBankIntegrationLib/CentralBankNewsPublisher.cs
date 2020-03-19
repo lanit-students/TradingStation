@@ -21,12 +21,12 @@ namespace CentralBankIntegration
             var sb = new StringBuilder();
             if (valutes.Count == 0)
             {
-                sb.AppendLine("Valutes are not founded");
+                sb.AppendLine("Currencies are not found");
             }
             else
             {
                 sb.AppendLine("Top - 5 exchange rates:");
-                foreach (Valute valute in valutes)
+                foreach (var valute in valutes)
                 {
                     var description = valute.Description();
                     sb.AppendLine(description);
