@@ -14,12 +14,11 @@ namespace UserService.Utils
         {
             this.next = next;
         }
-        
 
         public async Task InvokeAsync(HttpContext context)
         {
             if (context.Request.Method == "POST" 
-                & context.Request.Path == StringConstants.UrlCreateUser)
+                && context.Request.Path == Urls.CreateUser)
             {
                 await next.Invoke(context);
                 return;
@@ -35,7 +34,7 @@ namespace UserService.Utils
             else
             {
                 context.Response.StatusCode = 403;
-                await context.Response.WriteAsync(StringConstants.TokenError);
+                await context.Response.WriteAsync(Messages.TokenError);
             }
         }
 
@@ -46,16 +45,18 @@ namespace UserService.Utils
             {
                 try
                 {
+                    //TODO replace way of communication
                     ans = client
                         .GetStringAsync($"https://localhost:5001/Authentication/check?userId={userId}&token={token}")
                         .Result;
                 }
+                // TODO add logs
                 catch (Exception)
                 {
                     ans = null;
                 }
             }
-            return string.Compare(ans, StringConstants.UrlCreateUser, StringComparison.OrdinalIgnoreCase) == 0 ;
+            return string.Compare(ans, Messages.TokenError, StringComparison.OrdinalIgnoreCase) == 0 ;
         }
     }
 }

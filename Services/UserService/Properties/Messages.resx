@@ -123,7 +123,4 @@
   <data name="TokenError" xml:space="preserve">
     <value>Token is invalid</value>
   </data>
-  <data name="UrlCreateUser" xml:space="preserve">
-    <value>/UserService/post</value>
-  </data>
 </root>

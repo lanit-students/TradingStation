@@ -7,7 +7,7 @@
     <ActiveDebugProfile>UserService</ActiveDebugProfile>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Properties\StringConstants.resx">
+    <EmbeddedResource Update="Properties\Messages.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
