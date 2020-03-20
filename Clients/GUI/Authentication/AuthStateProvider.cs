@@ -5,8 +5,14 @@ using System.Threading.Tasks;
 
 namespace GUI.Authentication
 {
+    /// <summary>
+    /// Custom implementation of AuthenticationStateProvider
+    /// </summary>
     public class AuthStateProvider : AuthenticationStateProvider
     {
+        /// <summary>
+        /// <see cref="AuthenticationStateProvider.GetAuthenticationStateAsync"/>
+        /// </summary>
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
@@ -14,8 +20,13 @@ namespace GUI.Authentication
             return await Task.FromResult(new AuthenticationState(anonymous));
         }
 
+        /// <summary>
+        /// Signs current user out
+        /// </summary>
         public void MarkSignedIn()
         {
+            // TODO: implement real logic using api
+
             var identity = new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, "0"),
@@ -30,6 +41,9 @@ namespace GUI.Authentication
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claims)));
         }
 
+        /// <summary>
+        /// Signs current user in
+        /// </summary>
         public void MarkSignedOut()
         {
             var anonymous = new ClaimsPrincipal(new ClaimsIdentity());

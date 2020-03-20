@@ -33,13 +33,19 @@
     [CascadingParameter]
     private Task<AuthenticationState> authState { get; set; }
 
+    /// <summary>
+    /// Objects for interactiong with form
+    /// </summary>
     private SignInViewModel userInput;
     private EditContext editContext;
     private ValidationMessageStore messageStore;
 
+    /// <summary>
+    /// Sign in button press event handler
+    /// </summary>
     private async Task TrySignIn()
     {
-        // TODO: imolement ValidateInput()
+        // TODO: implement ValidateInput()
         var isValid = await ValidateInput(editContext);
         // Not sure if all this validating stuff is done properly
         messageStore.Clear();
@@ -58,7 +64,7 @@
         }
     }
 
-    //TODO: Validate input using api
+    //TODO: Validate input using api and move it to validations folder
     private async Task<bool> ValidateInput(EditContext context)
     {
         var serverCheck = userInput.Email == "root@gmail.com" && userInput.Password == "root";
