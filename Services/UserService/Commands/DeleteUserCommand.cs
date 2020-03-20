@@ -1,11 +1,7 @@
 ﻿ using System;
- using System.Collections.Generic;
-using System.Linq;
  using System.Net;
- using System.Threading.Tasks;
  using IDeleteUserUserService.Interfaces;
- using Microsoft.AspNetCore.Mvc;
- using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 
  namespace UserService.Commands
 
@@ -13,16 +9,17 @@ using System.Linq;
      public class DeleteUserCommand : IDeleteUser<Guid, string>
      {
 
-         public string Execute(Guid userId)
+         public HttpStatusCode Execute(Guid userId)
          {
              if (DeleteUserFromDataBaseService(userId) == "Ok")
-                 return "HttpStatusCode.OK";
+                 return HttpStatusCode.OK;
              else
              {
-                 return "400";
+                 return HttpStatusCode.BadRequest;
              }
          }
 
+        //TODO fix from stub on request
          private string DeleteUserFromDataBaseService(Guid userId)
          {
              return "Ok";
