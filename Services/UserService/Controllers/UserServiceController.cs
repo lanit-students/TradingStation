@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using IDeleteUserUserService.Interfaces;
@@ -16,11 +17,9 @@ namespace UserService.Controllers
     {
         [Route("[controller]/deleteUser")]
         [HttpGet]
-        public string DeleteUserFromDataBaseService([FromQuery] Guid userId)
+        public HttpStatusCode DeleteUserFromDataBaseService([FromServices] IDeleteUser command,[FromQuery] int userId)
         {
-            IDeleteUser<Guid, string> deletecommand = new DeleteUserCommand();
-            return deletecommand.Execute(userId);
-
+            return command.Execute(userId);
         }
     }
 }
