@@ -18,9 +18,8 @@ namespace UserService.Controllers
         [HttpGet]
         public string DeleteUserFromDataBaseService([FromQuery] Guid userId)
         {
-            return "Hey";
-            //IDeleteUser<Guid, string> deletecommand =new DeleteUserCommand();
-            //return deletecommand.Execute(userId);
+            IDeleteUser<Guid, string> deletecommand = new DeleteUserCommand();
+            return deletecommand.Execute(userId);
 
         }
     }
