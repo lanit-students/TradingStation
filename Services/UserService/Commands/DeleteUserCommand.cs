@@ -8,23 +8,24 @@ using System.Linq;
  using Microsoft.CodeAnalysis.CSharp.Syntax;
 
  namespace UserService.Commands
- 
+
  {
      public class DeleteUserCommand : IDeleteUser<Guid, string>
      {
 
          public string Execute(Guid userId)
          {
-            if(DeleteUserFromDataBaseService(userId) == "Ok")
-            return "HttpStatusCode.OK";
-            else
-            {
-                return "400";
-            }
-        }
+             if (DeleteUserFromDataBaseService(userId) == "Ok")
+                 return "HttpStatusCode.OK";
+             else
+             {
+                 return "400";
+             }
+         }
+
          private string DeleteUserFromDataBaseService(Guid userId)
          {
              return "Ok";
          }
-    }
+     }
  }
