@@ -18,6 +18,7 @@ namespace DataBaseService
 
         /// <summary>
         /// Migration method. 
+        /// Created "TradingStation" DB with "ExecutedScripts" table, then:
         /// Runs through all the .sql in the directory (configure in the appsettings.json).
         /// Checks (by its name) if a script was already executed, executes it, 
         /// and marks as executed (by adding a row to the table).
