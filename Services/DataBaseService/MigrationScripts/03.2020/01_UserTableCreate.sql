@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[Users]
         Email           NVARCHAR(40)        NOT NULL,
         PasswordHash    NVARCHAR(MAX)       NOT NULL,
         FirstName       NVARCHAR(15)        NOT NULL,
-        LastName        NVARCHAR(20)        NULL,
+        LastName        NVARCHAR(20)        NOT NULL,
 		IsActive        BIT                 NOT NULL,
         CONSTRAINT PKusers 
             PRIMARY KEY NONCLUSTERED (Id),
