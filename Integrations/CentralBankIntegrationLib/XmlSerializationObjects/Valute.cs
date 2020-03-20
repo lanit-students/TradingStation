@@ -18,6 +18,7 @@ namespace CentralBankIntegrationLib.XmlSerializationObjects
         {
             var valueDouble = Convert.ToDouble(Value);
             var result = Math.Round(valueDouble / Nominal, 2);
+
             return result;
         }
 
@@ -25,7 +26,5 @@ namespace CentralBankIntegrationLib.XmlSerializationObjects
         {
             return $"{CharCode} - {GetValueInRUB()}";
         }
-
     }
-
 }
