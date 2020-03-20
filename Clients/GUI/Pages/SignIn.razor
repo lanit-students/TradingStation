@@ -1,6 +1,6 @@
 ﻿@page "/signin"
-@using GUIModels
-@using Auth
+@using ViewModels
+@using Authentication
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
 
@@ -8,7 +8,7 @@
     <h3><b>Sign In</b></h3>
     <hr />
 
-    <EditForm EditContext="@_editContext" OnValidSubmit="@TrySignIn">
+    <EditForm EditContext="@editContext" OnSubmit="@TrySignIn">
         <DataAnnotationsValidator />
 
         <div class="form-group">
@@ -33,29 +33,43 @@
     [CascadingParameter]
     private Task<AuthenticationState> authState { get; set; }
 
-    private SignInData userInput;
-    private EditContext _editContext;
+    private SignInViewModel userInput;
+    private EditContext editContext;
+    private ValidationMessageStore messageStore;
 
-    private void TrySignIn()
+    private async Task TrySignIn()
     {
-        // var checkedUser = await UserService.Check(user)
-        // if != null
-        if (userInput.Email == "root" && userInput.Password == "root")
+        // TODO: imolement ValidateInput()
+        var isValid = await ValidateInput(editContext);
+        // Not sure if all this validating stuff is done properly
+        messageStore.Clear();
+        editContext.NotifyValidationStateChanged();
+
+        if (userInput.Email == "root@gmail.com" && userInput.Password == "root")
         {
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("userinfo");
         }
         else
         {
-            // handle incorrect input
-            // TODO: add custom validator? 
+            messageStore.Add(editContext.Field("Email"), "Invalid login data");
+            messageStore.Add(editContext.Field("Password"), "Invalid login data");
+            editContext.NotifyValidationStateChanged();
         }
+    }
+
+    //TODO: Validate input using api
+    private async Task<bool> ValidateInput(EditContext context)
+    {
+        var serverCheck = userInput.Email == "root@gmail.com" && userInput.Password == "root";
+        return serverCheck;
     }
 
     protected async override Task OnInitializedAsync()
     {
-        userInput = new SignInData();
-        _editContext = new EditContext(userInput);
+        userInput = new SignInViewModel();
+        editContext = new EditContext(userInput);
+        messageStore = new ValidationMessageStore(editContext);
 
         var claims = (await authState).User;
 

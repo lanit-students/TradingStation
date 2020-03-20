@@ -1,4 +1,4 @@
-using GUI.Auth;
+using GUI.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;

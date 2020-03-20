@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GUI.GUIModels
+namespace GUI.ViewModels
 {
     // Model for user input in SignUp page
-    public class SignUpData
+    public class SignUpViewModel
     {
         [Required(ErrorMessage = "Login is required")]
         public string Login { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]

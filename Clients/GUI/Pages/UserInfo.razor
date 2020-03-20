@@ -1,19 +1,26 @@
 ﻿@page "/userinfo"
+@using System.Security.Claims
 @attribute [Authorize]
 
 <div class="col-12">
     <h3><b>User Info</b></h3>
     <hr />
-
     <div class="form-group">
         <label for="Name">Name: @user.Name</label>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="Surname">Surname: @user.Surname</label>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="Birthday">Birthday: @user.DateOfBirth</label>
     </div>
     <br />
     <div class="form-group">
         <label for="Email">Email: @user.Email</label>
     </div>
     <br />
-
 </div>
 
 
@@ -21,17 +28,16 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationState { get; set; }
 
-    //[Parameter]
-    //public int UserId { get; set; }
-
     public class User
     {
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
+        public string DateOfBirth { get; set; }
     }
 
     public User user { get; set; }
+
     protected async override Task OnInitializedAsync()
     {
         var authState = await authenticationState;
@@ -39,14 +45,19 @@
 
         if (authUser.Identity.IsAuthenticated)
         {
+            var claims = authUser.Claims;
+
             user = new User()
             {
-                Name = authUser.Identity.Name
+                Name = claims?.FirstOrDefault(x => x.Type.Equals(ClaimTypes.GivenName, StringComparison.OrdinalIgnoreCase))?.Value,
+                Surname = claims?.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Surname, StringComparison.OrdinalIgnoreCase))?.Value,
+                Email = claims?.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Email, StringComparison.OrdinalIgnoreCase))?.Value,
+                DateOfBirth = claims?.FirstOrDefault(x => x.Type.Equals(ClaimTypes.DateOfBirth, StringComparison.OrdinalIgnoreCase))?.Value
             };
         }
         else
         {
-            // something else
+            // TODO: logic
         }
     }
 }

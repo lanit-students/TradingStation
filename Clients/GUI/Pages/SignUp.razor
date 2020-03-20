@@ -1,11 +1,11 @@
 ﻿@page "/signup"
-@using GUIModels
+@using ViewModels
 
     <div class="col-12">
         <h3><b>Sign up</b></h3>
         <hr />
 
-        <EditForm Model="@userInput" OnValidSubmit="@TrySignUp">
+        <EditForm Model="@editContext" OnValidSubmit="@TrySignUp">
             <DataAnnotationsValidator />
 
             <div class="form-group">
@@ -42,13 +42,16 @@
 @code {
     public void TrySignUp()
     {
-        // todo logic (communication with user service)
+        // TODO logic (communication with user service)
+        // TODO validation
     }
 
-    private SignUpData userInput;
+    private SignUpViewModel userInput;
+    private EditContext editContext;
 
     protected override void OnInitialized()
     {
-        userInput = new SignUpData();
+        userInput = new SignUpViewModel();
+        editContext = new EditContext(userInput);
     }
 }
