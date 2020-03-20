@@ -1,8 +1,10 @@
-﻿namespace IDeleteUserUserService.Interfaces
+﻿using System.Net;
+
+namespace IDeleteUserUserService.Interfaces
 {
 
-    public interface IDeleteUser<in Input, out Output>
+    public interface IDeleteUser<Guid, out Output>
     {
-        Output Execute(Input userId);
+        HttpStatusCode Execute(Guid userId);
     }
 }
