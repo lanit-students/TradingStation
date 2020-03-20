@@ -3,6 +3,6 @@
     
         public interface IDeleteUser<in Input,  out Output>
         {
-            Output Execute(Input data);
+            Output Execute(Input userId);
         }
 }
