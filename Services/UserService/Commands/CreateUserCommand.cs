@@ -1,10 +1,10 @@
 ﻿using DTO;
-using UserService.Interfaces;
 using Kernel;
+using System;
 
 namespace UserService.Commands
 {
-    public class CreateUserCommand : ICreateUser<string, string>
+    public class CreateUserCommand 
 
     {
         public string Execute(string email, string password)
@@ -13,8 +13,8 @@ namespace UserService.Commands
 
             if (CommonValidations.ValidateEmail(email))
             {
-                var user = new User(email, password);
-                message = sendNewUserInDatabaseService(email, password);
+                var user = new User(email, password, Guid.Empty);
+                message = sendNewUserInDataBaseService(email, password);
             }
             else
             {
@@ -22,7 +22,7 @@ namespace UserService.Commands
             }
             return message;
         }
-        private string sendNewUserInDatabaseService(string email, string password)
+        private string sendNewUserInDataBaseService(string email, string password)
         {
             return "User is already exist or User created";
         }

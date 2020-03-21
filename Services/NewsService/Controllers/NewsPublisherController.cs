@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using Interfaces;
 using NewsService.Utils;
 
 namespace NewsService.Controllers
@@ -14,7 +13,7 @@ namespace NewsService.Controllers
     
     public class NewsServiceController : ControllerBase
     {
-        [Route("[controller]/get")]
+        [Route("[controller]/getNews")]
         [HttpGet]
 
         ///<summary>
@@ -22,8 +21,7 @@ namespace NewsService.Controllers
         /// </summary>
         public String GetNews([FromQuery] NewsPublisherTypes newsPublisherType)
         {
-            INewsPublisher newsPublisher = NewsPublisherFactory.CreateNewsPublisher(newsPublisherType);
-            return newsPublisher.GetNews();
+            return  NewsPublisherFactory.CreateNewsPublisher(newsPublisherType).GetNews();
         }
     }
 }
