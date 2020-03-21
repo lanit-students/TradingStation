@@ -14,7 +14,7 @@ namespace UserService.Commands
             if (CommonValidations.ValidateEmail(email))
             {
                 var user = new User(email, password);
-                message = createUserInDatabase(email, password);
+                message = sendNewUserInDatabaseService(email, password);
             }
             else
             {
@@ -22,7 +22,7 @@ namespace UserService.Commands
             }
             return message;
         }
-        private string createUserInDatabase(string email, string password)
+        private string sendNewUserInDatabaseService(string email, string password)
         {
             return "User is already exist or User created";
         }
