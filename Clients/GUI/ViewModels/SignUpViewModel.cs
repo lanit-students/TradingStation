@@ -2,12 +2,11 @@
 
 namespace GUI.ViewModels
 {
-    // Model for user input in SignUp page
+    /// <summary>
+    /// Model for user input in SignUp page
+    /// </summary>
     public class SignUpViewModel
     {
-        [Required(ErrorMessage = "Login is required")]
-        public string Login { get; set; }
-
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; }

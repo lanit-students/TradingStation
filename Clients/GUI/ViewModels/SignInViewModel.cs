@@ -2,7 +2,9 @@
 
 namespace GUI.ViewModels
 {
-    // Model for user input in SignIn page
+    /// <summary>
+    /// Model for user input in SignIn page
+    /// </summary>
     public class SignInViewModel
     {
         [Required (ErrorMessage = "Email is required")]
