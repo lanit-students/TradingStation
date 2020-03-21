@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kernel", "Common\Kernel\Ker
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsServiceTests", "Tests\NewsServiceTests\NewsServiceTests.csproj", "{E1DE4770-65E0-43CF-8D92-837D394CE4B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServiceTests", "Tests\AuthServiceTests\AuthServiceTests.csproj", "{94AF55D9-EE65-4E19-BBB9-6F9F07C18EA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{E1DE4770-65E0-43CF-8D92-837D394CE4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1DE4770-65E0-43CF-8D92-837D394CE4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1DE4770-65E0-43CF-8D92-837D394CE4B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94AF55D9-EE65-4E19-BBB9-6F9F07C18EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94AF55D9-EE65-4E19-BBB9-6F9F07C18EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94AF55D9-EE65-4E19-BBB9-6F9F07C18EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94AF55D9-EE65-4E19-BBB9-6F9F07C18EA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
