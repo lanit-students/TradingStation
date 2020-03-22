@@ -6,4 +6,9 @@
   <PropertyGroup>
     <ActiveDebugProfile>UserService</ActiveDebugProfile>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Messages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
