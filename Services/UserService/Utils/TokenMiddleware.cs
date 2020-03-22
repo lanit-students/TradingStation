@@ -38,7 +38,7 @@ namespace UserService.Utils
             }
         }
 
-        private bool checkToken(string userId, string token)
+        private bool CheckToken(string userId, string token)
         {
             string ans;
             using (var client = new HttpClient())
