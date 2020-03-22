@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Restore nuget
+      run: dotnet restore
     - name: Build with dotnet
       run: dotnet build --configuration Release
     - name: Test with unit tests
