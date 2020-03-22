@@ -8,11 +8,9 @@ namespace UserService.Controllers
     {
         [Route("[controller]/deleteUser")]
         [HttpGet]
-        public string DeleteUserFromDataBaseService([FromQuery] Guid userId)
+        public HttpStatusCode DeleteUserFromDataBaseService([FromServices] IDeleteUser command,[FromQuery] int userId)
         {
-            return "Hey";
-            //IDeleteUser<Guid, string> deletecommand =new DeleteUserCommand();
-            //return deletecommand.Execute(userId);
+            return command.Execute(userId);
         }
     }
 }

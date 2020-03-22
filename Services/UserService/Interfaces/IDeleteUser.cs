@@ -6,6 +6,6 @@ namespace IDeleteUserUserService.Interfaces
 
     public interface IDeleteUser
     {
-        HttpStatusCode Execute(Guid userId);
+        HttpStatusCode Execute(int userId);
     }
 }

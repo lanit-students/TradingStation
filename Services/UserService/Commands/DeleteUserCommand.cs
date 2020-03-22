@@ -6,21 +6,15 @@
  namespace UserService.Commands
 
  {
-     public class DeleteUserCommand : IDeleteUser<Guid, string>
+     public class DeleteUserCommand : IDeleteUser
      {
-
-         public HttpStatusCode Execute(Guid userId)
+         public HttpStatusCode Execute(int userId)
          {
-             if (DeleteUserFromDataBaseService(userId) == "Ok")
-                 return HttpStatusCode.OK;
-             else
-             {
-                 return HttpStatusCode.BadRequest;
-             }
+             return DeleteUserFromDataBaseService(userId) == "Ok" ? HttpStatusCode.OK : HttpStatusCode.BadRequest;
          }
 
         //TODO fix from stub on request
-         private string DeleteUserFromDataBaseService(Guid userId)
+         private string DeleteUserFromDataBaseService(int userId)
          {
              return "Ok";
          }
