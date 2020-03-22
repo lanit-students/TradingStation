@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{A655E3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kernel", "Common\Kernel\Kernel.csproj", "{E71E0705-C89D-4F5E-BAF6-5578F3B0399A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthServiceTests", "Tests\AuthServiceTests\AuthServiceTests.csproj", "{94AF55D9-EE65-4E19-BBB9-6F9F07C18EA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationServiceTests", "Tests\AuthServiceTests\AuthenticationServiceTests.csproj", "{94AF55D9-EE65-4E19-BBB9-6F9F07C18EA8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationServiceTests", "Tests\OperationServiceTests\OperationServiceTests.csproj", "{1B0D0FF7-2820-4363-8118-BCC7BBF96AE2}"
 EndProject

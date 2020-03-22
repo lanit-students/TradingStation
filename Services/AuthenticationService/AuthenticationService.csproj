@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
     <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using AuthenticationService.Interfaces;
+using DTO;
 
 namespace AuthenticationService
 {
@@ -11,10 +12,10 @@ namespace AuthenticationService
         /// <summary>
         /// Tokens storage.
         /// </summary>
-        private Dictionary<int, string> tokens = new Dictionary<int, string>();
+        private Dictionary<Guid, string> tokens = new Dictionary<Guid, string>();
 
         /// <inheritdoc />
-        public string GetToken(int userId)
+        public string GetToken(Guid userId)
         {
             var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 
@@ -24,13 +25,13 @@ namespace AuthenticationService
         }
 
         /// <inheritdoc />
-        public bool CheckToken(int userId, string token)
+        public bool CheckToken(UserToken token)
         {
-            return tokens.TryGetValue(userId, out string tokenFromStorage) && tokenFromStorage == token;
+            return tokens.TryGetValue(token.UserId, out string tokenFromStorage) && tokenFromStorage == token.Body;
         }
 
         /// <inheritdoc />
-        public void DeleteToken(int userId)
+        public void DeleteToken(Guid userId)
         {
             if (tokens.ContainsKey(userId))
             {
