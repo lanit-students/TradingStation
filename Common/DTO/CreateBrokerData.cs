@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DTO
+﻿namespace DTO
 {
     /// <summary>
     /// Required for create any bank broker

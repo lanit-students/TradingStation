@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace NewsService
+namespace GUI
 {
     public class Program
     {
@@ -17,6 +17,4 @@ namespace NewsService
                     webBuilder.UseStartup<Startup>();
                 });
     }
-
-
 }
