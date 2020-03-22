@@ -1,7 +1,5 @@
 ﻿using Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffIntegrationLib

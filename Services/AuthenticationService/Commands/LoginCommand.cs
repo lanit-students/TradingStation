@@ -1,7 +1,7 @@
 ﻿using AuthenticationService.Interfaces;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
-using Kernel;
+using System;
 
 namespace AuthenticationService.Commands
 {
