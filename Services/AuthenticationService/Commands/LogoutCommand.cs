@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationService.Commands
 {
-    public class LogoutCommand : ICommand<int>
+    public class LogoutCommand : ICommand<Guid>
     {
         private readonly ITokensEngine tokensEngine;
 
@@ -13,10 +13,8 @@ namespace AuthenticationService.Commands
             this.tokensEngine = tokensEngine;
         }
 
-        public void Execute(int data)
+        public void Execute(Guid data)
         {
-            CommonValidations.ValidateId(data);
-
             tokensEngine.DeleteToken(data);
         }
     }

@@ -8,6 +8,9 @@ using AuthenticationService.Commands;
 using AuthenticationService.Interfaces;
 
 using DTO;
+using System;
+using FluentValidation;
+using AuthenticationService.Validators;
 
 namespace AuthenticationService
 {
@@ -28,7 +31,9 @@ namespace AuthenticationService
             services.AddSingleton<ITokensEngine, TokensEngine>();
             
             services.AddTransient<ICommand<User, string>, LoginCommand>();
-            services.AddTransient<ICommand<int>, LogoutCommand>();
+            services.AddTransient<ICommand<Guid>, LogoutCommand>();
+
+            services.AddTransient<IValidator<UserToken>, UserTokenValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
