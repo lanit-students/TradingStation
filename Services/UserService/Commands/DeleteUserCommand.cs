@@ -6,9 +6,9 @@
  {
      public class DeleteUserCommand : IDeleteUserCommand
      {
-         public HttpStatusCode Execute(Guid userId)
+         public void Execute(Guid userId)
          {
-             return DeleteUserFromDataBaseService(userId) == "Ok" ? HttpStatusCode.OK : HttpStatusCode.BadRequest;
+            DeleteUserFromDataBaseService(userId);
          }
 
          //TODO fix from stub on request
