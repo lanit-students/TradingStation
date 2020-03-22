@@ -17,7 +17,7 @@ namespace UserService
         {
             services.AddControllers();
 
-            services.AddTransient<IDeleteUser, DeleteUserCommand>();
+            services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
