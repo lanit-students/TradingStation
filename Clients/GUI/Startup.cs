@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using GUI.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -23,6 +24,8 @@ namespace GUI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddBlazoredLocalStorage();
 
             services.AddScoped<AuthStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(

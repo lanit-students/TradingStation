@@ -1,10 +1,9 @@
 ﻿@page "/signin"
 @using ViewModels
 @using Authentication
-@using Microsoft.JSInterop
-@inject IJSRuntime JSRuntime
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <div class="col-12">
     <h3><b>Sign In</b></h3>
@@ -55,7 +54,7 @@
 
         if (userInput.Email == "root@gmail.com" && userInput.Password == "root")
         {
-            await JSRuntime.InvokeAsync<string>("CookieManager.WriteCookie", "root", "token", 5);
+            await LocalStorage.SetItemAsync("root", "token");
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("userinfo");
         }
