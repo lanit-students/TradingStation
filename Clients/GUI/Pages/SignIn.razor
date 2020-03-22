@@ -1,6 +1,8 @@
 ﻿@page "/signin"
 @using ViewModels
 @using Authentication
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
 
@@ -53,6 +55,7 @@
 
         if (userInput.Email == "root@gmail.com" && userInput.Password == "root")
         {
+            await JSRuntime.InvokeAsync<string>("CookieManager.WriteCookie", "root", "token", 5);
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("userinfo");
         }

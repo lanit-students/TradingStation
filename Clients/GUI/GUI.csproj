@@ -14,4 +14,8 @@
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\js\CookieManager.js" />
+  </ItemGroup>
+
 </Project>
