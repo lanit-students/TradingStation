@@ -2,12 +2,13 @@
 
 using AuthenticationService;
 using AuthenticationService.Interfaces;
+using System;
 
-namespace UserServiceTests.Utils
+namespace AuthenticationServiceTests.Utils
 {
     public class TokensEngineTests
     {
-        private const int GoodId = 1;
+        private readonly Guid goodUserId = Guid.NewGuid();
 
         private ITokensEngine tokensEngine;
 
@@ -20,7 +21,7 @@ namespace UserServiceTests.Utils
         [Test]
         public void TokensEngineGetTokenTest()
         {
-            Assert.NotNull(tokensEngine.GetToken(GoodId));
+            Assert.NotNull(tokensEngine.GetToken(goodUserId));
         }
     }
 }

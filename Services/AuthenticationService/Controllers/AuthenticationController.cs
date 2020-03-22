@@ -3,7 +3,7 @@
 using AuthenticationService.Interfaces;
 
 using DTO;
-using Kernel;
+using FluentValidation;
 
 namespace AuthenticationService.Controllers
 {
@@ -36,12 +36,12 @@ namespace AuthenticationService.Controllers
         /// Checks if token exist.
         /// </summary>
         [Route("check")]
-        [HttpGet]
-        public bool CheckToken([FromQuery] int userId, [FromQuery] string token)
+        [HttpPost]
+        public bool CheckToken([FromServices] IValidator<UserToken> validator, [FromBody] UserToken token)
         {
-            CommonValidations.ValidateId(userId);
+            validator.ValidateAndThrow(token);
 
-            return tokenEngine.CheckToken(userId, token);
+            return tokenEngine.CheckToken(token);
         }
 
         /// <summary>

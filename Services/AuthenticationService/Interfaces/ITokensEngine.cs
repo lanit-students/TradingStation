@@ -1,4 +1,7 @@
-﻿namespace AuthenticationService.Interfaces
+﻿using DTO;
+using System;
+
+namespace AuthenticationService.Interfaces
 {
     /// <summary>
     /// Engine for working with the token system.
@@ -8,16 +11,16 @@
         /// <summary>
         /// Generate token for user and put it in storage.
         /// </summary>
-        string GetToken(int userId);
+        string GetToken(Guid userId);
 
         /// <summary>
         /// Delete token from storage.
         /// </summary>
-        void DeleteToken(int userId);
+        void DeleteToken(Guid userId);
 
         /// <summary>
         /// Check token is in storage.
         /// </summary>
-        bool CheckToken(int userId, string token);
+        bool CheckToken(UserToken token);
     }
 }
