@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +27,7 @@ namespace UserService.Utils
             string token = context.Request.Query["token"];
             string userId = context.Request.Query["userId"];
 
-            if (checkToken(userId, token))
+            if (CheckToken(userId, token))
             {
                 await next.Invoke(context);
             }
