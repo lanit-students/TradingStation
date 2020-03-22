@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Net;
 
 namespace IDeleteUserUserService.Interfaces
 {
-
-    public interface IDeleteUser
+    public interface IDeleteUserCommand
     {
-        HttpStatusCode Execute(int userId);
+        HttpStatusCode Execute(Guid userId);
     }
 }
