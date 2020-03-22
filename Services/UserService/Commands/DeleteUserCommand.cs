@@ -1,5 +1,5 @@
  using System;
- using System.Net;
+
  using IDeleteUserUserService.Interfaces;
 
  namespace UserService.Commands
@@ -8,11 +8,11 @@
      {
          public void Execute(Guid userId)
          {
-            DeleteUserFromDataBaseService(userId);
+            DeleteUser(userId);
          }
 
          //TODO fix from stub on request
-         private string DeleteUserFromDataBaseService(Guid userId)
+         private string DeleteUser(Guid userId)
          {
              return "Ok";
          }
