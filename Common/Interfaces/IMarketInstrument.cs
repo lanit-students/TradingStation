@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Interfaces
+﻿namespace Interfaces
 {
     /// <summary>
     /// Represents market instrument 

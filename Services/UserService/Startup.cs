@@ -1,7 +1,10 @@
+using System;
+using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using UserService.Utils;
 using UserService.Commands;
 using UserService.Interfaces;
 
@@ -14,6 +17,8 @@ namespace UserService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
         }
 
@@ -28,6 +33,7 @@ namespace UserService
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseMiddleware<TokenMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

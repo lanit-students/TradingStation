@@ -1,4 +1,8 @@
-﻿using DTO;
+using System;
+using Microsoft.AspNetCore.Mvc;
+
+using IDeleteUserUserService.Interfaces;
+using DTO;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using UserService.Commands;
@@ -8,7 +12,8 @@ namespace UserService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : Controller
+<<<<<<< HEAD
+    public class UserController : ControllerBase
     {
         
         [Route("create")]
@@ -19,6 +24,13 @@ namespace UserService.Controllers
         public HttpStatusCode CreateUser([FromServices] ICreateUserCommand command, [FromBody] UserCredential userCredential)
         {
             return command.Execute(userCredential);
+        }
+
+        [Route("delete")]
+        [HttpDelete]
+        public void DeleteUser([FromServices] IDeleteUserCommand command, [FromQuery] Guid userId)
+        {
+             command.Execute(userId);
         }
     }
 }

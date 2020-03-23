@@ -1,7 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Commands\**" />
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="Utils\**" />
+    <Content Remove="Commands\**" />
+    <Content Remove="Controllers\**" />
+    <Content Remove="Interfaces\**" />
+    <Content Remove="Utils\**" />
+    <EmbeddedResource Remove="Commands\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Utils\**" />
+    <None Remove="Commands\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="Utils\**" />
+  </ItemGroup>
 
 </Project>

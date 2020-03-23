@@ -1,11 +1,7 @@
 ﻿using AuthenticationService.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
-using Kernel;
 
 namespace AuthenticationService.Commands
 {
@@ -16,9 +12,9 @@ namespace AuthenticationService.Commands
         /// <summary>
         /// Get user ID from UserService.
         /// </summary>
-        private int GetUserIdFromUserService(User user)
+        private Guid GetUserIdFromUserService(User user)
         {
-            return -1;
+            return Guid.Empty;
         }
 
         public LoginCommand([FromServices] ITokensEngine tokensEngine)
@@ -28,9 +24,7 @@ namespace AuthenticationService.Commands
 
         public string Execute(User data)
         {
-            int userId = GetUserIdFromUserService(data);
-
-            CommonValidations.ValidateId(userId);
+            Guid userId = GetUserIdFromUserService(data);
 
             return tokensEngine.GetToken(userId);
         }
