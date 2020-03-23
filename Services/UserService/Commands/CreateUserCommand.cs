@@ -9,16 +9,8 @@ namespace UserService.Commands
     {
         public string Execute(UserCredential userCredential)
         {
-            string message;
-
-            if (CommonValidations.ValidateEmail(userCredential.Email))
-            {
-                message = createUser(userCredential);
-            }
-            else
-            {
-                message = "Invalid email";
-            }
+            CommonValidations.ValidateEmail(userCredential.Email);
+            string message = createUser(userCredential);
             return message;
         }
         private string createUser(UserCredential userCredential)

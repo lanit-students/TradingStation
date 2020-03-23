@@ -14,17 +14,17 @@ namespace Kernel
             }
         }
         
-        public static bool ValidateEmail(string email)
+        public static void ValidateEmail(string email)
         {
-            try
+
+            var addr = new MailAddress(email); 
+            bool emailIsValid = addr.Address == email;
+            
+            if (emailIsValid == false)
             {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
+                throw new Exception(Errors.EmailCanNotBeNullEmptyOrNotEmailFormat);
+            }  
         }
+
     }
 }

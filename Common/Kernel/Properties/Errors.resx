@@ -120,6 +120,9 @@
   <data name="CanNotGetCurrencyRateFromCB" xml:space="preserve">
     <value>Can't get currency rate from Central Bank.</value>
   </data>
+  <data name="EmailCanNotBeNullEmptyOrNotEmailFormat" xml:space="preserve">
+    <value>Email is null, empty or not match email address format</value>
+  </data>
   <data name="IdCanNotBeLessThanZero" xml:space="preserve">
     <value>ID can't be less than 0.</value>
   </data>
