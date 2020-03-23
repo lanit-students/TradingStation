@@ -35,7 +35,7 @@ namespace DataBaseService.Utils
                 { "CreateScriptsTable", CreateScriptsTable(connectionStringTradingStation) }
             };
             List<string> scriptsToExecute = FilterScriptsToExecute(connectionStringTradingStation, allScripts);
-            string lastScriptToExecute = "[no script selected]";
+            var lastScriptToExecute = "no script selected";
 
             try
             {
@@ -104,7 +104,7 @@ namespace DataBaseService.Utils
             insertRow.AppendLine("INSERT INTO [dbo].[ExecutedScripts] ");
             insertRow.AppendLine("(FileName, ExecutionTime, Code) ");
             insertRow.AppendLine("VALUES (@fileName, @executionTime, @code);");
-            string lastScriptToWrite = "[no script written]";
+            var lastScriptToWrite = "no script written";
 
             try
             {
@@ -115,7 +115,7 @@ namespace DataBaseService.Utils
                     try
                     {
                         foreach (var script in scriptsToWriteDown)
-                            using (SqlCommand command = new SqlCommand(insertRow.ToString(), conn, writingTransaction))
+                            using (var command = new SqlCommand(insertRow.ToString(), conn, writingTransaction))
                             {
                                 lastScriptToWrite = script.Key;
                                 command.Parameters.AddWithValue("@fileName", script.Key);
@@ -129,7 +129,7 @@ namespace DataBaseService.Utils
                     {
                         // TODO replace with logs
                         Console.WriteLine(e.Message +
-                            $"\n\tWarning! The {lastScriptToWrite} script cannot be marked as executed.");
+                            $"\n\tWarning! The [{lastScriptToWrite}] script cannot be marked as executed.");
                         try
                         {
                             writingTransaction.Rollback();
@@ -174,7 +174,7 @@ namespace DataBaseService.Utils
                 using (var conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    using (SqlCommand command = new SqlCommand(selectFileName, conn))
+                    using (var command = new SqlCommand(selectFileName, conn))
                     using (SqlDataReader reader = command.ExecuteReader())
                         while (reader.Read())
                             executedScripts.Add(reader.GetString(0));
@@ -208,7 +208,7 @@ namespace DataBaseService.Utils
                 using (var conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    using (SqlCommand command = new SqlCommand(createDbScript, conn))
+                    using (var command = new SqlCommand(createDbScript, conn))
                         command.ExecuteNonQuery();
                     // TODO replace with logs
                     Console.WriteLine("\tTradingStation DB was created successfully or already existed.");
@@ -245,7 +245,7 @@ namespace DataBaseService.Utils
                 using (var conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    using (SqlCommand command = new SqlCommand(createTableScript.ToString(), conn))
+                    using (var command = new SqlCommand(createTableScript.ToString(), conn))
                         command.ExecuteNonQuery();
                     // TODO replace with logs
                     Console.WriteLine("\tThe Scripts table was created successfully or already existed.");
