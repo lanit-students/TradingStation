@@ -1,5 +1,6 @@
 ﻿using DTO;
 using Kernel;
+using System.Net;
 using UserService.Interfaces;
 
 namespace UserService.Commands
@@ -7,15 +8,14 @@ namespace UserService.Commands
     public class CreateUserCommand : ICreateUserCommand
 
     {
-        public string Execute(UserCredential userCredential)
+        public HttpStatusCode Execute(UserCredential userCredential)
         {
             CommonValidations.ValidateEmail(userCredential.Email);
-            string message = createUser(userCredential);
-            return message;
+            return createUser(userCredential);
         }
-        private string createUser(UserCredential userCredential)
+        private HttpStatusCode createUser(UserCredential userCredential)
         {
-            return "User is already exist or User created";
+            return HttpStatusCode.Created;
         }
 
     }

@@ -1,10 +1,10 @@
 ﻿using DTO;
-
+using System.Net;
 
 namespace UserService.Interfaces
 {
     public interface ICreateUserCommand
     {
-        string Execute(UserCredential userCredential);
+        HttpStatusCode Execute(UserCredential userCredential);
     }
 }
