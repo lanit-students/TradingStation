@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="MigrationScripts\03.2020\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.ConnectionInfo.dll" Version="1.0.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
