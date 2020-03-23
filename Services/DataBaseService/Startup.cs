@@ -10,7 +10,7 @@ namespace DataBaseService
 {
     public class Startup
     {
-        static IConfiguration Configuration { get; set; }
+        public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {

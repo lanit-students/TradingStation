@@ -2,7 +2,7 @@
 
 namespace DataBaseService.Utils
 {
-    class ExecutedScript
+    public class ExecutedScript
     {
         public DateTime ExecutionTime { get; }
         public string ExecutedCode { get; }

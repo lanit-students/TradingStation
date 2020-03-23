@@ -75,19 +75,13 @@ namespace DataBaseService.Utils
                             WriteDownExecutedScripts(connectionStringTradingStation, scriptsToWriteDown);
                             Console.WriteLine("\tExecuted scripts were written down.");
                         }
-                        throw;
+                        throw e;
                     }
                     finally
                     {
                         executingTransaction.Dispose();
                     }
                 }
-            }
-            catch (SqlException e) when (e.Number == -2)
-            {
-                // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't open the connection (timeout).");
-                throw;
             }
             catch (Exception e) when (!(e is SqlException))
             {
@@ -149,12 +143,6 @@ namespace DataBaseService.Utils
                     }
                 }
             }
-            catch (SqlException e) when (e.Number == -2)
-            {
-                // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't write down executed scripts: the connection timeout.");
-                throw e;
-            }
             catch (Exception e) when (!(e is SqlException))
             {
                 // TODO replace with logs
@@ -184,13 +172,6 @@ namespace DataBaseService.Utils
                         scriptsToExecute.Add(scriptName);
                 return scriptsToExecute;
             }
-            catch (SqlException e) when (e.Number == -2)
-            {
-                // TODO replace with logs
-                Console.WriteLine(e.Message + 
-                    "\n\tCouldn't receive the list of executed scripts: the connection timeout.");
-                throw e;
-            }
             catch (Exception e)
             {
                 // TODO replace with logs
@@ -214,12 +195,6 @@ namespace DataBaseService.Utils
                     Console.WriteLine("\tTradingStation DB was created successfully or already existed.");
                     return new ExecutedScript(DateTime.Now, createDbScript);
                 }
-            }
-            catch (SqlException e) when (e.Number == -2)
-            {
-                // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't create the TradingStation DB: the connection timeout.");
-                throw e;
             }
             catch (Exception e)
             {
@@ -251,12 +226,6 @@ namespace DataBaseService.Utils
                     Console.WriteLine("\tThe Scripts table was created successfully or already existed.");
                     return new ExecutedScript(DateTime.Now, createTableScript.ToString());
                 }
-            }
-            catch (SqlException e) when (e.Number == -2)
-            {
-                // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't create Scripts table: the connection timeout.");
-                throw e;
             }
             catch (Exception e)
             {
