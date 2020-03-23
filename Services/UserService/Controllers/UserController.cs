@@ -7,7 +7,7 @@ namespace UserService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserServiceController : ControllerBase
+    public class UserController : ControllerBase
     {
         [Route("delete")]
         [HttpDelete]
