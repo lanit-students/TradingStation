@@ -13,6 +13,7 @@ namespace UserService.Commands
             CommonValidations.ValidateEmail(userCredential.Email);
             return createUser(userCredential);
         }
+
         private HttpStatusCode createUser(UserCredential userCredential)
         {
             return HttpStatusCode.Created;

@@ -17,7 +17,7 @@ namespace NewsService.Controllers
         [HttpGet]
 
         ///<summary>
-        /// Return news depends on a publisher type
+        /// Return news depending on a publisher type
         /// </summary>
         public String GetNews([FromQuery] NewsPublisherTypes newsPublisherType)
         {
