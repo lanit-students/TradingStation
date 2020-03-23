@@ -8,7 +8,7 @@ namespace UserService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserServiceController : Controller
+    public class UserController : Controller
     {
         
         [Route("create")]
