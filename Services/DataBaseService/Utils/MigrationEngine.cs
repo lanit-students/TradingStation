@@ -134,7 +134,8 @@ namespace DataBaseService.Utils
             catch (Exception e)
             {
                 // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't receive the list of executed scripts.");
+                Console.WriteLine("\n\tCouldn't receive the list of executed scripts.");
+                throw e;
             }
         }
 
@@ -155,7 +156,8 @@ namespace DataBaseService.Utils
             catch (Exception e)
             {
                 // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't create the TradingStation DB.");
+                Console.WriteLine("\n\tCouldn't create the TradingStation DB.");
+                throw e;
             }
         }
 
@@ -183,7 +185,8 @@ namespace DataBaseService.Utils
             catch (Exception e)
             {
                 // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't create the Scripts table.");
+                Console.WriteLine("\n\tCouldn't create the Scripts table.");
+                throw e;
             }
         }
     }
