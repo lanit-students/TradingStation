@@ -1,7 +1,6 @@
 ﻿using DTO;
 using Kernel;
 using System;
-using System.Net;
 using UserService.Interfaces;
 
 namespace UserService.Commands
@@ -9,12 +8,12 @@ namespace UserService.Commands
     public class CreateUserCommand : ICreateUserCommand
 
     {
-        public void Execute(UserCredential userCredential)
+        public void Execute(UserEmailPassword userEmailPassword)
         {
             try
             {
-                CommonValidations.ValidateEmail(userCredential.Email);
-                createUser(userCredential);
+                CommonValidations.ValidateEmail(userEmailPassword.Email);
+                createUser(userEmailPassword);
                 return;
             }
             catch (Exception ex)
@@ -23,7 +22,7 @@ namespace UserService.Commands
             }
         }
 
-        private void createUser(UserCredential userCredential)
+        private void createUser(UserEmailPassword userEmailPassword)
         {
             try
             {
