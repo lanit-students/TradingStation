@@ -16,12 +16,18 @@ namespace Kernel
         
         public static void ValidateEmail(string email)
         {
-
-            var addr = new MailAddress(email);             
-            if (addr.Address != email)
+            try
             {
-                throw new Exception(Errors.EmailCanNotBeNullEmptyOrNotEmailFormat);
-            }  
+                var addr = new MailAddress(email);
+                if (addr.Address != email)
+                {
+                    throw new Exception(Errors.EmailCanNotBeNullEmptyOrNotEmailFormat);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
     }
