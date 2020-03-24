@@ -1,10 +1,12 @@
-﻿namespace DTO
+﻿using System;
+
+namespace DTO
 {
     public class User
     {
-        public int Id { get; }
+        public Guid Id { get; }
         public string Login { get; }
         public string Email { get; set; }
-        public string Password { get; }
+        public string PasswordHash { get; }
     }
 }
