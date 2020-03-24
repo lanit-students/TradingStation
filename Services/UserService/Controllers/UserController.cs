@@ -17,9 +17,9 @@ namespace UserService.Controllers
         /// <summary>
         /// This method will be implemented in communication with other services
         /// </summary>
-        public HttpStatusCode CreateUser([FromServices] ICreateUserCommand command, [FromBody] UserCredential userCredential)
+        public void CreateUser([FromServices] ICreateUserCommand command, [FromBody] UserCredential userCredential)
         {
-            return command.Execute(userCredential);
+            command.Execute(userCredential);
         }
 
         [Route("delete")]

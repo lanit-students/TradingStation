@@ -5,6 +5,6 @@ namespace UserService.Interfaces
 {
     public interface ICreateUserCommand
     {
-        HttpStatusCode Execute(UserCredential userCredential);
+        void Execute(UserCredential userCredential);
     }
 }
