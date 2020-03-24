@@ -33,7 +33,7 @@ namespace UserService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseMiddleware<TokenMiddleware>();
+            //TODO app.UseMiddleware<TokenMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
