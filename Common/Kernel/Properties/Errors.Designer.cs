@@ -70,7 +70,7 @@ namespace Kernel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email is null, empty or not match email address format.
+        ///   Looks up a localized string similar to Email is null, empty or not match email address format..
         /// </summary>
         public static string EmailCanNotBeNullEmptyOrNotEmailFormat {
             get {
