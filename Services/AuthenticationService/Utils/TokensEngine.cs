@@ -6,31 +6,41 @@ using DTO;
 
 namespace AuthenticationService
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Engine for working with the token system.
+    /// </summary>
     public class TokensEngine : ITokensEngine
     {
         /// <summary>
         /// Tokens storage.
         /// </summary>
-        private Dictionary<Guid, string> tokens = new Dictionary<Guid, string>();
+        private Dictionary<Guid, UserToken> tokens = new Dictionary<Guid, UserToken>();
 
-        /// <inheritdoc />
-        public string GetToken(Guid userId)
+        /// <summary>
+        /// Generate token for user and put it in storage.
+        /// </summary>
+        /// <param name="userId">User's identifier</param>
+        /// <returns>New token for user</returns>
+        public UserToken GetToken(Guid userId)
         {
-            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            UserToken token = new UserToken() { Body = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) };
 
             tokens[userId] = token;
 
             return tokens[userId];    
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Check token is in storage.
+        /// </summary>
         public bool CheckToken(UserToken token)
         {
-            return tokens.TryGetValue(token.UserId, out string tokenFromStorage) && tokenFromStorage == token.Body;
+            return tokens.TryGetValue(token.UserId, out UserToken tokenFromStorage) && tokenFromStorage.Body == token.Body;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Delete token from storage.
+        /// </summary>
         public void DeleteToken(Guid userId)
         {
             if (tokens.ContainsKey(userId))

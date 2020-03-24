@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationService.Commands
 {
-    public class LoginCommand : ICommand<User, string>
+    public class LoginCommand : ICommand<User, UserToken>
     {
         private readonly ITokensEngine tokensEngine;
 
@@ -22,7 +22,7 @@ namespace AuthenticationService.Commands
             this.tokensEngine = tokensEngine;
         }
 
-        public string Execute(User data)
+        public UserToken Execute(User data)
         {
             Guid userId = GetUserIdFromUserService(data);
 
