@@ -14,8 +14,7 @@ namespace DataBaseService
 
         public DataBaseContext()
         {
-            Database.EnsureCreated();
-            Console.WriteLine("Db Created");
+            Database.EnsureCreated();            
         }
 
 

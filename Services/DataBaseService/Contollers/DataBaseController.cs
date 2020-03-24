@@ -15,16 +15,15 @@ namespace DataBaseService.Contollers
     {
         [Route("create_user")]
         [HttpPost]
-        public string CreateUser()
+        public void CreateUser([FromBody] UserEmailPassword userIn)
         {                   
             using (var db = new DataBaseContext())
             {
-                var newUser = new DbUser { Id = Guid.NewGuid(), Email = "Tom", Password = "sdfs" };
-                                
+                var newUser = new DbUser { Id = Guid.NewGuid(), Email = userIn.Email, Password = userIn.Password };
+                
                 db.Users.Add(newUser);                
                 db.SaveChanges();               
-            }
-            return "User was added :)";
+            }            
         }
     }
 }
