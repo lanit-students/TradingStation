@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
@@ -36,58 +37,37 @@ namespace DataBaseService.Utils
             };
             List<string> scriptsToExecute = FilterScriptsToExecute(connectionStringTradingStation, allScripts);
             var lastScriptToExecute = "no script selected";
+            SqlTransaction executingTransaction = null;
 
             try
             {
                 using (var conn = new SqlConnection(connectionStringTradingStation))
                 {
                     conn.Open();
-                    SqlTransaction executingTransaction = conn.BeginTransaction();
-                    try
+                    executingTransaction = conn.BeginTransaction();
+                    foreach (var fileName in scriptsToExecute)
                     {
-                        foreach (var fileName in scriptsToExecute)
-                        {
-                            lastScriptToExecute = fileName;
-                            var scriptCode = File.ReadAllText(fileName);
-                            using (var command = new SqlCommand(scriptCode, conn, executingTransaction))
-                                command.ExecuteNonQuery();
-                            scriptsToWriteDown.Add(fileName, new ExecutedScript(DateTime.Now, scriptCode));
-                        }
-                        executingTransaction.Commit();
-                        WriteDownExecutedScripts(connectionStringTradingStation, scriptsToWriteDown);
-                        Console.WriteLine("\tExecuted scripts written down.");
+                        lastScriptToExecute = fileName;
+                        var scriptCode = File.ReadAllText(fileName);
+                        using (var command = new SqlCommand(scriptCode, conn, executingTransaction))
+                            command.ExecuteNonQuery();
+                        scriptsToWriteDown.Add(fileName, new ExecutedScript(DateTime.Now, scriptCode));
                     }
-                    catch (SqlException e)
-                    {
-                        // TODO replace with logs
-                        Console.WriteLine(e.Message +
-                            $"\n\tError in the [{lastScriptToExecute}] script, or the connection is broken.");
-                        try
-                        {
-                            executingTransaction.Rollback();
-                            // TODO replace with logs
-                            Console.WriteLine("\tExecuting rollback is successful.");
-                        }
-                        catch
-                        {
-                            // TODO replace with logs
-                            Console.WriteLine("\tCouldn't rollback executing.");
-                            WriteDownExecutedScripts(connectionStringTradingStation, scriptsToWriteDown);
-                            Console.WriteLine("\tExecuted scripts were written down.");
-                        }
-                        throw e;
-                    }
-                    finally
-                    {
-                        executingTransaction.Dispose();
-                    }
+                    executingTransaction.Commit();
                 }
             }
-            catch (Exception e) when (!(e is SqlException))
+            catch (Exception e)
             {
                 // TODO replace with logs
-                Console.WriteLine(e.Message);
-                throw;
+                Console.WriteLine(e.Message + $"\n\tExecution error on the [{lastScriptToExecute}] script.");
+                // TODO replace with logs
+                Console.WriteLine("\tExecution transaction rollbacked.");
+                throw e;
+            }
+            finally
+            {
+                executingTransaction?.Dispose();
+                WriteDownExecutedScripts(connectionStringTradingStation, scriptsToWriteDown);
             }
         }
 
@@ -99,62 +79,46 @@ namespace DataBaseService.Utils
             insertRow.AppendLine("(FileName, ExecutionTime, Code) ");
             insertRow.AppendLine("VALUES (@fileName, @executionTime, @code);");
             var lastScriptToWrite = "no script written";
+            SqlTransaction writingTransaction = null;
 
             try
             {
                 using (var conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlTransaction writingTransaction = conn.BeginTransaction();
-                    try
-                    {
-                        foreach (var script in scriptsToWriteDown)
-                            using (var command = new SqlCommand(insertRow.ToString(), conn, writingTransaction))
-                            {
-                                lastScriptToWrite = script.Key;
-                                command.Parameters.AddWithValue("@fileName", script.Key);
-                                command.Parameters.AddWithValue("@executionTime", script.Value.ExecutionTime);
-                                command.Parameters.AddWithValue("@code", script.Value.ExecutedCode);
-                                command.ExecuteNonQuery();
-                            }
-                        writingTransaction.Commit();
-                    }
-                    catch (SqlException e)
-                    {
-                        // TODO replace with logs
-                        Console.WriteLine(e.Message +
-                            $"\n\tWarning! The [{lastScriptToWrite}] script cannot be marked as executed.");
-                        try
+                    writingTransaction = conn.BeginTransaction();
+                    foreach (var script in scriptsToWriteDown)
+                        using (var command = new SqlCommand(insertRow.ToString(), conn, writingTransaction))
                         {
-                            writingTransaction.Rollback();
-                            // TODO replace with logs
-                            Console.WriteLine("\tWriting rollback is successful.");
+                            lastScriptToWrite = script.Key;
+                            command.Parameters.AddWithValue("@fileName", script.Key);
+                            command.Parameters.AddWithValue("@executionTime", script.Value.ExecutionTime);
+                            command.Parameters.AddWithValue("@code", script.Value.ExecutedCode);
+                            command.ExecuteNonQuery();
                         }
-                        catch
-                        {
-                            // TODO replace with logs
-                            Console.WriteLine("\tCouldn't rollback writing.");
-                        }
-                        throw e;
-                    }
-                    finally
-                    {
-                        writingTransaction.Dispose();
-                    }
+                    writingTransaction.Commit();
+                    // TODO replace with logs
+                    Console.WriteLine("\tExecuted scripts written down.");
                 }
             }
-            catch (Exception e) when (!(e is SqlException))
+            catch (SqlException e)
             {
                 // TODO replace with logs
-                Console.WriteLine(e.Message + "\n\tCouldn't write down executed scripts.");
+                Console.WriteLine(e.Message + 
+                    $"\n\tCouldn't write down executed scripts. Error on the [{lastScriptToWrite}] script.");
+                // TODO replace with logs
+                Console.WriteLine("\tWriting transaction rollbacked.");
                 throw e;
+            }
+            finally
+            {
+                writingTransaction?.Dispose();
             }
         }
 
         private List<string> FilterScriptsToExecute(string connectionString, string[] allScripts)
         {
             var executedScripts = new List<string>();
-            var scriptsToExecute = new List<string>();
             var selectFileName = "SELECT (FileName) FROM [dbo].[ExecutedScripts];";
 
             try
@@ -167,10 +131,7 @@ namespace DataBaseService.Utils
                         while (reader.Read())
                             executedScripts.Add(reader.GetString(0));
                 }
-                foreach (var scriptName in allScripts)
-                    if (!(executedScripts.Contains(scriptName)))
-                        scriptsToExecute.Add(scriptName);
-                return scriptsToExecute;
+                return allScripts.ToList().Except(executedScripts).ToList();
             }
             catch (Exception e)
             {
@@ -191,8 +152,6 @@ namespace DataBaseService.Utils
                     conn.Open();
                     using (var command = new SqlCommand(createDbScript, conn))
                         command.ExecuteNonQuery();
-                    // TODO replace with logs
-                    Console.WriteLine("\tTradingStation DB was created successfully or already existed.");
                     return new ExecutedScript(DateTime.Now, createDbScript);
                 }
             }
@@ -222,8 +181,6 @@ namespace DataBaseService.Utils
                     conn.Open();
                     using (var command = new SqlCommand(createTableScript.ToString(), conn))
                         command.ExecuteNonQuery();
-                    // TODO replace with logs
-                    Console.WriteLine("\tThe Scripts table was created successfully or already existed.");
                     return new ExecutedScript(DateTime.Now, createTableScript.ToString());
                 }
             }
