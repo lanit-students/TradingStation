@@ -62,7 +62,6 @@ namespace DataBaseService.Utils
                 Console.WriteLine(e.Message + $"\n\tExecution error on the [{lastScriptToExecute}] script.");
                 // TODO replace with logs
                 Console.WriteLine("\tExecution transaction rollbacked.");
-                throw e;
             }
             finally
             {
@@ -108,7 +107,6 @@ namespace DataBaseService.Utils
                     $"\n\tCouldn't write down executed scripts. Error on the [{lastScriptToWrite}] script.");
                 // TODO replace with logs
                 Console.WriteLine("\tWriting transaction rollbacked.");
-                throw e;
             }
             finally
             {
@@ -137,7 +135,6 @@ namespace DataBaseService.Utils
             {
                 // TODO replace with logs
                 Console.WriteLine(e.Message + "\n\tCouldn't receive the list of executed scripts.");
-                throw e;
             }
         }
 
@@ -159,7 +156,6 @@ namespace DataBaseService.Utils
             {
                 // TODO replace with logs
                 Console.WriteLine(e.Message + "\n\tCouldn't create the TradingStation DB.");
-                throw e;
             }
         }
 
@@ -188,7 +184,6 @@ namespace DataBaseService.Utils
             {
                 // TODO replace with logs
                 Console.WriteLine(e.Message + "\n\tCouldn't create the Scripts table.");
-                throw e;
             }
         }
     }
