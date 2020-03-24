@@ -13,6 +13,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C65FCC87-0D7A-476D-AA0D-1AFEAD12E8B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBaseService", "Services\DataBaseService\DataBaseService.csproj", "{E37485DB-4CE1-4B37-ADF5-319D13192AD7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6FA1ABB0-F5D3-4CF4-BC2A-170867AEF298} = {6FA1ABB0-F5D3-4CF4-BC2A-170867AEF298}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationService", "Services\OperationService\OperationService.csproj", "{30725E19-EA8D-4190-BEB6-46283B9E4743}"
 EndProject
@@ -42,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseServiceTests", "Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{26F9DC2D-F9B3-480D-8041-265DC04D1A2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "Clients\GUI\GUI.csproj", "{507A33F7-BD86-4B29-83B7-61A52E60D904}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUI", "Clients\GUI\GUI.csproj", "{507A33F7-BD86-4B29-83B7-61A52E60D904}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
