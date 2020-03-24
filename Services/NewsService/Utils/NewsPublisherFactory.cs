@@ -8,7 +8,7 @@ namespace NewsService.Utils
     {
         // This method create an instance of INewsPublisher depending on the newsPublisherType
 
-        public static INewsPublisher CreateNewsPublisher(NewsPublisherTypes newsPublisherType)
+        public static INewsPublisher Create(NewsPublisherTypes newsPublisherType)
         {
             switch (newsPublisherType)
             {
