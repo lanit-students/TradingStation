@@ -1,5 +1,6 @@
 ﻿@page "/userinfo"
 @using System.Security.Claims
+@using ViewModels
 @attribute [Authorize]
 
     <div class="col-12">
@@ -40,39 +41,27 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationState { get; set; }
 
-    //Class to keep user data, later we should
-    //change it and think about DTO.User
-    public class User
-    {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
-        public string DateOfBirth { get; set; }
-        public string OldPassword { get; set; }
-        public string NewPassword { get; set; }
-    }
-
     private async Task EditInfoClickHandler()
     {
         if (IsEditModeDisabled)
         {
             IsEditModeDisabled = false;
         }
-        else
+        else // Trying to save changes
         {
             IsEditModeDisabled = true;
             IsPasswordBeingChanged = false;
         }
     }
 
-    private async Task ChangePasswordClickHandler()
+    private void ChangePasswordClickHandler()
     {
         IsPasswordBeingChanged ^= true;
     }
 
     public bool IsEditModeDisabled { get; set; }
     public bool IsPasswordBeingChanged { get; set; }
-    public User user { get; set; }
+    public UserInfoViewModel user { get; set; }
     public EditContext editContext { get; set; }
 
     protected async override Task OnInitializedAsync()
@@ -81,7 +70,7 @@
         var authUser = authState.User;
         IsEditModeDisabled = true;
         IsPasswordBeingChanged = false;
-        user = new User();
+        user = new UserInfoViewModel();
         user.DateOfBirth = "7777-07-07";
         //
         //if (authUser.Identity.IsAuthenticated)
