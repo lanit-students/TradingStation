@@ -5,15 +5,16 @@ using NewsService.Utils;
 namespace NewsService.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
 
     /// <summary>
     /// To verify NewsService work in the url - field add "/NewsService/get?newsPublisherType=CentralBank"
     /// You can select only NewsService to start
     /// </summary>
-    
+
     public class NewsServiceController : ControllerBase
     {
-        [Route("[controller]/getNews")]
+        [Route("getNews")]
         [HttpGet]
 
         ///<summary>
@@ -21,7 +22,7 @@ namespace NewsService.Controllers
         /// </summary>
         public String GetNews([FromQuery] NewsPublisherTypes newsPublisherType)
         {
-            return  NewsPublisherFactory.CreateNewsPublisher(newsPublisherType).GetNews();
+            return  NewsPublisherFactory.Create(newsPublisherType).GetNews();
         }
     }
 }
