@@ -11,7 +11,7 @@ namespace AuthenticationService.Interfaces
         /// <summary>
         /// Generate token for user and put it in storage.
         /// </summary>
-        string GetToken(Guid userId);
+        UserToken GetToken(Guid userId);
 
         /// <summary>
         /// Delete token from storage.
