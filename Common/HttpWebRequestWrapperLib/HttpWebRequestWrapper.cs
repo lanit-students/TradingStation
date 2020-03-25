@@ -6,6 +6,9 @@ using System.Text;
 
 namespace HttpWebRequestWrapperLib
 {
+    /// <summary>
+    /// Wrapper of http web requests and responses that encapsulate GET, PUT POST and DELETE requests
+    /// </summary>
     public class HttpWebRequestWrapper
     {
         public HttpWebRequest httpWebRequest { get; set; }
@@ -16,15 +19,15 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.ContentType = contentType;
         }
         
-        public string Get(string url, Dictionary<string,string> dictionary)
+        public string Get(string url, Dictionary<string,string> parameters)
         {
             if (string.IsNullOrEmpty(url))
             {
                 return "Url is null or empty";
             }
-            if (!(dictionary is null) || dictionary.Count > 0)
+            if (!(parameters is null) || parameters.Count > 0)
             {
-                url = getUrlWithParams(url, dictionary);
+                url = getUrlWithParams(url, parameters);
             }
             httpWebRequest.Method = "GET";
             HttpWebRequest.Create(url);
@@ -36,19 +39,19 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Put(string url, Dictionary<string, string> dictionary, string json)
+        public string Put(string url, Dictionary<string, string> parameters, string body)
         {
             if (string.IsNullOrEmpty(url))
             {
                 return "Url is null or empty";
             }
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(body))
             {
                 return "Data in body is null or empty";
             }
-            if (!(dictionary is null) && dictionary.Count > 0)
+            if (!(parameters is null) && parameters.Count > 0)
             {
-                url = getUrlWithParams(url, dictionary);
+                url = getUrlWithParams(url, parameters);
             }
 
             httpWebRequest.Method = "PUT";
@@ -56,7 +59,7 @@ namespace HttpWebRequestWrapperLib
 
             using Stream requestStream = httpWebRequest.GetRequestStream();
             using StreamWriter streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
-            streamWriter.WriteLine(json);
+            streamWriter.WriteLine(body);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using Stream responseStream = httpWebResponse.GetResponseStream();
@@ -65,19 +68,19 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Post(string url, Dictionary<string, string> dictionary, string json)
+        public string Post(string url, Dictionary<string, string> parameters, string body)
         {
             if (string.IsNullOrEmpty(url))
             {
                 return "Url is null or empty";
             }
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(body))
             {
                 return "Data in body is null or empty";
             }
-            if (!(dictionary is null) && dictionary.Count > 0)
+            if (!(parameters is null) && parameters.Count > 0)
             {
-                url = getUrlWithParams(url, dictionary);
+                url = getUrlWithParams(url, parameters);
             }
 
             httpWebRequest.Method = "POST";
@@ -85,7 +88,7 @@ namespace HttpWebRequestWrapperLib
 
             using Stream requestStream = httpWebRequest.GetRequestStream();
             using StreamWriter streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
-            streamWriter.WriteLine(json);
+            streamWriter.WriteLine(body);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using Stream responseStream = httpWebResponse.GetResponseStream();
@@ -94,15 +97,15 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Delete(string url, Dictionary<string, string> dictionary)
+        public string Delete(string url, Dictionary<string, string> parameters)
         {
             if (string.IsNullOrEmpty(url))
             {
                 return "Url is null or empty";
             }
-            if (!(dictionary is null) && dictionary.Count > 0 )
+            if (!(parameters is null) && parameters.Count > 0 )
             {
-                url = getUrlWithParams(url, dictionary);
+                url = getUrlWithParams(url, parameters);
             }
 
             httpWebRequest.Method = "DELETE";
@@ -115,15 +118,15 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        private string getUrlWithParams(string url, Dictionary<string, string> dictionary)
+        private string getUrlWithParams(string url, Dictionary<string, string> parameters)
         {
-            if (string.IsNullOrEmpty(url) || dictionary is null || dictionary.Count < 1)
+            if (string.IsNullOrEmpty(url) || parameters is null || parameters.Count < 1)
             {
                 throw new NullReferenceException();
             }
             StringBuilder sb = new StringBuilder();
             sb.Append(url + "?");
-            foreach (KeyValuePair<string, string> keyValuePair in dictionary)
+            foreach (KeyValuePair<string, string> keyValuePair in parameters)
             {
                 sb.Append(keyValuePair.Key + "=" + keyValuePair.Value + "&");
             }
