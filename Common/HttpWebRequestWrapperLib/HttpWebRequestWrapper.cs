@@ -32,19 +32,63 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Put()
+        public string Put(string url, Dictionary<string, string> dictionary, string json)
         {
-            throw new NotImplementedException();
+            if (dictionary != null || dictionary.Count < 1)
+            {
+                url = getUrlWithParams(url, dictionary);
+            }
+
+            httpWebRequest.Method = "PUT";
+            HttpWebRequest.Create(url);
+
+            using Stream requestStream = httpWebRequest.GetRequestStream();
+            using StreamWriter streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+            streamWriter.WriteLine(json);
+
+            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using Stream responseStream = httpWebResponse.GetResponseStream();
+            using StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+            var result = streamReader.ReadToEnd();
+            return result;
         }
 
-        public string Post()
+        public string Post(string url, Dictionary<string, string> dictionary, string json)
         {
-            throw new NotImplementedException();
+            if (dictionary != null || dictionary.Count < 1)
+            {
+                url = getUrlWithParams(url, dictionary);
+            }
+
+            httpWebRequest.Method = "POST";
+            HttpWebRequest.Create(url);
+
+            using Stream requestStream = httpWebRequest.GetRequestStream();
+            using StreamWriter streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+            streamWriter.WriteLine(json);
+
+            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using Stream responseStream = httpWebResponse.GetResponseStream();
+            using StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+            var result = streamReader.ReadToEnd();
+            return result;
         }
 
-        public string Delete()
+        public string Delete(string url, Dictionary<string, string> dictionary)
         {
-            throw new NotImplementedException();
+            if (dictionary != null || dictionary.Count < 1)
+            {
+                url = getUrlWithParams(url, dictionary);
+            }
+
+            httpWebRequest.Method = "DELETE";
+            HttpWebRequest.Create(url);
+
+            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using Stream responseStream = httpWebResponse.GetResponseStream();
+            using StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+            var result = streamReader.ReadToEnd();
+            return result;
         }
 
         private string getUrlWithParams(string url, Dictionary<string, string> dictionary)
