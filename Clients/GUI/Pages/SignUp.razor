@@ -1,0 +1,59 @@
+﻿@page "/signup"
+@using GUIModels
+@using GUI.Scripts
+@inject NavigationManager NavigationManager
+
+<div class="col-12">
+    <h3><b>Sign up</b></h3>
+    <hr />
+
+    <EditForm Model="@userInput" OnValidSubmit="@TrySignUp">
+        <DataAnnotationsValidator />
+
+        @*<div class="form-group">
+                <label for="Login">Login</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Login" placeholder="ololololo" />
+            </div>
+            <br />*@
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <InputText class="form-control col-3" type="password" @bind-Value="userInput.Password" placeholder="*****" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="ConfirmPassword">Confirm Password</label>
+            <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+        </div>
+        <br />
+
+        <!--Эта штука всегда выводит ошибку в случае ConfirmPassword, а с Message бага-->
+        <ValidationSummary />
+        <br />
+
+        <input type="submit" class="form-control col-1 button btn-primary" value="Sign up" />
+
+    </EditForm>
+</div>
+
+
+@code {
+    public void TrySignUp()
+    {
+        var Status = SignUper.SignUp(userInput);
+        if (Status == System.Net.HttpStatusCode.OK)
+            NavigationManager.NavigateTo("/signin");
+        else userInput = new SignUpData();
+    }
+
+    private SignUpData userInput;
+
+    protected override void OnInitialized()
+    {
+        userInput = new SignUpData();
+    }
+}
