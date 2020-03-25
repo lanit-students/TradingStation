@@ -18,7 +18,11 @@ namespace HttpWebRequestWrapperLib
         
         public string Get(string url, Dictionary<string,string> dictionary)
         {
-            if (dictionary != null || dictionary.Count < 1)
+            if (string.IsNullOrEmpty(url))
+            {
+                return "Url is null or empty";
+            }
+            if (!(dictionary is null) || dictionary.Count > 0)
             {
                 url = getUrlWithParams(url, dictionary);
             }
@@ -34,7 +38,15 @@ namespace HttpWebRequestWrapperLib
 
         public string Put(string url, Dictionary<string, string> dictionary, string json)
         {
-            if (dictionary != null || dictionary.Count < 1)
+            if (string.IsNullOrEmpty(url))
+            {
+                return "Url is null or empty";
+            }
+            if (string.IsNullOrEmpty(json))
+            {
+                return "Data in body is null or empty";
+            }
+            if (!(dictionary is null) && dictionary.Count > 0)
             {
                 url = getUrlWithParams(url, dictionary);
             }
@@ -55,7 +67,15 @@ namespace HttpWebRequestWrapperLib
 
         public string Post(string url, Dictionary<string, string> dictionary, string json)
         {
-            if (dictionary != null || dictionary.Count < 1)
+            if (string.IsNullOrEmpty(url))
+            {
+                return "Url is null or empty";
+            }
+            if (string.IsNullOrEmpty(json))
+            {
+                return "Data in body is null or empty";
+            }
+            if (!(dictionary is null) && dictionary.Count > 0)
             {
                 url = getUrlWithParams(url, dictionary);
             }
@@ -76,7 +96,11 @@ namespace HttpWebRequestWrapperLib
 
         public string Delete(string url, Dictionary<string, string> dictionary)
         {
-            if (dictionary != null || dictionary.Count < 1)
+            if (string.IsNullOrEmpty(url))
+            {
+                return "Url is null or empty";
+            }
+            if (!(dictionary is null) && dictionary.Count > 0 )
             {
                 url = getUrlWithParams(url, dictionary);
             }
@@ -93,6 +117,10 @@ namespace HttpWebRequestWrapperLib
 
         private string getUrlWithParams(string url, Dictionary<string, string> dictionary)
         {
+            if (string.IsNullOrEmpty(url) || dictionary is null || dictionary.Count < 1)
+            {
+                throw new NullReferenceException();
+            }
             StringBuilder sb = new StringBuilder();
             sb.Append(url + "?");
             foreach (KeyValuePair<string, string> keyValuePair in dictionary)
