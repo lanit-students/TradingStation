@@ -2,8 +2,9 @@
 {
     public class UserEmailPassword
     {
-        public string Email { get; }
-        public string Password { get; }
+        UserEmailPassword() { }
+        public string Email { get; set; }
+        public string Password { get; set; }
 
         public UserEmailPassword(string email, string password)
         {
