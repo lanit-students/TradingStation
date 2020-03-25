@@ -8,26 +8,25 @@ using DTO;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using GUI.ViewModels;
 
 namespace GUI.Scripts
 {
-    public class SignUpper
+    public class SignUper
     {
-        public static HttpStatusCode SignUp(SignUpViewModel input)
+        public static HttpStatusCode SignUp(SignUpData insert)
         {
-            var output = new UserEmailPassword(input.Email, input.Password);
+            UserEmailPassword output = new UserEmailPassword(insert.Email, insert.Password);
 
-            var request = (HttpWebRequest)WebRequest.Create("https://localhost:5011/user/create");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://localhost:5002/authentication/login");
             request.Method = "POST";
-            string jsonOutput = JsonSerializer.Serialize(output);
+            string json = JsonSerializer.Serialize(insert);
             request.ContentType = "application/json";
             using (var dataStream = new StreamWriter(request.GetRequestStream()))
             {
-                dataStream.Write(jsonOutput);
+                dataStream.Write(json);
             }
 
-            var response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             return response.StatusCode;
         }
     }
