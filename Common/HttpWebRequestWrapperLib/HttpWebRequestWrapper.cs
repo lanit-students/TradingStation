@@ -25,7 +25,7 @@ namespace HttpWebRequestWrapperLib
             {
                 return "Url is null or empty";
             }
-            if (!(parameters is null) || parameters.Count > 0)
+            if (!(parameters is null) && parameters.Count > 0)
             {
                 url = getUrlWithParams(url, parameters);
             }
