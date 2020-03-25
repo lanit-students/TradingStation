@@ -1,0 +1,6 @@
+CREATE TABLE [Users] (
+    [Id]		UNIQUEIDENTIFIER NOT NULL,
+    [Email]		NVARCHAR (30)    NOT NULL,
+    [Password]  NVARCHAR (25)    NOT NULL,
+    CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
