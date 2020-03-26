@@ -17,9 +17,9 @@ namespace GUI.Scripts
         {
             UserEmailPassword output = new UserEmailPassword(insert.Email, insert.Password);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://localhost:5002/authentication/login");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://localhost:5011/user/create");
             request.Method = "POST";
-            string json = JsonSerializer.Serialize(insert);
+            string json = JsonSerializer.Serialize(output);
             request.ContentType = "application/json";
             using (var dataStream = new StreamWriter(request.GetRequestStream()))
             {
