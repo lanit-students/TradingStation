@@ -11,8 +11,8 @@ namespace HttpWebRequestWrapperLib
     /// </summary>
     public class HttpWebRequestWrapper
     {
-        public HttpWebRequest httpWebRequest { get; set; }
-        public HttpWebResponse httpWebResponse { get; set; }
+        private HttpWebRequest httpWebRequest { get; set; }
+        private HttpWebResponse httpWebResponse { get; set; }
 
         public HttpWebRequestWrapper(string contentType = "application/json")
         {
@@ -23,18 +23,16 @@ namespace HttpWebRequestWrapperLib
         {
             if (string.IsNullOrEmpty(url))
             {
-                return "Url is null or empty";
+                throw new NullReferenceException();
             }
-            if (!(parameters is null) && parameters.Count > 0)
-            {
-                url = getUrlWithParams(url, parameters);
-            }
+
+            url = getUrlWithParams(url, parameters);
             httpWebRequest.Method = "GET";
             HttpWebRequest.Create(url);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using Stream responseStream = httpWebResponse.GetResponseStream();
-            using StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+            using var responseStream = httpWebResponse.GetResponseStream();
+            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
             return result;
         }
@@ -43,27 +41,25 @@ namespace HttpWebRequestWrapperLib
         {
             if (string.IsNullOrEmpty(url))
             {
-                return "Url is null or empty";
+                throw new NullReferenceException();
             }
             if (string.IsNullOrEmpty(body))
             {
                 return "Data in body is null or empty";
             }
-            if (!(parameters is null) && parameters.Count > 0)
-            {
-                url = getUrlWithParams(url, parameters);
-            }
+
+            url = getUrlWithParams(url, parameters);
 
             httpWebRequest.Method = "PUT";
             HttpWebRequest.Create(url);
 
-            using Stream requestStream = httpWebRequest.GetRequestStream();
-            using StreamWriter streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+            using var requestStream = httpWebRequest.GetRequestStream();
+            using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
             streamWriter.WriteLine(body);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using Stream responseStream = httpWebResponse.GetResponseStream();
-            using StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+            using var responseStream = httpWebResponse.GetResponseStream();
+            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
             return result;
         }
@@ -72,27 +68,24 @@ namespace HttpWebRequestWrapperLib
         {
             if (string.IsNullOrEmpty(url))
             {
-                return "Url is null or empty";
+                throw new NullReferenceException();
             }
             if (string.IsNullOrEmpty(body))
             {
                 return "Data in body is null or empty";
             }
-            if (!(parameters is null) && parameters.Count > 0)
-            {
-                url = getUrlWithParams(url, parameters);
-            }
 
+            url = getUrlWithParams(url, parameters);
             httpWebRequest.Method = "POST";
             HttpWebRequest.Create(url);
 
-            using Stream requestStream = httpWebRequest.GetRequestStream();
-            using StreamWriter streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+            using var requestStream = httpWebRequest.GetRequestStream();
+            using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
             streamWriter.WriteLine(body);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using Stream responseStream = httpWebResponse.GetResponseStream();
-            using StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+            using var responseStream = httpWebResponse.GetResponseStream();
+            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
             return result;
         }
@@ -101,30 +94,30 @@ namespace HttpWebRequestWrapperLib
         {
             if (string.IsNullOrEmpty(url))
             {
-                return "Url is null or empty";
+                throw new NullReferenceException();
             }
-            if (!(parameters is null) && parameters.Count > 0 )
-            {
-                url = getUrlWithParams(url, parameters);
-            }
-
+            url = getUrlWithParams(url, parameters);
             httpWebRequest.Method = "DELETE";
             HttpWebRequest.Create(url);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using Stream responseStream = httpWebResponse.GetResponseStream();
-            using StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+            using var responseStream = httpWebResponse.GetResponseStream();
+            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
             return result;
         }
 
         private string getUrlWithParams(string url, Dictionary<string, string> parameters)
         {
-            if (string.IsNullOrEmpty(url) || parameters is null || parameters.Count < 1)
+            if (string.IsNullOrEmpty(url))
             {
                 throw new NullReferenceException();
             }
-            StringBuilder sb = new StringBuilder();
+            if (parameters is null || parameters.Count < 1)
+            {
+                return url;
+            }
+            var sb = new StringBuilder();
             sb.Append(url + "?");
             foreach (KeyValuePair<string, string> keyValuePair in parameters)
             {
