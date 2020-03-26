@@ -11,24 +11,25 @@ namespace HttpWebRequestWrapperLib
     /// </summary>
     public class HttpWebRequestWrapper
     {
+        public string ContentType { get; set; }
         private HttpWebRequest httpWebRequest { get; set; }
         private HttpWebResponse httpWebResponse { get; set; }
 
-        public HttpWebRequestWrapper(string contentType = "application/json")
+        public HttpWebRequestWrapper()
         {
-            httpWebRequest.ContentType = contentType;
+            ContentType = "application/json";
         }
         
-        public string Get(string url, Dictionary<string,string> parameters)
+        public string Get(string url, Dictionary<string,string> queryParams)
         {
             if (string.IsNullOrEmpty(url))
             {
                 throw new NullReferenceException();
             }
-
-            url = getUrlWithParams(url, parameters);
+            url = getUrlWithParams(url, queryParams);
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "GET";
-            HttpWebRequest.Create(url);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var responseStream = httpWebResponse.GetResponseStream();
@@ -37,17 +38,17 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Put(string url, Dictionary<string, string> parameters, string body)
+        public string Put(string url, Dictionary<string, string> queryParams, string body)
         {
             if (string.IsNullOrEmpty(url))
             {
                 throw new NullReferenceException();
             }
 
-            url = getUrlWithParams(url, parameters);
-
+            url = getUrlWithParams(url, queryParams);
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "PUT";
-            HttpWebRequest.Create(url);
             
             if (!string.IsNullOrEmpty(body))
             {
@@ -63,16 +64,17 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Post(string url, Dictionary<string, string> parameters, string body)
+        public string Post(string url, Dictionary<string, string> queryParams, string body)
         {
             if (string.IsNullOrEmpty(url))
             {
                 throw new NullReferenceException();
             }
 
-            url = getUrlWithParams(url, parameters);
+            url = getUrlWithParams(url, queryParams);
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "POST";
-            HttpWebRequest.Create(url);
 
             if (! string.IsNullOrEmpty(body))
             {
@@ -88,15 +90,16 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Delete(string url, Dictionary<string, string> parameters)
+        public string Delete(string url, Dictionary<string, string> queryParams)
         {
             if (string.IsNullOrEmpty(url))
             {
                 throw new NullReferenceException();
             }
-            url = getUrlWithParams(url, parameters);
+            url = getUrlWithParams(url, queryParams);
+            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "DELETE";
-            HttpWebRequest.Create(url);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var responseStream = httpWebResponse.GetResponseStream();
@@ -105,19 +108,19 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        private string getUrlWithParams(string url, Dictionary<string, string> parameters)
+        private string getUrlWithParams(string url, Dictionary<string, string> queryParams)
         {
             if (string.IsNullOrEmpty(url))
             {
                 throw new NullReferenceException();
             }
-            if (parameters is null || parameters.Count < 1)
+            if (queryParams is null || queryParams.Count < 1)
             {
                 return url;
             }
             var sb = new StringBuilder();
             sb.Append(url + "?");
-            foreach (KeyValuePair<string, string> keyValuePair in parameters)
+            foreach (KeyValuePair<string, string> keyValuePair in queryParams)
             {
                 sb.Append(keyValuePair.Key + "=" + keyValuePair.Value + "&");
             }
