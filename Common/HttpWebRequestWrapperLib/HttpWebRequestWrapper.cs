@@ -20,7 +20,7 @@ namespace HttpWebRequestWrapperLib
         }
         
         public string Get(string url, Dictionary<string, string> queryParams = null,
-            Dictionary<string, string> headerCollection = null)
+            Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -31,6 +31,8 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "GET";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
+            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
+
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
             // TODO: Handling custom exceptions
@@ -45,7 +47,8 @@ namespace HttpWebRequestWrapperLib
         }
 
         public string Put(string url, Dictionary<string, string> queryParams = null,
-            object body = null, Dictionary<string, string> headerCollection = null)
+            object body = null, Dictionary<string, string> headerCollection = null,
+            Dictionary<string, string> cookieContainer = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -56,6 +59,7 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "PUT";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
+            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
 
             if (! (body is null))
             {
@@ -79,7 +83,8 @@ namespace HttpWebRequestWrapperLib
         }
 
         public string Post(string url, Dictionary<string, string> queryParams = null,
-            object body = null, Dictionary<string, string> headerCollection = null)
+            object body = null, Dictionary<string, string> headerCollection = null,
+            Dictionary<string, string> cookieContainer = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -90,6 +95,7 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
+            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
 
             if (! (body is null))
             {
@@ -113,7 +119,7 @@ namespace HttpWebRequestWrapperLib
         }
 
         public string Delete(string url, Dictionary<string, string> queryParams = null,
-             Dictionary<string, string> headerCollection = null)
+             Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -124,6 +130,7 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "DELETE";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
+            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
 
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
@@ -166,6 +173,16 @@ namespace HttpWebRequestWrapperLib
                 headerCollection.Add(keyValuePair.Key, keyValuePair.Value);
             }
             return headerCollection;
+        }
+
+        private CookieContainer getCookieContainerFromDictionary(Dictionary<string, string> dictionary)
+        {
+            var cookieContainer = new CookieContainer();
+            foreach (var keyValuePair in dictionary)
+            {
+                cookieContainer.Add(new Cookie(keyValuePair.Key, keyValuePair.Value));
+            }
+            return cookieContainer;
         }
     }
 }
