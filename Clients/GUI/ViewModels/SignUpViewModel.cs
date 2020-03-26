@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GUI.ViewModels
+namespace GUI.GUIModels
 {
     /// <summary>
     /// Model for user input in SignUp page
