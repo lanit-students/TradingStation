@@ -7,6 +7,10 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
+    <PackageReference Include="MassTransit" Version="6.2.3" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="6.2.3" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
