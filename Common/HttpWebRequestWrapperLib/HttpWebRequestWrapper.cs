@@ -20,7 +20,8 @@ namespace HttpWebRequestWrapperLib
             ContentType = "application/json";
         }
         
-        public string Get(string url, Dictionary<string,string> queryParams)
+        public string Get(string url, Dictionary<string, string> queryParams = null,
+            Dictionary<string, string> headerCollection = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -30,6 +31,7 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "GET";
+            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var responseStream = httpWebResponse.GetResponseStream();
@@ -38,7 +40,8 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Put(string url, Dictionary<string, string> queryParams, string body)
+        public string Put(string url, Dictionary<string, string> queryParams = null,
+            string body = null, Dictionary<string, string> headerCollection = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -49,7 +52,8 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "PUT";
-            
+            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
+
             if (!string.IsNullOrEmpty(body))
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
@@ -64,7 +68,8 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Post(string url, Dictionary<string, string> queryParams, string body)
+        public string Post(string url, Dictionary<string, string> queryParams = null,
+            string body = null, Dictionary<string, string> headerCollection = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -75,6 +80,7 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "POST";
+            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
             if (! string.IsNullOrEmpty(body))
             {
@@ -90,7 +96,8 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
-        public string Delete(string url, Dictionary<string, string> queryParams)
+        public string Delete(string url, Dictionary<string, string> queryParams = null,
+             Dictionary<string, string> headerCollection = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -100,6 +107,7 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "DELETE";
+            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var responseStream = httpWebResponse.GetResponseStream();
@@ -126,6 +134,17 @@ namespace HttpWebRequestWrapperLib
             }
             sb.Remove(sb.Length - 1, 1);
             return sb.ToString();
+        }
+
+        private WebHeaderCollection getHeaderCollectionFromDictionary(Dictionary<string, string> dictionary)
+        {
+            var headerCollection = new WebHeaderCollection();
+            foreach (KeyValuePair<string, string> keyValuePair in dictionary)
+            {
+
+                headerCollection.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+            return headerCollection;
         }
     }
 }
