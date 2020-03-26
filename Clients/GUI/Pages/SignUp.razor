@@ -39,10 +39,10 @@
         var Status = SignUper.SignUp(userInput);
         if (Status == System.Net.HttpStatusCode.OK)
             NavigationManager.NavigateTo("/signin");
-        else userInput = new SignUpData();
+        else userInput = new SignUpViewModel();
     }
 
-    private SignUpData userInput;
+    private SignUpViewModel userInput;
 
     protected override void OnInitialized()
     {
