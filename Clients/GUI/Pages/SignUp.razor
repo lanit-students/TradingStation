@@ -12,6 +12,7 @@
             <div class="form-group">
                 <label for="Email">Email</label>
                 <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+                <label style=“color:red;display:@isErrorDisplayed”> @errorMessage </label>
             </div>
             <br />
             <div class="form-group">
@@ -30,7 +31,6 @@
             <input type="submit" class="form-control col-1 button btn-primary" value="Sign up" />
 
         </EditForm>
-        <label style=“color:red;display:@isErrorDisplayed”> @errorMessage </label>
     </div>
 
 
