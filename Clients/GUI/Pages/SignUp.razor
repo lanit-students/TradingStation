@@ -9,12 +9,6 @@
 
     <EditForm Model="@userInput" OnValidSubmit="@TrySignUp">
         <DataAnnotationsValidator />
-
-        @*<div class="form-group">
-                <label for="Login">Login</label>
-                <InputText class="form-control col-3" @bind-Value="userInput.Login" placeholder="ololololo" />
-            </div>
-            <br />*@
         <div class="form-group">
             <label for="Email">Email</label>
             <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
@@ -30,8 +24,6 @@
             <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
         </div>
         <br />
-
-        <!--Эта штука всегда выводит ошибку в случае ConfirmPassword, а с Message бага-->
         <ValidationSummary />
         <br />
 
