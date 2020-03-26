@@ -43,19 +43,18 @@ namespace HttpWebRequestWrapperLib
             {
                 throw new NullReferenceException();
             }
-            if (string.IsNullOrEmpty(body))
-            {
-                return "Data in body is null or empty";
-            }
 
             url = getUrlWithParams(url, parameters);
 
             httpWebRequest.Method = "PUT";
             HttpWebRequest.Create(url);
-
-            using var requestStream = httpWebRequest.GetRequestStream();
-            using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
-            streamWriter.WriteLine(body);
+            
+            if (!string.IsNullOrEmpty(body))
+            {
+                using var requestStream = httpWebRequest.GetRequestStream();
+                using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+                streamWriter.WriteLine(body);
+            }
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var responseStream = httpWebResponse.GetResponseStream();
@@ -70,18 +69,17 @@ namespace HttpWebRequestWrapperLib
             {
                 throw new NullReferenceException();
             }
-            if (string.IsNullOrEmpty(body))
-            {
-                return "Data in body is null or empty";
-            }
 
             url = getUrlWithParams(url, parameters);
             httpWebRequest.Method = "POST";
             HttpWebRequest.Create(url);
 
-            using var requestStream = httpWebRequest.GetRequestStream();
-            using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
-            streamWriter.WriteLine(body);
+            if (! string.IsNullOrEmpty(body))
+            {
+                using var requestStream = httpWebRequest.GetRequestStream();
+                using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+                streamWriter.WriteLine(body);
+            }
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using var responseStream = httpWebResponse.GetResponseStream();
