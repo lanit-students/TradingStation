@@ -13,8 +13,6 @@ namespace HttpWebRequestWrapperLib
     public class HttpWebRequestWrapper
     {
         public string ContentType { get; set; }
-        private HttpWebRequest httpWebRequest { get; set; }
-        private HttpWebResponse httpWebResponse { get; set; }
 
         public HttpWebRequestWrapper()
         {
@@ -29,18 +27,17 @@ namespace HttpWebRequestWrapperLib
                 throw new NullReferenceException();
             }
             url = getUrlWithParams(url, queryParams);
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "GET";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
             // TODO: Handling custom exceptions
             if (httpWebResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new Exception("Response returned with error");
             }
-
             using var responseStream = httpWebResponse.GetResponseStream();
             using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
@@ -54,9 +51,8 @@ namespace HttpWebRequestWrapperLib
             {
                 throw new NullReferenceException();
             }
-
             url = getUrlWithParams(url, queryParams);
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "PUT";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
@@ -69,7 +65,7 @@ namespace HttpWebRequestWrapperLib
                 streamWriter.WriteLine(body);
             }
 
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
             // TODO: Handling custom exceptions
             if (httpWebResponse.StatusCode != HttpStatusCode.OK)
@@ -89,9 +85,8 @@ namespace HttpWebRequestWrapperLib
             {
                 throw new NullReferenceException();
             }
-
             url = getUrlWithParams(url, queryParams);
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
@@ -104,7 +99,7 @@ namespace HttpWebRequestWrapperLib
                 streamWriter.WriteLine(body);
             }
 
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
             // TODO: Handling custom exceptions
             if (httpWebResponse.StatusCode != HttpStatusCode.OK)
@@ -125,12 +120,12 @@ namespace HttpWebRequestWrapperLib
                 throw new NullReferenceException();
             }
             url = getUrlWithParams(url, queryParams);
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "DELETE";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
             // TODO: Handling custom exceptions
             if (httpWebResponse.StatusCode != HttpStatusCode.OK)
@@ -155,7 +150,7 @@ namespace HttpWebRequestWrapperLib
             }
             var sb = new StringBuilder();
             sb.Append(url + "?");
-            foreach (KeyValuePair<string, string> keyValuePair in queryParams)
+            foreach (var keyValuePair in queryParams)
             {
                 sb.Append(keyValuePair.Key + "=" + keyValuePair.Value + "&");
             }
@@ -166,7 +161,7 @@ namespace HttpWebRequestWrapperLib
         private WebHeaderCollection getHeaderCollectionFromDictionary(Dictionary<string, string> dictionary)
         {
             var headerCollection = new WebHeaderCollection();
-            foreach (KeyValuePair<string, string> keyValuePair in dictionary)
+            foreach (var keyValuePair in dictionary)
             {
                 headerCollection.Add(keyValuePair.Key, keyValuePair.Value);
             }
