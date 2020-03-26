@@ -15,9 +15,9 @@ namespace GUI.Scripts
     {
         public static HttpStatusCode SignUp(SignUpViewModel insert)
         {
-            UserEmailPassword output = new UserEmailPassword(insert.Email, insert.Password);
+            var output = new UserEmailPassword(insert.Email, insert.Password);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://localhost:5011/user/create");
+            var request = (HttpWebRequest)WebRequest.Create("https://localhost:5011/user/create");
             request.Method = "POST";
             string json = JsonSerializer.Serialize(output);
             request.ContentType = "application/json";
@@ -26,7 +26,7 @@ namespace GUI.Scripts
                 dataStream.Write(json);
             }
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            var response = (HttpWebResponse)request.GetResponse();
             return response.StatusCode;
         }
     }
