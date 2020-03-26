@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -32,7 +33,6 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.ContentType = ContentType;
             httpWebRequest.Method = "GET";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
-
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
             // TODO: Handling custom exceptions
@@ -48,7 +48,7 @@ namespace HttpWebRequestWrapperLib
         }
 
         public string Put(string url, Dictionary<string, string> queryParams = null,
-            string body = null, Dictionary<string, string> headerCollection = null)
+            object body = null, Dictionary<string, string> headerCollection = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -61,10 +61,11 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.Method = "PUT";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
-            if (!string.IsNullOrEmpty(body))
+            if (! (body is null))
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
                 using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+                var jsonBody = JsonConvert.SerializeObject(body);
                 streamWriter.WriteLine(body);
             }
 
@@ -82,7 +83,7 @@ namespace HttpWebRequestWrapperLib
         }
 
         public string Post(string url, Dictionary<string, string> queryParams = null,
-            string body = null, Dictionary<string, string> headerCollection = null)
+            object body = null, Dictionary<string, string> headerCollection = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -95,10 +96,11 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
-            if (! string.IsNullOrEmpty(body))
+            if (! (body is null))
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
                 using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+                var jsonBody = JsonConvert.SerializeObject(body);
                 streamWriter.WriteLine(body);
             }
 
