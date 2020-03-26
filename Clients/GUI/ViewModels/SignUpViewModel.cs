@@ -2,7 +2,7 @@
 
 namespace GUI.GUIModels
 {
-    public class SignUpData
+    public class SignUpViewModel
     {
         [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
