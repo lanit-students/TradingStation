@@ -34,6 +34,13 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            // TODO: Handling custom exceptions
+            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception("Response returned with error");
+            }
+
             using var responseStream = httpWebResponse.GetResponseStream();
             using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
@@ -62,6 +69,12 @@ namespace HttpWebRequestWrapperLib
             }
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            // TODO: Handling custom exceptions
+            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception("Response returned with error");
+            }
             using var responseStream = httpWebResponse.GetResponseStream();
             using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
@@ -90,6 +103,12 @@ namespace HttpWebRequestWrapperLib
             }
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            // TODO: Handling custom exceptions
+            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception("Response returned with error");
+            }
             using var responseStream = httpWebResponse.GetResponseStream();
             using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
@@ -110,6 +129,12 @@ namespace HttpWebRequestWrapperLib
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
 
             httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            // TODO: Handling custom exceptions
+            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception("Response returned with error");
+            }
             using var responseStream = httpWebResponse.GetResponseStream();
             using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
             var result = streamReader.ReadToEnd();
@@ -141,7 +166,6 @@ namespace HttpWebRequestWrapperLib
             var headerCollection = new WebHeaderCollection();
             foreach (KeyValuePair<string, string> keyValuePair in dictionary)
             {
-
                 headerCollection.Add(keyValuePair.Key, keyValuePair.Value);
             }
             return headerCollection;
