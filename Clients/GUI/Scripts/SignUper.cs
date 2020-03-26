@@ -13,7 +13,7 @@ namespace GUI.Scripts
 {
     public class SignUper
     {
-        public static HttpStatusCode SignUp(SignUpData insert)
+        public static HttpStatusCode SignUp(SignUpViewModel insert)
         {
             UserEmailPassword output = new UserEmailPassword(insert.Email, insert.Password);
 
