@@ -1,5 +1,4 @@
 ﻿using DTO;
-using System.Net;
 
 namespace UserService.Interfaces
 {

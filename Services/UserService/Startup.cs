@@ -1,10 +1,8 @@
-using System;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using UserService.Utils;
 using UserService.Commands;
 using UserService.Interfaces;
 

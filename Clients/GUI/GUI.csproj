@@ -5,9 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.Modal" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.0-preview.1.20124.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.2.0-preview2.20160.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.2.0-preview3.20168.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
   </ItemGroup>
 
 </Project>

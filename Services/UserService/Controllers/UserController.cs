@@ -2,7 +2,6 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using IDeleteUserUserService.Interfaces;
 using DTO;
-using System.Net;
 using UserService.Interfaces;
 
 namespace UserService.Controllers

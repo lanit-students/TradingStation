@@ -1,0 +1,38 @@
+﻿<div class="simple-form">
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <input type="text" class="input-group-text" value="@user.Name" />
+    </div>
+    <div class="form-group">
+        <label for="Surname">Surname:</label>
+        <input type="text" class="input-group-text" value="@user.Surname" />
+    </div>
+    <div class="form-group">
+        <label for="Birthday">Birthday:</label>
+        <input type="date" class="input-group-text" value="@user.DateOfBirth" />
+    </div>
+    <br />
+    <input type="button" @onclick="@SaveDataClickHandler" class="form-control col-3 button btn-primary" value="Save" />
+</div>
+
+@code {
+    [Parameter]
+    public Guid userId { get; set; }
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+    private SetUserDataViewModel user;
+
+    private void SaveDataClickHandler()
+    {
+        var dateOfBirth = DateTime.Parse(user.DateOfBirth);
+
+        var userInfo = new DTO.UserInfo(user.Name, user.Surname, "",dateOfBirth);
+
+        //BlazoredModal.Close(ModalResult.Ok($"Form was submitted successfully."));
+    }
+
+    protected override void OnInitialized()
+    {
+        user = new SetUserDataViewModel();
+    }
+}

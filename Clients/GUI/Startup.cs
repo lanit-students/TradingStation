@@ -1,3 +1,4 @@
+using Blazored.Modal;
 using GUI.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -5,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Net.Http;
 
 namespace GUI
 {
@@ -24,6 +24,8 @@ namespace GUI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddBlazoredModal();
 
             services.AddScoped<AuthStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(
