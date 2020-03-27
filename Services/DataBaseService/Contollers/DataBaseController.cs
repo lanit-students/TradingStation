@@ -9,11 +9,11 @@ using DataBaseService.DbModels;
 
 namespace DataBaseService.Contollers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class DataBaseController : ControllerBase
     {
-        [Route("create_user")]
+        [Route("CreateUser")]
         [HttpPost]
         public void CreateUser([FromBody] UserEmailPassword userIn, [FromServices] DataBaseContext db)
         {

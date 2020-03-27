@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Interfaces\" />
     <Folder Include="Utils\MigrationScripts\24.03.2020\" />
   </ItemGroup>
 
