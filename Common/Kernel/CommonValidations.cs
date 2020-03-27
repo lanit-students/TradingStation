@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Net.Mail;
 using Kernel.Properties;
 
 namespace Kernel
@@ -13,5 +13,22 @@ namespace Kernel
                 throw new Exception(Errors.IdCanNotBeLessThanZero);
             }
         }
+        
+        public static void ValidateEmail(string email)
+        {
+            try
+            {
+                var addr = new MailAddress(email);
+                if (addr.Address != email)
+                {
+                    throw new Exception(Errors.EmailCanNotBeNullEmptyOrNotEmailFormat);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
     }
 }

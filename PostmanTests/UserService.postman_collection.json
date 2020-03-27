@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "ab1b6a8d-c603-4486-bfca-e25d1c3ef2c7",
+		"name": "UserService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "DeleteUser",
+			"item": [
+				{
+					"name": "DeleteUserSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c6bc62f6-df03-47ef-b20c-56ee4834ea6f",
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5011/UserService/delete?userId=C8E3BC62-8D33-421C-9191-5DA3F12070C4",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5011",
+							"path": [
+								"UserService",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "C8E3BC62-8D33-421C-9191-5DA3F12070C4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

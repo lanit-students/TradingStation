@@ -70,6 +70,15 @@ namespace Kernel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email is null, empty or not match email address format..
+        /// </summary>
+        public static string EmailCanNotBeNullEmptyOrNotEmailFormat {
+            get {
+                return ResourceManager.GetString("EmailCanNotBeNullEmptyOrNotEmailFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ID can&apos;t be less than 0..
         /// </summary>
         public static string IdCanNotBeLessThanZero {

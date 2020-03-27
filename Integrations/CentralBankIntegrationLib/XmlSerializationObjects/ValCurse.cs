@@ -13,6 +13,6 @@ namespace CentralBankIntegrationLib.XmlSerializationObjects
         [XmlElement("Valute")]
         public List<Valute> Valutes { get; set; }
 
-        public List<string> TopValutesCharCode => new List<string> { "EUR", "USD", "GBP", "CNY", "JPY" };
+        public List<string> TopValutesCharCode => new List<string> {  };
     }
 }
