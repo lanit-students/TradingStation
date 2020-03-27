@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 
 namespace HttpWebRequestWrapperLib
 {
@@ -65,8 +65,8 @@ namespace HttpWebRequestWrapperLib
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
                 using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
-                var jsonBody = JsonConvert.SerializeObject(body);
-                streamWriter.WriteLine(body);
+                string jsonBody = JsonSerializer.Serialize(body);
+                streamWriter.WriteLine(jsonBody);
             }
 
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -101,8 +101,8 @@ namespace HttpWebRequestWrapperLib
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
                 using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
-                var jsonBody = JsonConvert.SerializeObject(body);
-                streamWriter.WriteLine(body);
+                string jsonBody = JsonSerializer.Serialize(body);
+                streamWriter.WriteLine(jsonBody);
             }
 
             var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
