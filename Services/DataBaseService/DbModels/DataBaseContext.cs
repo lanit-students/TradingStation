@@ -25,5 +25,10 @@ namespace DataBaseService
             optionsBuilder.UseSqlServer(connectionStringTradingStation);            
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserConfigure());
+        }
+
     }
 }
