@@ -167,6 +167,9 @@ namespace HttpWebRequestWrapperLib
 
         private WebHeaderCollection getHeaderCollectionFromDictionary(Dictionary<string, string> dictionary)
         {
+            if (dictionary == null)
+                return new WebHeaderCollection();
+
             var headerCollection = new WebHeaderCollection();
             foreach (var keyValuePair in dictionary)
             {
@@ -177,6 +180,9 @@ namespace HttpWebRequestWrapperLib
 
         private CookieContainer getCookieContainerFromDictionary(Dictionary<string, string> dictionary)
         {
+            if (dictionary == null)
+                return new CookieContainer();
+
             var cookieContainer = new CookieContainer();
             foreach (var keyValuePair in dictionary)
             {
