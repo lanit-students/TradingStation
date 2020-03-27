@@ -41,7 +41,7 @@
 
     public void TrySignUp()
     {
-        var statusCode = SignUper.SignUp(userInput);
+        var statusCode = SignUpper.SignUp(userInput);
         if (statusCode == System.Net.HttpStatusCode.OK)
             NavigationManager.NavigateTo("/signin");
         else
