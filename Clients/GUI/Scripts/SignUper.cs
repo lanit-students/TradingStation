@@ -8,17 +8,17 @@ namespace GUI.Scripts
 {
     public class SignUper
     {
-        public static HttpStatusCode SignUp(SignUpViewModel insert)
+        public static HttpStatusCode SignUp(SignUpViewModel input)
         {
-            var output = new UserEmailPassword(insert.Email, insert.Password);
+            var output = new UserEmailPassword(input.Email, input.Password);
 
             var request = (HttpWebRequest)WebRequest.Create("https://localhost:5011/user/create");
             request.Method = "POST";
-            string json = JsonSerializer.Serialize(output);
+            string jsonOutput = JsonSerializer.Serialize(output);
             request.ContentType = "application/json";
             using (var dataStream = new StreamWriter(request.GetRequestStream()))
             {
-                dataStream.Write(json);
+                dataStream.Write(jsonOutput);
             }
 
             var response = (HttpWebResponse)request.GetResponse();
