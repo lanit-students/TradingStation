@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace GUI.Scripts
 {
-    public class SignUper
+    public class SignUpper
     {
         public static HttpStatusCode SignUp(SignUpViewModel input)
         {
