@@ -61,7 +61,7 @@ namespace UserService.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /UserService/post.
+        ///   Looks up a localized string similar to /user/create.
         /// </summary>
         public static string CreateUser {
             get {
