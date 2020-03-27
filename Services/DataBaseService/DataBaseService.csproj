@@ -16,9 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Utils\MigrationScripts\24.03.2020\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Commands\" />
-    <Folder Include="Mappers\" />
   </ItemGroup>
 
 </Project>

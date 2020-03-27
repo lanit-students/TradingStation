@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.DbModels
 {
-    public class UserConfigure : IEntityTypeConfiguration<DbUser>
+    public class UserConfiguration : IEntityTypeConfiguration<DbUser>
     {
         public void Configure(EntityTypeBuilder<DbUser> builder)
-        {
-            builder.ToTable("Mobiles").HasKey(p => p.Id);
-            builder.Property(p => p.Email).IsRequired().HasMaxLength(30);
+        {            
         }
     }
 }
