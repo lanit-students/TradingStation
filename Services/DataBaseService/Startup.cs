@@ -5,14 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using DataBaseService.Utils;
+using DataBaseService.Interfaces;
+using DTO;
+using DataBaseService.DbModels;
 
 namespace DataBaseService
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
-        
+        public IConfiguration Configuration { get; }       
 
         public Startup(IConfiguration configuration)
         {
@@ -24,6 +25,8 @@ namespace DataBaseService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataBaseContext>();
+            services.AddTransient<IRepository<UserEmailPassword>>();
+            services.AddTransient<IMapper<UserEmailPassword, DbUser>>();
             var migrationEngine = new MigrationEngine(Configuration);
             migrationEngine.Migrate();
         }
