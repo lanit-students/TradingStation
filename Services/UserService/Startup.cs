@@ -21,7 +21,8 @@ namespace UserService
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
-            services.AddSingleton<HttpWebRequestWrapper,H>()
+
+            services.AddSingleton<HttpWebRequestWrapper, HttpWebRequestWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

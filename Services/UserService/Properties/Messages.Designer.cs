@@ -70,6 +70,15 @@ namespace UserService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id is invalid.
+        /// </summary>
+        public static string IdError {
+            get {
+                return ResourceManager.GetString("IdError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Token is invalid.
         /// </summary>
         public static string TokenError {

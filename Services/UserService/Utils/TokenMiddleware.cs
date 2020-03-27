@@ -1,18 +1,23 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using DTO;
+using HttpWebRequestWrapperLib;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using UserService.Properties;
 
 namespace UserService.Utils
 {
     public class TokenMiddleware
     {
-        private RequestDelegate next;
+        private readonly RequestDelegate next;
+        private readonly HttpWebRequestWrapper httpWebWrapper;
 
-        public TokenMiddleware(RequestDelegate next)
+        public TokenMiddleware(RequestDelegate next, [FromServices] HttpWebRequestWrapper httpWebWrapper)
         {
             this.next = next;
+            this.httpWebWrapper = httpWebWrapper;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -24,8 +29,20 @@ namespace UserService.Utils
                 return;
             }
 
-            string token = context.Request.Query["token"];
-            string userId = context.Request.Query["userId"];
+            string token = context.Request.Headers["token"];
+            Guid userId;
+            try
+            {
+                userId = Guid.Parse(context.Request.Headers["userId"]);
+            }
+            catch
+            {
+                //TODO change on custom exception
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(Messages.IdError);
+                return;
+            }
+
 
             if (CheckToken(userId, token))
             {
@@ -38,23 +55,19 @@ namespace UserService.Utils
             }
         }
 
-        private bool CheckToken(string userId, string token)
+        private bool CheckToken(Guid userId, string token)
         {
             string ans;
-            using (var client = new HttpClient())
+            try
             {
-                try
-                {
-                    //TODO replace way of communication
-                    ans = client
-                        .GetStringAsync($"https://localhost:5001/Authentication/check?userId={userId}&token={token}")
-                        .Result;
-                }
-                // TODO add logs
-                catch (Exception)
-                {
-                    ans = null;
-                }
+                //TODO replace way of communication
+                var userToken = new UserToken {UserId = userId, Body = token};
+                ans = httpWebWrapper.Post(Urls.AuthServiceCheckToken, null, userToken);
+            }
+            // TODO add logs
+            catch (Exception) 
+            {   
+                ans = null;
             }
             return string.Compare(ans, Messages.TokenError, StringComparison.OrdinalIgnoreCase) == 0 ;
         }
