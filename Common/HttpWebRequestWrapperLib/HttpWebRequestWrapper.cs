@@ -24,109 +24,59 @@ namespace HttpWebRequestWrapperLib
         {
             var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
             httpWebRequest.Method = "GET";
-
+            
             var result = getResultFromRequest(httpWebRequest);
             
             return result;
-        }       
-
+        }
 
         public string Put(string url, Dictionary<string, string> queryParams = null,
-            object body = null, Dictionary<string, string> headerCollection = null,
-            Dictionary<string, string> cookieContainer = null)
+           object body = null, Dictionary<string, string> headerCollection = null,
+           Dictionary<string, string> cookieContainer = null)
         {
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new NullReferenceException();
-            }
-            url = getUrlWithParams(url, queryParams);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = ContentType;
+            var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
             httpWebRequest.Method = "PUT";
-            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
-            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
 
-            if (! (body is null))
+            if (!(body is null))
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
                 using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
                 string jsonBody = JsonSerializer.Serialize(body);
                 streamWriter.WriteLine(jsonBody);
             }
+            var result = getResultFromRequest(httpWebRequest);
 
-            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-            // TODO: Handling custom exceptions
-            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
-            {
-                throw new Exception("Response returned with error");
-            }
-            using var responseStream = httpWebResponse.GetResponseStream();
-            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
-            var result = streamReader.ReadToEnd();
             return result;
         }
+
 
         public string Post(string url, Dictionary<string, string> queryParams = null,
             object body = null, Dictionary<string, string> headerCollection = null,
             Dictionary<string, string> cookieContainer = null)
         {
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new NullReferenceException();
-            }
-            url = getUrlWithParams(url, queryParams);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = ContentType;
+            var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
             httpWebRequest.Method = "POST";
-            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
-            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
 
-            if (! (body is null))
+            if (!(body is null))
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
                 using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
                 string jsonBody = JsonSerializer.Serialize(body);
                 streamWriter.WriteLine(jsonBody);
             }
+            var result = getResultFromRequest(httpWebRequest);
 
-            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-            // TODO: Handling custom exceptions
-            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
-            {
-                throw new Exception("Response returned with error");
-            }
-            using var responseStream = httpWebResponse.GetResponseStream();
-            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
-            var result = streamReader.ReadToEnd();
             return result;
         }
 
         public string Delete(string url, Dictionary<string, string> queryParams = null,
              Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
         {
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new NullReferenceException();
-            }
-            url = getUrlWithParams(url, queryParams);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = ContentType;
+            var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
             httpWebRequest.Method = "DELETE";
-            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
-            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
 
-            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            string result = getResultFromRequest(httpWebRequest);
 
-            // TODO: Handling custom exceptions
-            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
-            {
-                throw new Exception("Response returned with error");
-            }
-            using var responseStream = httpWebResponse.GetResponseStream();
-            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
-            var result = streamReader.ReadToEnd();
             return result;
         }
 
@@ -141,7 +91,10 @@ namespace HttpWebRequestWrapperLib
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
             httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
-            httpWebRequest.ContentType = ContentType;
+            if (httpWebRequest.ContentType is null)
+            {
+                httpWebRequest.ContentType = ContentType;
+            }
             return httpWebRequest;
         }
 
