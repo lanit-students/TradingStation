@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.Interfaces
 {
-    interface IMapper<B, Db>
+    public interface IMapper<B, Db>
     {
-        Db CreateMap(Db data);
-        B CreateRemap(B data);
+        Db CreateMap(B data);
+        B CreateRemap(Db data);
     }
 }
