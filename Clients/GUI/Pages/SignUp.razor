@@ -37,6 +37,8 @@
 @code {
     bool isErrorDisplayed = false;
     string errorMessage;
+    private SignUpViewModel userInput;
+
     public void TrySignUp()
     {
         var Status = SignUper.SignUp(userInput);
@@ -49,8 +51,6 @@
             errorMessage = "данный e-mail уже занят";
         }
     }
-
-    private SignUpViewModel userInput;
 
     protected override void OnInitialized()
     {
