@@ -31,6 +31,7 @@ namespace DataBaseService
         {            
             var migrationEngine = new MigrationEngine(Configuration);
             migrationEngine.Migrate();
+            services.AddControllers();
             services.AddDbContext<DataBaseContext>();
             services.AddTransient<IRepository<UserEmailPassword>, UserRepository>();
             services.AddTransient<IMapper<UserEmailPassword, DbUser>, UserMapper>();
