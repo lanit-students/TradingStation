@@ -7,8 +7,8 @@ using NewsService.Utils;
 namespace NewsService.Controllers
 {
     /// <summary>
-    /// To verify NewsService work in the url - field add "/NewsService/get?newsPublisherType=CentralBank"
-    /// You can select only NewsService to start
+    /// To verify News work in the url - field add "/News/currencies?newsPublisherType=CentralBank"
+    /// You can select only News to start
     /// </summary>
     [ApiController]
     [Route("[controller]")]
