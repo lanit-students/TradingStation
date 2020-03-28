@@ -49,7 +49,7 @@ namespace CentralBankIntegration
                 StreamReader streamReader = new StreamReader(responseStream);
                 data = (DataFromCentralBank) serializer.Deserialize(streamReader);
             }
-            
+
             //Todo: past exception
             //if (data == nul) {}
 
