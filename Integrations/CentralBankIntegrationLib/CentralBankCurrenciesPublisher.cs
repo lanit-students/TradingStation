@@ -27,10 +27,6 @@ namespace CentralBankIntegration
         public List<ExchangeRate> GetCurrencies()
         {
             List<ExchangeRate> rates = new List<ExchangeRate>();
-            //Parallel.For(0, data.Currencies.Count, (int i) =>
-            //{
-            //    rates.Add(new ExchangeRate { CurrencyCode = data[i].CharId, Value = data[i].DigitValue });
-            //});
 
             for(int i = 0; i < data.Currencies.Count; i++)
             {

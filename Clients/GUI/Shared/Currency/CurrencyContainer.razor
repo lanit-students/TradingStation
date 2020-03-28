@@ -26,6 +26,12 @@
             }
         }
     }
+    @if (CurrencyList.Count == 0)
+    {
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    }
 }
 
 @code {
@@ -37,7 +43,7 @@
     protected override async Task OnInitializedAsync()
     {
         string uri = "https://localhost:44384/NewsService/currencies?newsPublisherType=CentralBank";
-        HttpClient client = new HttpClient();        
+        HttpClient client = new HttpClient();
         Currencies = await client.GetJsonAsync<Currency[]>(uri);
     }
 }
