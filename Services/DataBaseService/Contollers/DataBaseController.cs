@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DTO;
 using DataBaseService.DbModels;
+using DataBaseService.Interfaces;
 
 namespace DataBaseService.Contollers
 {
@@ -15,12 +16,9 @@ namespace DataBaseService.Contollers
     {
         [Route("CreateUser")]
         [HttpPost]
-        public void CreateUser([FromBody] UserEmailPassword userIn, [FromServices] DataBaseContext db)
+        public void CreateUser([FromBody] UserEmailPassword userIn, [FromServices] ICommand<UserEmailPassword> command)
         {
-            var newUser = new DbUser { Id = Guid.NewGuid(), Email = userIn.Email, Password = userIn.Password };
-
-            db.Users.Add(newUser);
-            db.SaveChanges();
+            command.Execute(userIn);            
         }
     }
 }
