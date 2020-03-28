@@ -69,7 +69,7 @@ namespace AuthenticationServiceTests.Validators
         {
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordTooShortEmailOk));
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's length must be from 5 to 500 symbols.");
+            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's length must be from 5 to 50 symbols.");
 
             Assert.IsNotNull(expectedError);
         }
@@ -79,7 +79,7 @@ namespace AuthenticationServiceTests.Validators
         {
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordTooLongEmailOk));
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's length must be from 5 to 500 symbols.");
+            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's length must be from 5 to 50 symbols.");
 
             Assert.IsNotNull(expectedError);
         }
