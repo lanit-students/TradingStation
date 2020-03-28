@@ -9,9 +9,9 @@ namespace Interfaces
     public interface INewsPublisher
     {
         /// <summary>
-        /// Returned string representation of the latest news from publisher
+        /// Returned currencies from publisher
         /// </summary>
-        /// <returns></returns>
-        List<ExchangeRate> GetNews();
+        /// <returns>List with currencies</returns>
+        List<ExchangeRate> GetCurrencies();
     }
 }

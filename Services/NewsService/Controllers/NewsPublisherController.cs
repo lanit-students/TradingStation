@@ -16,15 +16,15 @@ namespace NewsService.Controllers
 
     public class NewsServiceController : ControllerBase
     {
-        [Route("getNews")]
+        [Route("currencies")]
         [HttpGet]
 
         ///<summary>
         /// Return news depending on a publisher type
         /// </summary>
-        public List<ExchangeRate> GetNews([FromQuery] NewsPublisherTypes newsPublisherType)
+        public List<ExchangeRate> GetCurrencies([FromQuery] NewsPublisherTypes newsPublisherType)
         {
-            return  NewsPublisherFactory.Create(newsPublisherType).GetNews();
+            return  NewsPublisherFactory.Create(newsPublisherType).GetCurrencies();
         }
     }
 }
