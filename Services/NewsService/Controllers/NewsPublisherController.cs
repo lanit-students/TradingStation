@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using NewsService.Utils;
+using System.Collections.Generic;
+using DTO;
 
 namespace NewsService.Controllers
 {
@@ -20,7 +22,7 @@ namespace NewsService.Controllers
         ///<summary>
         /// Return news depending on a publisher type
         /// </summary>
-        public String GetNews([FromQuery] NewsPublisherTypes newsPublisherType)
+        public List<ExchangeRate> GetNews([FromQuery] NewsPublisherTypes newsPublisherType)
         {
             return  NewsPublisherFactory.Create(newsPublisherType).GetNews();
         }

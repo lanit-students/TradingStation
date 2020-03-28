@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using GUI.Shared.Currency 
+
+@inherits LayoutComponentBase
 
 <div class="sidebar">
     <NavMenu />
@@ -7,5 +9,14 @@
 <div class="main">
     <div class="content px-4">
         @Body
+    </div>
+</div>
+
+<div class="newsbar sidebar">
+    <div class="newsbar-item currencies">
+        <CurrencyContainer Tag="Place.NewsBar"/>
+    </div>
+    <div class="newsbar-item news">
+        News
     </div>
 </div>

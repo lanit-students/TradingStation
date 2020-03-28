@@ -1,4 +1,7 @@
-﻿namespace Interfaces
+﻿using DTO;
+using System.Collections.Generic;
+
+namespace Interfaces
 {
     /// <summary>
     /// An interface for each news publisher
@@ -9,6 +12,6 @@
         /// Returned string representation of the latest news from publisher
         /// </summary>
         /// <returns></returns>
-        string GetNews();
+        List<ExchangeRate> GetNews();
     }
 }
