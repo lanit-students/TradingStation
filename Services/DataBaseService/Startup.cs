@@ -31,8 +31,11 @@ namespace DataBaseService
         {            
             var migrationEngine = new MigrationEngine(Configuration);
             migrationEngine.Migrate();
+
             services.AddControllers();
+
             services.AddDbContext<DataBaseContext>();
+
             services.AddTransient<IRepository<UserEmailPassword>, UserRepository>();
             services.AddTransient<IMapper<UserEmailPassword, DbUser>, UserMapper>();
             services.AddTransient<ICommand<UserEmailPassword>, CreateUserCommand>();
@@ -50,10 +53,7 @@ namespace DataBaseService
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
