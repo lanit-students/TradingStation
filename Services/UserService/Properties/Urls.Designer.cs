@@ -61,7 +61,16 @@ namespace UserService.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /UserService/post.
+        ///   Looks up a localized string similar to https://localhost:5001/Authentication/check.
+        /// </summary>
+        public static string AuthServiceCheckToken {
+            get {
+                return ResourceManager.GetString("AuthServiceCheckToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /user/create.
         /// </summary>
         public static string CreateUser {
             get {

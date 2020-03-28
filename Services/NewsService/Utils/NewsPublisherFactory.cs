@@ -15,6 +15,7 @@ namespace NewsService.Utils
                 case NewsPublisherTypes.CentralBank:
                     return new CentralBankNewsPublisher();
                 default:
+                    //TODO change on custom exception
                         throw new NotImplementedException();
             }
         }
