@@ -24,12 +24,12 @@ namespace DataBaseService
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbUser>().ToTable("Users");
-            modelBuilder.Entity<DbUser>().Property(u => u.Id).HasColumnName("Id");
-            modelBuilder.Entity<DbUser>().Property(u => u.Email).HasColumnName("Email");
-            modelBuilder.Entity<DbUser>().Property(u => u.Password).HasColumnName("Password");            modelBuilder.Entity<DbUser>().HasKey(u => u.Id);
-            
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.Entity<DbUser>().ToTable("Users");
+            //modelBuilder.Entity<DbUser>().Property(u => u.Id).HasColumnName("Id").IsRequired();
+            //modelBuilder.Entity<DbUser>().Property(u => u.Email).HasColumnName("Email").IsRequired();
+            //modelBuilder.Entity<DbUser>().Property(u => u.Password).HasColumnName("Password").IsRequired();  
+            //modelBuilder.Entity<DbUser>().HasKey(u => u.Id);            
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
     }
