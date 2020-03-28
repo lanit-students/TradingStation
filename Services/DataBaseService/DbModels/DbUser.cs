@@ -16,7 +16,7 @@ namespace DataBaseService.DbModels
         public void Configure(EntityTypeBuilder<DbUser> builder)
         {
             builder.ToTable("Users").HasKey(p => p.Id);
-            builder.Property(p => p.Id).HasColumnName("Email").IsRequired().HasMaxLength(30);
+            builder.Property(p => p.Id).HasColumnName("Id").IsRequired();
             builder.Property(p => p.Email).HasColumnName("Email").IsRequired().HasMaxLength(30);
             builder.Property(p => p.Password).HasColumnName("Password").IsRequired().HasMaxLength(25);
         }
