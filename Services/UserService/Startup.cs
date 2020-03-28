@@ -1,4 +1,5 @@
 using System;
+using HttpWebRequestWrapperLib;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +21,8 @@ namespace UserService
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
+
+            services.AddSingleton<HttpWebRequestWrapper, HttpWebRequestWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
