@@ -16,11 +16,9 @@ namespace AuthenticationServiceTests.Validators
 
         private UserEmailPassword emailInvalidFormatPasswordOk = new UserEmailPassword("ololo", "xxxxx");
 
-        private UserEmailPassword passwordInvalidFormatEmailOk = new UserEmailPassword("example@gmail.com", "/-=%");
-
         private UserEmailPassword passwordTooShortEmailOk = new UserEmailPassword("example@gmail.com", "a");
 
-        private UserEmailPassword passwordTooLongEmailOk = new UserEmailPassword("example@gmail.com", new string('c', 501));
+        private UserEmailPassword passwordTooLongEmailOk = new UserEmailPassword("example@gmail.com", new string('c', 51));
 
         private IValidator<UserEmailPassword> validator;
 
@@ -62,16 +60,6 @@ namespace AuthenticationServiceTests.Validators
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailInvalidFormatPasswordOk));
 
             var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Email address must be in valid format.");
-
-            Assert.IsNotNull(expectedError);
-        }
-
-        [Test]
-        public void UserEmailPasswordInvalidPasswordFormat()
-        {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordInvalidFormatEmailOk));
-
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password must be alphanumeric.");
 
             Assert.IsNotNull(expectedError);
         }
