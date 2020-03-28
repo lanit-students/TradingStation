@@ -13,7 +13,11 @@
 </div>
 
 <div class="newsbar sidebar">
-    <div class="newsbar-item currencies">
-        <CurrencyContainer Tag="Place.NewsBar"/>
+    <div class="newsbar-item currencies text-center">         
+        <CurrencyContainer CurrencyList="currencies"/>
     </div>
 </div>
+
+@code{
+    List<string> currencies = new List<string> { "USD", "EUR", "CNY", "JPY", "GBP" };
+}

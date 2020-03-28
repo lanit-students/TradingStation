@@ -183,11 +183,11 @@ app {
 }
 
 .newsbar {
-    width: 240px;
+    width: 120px;
     height: 100vh;
     color: #d7d7d7;
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-    padding: 3px;
+    padding: 1px;
     align-items: center;
 
     transition: 0.5s width;
@@ -195,6 +195,7 @@ app {
 
 .newsbar-item {
     color:black;
+    font-size: 0.7rem; 
     border: 1px solid #d7d7d7;
     border-radius: 5px;
     padding: 3px;
@@ -210,6 +211,10 @@ app {
     .newsbar-item .news {
         opacity: 1;
     }
+
+.item {
+    padding: 1px;
+}
 
 .n-active {
     display: none;

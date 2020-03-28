@@ -1,89 +1,43 @@
 ﻿@using System.Net.Http
 
 @if (Currencies != null)
- {
-   @switch (Tag)
+{
+    <p class="badge-dark" style="margin-bottom:1px">CURRENCY RATE</p>
+    @if (CurrencyList == null)
     {
-        case Place.Body:
+        @foreach (var cur in Currencies)
+        {
+            <div class="text-center container-fluid" style="white-space:nowrap">
+                <span class="item i-body">@cur.Id</span>
+                <span class="item i-body">@cur.Value</span>
+            </div>
+        }
+    }
+    else
+    {
+        @foreach (var cur in Currencies)
+        {
+            @if (CurrencyList.Contains(cur.Id))
             {
-                <table class="table m-2">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Code</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var cur in Currencies)
-                        {
-                            <tr>
-                                <td>@cur.Id</td>
-                                <td>@cur.Value</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                break;
+                <div class="text-center container-fluid" style="white-space:nowrap">
+                    <span class="item i-body">@cur.Id</span>
+                    <span class="item i-body">@cur.Value</span>
+                </div>
             }
-        case Place.NavBar:
-            {
-                <span class="text-white text-lg-right">
-                    <span class="m-lg-1">
-                        <span>$</span>
-                        <span>
-                            @Currencies.Where(c => c.Id == "USD").FirstOrDefault().Value
-                        </span>
-                    </span>
-                    <span class="m-lg-1">
-                        <span class="h5">€</span>
-                        <span>
-                            @Currencies.Where(c => c.Id == "EUR").FirstOrDefault().Value
-                        </span>
-                    </span>
-                </span>                
-                break;
-            }
-        case Place.NewsBar:
-            {
-                <h4 class="h4">CURRENCY RATE</h4>
-                <table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Currency</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var cur in Currencies)
-                        {
-                            @if (pop.Contains(cur.Id))
-                            {
-                                <tr>
-                                    <td>@cur.Id</td>
-                                    <td>@cur.Value</td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-                break;
-            }
-     }
- }
+        }
+    }
+}
 
 @code {
     [Parameter]
-    public Place Tag { get; set; }
-
-    List<string> pop = new List<string> { "USD", "EUR", "CNY", "JPY", "GBP" };
+    public List<string> CurrencyList { get; set; }
 
     Currency[] Currencies { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         string uri = "https://localhost:44384/NewsService/currencies?newsPublisherType=CentralBank";
-        HttpClient client = new HttpClient();
-        List<Currency> currencies = await client.GetJsonAsync<List<Currency>>(uri);
-        Currencies = currencies.ToArray();
+        HttpClient client = new HttpClient();        
+        Currencies = await client.GetJsonAsync<Currency[]>(uri);
     }
 }
