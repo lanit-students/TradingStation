@@ -6,7 +6,8 @@ namespace DataBaseService.DbModels
     public class UserConfiguration : IEntityTypeConfiguration<DbUser>
     {
         public void Configure(EntityTypeBuilder<DbUser> builder)
-        {            
+        {
+            
         }
     }
 }
