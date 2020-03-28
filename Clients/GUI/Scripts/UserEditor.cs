@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json;
-using GUI.ViewModels;
 using System.Net;
 using System.IO;
 using DTO;
@@ -16,7 +15,7 @@ namespace GUI.Scripts
         /// <param name="userInfo">Updated information</param>
         /// <param name="oldPassword">If not null, there is an attempt to change password</param>
         /// <param name="newPassword">Same as with oldPassword</param>
-        public static void EditUser(Guid id, UserInfo userInfo, string oldPassword = null, string newPassword = null)
+        public static void EditUser(Guid id, UserInformation userInfo, string oldPassword = null, string newPassword = null)
         {
             // The edit user stuff is in process in another team
             var request = (HttpWebRequest)WebRequest.Create("https://localhost:5011/user/edit");
