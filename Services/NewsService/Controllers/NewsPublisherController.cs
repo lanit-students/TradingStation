@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using NewsService.Utils;
 using System.Collections.Generic;
 using DTO;

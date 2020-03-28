@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Xml.Serialization;
-using System.Text;
 using CentralBankIntegrationLib.XmlSerializationObjects;
-using System.Linq;
 using System;
 using DTO;
-using System.Threading.Tasks;
 
 namespace CentralBankIntegration
 {
