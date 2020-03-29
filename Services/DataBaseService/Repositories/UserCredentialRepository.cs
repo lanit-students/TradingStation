@@ -17,17 +17,9 @@ namespace DataBaseService.Repositories
         }
         public void Create(UserEmailPassword data)
         {
-            try
-            {
-                dbContext.Add(mapper.CreateMap(data));
-                dbContext.SaveChanges();
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message + "Can`t add user");
-            }
+            dbContext.Add(mapper.CreateMap(data));
+            dbContext.SaveChanges();
         }
-
     }
 }
 
