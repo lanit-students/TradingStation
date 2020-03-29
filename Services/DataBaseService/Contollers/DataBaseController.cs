@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DTO;
 using DataBaseService.Interfaces;
+using System;
 
 namespace DataBaseService.Contollers
 {
@@ -10,9 +11,13 @@ namespace DataBaseService.Contollers
     {
         [Route("CreateUser")]
         [HttpPost]
-        public void CreateUser([FromBody] UserEmailPassword userIn, [FromServices] ICommand<UserEmailPassword> command)
-        {            
-            command.Execute(userIn);            
+        public void CreateUser([FromServices] ICommand<UserEmailPassword> command, [FromBody] UserEmailPassword user)
+        {
+            if (user.Email == null && user.PasswordHash == null)
+            {
+                throw new Exception("Not correct data");
+            }
+            command.Execute(user);
         }
     }
 }
