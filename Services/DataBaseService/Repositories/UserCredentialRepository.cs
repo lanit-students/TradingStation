@@ -1,6 +1,7 @@
 ﻿using DataBaseService.DbModels;
 using DataBaseService.Interfaces;
 using DTO;
+using System;
 
 namespace DataBaseService.Repositories
 {
@@ -16,8 +17,15 @@ namespace DataBaseService.Repositories
         }
         public void Create(UserEmailPassword data)
         {
-            dbContext.Add(mapper.CreateMap(data));
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.Add(mapper.CreateMap(data));
+                dbContext.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message + "Can`t add user");
+            }
         }
 
     }
