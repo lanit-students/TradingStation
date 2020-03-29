@@ -1,6 +1,7 @@
 ﻿using DataBaseService.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Reflection;
 
 namespace DataBaseService
@@ -20,8 +21,14 @@ namespace DataBaseService
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionStringTradingStation = configuration.GetConnectionString("TradingStationString");
-
-            optionsBuilder.UseSqlServer(connectionStringTradingStation);            
+            try
+            {
+                optionsBuilder.UseSqlServer(connectionStringTradingStation);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message + "Something went wrong");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
