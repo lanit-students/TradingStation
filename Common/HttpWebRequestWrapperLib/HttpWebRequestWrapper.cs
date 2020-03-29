@@ -18,15 +18,15 @@ namespace HttpWebRequestWrapperLib
         {
             ContentType = "application/json";
         }
-        
+
         public string Get(string url, Dictionary<string, string> queryParams = null,
             Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
         {
             var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
             httpWebRequest.Method = "GET";
-            
+
             var result = getResultFromRequest(httpWebRequest);
-            
+
             return result;
         }
 
@@ -48,7 +48,6 @@ namespace HttpWebRequestWrapperLib
 
             return result;
         }
-
 
         public string Post(string url, Dictionary<string, string> queryParams = null,
             object body = null, Dictionary<string, string> headerCollection = null,
@@ -135,7 +134,7 @@ namespace HttpWebRequestWrapperLib
         private WebHeaderCollection getHeaderCollectionFromDictionary(Dictionary<string, string> dictionary)
         {
             var headerCollection = new WebHeaderCollection();
-            if (! (dictionary is null || dictionary.Count < 1))
+            if (!(dictionary is null || dictionary.Count < 1))
             {
                 foreach (var keyValuePair in dictionary)
                 {

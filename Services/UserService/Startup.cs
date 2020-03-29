@@ -1,4 +1,3 @@
-using System;
 using HttpWebRequestWrapperLib;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;

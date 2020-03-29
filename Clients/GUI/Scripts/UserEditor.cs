@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Text.Json;
-using System.Net;
-using System.IO;
 using DTO;
 
 namespace GUI.Scripts
@@ -17,23 +14,9 @@ namespace GUI.Scripts
         /// <param name="newPassword">Same as with oldPassword</param>
         public static void EditUser(Guid id, UserInformation userInfo, string oldPassword = null, string newPassword = null)
         {
-            // The edit user stuff is in process in another team
-            var request = (HttpWebRequest)WebRequest.Create("https://localhost:5011/user/edit");
-            request.Method = "POST";
-            var jsonOutput = JsonSerializer.Serialize(userInfo);
-            request.ContentType = "application/json";
-            using (var dataStream = new StreamWriter(request.GetRequestStream()))
-            {
-                dataStream.Write(jsonOutput);
-            }
-
-            var response = (HttpWebResponse)request.GetResponse();
-            
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                // TODO: add custom exceptions
-                throw new Exception();
-            }
+            // I don't want to try creating any implementation here because
+            // this command has not been implemented in UserService yet
+            // so there's no documentation for usage or anything like that.
         }
     }
 }
