@@ -31,7 +31,7 @@ namespace DataBaseService.DbModels
                 .Property(p => p.PasswordHash)
                 .HasColumnName("PasswordHash")
                 .IsRequired()
-                .HasMaxLength(25);
+                .HasMaxLength(40);
         }
     }
 }
