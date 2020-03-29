@@ -18,6 +18,7 @@ namespace DataBaseService.Repositories
         }
         public void Create(UserEmailPassword data)
         {
+            //TOTO change to custom exception
             try
             {
                 dbContext.Add(mapper.CreateMap(data));
@@ -26,6 +27,7 @@ namespace DataBaseService.Repositories
             catch(SqlException e)
             {
                 Console.WriteLine(e.Message + $"\nCan`t add user :(");
+                throw new Exception(e.Message + $"\nCan`t add user");                
             }
         }
     }
