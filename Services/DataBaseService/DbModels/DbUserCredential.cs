@@ -26,12 +26,18 @@ namespace DataBaseService.DbModels
                 .Property(p => p.Email)
                 .HasColumnName("Email")
                 .IsRequired()
-                .HasMaxLength(30);
+                .HasMaxLength(30);            
             builder
                 .Property(p => p.PasswordHash)
                 .HasColumnName("PasswordHash")
                 .IsRequired()
                 .HasMaxLength(40);
+            builder
+                .HasIndex(p => p.Id)
+                .IsUnique();
+            builder
+                .HasIndex(p => p.Email)
+                .IsUnique();
         }
     }
 }

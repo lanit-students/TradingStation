@@ -1,6 +1,7 @@
 ﻿using DataBaseService.DbModels;
 using DataBaseService.Interfaces;
 using DTO;
+using Microsoft.Data.SqlClient;
 using System;
 
 namespace DataBaseService.Repositories
@@ -17,8 +18,15 @@ namespace DataBaseService.Repositories
         }
         public void Create(UserEmailPassword data)
         {
-            dbContext.Add(mapper.CreateMap(data));
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.Add(mapper.CreateMap(data));
+                dbContext.SaveChanges();
+            }
+            catch(SqlException e)
+            {
+                Console.WriteLine(e.Message + $"\nCan`t add user :(");
+            }
         }
     }
 }

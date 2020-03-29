@@ -13,18 +13,11 @@ namespace DataBaseService.Contollers
         [HttpPost]
         public void CreateUser([FromServices] ICommand<UserEmailPassword> command, [FromBody] UserEmailPassword user)
         {
-            if (user.PasswordHash == null && user.Email == null)
+            if (user.PasswordHash == null || user.Email == null)
             {
                 throw new Exception("Not correct data");
             }
-            try
-            {
-                command.Execute(user);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + "Can`t add user");
-            }
+            command.Execute(user);
         }
     }
 }
