@@ -13,6 +13,7 @@ namespace DataBaseService.Contollers
         [HttpPost]
         public void CreateUser([FromServices] ICommand<UserEmailPassword> command, [FromBody] UserEmailPassword user)
         {
+            //TODO Change to custom exception
             if (user.PasswordHash == null || user.Email == null)
             {
                 throw new Exception("Not correct data");

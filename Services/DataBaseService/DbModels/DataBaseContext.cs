@@ -20,6 +20,7 @@ namespace DataBaseService
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //TODO change to custom exceptions
             var connectionStringTradingStation = configuration.GetConnectionString("TradingStationString");
             try
             {
@@ -28,6 +29,7 @@ namespace DataBaseService
             catch(Exception e)
             {
                 Console.WriteLine(e.Message + "Something went wrong");
+                throw new Exception(e.Message + "Connection was failed");
             }
         }
 

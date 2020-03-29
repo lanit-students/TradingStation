@@ -37,7 +37,8 @@ namespace DataBaseService.DbModels
                 .IsUnique();
             builder
                 .HasIndex(p => p.Email)
-                .IsUnique();
+                .IsUnique()
+                .IsClustered();
         }
     }
 }
