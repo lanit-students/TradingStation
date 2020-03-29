@@ -16,7 +16,7 @@ namespace DataBaseService.DbModels
         public void Configure(EntityTypeBuilder<DbUserCredential> builder)
         {
             builder
-                .ToTable("Users")
+                .ToTable("UsersCredentials")
                 .HasKey(p => p.Id);
             builder
                 .Property(p => p.Id)
