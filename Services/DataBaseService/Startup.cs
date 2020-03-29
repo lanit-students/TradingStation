@@ -36,8 +36,8 @@ namespace DataBaseService
 
             services.AddDbContext<DataBaseContext>();
 
-            services.AddTransient<IRepository<UserEmailPassword>, UserRepository>();
-            services.AddTransient<IMapper<UserEmailPassword, DbUser>, UserMapper>();
+            services.AddTransient<IRepository<UserEmailPassword>, UserCredentialRepository>();
+            services.AddTransient<IMapper<UserEmailPassword, DbUserCredential>, UserCredentialMapper>();
             services.AddTransient<ICommand<UserEmailPassword>, CreateUserCommand>();
         }
 

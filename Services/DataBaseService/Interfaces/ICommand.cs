@@ -1,11 +1,11 @@
 ﻿namespace DataBaseService.Interfaces
 {
-    public interface ICommand<I>
+    public interface ICommand<Input>
     {
-        void Execute(I Data);
-    }
-    public interface ICommand<in I, out T>
+        void Execute(Input Data);
+    }  
+    public interface ICommand<in Input, out Output>
     {
-        T Execute(I data);
+        Output Execute(Input data);
     }    
 }

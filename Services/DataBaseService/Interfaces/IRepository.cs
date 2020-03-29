@@ -1,7 +1,7 @@
 ﻿namespace DataBaseService.Interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<Input>
     {
-        void Create(T data);
+        void Create(Input data);
     }
 }

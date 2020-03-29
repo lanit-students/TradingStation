@@ -7,9 +7,10 @@ namespace DataBaseService
 {
     public class DataBaseContext: DbContext
     {
-        public DbSet<DbUser> Users { get; set; }
-
         private readonly IConfiguration configuration;
+
+        public DbSet<DbUserCredential> UsersCredentials { get; set; }
+        
 
         public DataBaseContext(IConfiguration configuration)
         {
@@ -19,6 +20,7 @@ namespace DataBaseService
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionStringTradingStation = configuration.GetConnectionString("TradingStationString");
+
             optionsBuilder.UseSqlServer(connectionStringTradingStation);            
         }
 

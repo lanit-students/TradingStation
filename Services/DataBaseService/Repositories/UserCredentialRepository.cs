@@ -4,12 +4,12 @@ using DTO;
 
 namespace DataBaseService.Repositories
 {
-    public class UserRepository : IRepository<UserEmailPassword>
+    public class UserCredentialRepository : IRepository<UserEmailPassword>
     {
-        readonly IMapper<UserEmailPassword, DbUser> mapper;
-        readonly DataBaseContext dbContext;        
+        private readonly IMapper<UserEmailPassword, DbUserCredential> mapper;
+        private readonly DataBaseContext dbContext;        
         
-        public UserRepository(IMapper<UserEmailPassword, DbUser> mapper, DataBaseContext dbContext)
+        public UserCredentialRepository(IMapper<UserEmailPassword, DbUserCredential> mapper, DataBaseContext dbContext)
         {
             this.mapper = mapper;
             this.dbContext = dbContext;

@@ -1,8 +1,8 @@
 ﻿namespace DataBaseService.Interfaces
 {
-    public interface IMapper<B, Db>
+    public interface IMapper<BusinessModel, DbModel>
     {
-        Db CreateMap(B data);
-        B CreateRemap(Db data);
+        DbModel CreateMap(BusinessModel data);
+        BusinessModel CreateRemap(DbModel data);
     }
 }

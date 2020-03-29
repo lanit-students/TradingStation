@@ -14,8 +14,4 @@
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Utils\MigrationScripts\24.03.2020\" />
-  </ItemGroup>
-
 </Project>
