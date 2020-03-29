@@ -10,9 +10,10 @@ using DataBaseService.Interfaces;
 using DataBaseService.DbModels;
 using DataBaseService.Repositories;
 using DataBaseService.Mappers;
+using DataBaseService.Commands;
 
 using DTO;
-using DataBaseService.Commands;
+
 
 namespace DataBaseService
 {
