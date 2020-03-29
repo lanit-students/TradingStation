@@ -13,11 +13,9 @@ namespace AuthenticationService.Validators
                 .EmailAddress()
                 .WithMessage("Email address must be in valid format.");
 
-            RuleFor(user => user.Password)
+            RuleFor(user => user.PasswordHash)
                 .NotEmpty()
-                .WithMessage("Password must not be empty.")
-                .Length(5, 50)
-                .WithMessage("Password's length must be from 5 to 50 symbols.");
+                .WithMessage("Password must not be empty.");                
         }
     }
 }
