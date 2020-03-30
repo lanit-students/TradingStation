@@ -28,7 +28,7 @@ namespace DataBaseService.Repositories
             catch(SqlException e)
             {
                 Console.WriteLine(e.Message + "\nCan`t add user :(");
-                throw new Exception(e.Message + "\nCan`t add user");                
+                throw new Exception(e.Message + "\nCan`t add user");       
             }
         }
     }
