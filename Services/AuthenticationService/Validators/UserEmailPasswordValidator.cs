@@ -15,9 +15,9 @@ namespace AuthenticationService.Validators
 
             RuleFor(user => user.PasswordHash)
                 .NotEmpty()
-                .WithMessage("Password must not be empty.")
-                .Length(5, 50)
-                .WithMessage("Password's length must be from 5 to 50 symbols.");
+                .WithMessage("Password hash must not be empty.")
+                .Length(40)
+                .WithMessage("Password's hash length must be 40 symbols.");
         }
     }
 }

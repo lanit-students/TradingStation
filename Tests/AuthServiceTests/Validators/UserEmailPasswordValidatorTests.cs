@@ -8,17 +8,17 @@ namespace AuthenticationServiceTests.Validators
 {
     public class UserEmailPasswordValidatorTests
     {
-        private UserEmailPassword emailPasswordEmpty = new UserEmailPassword(string.Empty, string.Empty);
+        private UserEmailPassword emailPasswordHashEmpty = new UserEmailPassword(string.Empty, string.Empty);
 
-        private UserEmailPassword emailEmptyPasswordOk = new UserEmailPassword(string.Empty, "xxxxx");
+        private UserEmailPassword emailEmptyPasswordHashOk = new UserEmailPassword(string.Empty, new string('c', 40));
 
-        private UserEmailPassword passwordEmptyEmailOk = new UserEmailPassword("example@gmail.com", string.Empty);
+        private UserEmailPassword passwordHashEmptyEmailOk = new UserEmailPassword("example@gmail.com", string.Empty);
 
-        private UserEmailPassword emailInvalidFormatPasswordOk = new UserEmailPassword("ololo", "xxxxx");
+        private UserEmailPassword emailInvalidFormatPasswordHashOk = new UserEmailPassword("ololo", new string('c', 40));
 
-        private UserEmailPassword passwordTooShortEmailOk = new UserEmailPassword("example@gmail.com", "a");
+        private UserEmailPassword passwordHashTooShortEmailOk = new UserEmailPassword("example@gmail.com", "a");
 
-        private UserEmailPassword passwordTooLongEmailOk = new UserEmailPassword("example@gmail.com", new string('c', 51));
+        private UserEmailPassword passwordHashTooLongEmailOk = new UserEmailPassword("example@gmail.com", new string('c', 41));
 
         private IValidator<UserEmailPassword> validator;
 
@@ -31,13 +31,13 @@ namespace AuthenticationServiceTests.Validators
         [Test]
         public void UserEmailPasswordAllEmpty()
         {
-            Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailPasswordEmpty));
+            Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailPasswordHashEmpty));
         }
 
         [Test]
         public void UserEmailPasswordEmptyEmail()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailEmptyPasswordOk));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailEmptyPasswordHashOk));
 
             var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Email address must not be empty.");
 
@@ -47,9 +47,9 @@ namespace AuthenticationServiceTests.Validators
         [Test]
         public void UserEmailPasswordEmptyPassword()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordEmptyEmailOk));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashEmptyEmailOk));
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password must not be empty.");
+            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password hash must not be empty.");
 
             Assert.IsNotNull(expectedError);
         }
@@ -57,7 +57,7 @@ namespace AuthenticationServiceTests.Validators
         [Test]
         public void UserEmailPasswordInvalidEmailFormat()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailInvalidFormatPasswordOk));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailInvalidFormatPasswordHashOk));
 
             var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Email address must be in valid format.");
 
@@ -67,9 +67,9 @@ namespace AuthenticationServiceTests.Validators
         [Test]
         public void UserEmailPasswordTooShortPassword()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordTooShortEmailOk));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashTooShortEmailOk));
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's length must be from 5 to 50 symbols.");
+            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's hash length must be 40 symbols.");
 
             Assert.IsNotNull(expectedError);
         }
@@ -77,9 +77,9 @@ namespace AuthenticationServiceTests.Validators
         [Test]
         public void UserEmailPasswordTooLongPassword()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordTooLongEmailOk));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashTooLongEmailOk));
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's length must be from 5 to 50 symbols.");
+            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's hash length must be 40 symbols.");
 
             Assert.IsNotNull(expectedError);
         }
