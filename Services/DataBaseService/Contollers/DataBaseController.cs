@@ -14,7 +14,7 @@ namespace DataBaseService.Contollers
         public void CreateUser([FromServices] ICommand<UserEmailPassword> command, [FromBody] UserEmailPassword user)
         {
             //TODO Change to custom exception
-            if (user.PasswordHash == null || user.Email == null)
+            if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.PasswordHash))
             {
                 throw new Exception("Not correct data");
             }
