@@ -26,7 +26,7 @@ namespace DataBaseService.DbModels
                 .Property(p => p.Email)
                 .HasColumnName("Email")
                 .IsRequired()
-                .HasMaxLength(30);            
+                .HasMaxLength(50);            
             builder
                 .Property(p => p.PasswordHash)
                 .HasColumnName("PasswordHash")
