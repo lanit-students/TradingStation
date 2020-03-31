@@ -56,7 +56,8 @@
         {
             IsEditModeDisabled = false;
         }
-        else // Trying to save changes
+        // Trying to save changes
+        else
         {
             // Edit is inprocess in other team
             try
@@ -94,10 +95,12 @@
 
     private void UpdateUserModel()
     {
-        user = new UserInfoViewModel(); // TODO: get it by id (another team task)
-        user.Name = null; // to call pop-up
+        // TODO: get it by id (another team task)
+        user = new UserInfoViewModel();
+        // To call pop-up
+        user.Name = null;
         user.Surname = null;
-        // some dummy data
+        // Some dummy data
         user.DateOfBirth = DateTime.Today;
         user.Email = "john.smith@gmail.com";
     }
@@ -109,7 +112,8 @@
         PopupVisible = false;
         IsEditModeDisabled = true;
         IsPasswordBeingChanged = false;
-        currentId = new Guid(); // TODO: grab it from local storage
+        // TODO: grab it from local storage
+        currentId = new Guid();
         UpdateUserModel();
     }
 
@@ -127,7 +131,8 @@
             user.Name = (modalResult.Data as SetUserDataViewModel).Name;
             user.Surname = (modalResult.Data as SetUserDataViewModel).Surname;
             user.DateOfBirth = (modalResult.Data as SetUserDataViewModel).DateOfBirth;
-            StateHasChanged(); // notify the component
+            // Notifying the component
+            StateHasChanged();
         }
     }
 }
