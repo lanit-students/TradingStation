@@ -13,6 +13,7 @@ namespace DataBaseService.Commands
         {
             this.userRepository = userRepository;
         }
+
         public void Execute(UserEmailPassword data)
         {
             //TODO Change to custom exception
