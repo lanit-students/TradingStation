@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -19,8 +20,11 @@ namespace HttpWebRequestWrapperLib
             ContentType = "application/json";
         }
 
-        public string Get(string url, Dictionary<string, string> queryParams = null,
-            Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
+        public string Get(
+            string url,
+            Dictionary<string, string> queryParams = null,
+            UserToken token,
+            Dictionary<string, string> cookieContainer = null)
         {
             var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
             httpWebRequest.Method = "GET";
