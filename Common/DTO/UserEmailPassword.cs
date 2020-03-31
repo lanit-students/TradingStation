@@ -2,13 +2,15 @@
 {
     public class UserEmailPassword
     {
-        public string Email { get; }
-        public string Password { get; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
 
-        public UserEmailPassword(string email, string password)
+        public UserEmailPassword() {}
+
+        public UserEmailPassword(string email, string passwordHash)
         {
             Email = email;
-            Password = password;
+            PasswordHash = passwordHash;
         }
     }
 }
