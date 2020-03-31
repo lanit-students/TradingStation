@@ -1,0 +1,62 @@
+﻿<EditForm EditContext="@editContext" OnValidSubmit="@SaveDataClickHandler">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <InputText class="input-group-text" @bind-Value="user.Name" placeholder="Your name" />
+    </div>
+    <div class="form-group">
+        <label for="Surname">Surname:</label>
+        <InputText class="input-group-text" @bind-Value="user.Surname" placeholder="Your surname" />
+    </div>
+    <div class="form-group">
+        <label for="Birthday">Birthday:</label>
+        <InputDate class="input-group-text" @bind-Value="@user.DateOfBirth" />
+    </div>
+    <br />
+    <ValidationSummary />
+    <h4 style="display:@(ErrorOccured ? "block" : "hidden"); color:red">@ErrorMessage</h4>
+    <br />
+    <input type="submit" class="form-control button btn-primary" value="Save" />
+</EditForm>
+
+@code {
+    [Parameter]
+    public Guid userId { get; set; }
+    [CascadingParameter]
+    public BlazoredModalInstance BlazoredModal { get; set; }
+    public string ErrorMessage { get; set; }
+    public bool ErrorOccured { get; set; }
+    private SetUserDataViewModel user;
+    private EditContext editContext;
+    private ValidationMessageStore messageStore;
+
+    private void SaveDataClickHandler()
+    {
+        var userInfo = new DTO.UserInformation(user.Name, user.Surname, user.DateOfBirth);
+
+        // This is in process (user/edit endpoint is another team's task)
+        try
+        {
+            //UserEditor.EditUser(userId, userInfo);
+            BlazoredModal.Close(ModalResult.Ok(user));
+        }
+        // This must be changed to a custom exception later
+        catch (Exception)
+        {
+            // This will be changed to real error message
+            ErrorMessage = "error";
+            ErrorOccured = true;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        ErrorOccured = false;
+        ErrorMessage = "";
+        user = new SetUserDataViewModel();
+        editContext = new EditContext(user);
+        messageStore = new ValidationMessageStore(editContext);
+
+        editContext.OnFieldChanged += (s, e) => messageStore.Clear(e.FieldIdentifier);
+    }
+}

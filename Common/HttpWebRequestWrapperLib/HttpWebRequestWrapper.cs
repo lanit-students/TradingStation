@@ -18,50 +18,45 @@ namespace HttpWebRequestWrapperLib
         {
             ContentType = "application/json";
         }
-        
+
         public string Get(string url, Dictionary<string, string> queryParams = null,
             Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
         {
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new NullReferenceException();
-            }
-            url = getUrlWithParams(url, queryParams);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = ContentType;
+            var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
             httpWebRequest.Method = "GET";
-            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
-            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
 
-            var httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var result = getResultFromRequest(httpWebRequest);
 
-            // TODO: Handling custom exceptions
-            if (httpWebResponse.StatusCode != HttpStatusCode.OK)
-            {
-                throw new Exception("Response returned with error");
-            }
-            using var responseStream = httpWebResponse.GetResponseStream();
-            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
-            var result = streamReader.ReadToEnd();
             return result;
         }
 
         public string Put(string url, Dictionary<string, string> queryParams = null,
+           object body = null, Dictionary<string, string> headerCollection = null,
+           Dictionary<string, string> cookieContainer = null)
+        {
+            var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
+            httpWebRequest.Method = "PUT";
+
+            if (!(body is null))
+            {
+                using var requestStream = httpWebRequest.GetRequestStream();
+                using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
+                string jsonBody = JsonSerializer.Serialize(body);
+                streamWriter.WriteLine(jsonBody);
+            }
+            var result = getResultFromRequest(httpWebRequest);
+
+            return result;
+        }
+
+        public string Post(string url, Dictionary<string, string> queryParams = null,
             object body = null, Dictionary<string, string> headerCollection = null,
             Dictionary<string, string> cookieContainer = null)
         {
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new NullReferenceException();
-            }
-            url = getUrlWithParams(url, queryParams);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = ContentType;
-            httpWebRequest.Method = "PUT";
-            httpWebRequest.Headers = getHeaderCollectionFromDictionary(headerCollection);
-            httpWebRequest.CookieContainer = getCookieContainerFromDictionary(cookieContainer);
+            var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
+            httpWebRequest.Method = "POST";
 
-            if (! (body is null))
+            if (!(body is null))
             {
                 using var requestStream = httpWebRequest.GetRequestStream();
                 using var streamWriter = new StreamWriter(requestStream, Encoding.UTF8);
@@ -118,8 +113,27 @@ namespace HttpWebRequestWrapperLib
             return result;
         }
 
+        private string getUrlWithParams(string url, Dictionary<string, string> queryParams)
+=======
+            var result = getResultFromRequest(httpWebRequest);
+
+            return result;
+        }
+
         public string Delete(string url, Dictionary<string, string> queryParams = null,
              Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
+        {
+            var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
+            httpWebRequest.Method = "DELETE";
+
+            string result = getResultFromRequest(httpWebRequest);
+
+            return result;
+        }
+
+        private HttpWebRequest getHttpWebRequest(string url, Dictionary<string, string> queryParams = null,
+            Dictionary<string, string> headerCollection = null, Dictionary<string, string> cookieContainer = null)
+>>>>>>> refs/rewritten/onto
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -141,8 +155,7 @@ namespace HttpWebRequestWrapperLib
             }
             using var responseStream = httpWebResponse.GetResponseStream();
             using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
-            var result = streamReader.ReadToEnd();
-            return result;
+            return streamReader.ReadToEnd();
         }
 
         private string getUrlWithParams(string url, Dictionary<string, string> queryParams)
@@ -167,26 +180,26 @@ namespace HttpWebRequestWrapperLib
 
         private WebHeaderCollection getHeaderCollectionFromDictionary(Dictionary<string, string> dictionary)
         {
-            if (dictionary == null)
-                return new WebHeaderCollection();
-
             var headerCollection = new WebHeaderCollection();
-            foreach (var keyValuePair in dictionary)
+            if (!(dictionary is null || dictionary.Count < 1))
             {
-                headerCollection.Add(keyValuePair.Key, keyValuePair.Value);
+                foreach (var keyValuePair in dictionary)
+                {
+                    headerCollection.Add(keyValuePair.Key, keyValuePair.Value);
+                }
             }
             return headerCollection;
         }
 
         private CookieContainer getCookieContainerFromDictionary(Dictionary<string, string> dictionary)
         {
-            if (dictionary == null)
-                return new CookieContainer();
-
             var cookieContainer = new CookieContainer();
-            foreach (var keyValuePair in dictionary)
+            if (!(dictionary is null || dictionary.Count < 1))
             {
-                cookieContainer.Add(new Cookie(keyValuePair.Key, keyValuePair.Value));
+                foreach (var keyValuePair in dictionary)
+                {
+                    cookieContainer.Add(new Cookie(keyValuePair.Key, keyValuePair.Value));
+                }
             }
             return cookieContainer;
         }

@@ -1,0 +1,138 @@
+﻿@page "/userinfo"
+@inject NavigationManager NavManager
+@inject IModalService Modal
+@attribute [Authorize]
+
+<div class="col-12">
+    <h3><b>User Info</b></h3>
+    <hr />
+    <EditForm Model="@user">
+        <DataAnnotationsValidator />
+        <div class="form-group">
+            <label for="Name">Name:</label>
+            <InputText class="input-group-text" disabled="@IsEditModeDisabled" @bind-Value="user.Name" />
+        </div>
+        <div class="form-group">
+            <label for="Surname">Surname:</label>
+            <InputText class="input-group-text" disabled="@IsEditModeDisabled" @bind-Value="user.Surname" />
+        </div>
+        <div class="form-group">
+            <label for="Birthday">Birthday:</label>
+            <InputDate class="input-group-text" disabled="@IsEditModeDisabled" @bind-Value="@user.DateOfBirth" />
+        </div>
+        <div class="form-group">
+            <label for="Email">Email:</label>
+            <InputText class="input-group-text" disabled="disabled" @bind-Value="@user.Email" />
+        </div>
+        <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+            <label for="OldPassword">Enter old password: </label>
+            <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="input-group-text" disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
+        </div>
+        <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+            <label for="NewPassword">Enter new password: </label>
+            <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="input-group-text" disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
+        </div>
+        <br />
+        <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler" class="form-control col-3 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
+        <br />
+        <ValidationSummary />
+        <h4 style="display:@(ErrorOccured ? "block" : "hidden"); color:red">@ErrorMessage</h4>
+        <input type="button" @onclick="@EditInfoClickHandler" class="form-control col-3 button btn-primary" value="@(IsEditModeDisabled ? "Edit" : "Save changes")" />
+    </EditForm>
+</div>
+
+@code {
+    public bool IsEditModeDisabled { get; set; }
+    public bool IsPasswordBeingChanged { get; set; }
+    public bool PopupVisible { get; set; }
+    public string ErrorMessage { get; set; }
+    public bool ErrorOccured { get; set; }
+    private UserInfoViewModel user;
+    private Guid currentId;
+
+    private void EditInfoClickHandler()
+    {
+        if (IsEditModeDisabled)
+        {
+            IsEditModeDisabled = false;
+        }
+        // Trying to save changes
+        else
+        {
+            // Edit is inprocess in other team
+            try
+            {
+                var userInfo = new DTO.UserInformation(user.Name, user.Surname, user.DateOfBirth);
+
+                // This is in process (user/edit endpoint is another team's task)
+                if (IsPasswordBeingChanged)
+                {
+                    //UserEditor.EditUser(currentId, userInfo, user.OldPassword, user.NewPassword);
+                }
+                else
+                {
+                    //UserEditor.EditUser(currentId, userInfo);
+                }
+            }
+            // This must be changed to a custom exception later
+            catch (Exception)
+            {
+                // This will be changed to real error message
+                ErrorMessage = "error";
+                ErrorOccured = true;
+            }
+
+            Modal.Show<Modals.ChangesSavedModal>("Changes saved");
+            IsEditModeDisabled = true;
+            IsPasswordBeingChanged = false;
+        }
+    }
+
+    private void ChangePasswordClickHandler()
+    {
+        IsPasswordBeingChanged ^= true;
+    }
+
+    private void UpdateUserModel()
+    {
+        // TODO: get it by id (another team task)
+        user = new UserInfoViewModel();
+        // To call pop-up
+        user.Name = null;
+        user.Surname = null;
+        // Some dummy data
+        user.DateOfBirth = DateTime.Today;
+        user.Email = "john.smith@gmail.com";
+    }
+
+    protected override void OnInitialized()
+    {
+        ErrorOccured = false;
+        ErrorMessage = "";
+        PopupVisible = false;
+        IsEditModeDisabled = true;
+        IsPasswordBeingChanged = false;
+        // TODO: grab it from local storage
+        currentId = new Guid();
+        UpdateUserModel();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (string.IsNullOrEmpty(user.Name))
+        {
+            var options = new ModalOptions() { HideCloseButton = true, DisableBackgroundCancel = true };
+
+            var parameters = new ModalParameters();
+            parameters.Add("userId", currentId);
+
+            var formModal = Modal.Show<Modals.SetUserDataModal>("Set your personal data", parameters, options);
+            var modalResult = await formModal.Result;
+            user.Name = (modalResult.Data as SetUserDataViewModel).Name;
+            user.Surname = (modalResult.Data as SetUserDataViewModel).Surname;
+            user.DateOfBirth = (modalResult.Data as SetUserDataViewModel).DateOfBirth;
+            // Notifying the component
+            StateHasChanged();
+        }
+    }
+}
