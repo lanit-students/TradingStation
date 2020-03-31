@@ -8,6 +8,7 @@ using DTO;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using GUI.ViewModels;
 
 namespace GUI.Scripts
 {
