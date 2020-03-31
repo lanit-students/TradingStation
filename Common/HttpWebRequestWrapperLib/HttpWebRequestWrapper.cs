@@ -1,5 +1,4 @@
-﻿using DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -23,7 +22,7 @@ namespace HttpWebRequestWrapperLib
         public string Get(
             string url,
             Dictionary<string, string> queryParams = null,
-            UserToken token,
+            Dictionary<string, string> headerCollection = null,
             Dictionary<string, string> cookieContainer = null)
         {
             var httpWebRequest = getHttpWebRequest(url, queryParams, headerCollection, cookieContainer);
