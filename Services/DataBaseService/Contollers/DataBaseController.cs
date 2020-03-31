@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DTO;
 using DataBaseService.Interfaces;
-using System;
 
 namespace DataBaseService.Contollers
 {
@@ -12,12 +11,7 @@ namespace DataBaseService.Contollers
         [Route("CreateUser")]
         [HttpPost]
         public void CreateUser([FromServices] ICommand<UserEmailPassword> command, [FromBody] UserEmailPassword user)
-        {
-            //TODO Change to custom exception
-            if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.PasswordHash))
-            {
-                throw new Exception("Not correct data");
-            }
+        {            
             command.Execute(user);
         }
     }

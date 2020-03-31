@@ -1,6 +1,7 @@
 ﻿using DataBaseService.Interfaces;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace DataBaseService.Commands
 {
@@ -14,6 +15,11 @@ namespace DataBaseService.Commands
         }
         public void Execute(UserEmailPassword data)
         {
+            //TODO Change to custom exception
+            if (string.IsNullOrEmpty(data.Email) || string.IsNullOrEmpty(data.PasswordHash))
+            {
+                throw new Exception("Not correct data");
+            }
             userRepository.Create(data);
         }
     }
