@@ -1,9 +1,5 @@
 ﻿@page "/singin"
 @using Authentication
-@using System.Net
-@using System.Text.Json
-@using System.IO
-@using System.Text.Json.Serialization;
 @using ViewModels
 @using DTO
 @using Scripts
@@ -40,10 +36,13 @@
     private SignInViewModel userInput;
     private EditContext _editContext;
     bool isHidden = false;
+    string errorMessage = "";
+
     private void TrySignIn()
     {
         var user = new UserEmailPassword(userInput.Email, userInput.Password);
-        if (SignIner.SignIn(user))
+        var signInError = SignInner.SignIn(user);
+        if (signInError is null)
         {
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
@@ -53,6 +52,7 @@
             userInput.Email = "";
             userInput.Password = "";
             isHidden = true;
+            errorMessage = signInError;
         }
     }
 

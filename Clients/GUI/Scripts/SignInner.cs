@@ -1,18 +1,13 @@
 ﻿using DTO;
 using HttpWebRequestWrapperLib;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace GUI.Scripts
 {
-    public class SignIner
+    public class SignInner
     {
-        public static bool SignIn(UserEmailPassword userInput)
+#pragma warning disable CS8632
+        public static string? SignIn(UserEmailPassword userInput)
         {
             var requestWrapper = new HttpWebRequestWrapper();
             try
@@ -20,11 +15,11 @@ namespace GUI.Scripts
                 var result = requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);
                 
             }
-            catch(Exception)
+            catch(Exception e)
             {
-                return false;
+                return e.Message;
             }
-            return true;
+            return null;
         }
     }
 }
