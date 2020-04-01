@@ -1,4 +1,4 @@
-﻿@page "/signin"
+﻿@page "/singin"
 @using Authentication
 @using System.Net
 @using System.Text.Json
@@ -43,7 +43,7 @@
     private void TrySignIn()
     {
         var user = new UserEmailPassword(userInput.Email, userInput.Password);
-        if (SignIner.SignIn(user) == " ")
+        if (SignIner.SignIn(user))
         {
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");

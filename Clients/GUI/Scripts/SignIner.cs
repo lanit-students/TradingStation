@@ -12,19 +12,19 @@ namespace GUI.Scripts
 {
     public class SignIner
     {
-        public static string SignIn(UserEmailPassword userInput)
+        public static bool SignIn(UserEmailPassword userInput)
         {
             var requestWrapper = new HttpWebRequestWrapper();
-            var result = "";
             try
             {
-                result = requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);
+                var result = requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);
+                
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                return e.Message;
+                return false;
             }
-            return result;
+            return true;
         }
     }
 }
