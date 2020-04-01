@@ -10,7 +10,7 @@
 <div class="col-12">
     <h3><b>Sign In</b></h3>
     <hr />
-    <EditForm EditContext="@_editContext" OnValidSubmit="@TrySignIn">
+    <EditForm OnValidSubmit="@TrySignIn">
         <DataAnnotationsValidator />
         <div class="form-group">
             <label for="Email">Email</label>
@@ -23,9 +23,7 @@
             <InputText class="form-control col-3" type="Password" @bind-Value="userInput.Password" placeholder="*****" />
             <ValidationMessage For="() => userInput.Password" />
         </div>
-
         <input type="submit" class="form-control col-1 button btn-primary" value="Sign in" />
-
     </EditForm>
 </div>
 
@@ -34,8 +32,7 @@
     [CascadingParameter]
     private Task<AuthenticationState> authState { get; set; }
     private SignInViewModel userInput;
-    private EditContext _editContext;
-    bool isHidden = false;
+    bool isHidden = true;
     string errorMessage = "";
 
     private void TrySignIn()
@@ -49,9 +46,8 @@
         }
         catch(Exception e)
         {
-            userInput.Email = "";
             userInput.Password = "";
-            isHidden = true;
+            isHidden = false;
             errorMessage = e.Message;
         }
     }
@@ -59,7 +55,6 @@
     protected async override Task OnInitializedAsync()
     {
         userInput = new SignInViewModel();
-        _editContext = new EditContext(userInput);
 
         var claims = (await authState).User;
 
