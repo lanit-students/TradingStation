@@ -3,6 +3,8 @@ using NewsService;
 using NewsService.Utils;
 using NUnit.Framework;
 using CentralBankIntegration;
+using System;
+
 namespace NewsServiceTests.Utils
 {
     class NewsPublisherFactoryTests
@@ -17,7 +19,16 @@ namespace NewsServiceTests.Utils
         }
 
         [Test]
-        public void CreateCBNewsPublisherTest()
+        public void CreateNotNullNewsPublisher()
+        {
+            foreach (NewsPublisherTypes type in Enum.GetValues(typeof(NewsPublisherTypes)))
+            {
+                Assert.NotNull(NewsPublisherFactory.Create(type));
+            }
+        }
+
+        [Test]
+        public void CreateCentralBankNewsPublisherResultHasCorrectedType()
         {
             Assert.AreEqual((NewsPublisherFactory.Create(centralBankNewsPublisherType)).GetType(), centralBankNewsPublisher.GetType());
         }
