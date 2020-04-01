@@ -44,8 +44,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationServiceTests", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseServiceTests", "Tests\DatabaseServiceTests\DatabaseServiceTests.csproj", "{67520E13-DB95-43E1-A3A0-002E41AD26A4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{26F9DC2D-F9B3-480D-8041-265DC04D1A2B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanTests", "PostmanTests", "{73D03064-B9BD-41E0-B451-72C42C843E6D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsServiceTests", "Tests\NewsServiceTests\NewsServiceTests.csproj", "{E1DE4770-65E0-43CF-8D92-837D394CE4B8}"
