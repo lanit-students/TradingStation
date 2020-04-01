@@ -7,7 +7,7 @@ using HttpWebRequestWrapperLib;
 
 namespace GUI.Scripts
 {
-    public class SignUpper
+    public class SignUper
     {
         public static void SignUp(SignUpViewModel input)
         {

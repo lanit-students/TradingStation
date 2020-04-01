@@ -35,15 +35,15 @@
 
 
 @code {
-        bool isErrorDisplayed = false;
-        string errorMessage;
+    bool isErrorDisplayed = false;
+    string errorMessage;
     private SignUpViewModel userInput;
 
     public void TrySignUp()
     {
         try
         {
-            SignUpper.SignUp(userInput);
+            SignUper.SignUp(userInput);
             NavigationManager.NavigateTo("/signin");
         }
         catch
