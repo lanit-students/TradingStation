@@ -19,7 +19,7 @@ namespace NewsServiceTests.Utils
         }
 
         [Test]
-        public void CreateNotNullNewsPublisher()
+        public void CreateReturnsNotNullNewsPublisher()
         {
             foreach (NewsPublisherTypes type in Enum.GetValues(typeof(NewsPublisherTypes)))
             {
@@ -28,9 +28,10 @@ namespace NewsServiceTests.Utils
         }
 
         [Test]
-        public void CreateCentralBankNewsPublisherResultHasCorrectedType()
+        public void CreateCentralBankNewsPublisherResultHasCorrectType()
         {
-            Assert.AreEqual((NewsPublisherFactory.Create(centralBankNewsPublisherType)).GetType(), centralBankNewsPublisher.GetType());
+            var typeOfCreatedObject = NewsPublisherFactory.Create(centralBankNewsPublisherType).GetType();
+            Assert.AreEqual(typeOfCreatedObject, centralBankNewsPublisher.GetType());
         }
     }
 }
