@@ -35,16 +35,18 @@
 
 
 @code {
-    bool isErrorDisplayed = false;
-    string errorMessage;
+        bool isErrorDisplayed = false;
+        string errorMessage;
     private SignUpViewModel userInput;
 
     public void TrySignUp()
     {
-        var statusCode = SignUpper.SignUp(userInput);
-        if (statusCode == System.Net.HttpStatusCode.OK)
+        try
+        {
+            SignUpper.SignUp(userInput);
             NavigationManager.NavigateTo("/signin");
-        else
+        }
+        catch
         {
             userInput = new SignUpViewModel();
             isErrorDisplayed = true;
