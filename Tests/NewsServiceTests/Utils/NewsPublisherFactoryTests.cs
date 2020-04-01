@@ -7,7 +7,7 @@ using System;
 
 namespace NewsServiceTests.Utils
 {
-    class NewsPublisherFactoryTests
+    public class NewsPublisherFactoryTests
     {
         private NewsPublisherTypes centralBankNewsPublisherType = NewsPublisherTypes.CentralBank;
         private INewsPublisher centralBankNewsPublisher;
