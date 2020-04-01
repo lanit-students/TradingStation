@@ -43,10 +43,10 @@
     private void TrySignIn()
     {
         var user = new UserEmailPassword(userInput.Email, userInput.Password);
-        if (SignInner.SignIn(user) == HttpStatusCode.OK)
+        if (SignIner.SignIn(user) == " ")
         {
             AuthenticationProvider.MarkSignedIn();
-            NavigationManager.NavigateTo("userinfo");
+            NavigationManager.NavigateTo("/userinfo");
         }
         else
         {
