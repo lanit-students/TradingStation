@@ -4,22 +4,12 @@ using System;
 
 namespace GUI.Scripts
 {
-    public class SignInner
+    public static class SignInner
     {
-#pragma warning disable CS8632
-        public static string? SignIn(UserEmailPassword userInput)
+        public static void SignIn(UserEmailPassword userInput)
         {
-            var requestWrapper = new HttpWebRequestWrapper();
-            try
-            {
-                var result = requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);
-                
-            }
-            catch(Exception e)
-            {
-                return e.Message;
-            }
-            return null;
+            var requestWrapper = new HttpWebRequestWrapper();                
+            requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);                
         }
     }
 }

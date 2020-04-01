@@ -41,18 +41,18 @@
     private void TrySignIn()
     {
         var user = new UserEmailPassword(userInput.Email, userInput.Password);
-        var signInError = SignInner.SignIn(user);
-        if (signInError is null)
+        try
         {
+            SignInner.SignIn(user);
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
-        else
+        catch(Exception e)
         {
             userInput.Email = "";
             userInput.Password = "";
             isHidden = true;
-            errorMessage = signInError;
+            errorMessage = e.Message;
         }
     }
 
