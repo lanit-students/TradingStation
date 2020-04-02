@@ -2,6 +2,9 @@
 
 namespace CustomException
 {
+    /// <summary>
+    /// Indicates that the server detected an unexpected condition that prevented it from completing the request
+    /// </summary>
     public class IternalServerException : Exception
     {
         public IternalServerException(string message)

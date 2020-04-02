@@ -2,6 +2,9 @@
 
 namespace CustomException
 {
+    /// <summary>
+    /// Indicates that the server cannot understand the request due to incorrect syntax
+    /// </summary>
     public class BadRequestException : Exception
     {
         public BadRequestException(string message)
