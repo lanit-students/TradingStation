@@ -1,3 +1,5 @@
+using DTO;
+using FluentValidation;
 using HttpWebRequestWrapperLib;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UserService.Commands;
 using UserService.Interfaces;
+using UserService.Validators;
 
 namespace UserService
 {
@@ -21,6 +24,8 @@ namespace UserService
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
 
             services.AddSingleton<HttpWebRequestWrapper, HttpWebRequestWrapper>();
+
+            services.AddTransient<IValidator<UserEmailPassword>, UserEmailPasswordValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
