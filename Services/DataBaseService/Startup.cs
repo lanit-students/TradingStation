@@ -13,7 +13,7 @@ using DataBaseService.Mappers;
 using DataBaseService.Commands;
 
 using DTO;
-
+using System;
 
 namespace DataBaseService
 {
@@ -40,6 +40,7 @@ namespace DataBaseService
             services.AddTransient<IRepository<UserEmailPassword>, UserCredentialRepository>();
             services.AddTransient<IMapper<UserEmailPassword, DbUserCredential>, UserCredentialMapper>();
             services.AddTransient<ICommand<UserEmailPassword>, CreateUserCommand>();
+            services.AddTransient<ICommand<Guid>, DeleteUserCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
