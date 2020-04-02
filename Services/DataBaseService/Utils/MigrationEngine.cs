@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace DataBaseService.Utils
 {
