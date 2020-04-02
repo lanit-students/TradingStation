@@ -4,7 +4,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+
 using DataBaseService.Utils;
+using DataBaseService.Interfaces;
+using DataBaseService.DbModels;
+using DataBaseService.Repositories;
+using DataBaseService.Mappers;
+using DataBaseService.Commands;
+
+using DTO;
+
 
 namespace DataBaseService
 {
@@ -23,6 +32,14 @@ namespace DataBaseService
         {
             var migrationEngine = new MigrationEngine(Configuration);
             migrationEngine.Migrate();
+
+            services.AddControllers();
+
+            services.AddDbContext<DataBaseContext>();
+
+            services.AddTransient<IRepository<UserEmailPassword>, UserCredentialRepository>();
+            services.AddTransient<IMapper<UserEmailPassword, DbUserCredential>, UserCredentialMapper>();
+            services.AddTransient<ICommand<UserEmailPassword>, CreateUserCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,10 +54,7 @@ namespace DataBaseService
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
