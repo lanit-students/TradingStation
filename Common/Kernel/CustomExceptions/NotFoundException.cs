@@ -8,5 +8,10 @@
         public override int StatusCode => 404;
 
         public override string Header => "Not found";
+
+        /// <inheritdoc />
+        public NotFoundException() { }
+
+        public NotFoundException(string message) : base(message) { }
     }
 }

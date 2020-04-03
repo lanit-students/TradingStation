@@ -8,5 +8,10 @@
         public override int StatusCode => 403;
         
         public override string Header => "Forbidden";
+
+        /// <inheritdoc />
+        public ForbiddenException() { }
+
+        public ForbiddenException(string message) : base(message) { }
     }
 }

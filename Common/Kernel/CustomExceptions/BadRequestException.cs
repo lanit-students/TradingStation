@@ -8,5 +8,10 @@
         public override int StatusCode => 400;
         
         public override string Header => "Bad Request";
+
+        /// <inheritdoc />
+        public BadRequestException() { }
+
+        public BadRequestException(string message) : base(message) { }
     }
 }
