@@ -3,7 +3,7 @@ using DTO;
 
 namespace GUI.Scripts
 {
-    public class UserEditor
+    public static class UserEditor
     {
         /// <summary>
         /// Edits information about the user
