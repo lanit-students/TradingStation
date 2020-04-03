@@ -12,7 +12,6 @@ using System;
 using FluentValidation;
 using AuthenticationService.Validators;
 using MassTransit;
-using GreenPipes;
 
 namespace AuthenticationService
 {

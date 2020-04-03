@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BrokerConsumers\**" />
+    <Content Remove="BrokerConsumers\**" />
+    <EmbeddedResource Remove="BrokerConsumers\**" />
+    <None Remove="BrokerConsumers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="MassTransit" Version="6.2.3" />
@@ -17,10 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
     <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="BrokerConsumers\" />
   </ItemGroup>
 
 

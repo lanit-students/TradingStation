@@ -2,7 +2,6 @@
 using DTO;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
