@@ -1,5 +1,6 @@
 ﻿@page "/signup"
 @using ViewModels
+@using DTO
 @using Scripts
 @inject NavigationManager NavigationManager
 
@@ -43,7 +44,7 @@
     {
         try
         {
-            SignUpper.SignUp(userInput);
+            SignUpper.SignUp(new UserEmailPassword(userInput.Email, userInput.Password));
             NavigationManager.NavigateTo("/signin");
         }
         catch
