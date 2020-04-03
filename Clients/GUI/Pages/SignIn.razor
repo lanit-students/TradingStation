@@ -10,7 +10,7 @@
 <div class="col-12">
     <h3><b>Sign In</b></h3>
     <hr />
-    <EditForm OnValidSubmit="@TrySignIn">
+    <EditForm Model="@userInput" OnValidSubmit="@TrySignIn">
         <DataAnnotationsValidator />
         <div class="form-group">
             <label for="Email">Email</label>
