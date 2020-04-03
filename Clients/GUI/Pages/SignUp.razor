@@ -1,0 +1,62 @@
+﻿@page "/signup"
+@using ViewModels
+@using DTO
+@using Scripts
+@inject NavigationManager NavigationManager
+
+    <div class="col-12">
+        <h3><b>Sign up</b></h3>
+        <hr />
+
+        <EditForm Model="@userInput" OnValidSubmit="@TrySignUp">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+                <label style=“color:red;display:@isErrorDisplayed”> @errorMessage </label>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.Password" placeholder="*****" />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="ConfirmPassword">Confirm Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+            </div>
+            <br />
+            <ValidationSummary />
+            <br />
+
+            <input type="submit" class="form-control col-1 button btn-primary" value="Sign up" />
+
+        </EditForm>
+    </div>
+
+
+@code {
+    bool isErrorDisplayed = false;
+    string errorMessage;
+    private SignUpViewModel userInput;
+
+    public void TrySignUp()
+    {
+        try
+        {
+            SignUpper.SignUp(new UserEmailPassword(userInput.Email, userInput.Password));
+            NavigationManager.NavigateTo("/signin");
+        }
+        catch
+        {
+            userInput = new SignUpViewModel();
+            isErrorDisplayed = true;
+            errorMessage = "this e-mail already taken";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        userInput = new SignUpViewModel();
+    }
+}
