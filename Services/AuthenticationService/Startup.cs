@@ -53,6 +53,7 @@ namespace AuthenticationService
             services.AddSingleton<ITokensEngine, TokensEngine>();
 
             services.AddTransient<ILoginCommand, LoginCommand>();
+            
             services.AddTransient<ICommand<Guid>, LogoutCommand>();
 
             services.AddTransient<IValidator<UserToken>, UserTokenValidator>();
