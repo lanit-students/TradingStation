@@ -1,6 +1,5 @@
 ﻿using DTO;
 using HttpWebRequestWrapperLib;
-using System;
 
 namespace GUI.Scripts
 {
