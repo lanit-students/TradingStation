@@ -41,7 +41,7 @@
         var user = new UserEmailPassword(userInput.Email, userInput.Password);
         try
         {
-            await LocalStorage.SetItemAsync("root", "token");
+            LocalStorage.SetItemAsync("root", "token");
             // TODO: add logic after MassTransit flow iw merged
             //SignInner.SignIn(user);
             AuthenticationProvider.MarkSignedIn();
