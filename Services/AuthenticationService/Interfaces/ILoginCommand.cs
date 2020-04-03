@@ -5,6 +5,6 @@ namespace AuthenticationService.Interfaces
 {
     public interface ILoginCommand
     {
-        Task<string> Execute(UserEmailPassword data);
+        Task<UserToken> Execute(UserEmailPassword data);
     }
 }

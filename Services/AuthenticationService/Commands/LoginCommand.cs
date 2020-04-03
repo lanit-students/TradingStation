@@ -40,7 +40,7 @@ namespace AuthenticationService.Commands
             this.busControl = busControl;
         }
 
-        public async Task<string> Execute(UserEmailPassword data)
+        public async Task<UserToken> Execute(UserEmailPassword data)
         {
             User user = await GetUserFromUserService(data);
 
@@ -49,7 +49,15 @@ namespace AuthenticationService.Commands
                 throw new Exception("User not found =(");
             }
 
-            return tokensEngine.GetToken(user.Id);
+            var token = tokensEngine.GetToken(user.Id);
+
+            var userToken = new UserToken()
+            {
+                UserId = user.Id,
+                Body = token
+            };
+
+            return userToken;
         }
     }
 }

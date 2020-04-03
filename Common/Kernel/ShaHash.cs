@@ -18,7 +18,7 @@ namespace Kernel
                 }
 
                 return sringBuilder.ToString();
-            }            
+            }
         }
     }
 }

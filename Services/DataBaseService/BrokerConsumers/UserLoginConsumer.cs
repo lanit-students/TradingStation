@@ -1,4 +1,5 @@
 ﻿using DTO;
+using Kernel;
 using MassTransit;
 using System;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace DatabaseService.BrokerConsumers
             {
                 Id = Guid.NewGuid(),
                 Email = "bla@bla.com",
-                PasswordHash = "some_pass_hash"
+                PasswordHash = ShaHash.GetHash("some_pass_hash")
             };
         }
 

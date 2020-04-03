@@ -1,8 +1,4 @@
 ﻿@page "/signin"
-@using Authentication
-@using ViewModels
-@using DTO
-@using Scripts
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
@@ -36,14 +32,15 @@
     bool isHidden = true;
     string errorMessage = "";
 
-    private void TrySignIn()
+    private async Task TrySignIn()
     {
-        var user = new UserEmailPassword(userInput.Email, userInput.Password);
         try
         {
-            LocalStorage.SetItemAsync("root", "token");
-            // TODO: add logic after MassTransit flow iw merged
-            //SignInner.SignIn(user);
+            await LocalStorage.ClearAsync();
+            var hash = ShaHash.GetHash(userInput.Password);
+            var credentials = new UserEmailPassword(userInput.Email, hash);
+            var userToken = SignInner.SignIn(credentials);
+            LocalStorage.SetItemAsync(userToken.UserId.ToString(), userToken.Body);
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }

@@ -5,6 +5,8 @@ using AuthenticationService.Interfaces;
 using DTO;
 using FluentValidation;
 
+using System.Text.Json;
+
 namespace AuthenticationService.Controllers
 {
     [ApiController]
@@ -31,7 +33,9 @@ namespace AuthenticationService.Controllers
         {
             var result = command.Execute(user);
 
-            return result.Result;
+            var userToken = result.Result;
+
+            return JsonSerializer.Serialize(userToken);
         }
 
         /// <summary>
