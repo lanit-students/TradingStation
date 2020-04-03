@@ -5,11 +5,12 @@
     /// </summary>
     public class BadRequestException : CustomHttpExceptionBase
     {
-        public override int StatusCode { get => 400; }
-        private string errorMessage = "400 Bad Request";
+        public override int StatusCode => 400;
+        private string errorMessage = "Bad Request";
 
-        public override string Message { get => errorMessage; }
+        public override string Message => errorMessage;
 
+        /// Need for unit tests
         public BadRequestException() { }
 
         public BadRequestException(string message) { errorMessage = message; }

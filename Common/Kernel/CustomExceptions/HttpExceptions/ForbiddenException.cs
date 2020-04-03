@@ -5,11 +5,12 @@
     /// </summary>
     public class ForbiddenException : CustomHttpExceptionBase
     {
-        public override int StatusCode { get => 403; }
-        private string errorMessage = "403 Forbidden";
+        public override int StatusCode => 403;
+        private string errorMessage = "Forbidden";
 
-        public override string Message { get => errorMessage; }
+        public override string Message => errorMessage;
 
+        /// Need for unit tests
         public ForbiddenException() { }
 
         public ForbiddenException(string message) { errorMessage = message; }

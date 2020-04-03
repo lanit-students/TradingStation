@@ -5,11 +5,12 @@
     /// </summary>
     public class IternalServerException : CustomHttpExceptionBase
     {
-        public override int StatusCode { get => 500; }
-        private string errorMessage = "500 Internal Server Error";
+        public override int StatusCode => 500;
+        private string errorMessage = "Internal Server Error";
 
-        public override string Message { get => errorMessage; }
+        public override string Message => errorMessage;
 
+        /// Need for unit tests
         public IternalServerException() { }
 
         public IternalServerException(string message) { errorMessage = message; }

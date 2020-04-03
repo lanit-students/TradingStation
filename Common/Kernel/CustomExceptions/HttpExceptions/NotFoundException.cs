@@ -5,11 +5,12 @@
     /// </summary>
     public class NotFoundException : CustomHttpExceptionBase
     {
-        public override int StatusCode { get => 404; }
-        private string errorMessage = "404 Not found";
+        public override int StatusCode => 404;
+        private string errorMessage = "Not found";
 
-        public override string Message { get => errorMessage; }
+        public override string Message => errorMessage;
 
+        /// Need for unit tests
         public NotFoundException() { }
 
         public NotFoundException(string message) { errorMessage = message; }

@@ -6,6 +6,7 @@ using DTO;
 using FluentValidation;
 
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace AuthenticationService.Controllers
 {
@@ -29,13 +30,11 @@ namespace AuthenticationService.Controllers
         /// </summary>
         [Route("login")]
         [HttpPost]
-        public string Login([FromServices] ILoginCommand command, [FromBody] UserEmailPassword user)
+        public async Task<string> Login([FromServices] ILoginCommand command, [FromBody] UserEmailPassword user)
         {
-            var result = command.Execute(user);
+            var result = await command.Execute(user);
 
-            var userToken = result.Result;
-
-            return JsonSerializer.Serialize(userToken);
+            return JsonSerializer.Serialize(result);
         }
 
         /// <summary>
