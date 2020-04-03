@@ -8,8 +8,8 @@ namespace GUI.Scripts
     {
         public static void SignIn(UserEmailPassword userInput)
         {
-            var requestWrapper = new HttpWebRequestWrapper();                
-            requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);                
+            var requestWrapper = new HttpWebRequestWrapper();
+            requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);
         }
     }
 }

@@ -40,7 +40,8 @@
         var user = new UserEmailPassword(userInput.Email, userInput.Password);
         try
         {
-            SignInner.SignIn(user);
+            // TODO: add logic after MassTransit flow iw merged
+            //SignInner.SignIn(user);
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
