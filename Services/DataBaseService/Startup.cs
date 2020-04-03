@@ -9,7 +9,6 @@ using DataBaseService.Interfaces;
 using DataBaseService.DbModels;
 using DataBaseService.Repositories;
 using DataBaseService.Mappers;
-using DataBaseService.Commands;
 
 using DTO;
 
@@ -75,7 +74,6 @@ namespace DataBaseService
 
             services.AddTransient<IRepository<UserEmailPassword>, UserCredentialRepository>();
             services.AddTransient<IMapper<UserEmailPassword, DbUserCredential>, UserCredentialMapper>();
-            services.AddTransient<ICommand<UserEmailPassword>, CreateUserCommand>();
 
             //var migrationEngine = new MigrationEngine(Configuration);
             //migrationEngine.Migrate();
