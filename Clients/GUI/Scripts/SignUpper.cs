@@ -1,10 +1,9 @@
-using GUI.ViewModels;
 using DTO;
 using HttpWebRequestWrapperLib;
 
 namespace GUI.Scripts
 {
-    public class SignUpper
+    public static class SignUpper
     {
         public static void SignUp(UserEmailPassword data)
         {
