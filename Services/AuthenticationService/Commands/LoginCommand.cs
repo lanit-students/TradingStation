@@ -15,7 +15,7 @@ namespace AuthenticationService.Commands
         /// <summary>
         /// Get user ID from UserService.
         /// </summary>
-        private Guid GetUserIdFromUserService(UserEmailPassword user)
+        private async Task<User> GetUserFromUserService(UserEmailPassword data)
         {
             var uri = new Uri("rabbitmq://localhost/UserServiceLogin");
 
@@ -39,7 +39,7 @@ namespace AuthenticationService.Commands
             this.tokensEngine = tokensEngine;
             this.busControl = busControl;
         }
-        
+
         public async Task<string> Execute(UserEmailPassword data)
         {
             User user = await GetUserFromUserService(data);
