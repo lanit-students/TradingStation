@@ -1,4 +1,3 @@
-using HttpWebRequestWrapperLib;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,11 +58,6 @@ namespace UserService
             services.AddControllers();
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
-
-            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
-
-            services.AddSingleton<HttpWebRequestWrapper, HttpWebRequestWrapper>();
-
             services.AddTransient<ICreateUserCommand, CreateUserCommand>();
 
             services.AddMassTransit(x =>

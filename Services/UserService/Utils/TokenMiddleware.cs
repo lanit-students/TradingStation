@@ -1,9 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DTO;
-using HttpWebRequestWrapperLib;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using UserService.Properties;
 
 namespace UserService.Utils
@@ -11,17 +9,15 @@ namespace UserService.Utils
     public class TokenMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly HttpWebRequestWrapper httpWebWrapper;
 
-        public TokenMiddleware(RequestDelegate next, [FromServices] HttpWebRequestWrapper httpWebWrapper)
+        public TokenMiddleware(RequestDelegate next)
         {
             this.next = next;
-            this.httpWebWrapper = httpWebWrapper;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.Request.Method == "POST" 
+            if (context.Request.Method == "POST"
                 && context.Request.Path == Urls.CreateUser)
             {
                 await next.Invoke(context);
@@ -61,14 +57,16 @@ namespace UserService.Utils
             {
                 //TODO replace way of communication
                 var userToken = new UserToken {UserId = userId, Body = token};
-                ans = httpWebWrapper.Post(Urls.AuthServiceCheckToken, null, userToken);
+                //ans = restClient.Post(Urls.AuthServiceCheckToken, null, userToken);
             }
             // TODO add logs
-            catch (Exception) 
-            {   
+            catch (Exception)
+            {
                 ans = null;
             }
-            return string.Compare(ans, Messages.TokenError, StringComparison.OrdinalIgnoreCase) == 0 ;
+            //return string.Compare(ans, Messages.TokenError, StringComparison.OrdinalIgnoreCase) == 0 ;
+
+            return true;
         }
     }
 }

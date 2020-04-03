@@ -1,5 +1,7 @@
 ﻿using DTO;
-using HttpWebRequestWrapperLib;
+using Kernel;
+using Kernel.Enums;
+using System;
 
 namespace GUI.Scripts
 {
@@ -7,8 +9,9 @@ namespace GUI.Scripts
     {
         public static void SignIn(UserEmailPassword userInput)
         {
-            var requestWrapper = new HttpWebRequestWrapper();
-            requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);
+            const string url = "http://localhost:5001/authentication/login";
+
+            var token = new RestClient<UserEmailPassword, UserToken>(url, RestRequestType.POST).Execute(userInput);
         }
     }
 }

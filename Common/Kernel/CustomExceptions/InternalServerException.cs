@@ -1,14 +1,14 @@
 ﻿namespace Kernel.CustomExceptions
 {
-    public class IternalServerException : BaseException
+    public class InternalServerException : BaseException
     {
         public override int StatusCode => 500;
 
         public override string Header => "Internal Server Error";
 
         /// <inheritdoc />
-        public IternalServerException() { }
+        public InternalServerException() { }
 
-        public IternalServerException(string message) : base(message) { }
+        public InternalServerException(string message) : base(message) { }
     }
 }

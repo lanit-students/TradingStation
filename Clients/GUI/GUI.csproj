@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
-    <ProjectReference Include="..\..\Common\HttpWebRequestWrapperLib\HttpWebRequestWrapperLib.csproj" />
+    <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
   </ItemGroup>
 
 </Project>
