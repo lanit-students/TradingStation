@@ -4,6 +4,7 @@ using DTO;
 using Microsoft.AspNetCore.Mvc;
 using MassTransit;
 using System.Threading.Tasks;
+using Kernel.CustomExceptions;
 
 namespace AuthenticationService.Commands
 {
@@ -46,7 +47,7 @@ namespace AuthenticationService.Commands
 
             if (!CheckUserCredentials(user, data))
             {
-                throw new Exception("User not found =(");
+                throw new NotFoundException("User not found =(");
             }
 
             var token = tokensEngine.GetToken(user.Id);
