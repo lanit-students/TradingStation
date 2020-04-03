@@ -44,11 +44,11 @@
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
-        catch(Exception e)
+        catch(NotFoundException)
         {
             userInput.Password = "";
             isHidden = false;
-            errorMessage = e.Message;
+            errorMessage = "Unable to login, check your data and try again.";
         }
     }
 

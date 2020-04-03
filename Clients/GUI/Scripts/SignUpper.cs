@@ -1,7 +1,6 @@
 using DTO;
 using HttpWebRequestWrapperLib;
 using System;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 
 namespace GUI.Scripts

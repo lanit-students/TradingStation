@@ -52,11 +52,23 @@
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
-        catch
+        catch (BadRequestException e)
         {
             userInput = new SignUpViewModel();
             isErrorDisplayed = true;
-            errorMessage = "Error occured during registration";
+            errorMessage = "Something went wrong during registration";
+        }
+        catch (NotFoundException)
+        {
+            userInput = new SignUpViewModel();
+            isErrorDisplayed = true;
+            errorMessage = "Something went wrong during signing you in";
+        }
+        catch (Exception)
+        {
+            userInput = new SignUpViewModel();
+            isErrorDisplayed = true;
+            errorMessage = "Something misterious went wrong";
         }
     }
 

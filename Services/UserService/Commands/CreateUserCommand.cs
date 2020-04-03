@@ -1,5 +1,6 @@
 ﻿using DTO;
 using Kernel;
+using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -36,7 +37,7 @@ namespace UserService.Commands
 
             if (user.Email == null)
             {
-                throw new Exception("Unable to create user =(");
+                throw new BadRequestException("Unable to create user =(");
             }
 
             return user.Id;
