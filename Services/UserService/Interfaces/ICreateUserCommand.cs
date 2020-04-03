@@ -1,9 +1,11 @@
 ﻿using DTO;
+using System;
+using System.Threading.Tasks;
 
 namespace UserService.Interfaces
 {
     public interface ICreateUserCommand
     {
-        void Execute(UserEmailPassword userEmailPassword);
+        Task<Guid> Execute(UserEmailPassword userEmailPassword);
     }
 }

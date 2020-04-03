@@ -13,7 +13,6 @@ using FluentValidation;
 using AuthenticationService.Validators;
 using MassTransit;
 using GreenPipes;
-using AuthenticationService.BrokerConsumers;
 
 namespace AuthenticationService
 {
@@ -46,8 +45,6 @@ namespace AuthenticationService
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
-
-                    ep.ConfigureConsumer<UserConsumer>(serviceProvider);
                 });
             });
         }
@@ -60,7 +57,7 @@ namespace AuthenticationService
             services.AddControllers();
 
             services.AddSingleton<ITokensEngine, TokensEngine>();
-            
+
             services.AddTransient<ILoginCommand, LoginCommand>();
             services.AddTransient<ICommand<Guid>, LogoutCommand>();
 
@@ -68,8 +65,6 @@ namespace AuthenticationService
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<UserConsumer>();
-
                 x.AddBus(provider => CreateBus(provider));
             });
 

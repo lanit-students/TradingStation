@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +17,7 @@ using MassTransit;
 using System;
 using DatabaseService.BrokerConsumers;
 using GreenPipes;
+using DataBaseService.BrokerConsumers;
 
 namespace DataBaseService
 {
@@ -46,12 +46,20 @@ namespace DataBaseService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint(serviceName, ep =>
+                cfg.ReceiveEndpoint($"{serviceName}Login", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
-                    ep.ConfigureConsumer<UserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<UserLoginConsumer>(serviceProvider);
+                });
+
+                cfg.ReceiveEndpoint($"{serviceName}Create", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<UserCreationConsumer>(serviceProvider);
                 });
             });
         }
@@ -76,7 +84,8 @@ namespace DataBaseService
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<UserConsumer>();
+                x.AddConsumer<UserCreationConsumer>();
+                x.AddConsumer<UserLoginConsumer>();
                 x.AddBus(provider => CreateBus(provider));
             });
 

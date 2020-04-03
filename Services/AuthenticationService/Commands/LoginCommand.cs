@@ -17,7 +17,7 @@ namespace AuthenticationService.Commands
         /// </summary>
         private async Task<User> GetUserFromUserService(UserEmailPassword data)
         {
-            var uri = new Uri("rabbitmq://localhost/UserService");
+            var uri = new Uri("rabbitmq://localhost/UserServiceLogin");
 
             var client = busControl.CreateRequestClient<UserEmailPassword>(uri).Create(data);
 
@@ -28,7 +28,7 @@ namespace AuthenticationService.Commands
 
         private bool CheckUserCredentials(User user, UserEmailPassword credentials)
         {
-            return user.PasswordHash == credentials.Password
+            return user.PasswordHash == credentials.PasswordHash
                 && user.Email == credentials.Email;
         }
 
@@ -46,7 +46,7 @@ namespace AuthenticationService.Commands
 
             if (!CheckUserCredentials(user, data))
             {
-                throw new Exception("Нет такого юзера, печалька ...");
+                throw new Exception("User not found =(");
             }
 
             return tokensEngine.GetToken(user.Id);

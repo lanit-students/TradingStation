@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace DatabaseService.BrokerConsumers
 {
-    public class UserConsumer : IConsumer<UserEmailPassword>
+    public class UserLoginConsumer : IConsumer<UserEmailPassword>
     {
         private User GetUserFromDatabase(string userEmail)
         {
+            // TODO: Implement asking the database here
             return new User
             {
                 Id = Guid.NewGuid(),
                 Email = "bla@bla.com",
-                Login = "bla",
                 PasswordHash = "some_pass_hash"
             };
         }

@@ -19,5 +19,9 @@
     <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BrokerConsumers\" />
+  </ItemGroup>
+
 
 </Project>

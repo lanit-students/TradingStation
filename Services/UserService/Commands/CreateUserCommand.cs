@@ -1,39 +1,47 @@
 ﻿using DTO;
 using Kernel;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 using UserService.Interfaces;
 
 namespace UserService.Commands
 {
     public class CreateUserCommand : ICreateUserCommand
-
     {
-        public void Execute(UserEmailPassword userEmailPassword)
+        private readonly IBus busControl;
+
+        public CreateUserCommand([FromServices] IBus busControl)
         {
-            try
-            {
-                CommonValidations.ValidateEmail(userEmailPassword.Email);
-                createUser(userEmailPassword);
-                return;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            this.busControl = busControl;
         }
 
-        private void createUser(UserEmailPassword userEmailPassword)
+        private async Task<User> CreateUserInDataBaseService(UserEmailPassword data)
         {
-            try
-            {
-                return;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            var uri = new Uri("rabbitmq://localhost/DataBaseServiceCreate");
+
+            var client = busControl.CreateRequestClient<UserEmailPassword>(uri).Create(data);
+
+            var response = await client.GetResponse<User>();
+
+            return response.Message;
         }
 
+        public async Task<Guid> Execute(UserEmailPassword data)
+        {
+            CommonValidations.ValidateEmail(data.Email);
+
+            User user = await CreateUserInDataBaseService(data);
+
+            if (user.Email == null)
+            {
+                throw new Exception("Unable to create user =(");
+            }
+
+            //throw new Exception("ololo");
+            return user.Id;
+        }
     }
 }
 

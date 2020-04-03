@@ -10,9 +10,9 @@ namespace UserService.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        
+
         [Route("create")]
-        [HttpPost] 
+        [HttpPost]
         /// <summary>
         /// This method will be implemented in communication with other services
         /// </summary>
