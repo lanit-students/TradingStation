@@ -11,10 +11,8 @@ namespace UserService.Validators
                 .NotEmpty()
                 .WithMessage("Email address must not be empty.")
                 .EmailAddress()
-                .WithMessage("Email address must be in valid format.")
-                .Length(50)
-                .WithMessage("Email length must be 50 symbols.");
-
+                .WithMessage("Email address must be in valid format.");
+            
             RuleFor(user => user.PasswordHash)
                 .NotEmpty()
                 .WithMessage("Password hash must not be empty.")

@@ -69,8 +69,6 @@ namespace UserService
             
             services.AddTransient<IValidator<UserEmailPassword>, UserEmailPasswordValidator>();
 
-            services.AddTransient<ICreateUserCommand, CreateUserCommand>();
-
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<UserLoginConsumer>();

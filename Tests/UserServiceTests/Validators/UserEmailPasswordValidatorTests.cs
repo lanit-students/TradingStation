@@ -20,8 +20,6 @@ namespace UserServiceTests.Validators
 
         private UserEmailPassword passwordHashTooLongEmailOk = new UserEmailPassword("example@gmail.com", new string('c', 41));
 
-        private UserEmailPassword passwordHashOkEmailToLong = new UserEmailPassword(new string('c', 40) + "example@gmail.com", new string('c', 39));
-
 
         private IValidator<UserEmailPassword> validator;
 
@@ -83,16 +81,6 @@ namespace UserServiceTests.Validators
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashTooLongEmailOk));
 
             var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's hash length must be 40 symbols.");
-
-            Assert.IsNotNull(expectedError);
-        }
-
-        [Test]
-        public void UserEmailPasswordTooLongEmail()
-        {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashOkEmailToLong));
-
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Email length must be 50 symbols.");
 
             Assert.IsNotNull(expectedError);
         }
