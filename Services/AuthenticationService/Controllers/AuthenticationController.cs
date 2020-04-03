@@ -27,9 +27,11 @@ namespace AuthenticationService.Controllers
         /// </summary>
         [Route("login")]
         [HttpPost]
-        public string Login([FromServices] ICommand<UserEmailPassword, string> command, [FromBody] UserEmailPassword user)
+        public string Login([FromServices] ILoginCommand command, [FromBody] UserEmailPassword user)
         {
-            return command.Execute(user);
+            var result = command.Execute(user);
+
+            return result.Result;
         }
 
         /// <summary>
