@@ -4,7 +4,7 @@ namespace DataBaseService.Interfaces
 {
     public interface IRepository<Input>
     {
-        void Create(Input data);
         void Delete(Guid data);
+        Guid Create(Input data);
     }
 }

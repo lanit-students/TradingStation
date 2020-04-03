@@ -20,7 +20,7 @@ namespace DataBaseService.Contollers
         [HttpDelete]
         public void DeleteUser([FromServices] ICommand<Guid> command, [FromBody] Guid id)
         {
-            command.Execute(id);
+            command.Execute(id); 
         }
     }
 }

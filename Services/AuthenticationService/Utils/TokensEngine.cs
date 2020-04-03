@@ -21,7 +21,7 @@ namespace AuthenticationService
 
             tokens[userId] = token;
 
-            return tokens[userId];    
+            return tokens[userId];
         }
 
         /// <inheritdoc />

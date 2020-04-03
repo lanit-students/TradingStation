@@ -18,10 +18,10 @@ namespace DataBaseService.Utils
         }
 
         /// <summary>
-        /// Migration method. 
+        /// Migration method.
         /// Creates "TradingStation" DB with "ExecutedScripts" table, then:
         /// Runs through all the .sql in the directory (configure in the appsettings.json).
-        /// Checks (by its name) if a script was already executed, executes it, 
+        /// Checks (by its name) if a script was already executed, executes it,
         /// and marks as executed (by adding a row to the table).
         /// </summary>
         public void Migrate()
@@ -70,7 +70,7 @@ namespace DataBaseService.Utils
             }
         }
 
-        private void WriteDownExecutedScripts(string connectionString, 
+        private void WriteDownExecutedScripts(string connectionString,
             Dictionary<string, ExecutedScript> scriptsToWriteDown)
         {
             var insertRow = new StringBuilder();
@@ -103,7 +103,7 @@ namespace DataBaseService.Utils
             catch (SqlException e)
             {
                 // TODO replace with logs
-                Console.WriteLine(e.Message + 
+                Console.WriteLine(e.Message +
                     $"\n\tCouldn't write down executed scripts. Error on the [{lastScriptToWrite}] script.");
                 // TODO replace with logs
                 Console.WriteLine("\tWriting transaction rollbacked.");
@@ -165,7 +165,7 @@ namespace DataBaseService.Utils
         {
             var createTableScript = new StringBuilder();
             createTableScript.AppendLine("IF OBJECT_ID('dbo.ExecutedScripts', 'U') IS NULL ");
-            createTableScript.AppendLine("CREATE TABLE [dbo].[ExecutedScripts] "); 
+            createTableScript.AppendLine("CREATE TABLE [dbo].[ExecutedScripts] ");
             createTableScript.AppendLine("(Id INT IDENTITY NOT NULL, ");
             createTableScript.AppendLine("FileName NVARCHAR(100) NOT NULL, ");
             createTableScript.AppendLine("ExecutionTime DATETIME NOT NULL, ");
