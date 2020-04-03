@@ -84,9 +84,9 @@ namespace DataBaseService
 
             services.AddMassTransit(x =>
             {
+                x.AddBus(provider => CreateBus(provider));
                 x.AddConsumer<UserCreationConsumer>();
                 x.AddConsumer<UserLoginConsumer>();
-                x.AddBus(provider => CreateBus(provider));
             });
 
             services.AddMassTransitHostedService();

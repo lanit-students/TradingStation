@@ -16,9 +16,11 @@ namespace UserService.Controllers
         /// <summary>
         /// This method will be implemented in communication with other services
         /// </summary>
-        public void CreateUser([FromServices] ICreateUserCommand command, [FromBody] UserEmailPassword userEmailPassword)
+        public Guid CreateUser([FromServices] ICreateUserCommand command, [FromBody] UserEmailPassword userEmailPassword)
         {
-            command.Execute(userEmailPassword);
+            var res = command.Execute(userEmailPassword);
+
+            return res.Result;
         }
 
         [Route("delete")]

@@ -19,7 +19,7 @@ namespace UserService.Commands
 
         private async Task<User> CreateUserInDataBaseService(UserEmailPassword data)
         {
-            var uri = new Uri("rabbitmq://localhost/DataBaseServiceCreate");
+            var uri = new Uri("rabbitmq://localhost/DatabaseServiceCreate");
 
             var client = busControl.CreateRequestClient<UserEmailPassword>(uri).Create(data);
 
@@ -39,7 +39,6 @@ namespace UserService.Commands
                 throw new Exception("Unable to create user =(");
             }
 
-            //throw new Exception("ololo");
             return user.Id;
         }
     }

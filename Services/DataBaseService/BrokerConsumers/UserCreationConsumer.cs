@@ -1,5 +1,7 @@
-﻿using DTO;
+﻿using DataBaseService.Interfaces;
+using DTO;
 using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
@@ -7,15 +9,31 @@ namespace DataBaseService.BrokerConsumers
 {
     public class UserCreationConsumer : IConsumer<UserEmailPassword>
     {
-        private User CreateUserInDatabase(UserEmailPassword userEmail)
+        private readonly IRepository<UserEmailPassword> userRepository;
+
+        public UserCreationConsumer([FromServices] IRepository<UserEmailPassword> userRepository)
         {
-            // TODO: Implement asking the database here
-            return new User
+            this.userRepository = userRepository;
+        }
+
+        private User CreateUserInDatabase(UserEmailPassword data)
+        {
+            try
             {
-                Id = Guid.NewGuid(),
-                Email = "email",
-                PasswordHash = "xxxxx"
-            };
+                return new User
+                {
+                    Id = userRepository.Create(data),
+                    Email = data.Email,
+                    PasswordHash = data.PasswordHash
+                };
+            }
+            catch
+            {
+                return new User
+                {
+                    Email = null
+                };
+            }
         }
 
         public async Task Consume(ConsumeContext<UserEmailPassword> context)

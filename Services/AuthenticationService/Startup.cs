@@ -40,12 +40,6 @@ namespace AuthenticationService
                     hst.Username($"{serviceName}_{serviceId}");
                     hst.Password($"{serviceId}");
                 });
-
-                cfg.ReceiveEndpoint(serviceName, ep =>
-                {
-                    ep.PrefetchCount = 16;
-                    ep.UseMessageRetry(r => r.Interval(2, 100));
-                });
             });
         }
 

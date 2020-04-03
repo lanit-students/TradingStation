@@ -47,14 +47,6 @@ namespace UserService
 
                     ep.ConfigureConsumer<UserLoginConsumer>(serviceProvider);
                 });
-
-                cfg.ReceiveEndpoint($"{serviceName}Create", ep =>
-                {
-                    ep.PrefetchCount = 16;
-                    ep.UseMessageRetry(r => r.Interval(2, 100));
-
-                    //ep.ConfigureConsumer<UserCreationConsumer>(serviceProvider);
-                });
             });
         }
 
@@ -76,7 +68,6 @@ namespace UserService
 
             services.AddMassTransit(x =>
             {
-                //x.AddConsumer<UserCreationConsumer>();
                 x.AddConsumer<UserLoginConsumer>();
                 x.AddBus(provider => CreateBus(provider));
             });
