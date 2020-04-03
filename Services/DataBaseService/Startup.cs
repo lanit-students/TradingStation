@@ -16,7 +16,7 @@ using System;
 using DatabaseService.BrokerConsumers;
 using GreenPipes;
 using DataBaseService.BrokerConsumers;
-
+using DataBaseService.Commands;
 
 namespace DataBaseService
 {
