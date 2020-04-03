@@ -1,6 +1,7 @@
 ﻿using DataBaseService.DbModels;
 using DataBaseService.Interfaces;
 using DTO;
+using Kernel.CustomExceptions;
 using Microsoft.Data.SqlClient;
 using System;
 
@@ -33,13 +34,17 @@ namespace DataBaseService.Repositories
             }
         }
 
-        public void Delete(Guid data)
+        public void Delete(Guid id)
         {
-            var user = dbContext.Find<DbUserCredential>(data);
+            var user = dbContext.Find<DbUserCredential>(id);
             if (!(user is null))
             {
-                user.Exist = false;
+                user.IsExists = false;
                 dbContext.SaveChanges();
+            }
+            else
+            {
+                throw new NotFoundException("User with such id is not found");
             }
         }
     }

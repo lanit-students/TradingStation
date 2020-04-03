@@ -1,1 +1,1 @@
-ALTER TABLE dbo.UsersCredentials ADD Exist BIT DEFAULT 1;
+ALTER TABLE dbo.UsersCredentials ADD IsExists BIT DEFAULT 1;

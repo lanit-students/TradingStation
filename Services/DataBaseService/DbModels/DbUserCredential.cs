@@ -9,7 +9,7 @@ namespace DataBaseService.DbModels
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public bool Exist { get; set; }
+        public bool IsExists { get; set; }
     }
 
     public class UserConfiguration : IEntityTypeConfiguration<DbUserCredential>
@@ -41,8 +41,8 @@ namespace DataBaseService.DbModels
                 .IsUnique()
                 .IsClustered();
             builder
-               .Property(p => p.Exist)
-               .HasColumnName("Exist")
+               .Property(p => p.IsExists)
+               .HasColumnName("IsExists")
                .HasDefaultValue(1);
 
         }
