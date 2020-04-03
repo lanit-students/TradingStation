@@ -37,7 +37,7 @@ namespace DataBaseService.Repositories
             var user = dbContext.Find<DbUserCredential>(data);
             if (!(user is null))
             {
-                user.IsExist = false;
+                user.Exist = false;
                 dbContext.SaveChanges();
             }
         }
