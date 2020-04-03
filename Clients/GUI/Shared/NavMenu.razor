@@ -1,4 +1,5 @@
-﻿@inject Authentication.AuthStateProvider AuthenticationProvider
+@using Authentication
+@inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
 
 <div class="top-row pl-4 navbar navbar-dark">
@@ -18,25 +19,24 @@
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="/" @onclick="() => Logout()" Match="NavLinkMatch.All">
-                        <span class="oi oi-account-logout" aria-hidden="true"></span> Log out
+                    <NavLink class="nav-link" href="signin" @onclick="@SignOut" Match="NavLinkMatch.All">
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Sign Out
                     </NavLink>
                 </li>
             </Authorized>
             <NotAuthorized>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="signup">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Sign up
+                        <span class="oi oi-plus" aria-hidden="true"></span> Sign Up
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="signin">
-                        <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
+                    <NavLink class="nav-link" href="signin" Match="NavLinkMatch.All">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Sign In
                     </NavLink>
                 </li>
             </NotAuthorized>
         </AuthorizeView>
-
     </ul>
 </div>
 
@@ -50,12 +50,8 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    /// <summary>
-    /// Handles signing out
-    /// </summary>
-    public void Logout()
+    private void SignOut()
     {
         AuthenticationProvider.MarkSignedOut();
-        NavigationManager.NavigateTo("signin");
     }
 }

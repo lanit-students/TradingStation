@@ -1,18 +1,18 @@
 ﻿using AuthenticationService.Interfaces;
+using System;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace AuthenticationService.Commands
 {
-    public class LoginCommand : ICommand<User, string>
+    public class LoginCommand : ICommand<UserEmailPassword, string>
     {
         private readonly ITokensEngine tokensEngine;
 
         /// <summary>
         /// Get user ID from UserService.
         /// </summary>
-        private Guid GetUserIdFromUserService(User user)
+        private Guid GetUserIdFromUserService(UserEmailPassword user)
         {
             return Guid.Empty;
         }
@@ -22,7 +22,7 @@ namespace AuthenticationService.Commands
             this.tokensEngine = tokensEngine;
         }
 
-        public string Execute(User data)
+        public string Execute(UserEmailPassword data)
         {
             Guid userId = GetUserIdFromUserService(data);
 

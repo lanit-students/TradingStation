@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Blazored.Modal;
 using GUI.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -24,8 +25,9 @@ namespace GUI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-
             services.AddBlazoredLocalStorage();
+
+            services.AddBlazoredModal();
 
             services.AddScoped<AuthStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(
@@ -41,7 +43,7 @@ namespace GUI
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                //app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

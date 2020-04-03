@@ -3,16 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.2.0-preview2.20160.5" />
+    <PackageReference Include="Blazored.Modal" Version="4.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.0-preview.1.20124.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
+    <ProjectReference Include="..\..\Common\HttpWebRequestWrapperLib\HttpWebRequestWrapperLib.csproj" />
   </ItemGroup>
 
 </Project>

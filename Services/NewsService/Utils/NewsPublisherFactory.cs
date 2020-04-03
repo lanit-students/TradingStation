@@ -8,13 +8,14 @@ namespace NewsService.Utils
     {
         // This method create an instance of INewsPublisher depending on the newsPublisherType
 
-        public static INewsPublisher CreateNewsPublisher(NewsPublisherTypes newsPublisherType)
+        public static INewsPublisher Create(NewsPublisherTypes newsPublisherType)
         {
             switch (newsPublisherType)
             {
                 case NewsPublisherTypes.CentralBank:
                     return new CentralBankNewsPublisher();
                 default:
+                    //TODO change on custom exception
                         throw new NotImplementedException();
             }
         }

@@ -15,8 +15,7 @@ namespace GUI.Authentication
         /// </summary>
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
-
+            var anonymous = new ClaimsPrincipal(new ClaimsIdentity(""));
             return await Task.FromResult(new AuthenticationState(anonymous));
         }
 

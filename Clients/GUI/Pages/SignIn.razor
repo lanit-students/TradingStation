@@ -1,17 +1,18 @@
 ﻿@page "/signin"
-@using ViewModels
 @using Authentication
+@using ViewModels
+@using DTO
+@using Scripts
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
+<h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password</h3>
 <div class="col-12">
     <h3><b>Sign In</b></h3>
     <hr />
-
-    <EditForm EditContext="@editContext" OnSubmit="@TrySignIn">
+    <EditForm Model="@userInput" OnValidSubmit="@TrySignIn">
         <DataAnnotationsValidator />
-
         <div class="form-group">
             <label for="Email">Email</label>
             <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
@@ -20,12 +21,10 @@
         <br />
         <div class="form-group">
             <label for="Password">Password</label>
-            <InputText class="form-control col-3" @bind-Value="userInput.Password" placeholder="*****" />
+            <InputText class="form-control col-3" type="Password" @bind-Value="userInput.Password" placeholder="*****" />
             <ValidationMessage For="() => userInput.Password" />
         </div>
-
         <input type="submit" class="form-control col-1 button btn-primary" value="Sign in" />
-
     </EditForm>
 </div>
 
@@ -33,51 +32,32 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState> authState { get; set; }
-
-    /// <summary>
-    /// Objects for interactiong with form
-    /// </summary>
     private SignInViewModel userInput;
-    private EditContext editContext;
-    private ValidationMessageStore messageStore;
+    bool isHidden = true;
+    string errorMessage = "";
 
-    /// <summary>
-    /// Sign in button press event handler
-    /// </summary>
-    private async Task TrySignIn()
+    private void TrySignIn()
     {
-        // TODO: implement ValidateInput()
-        var isValid = await ValidateInput(editContext);
-        // Not sure if all this validating stuff is done properly
-        messageStore.Clear();
-        editContext.NotifyValidationStateChanged();
-
-        if (userInput.Email == "root@gmail.com" && userInput.Password == "root")
+        var user = new UserEmailPassword(userInput.Email, userInput.Password);
+        try
         {
             await LocalStorage.SetItemAsync("root", "token");
+            // TODO: add logic after MassTransit flow iw merged
+            //SignInner.SignIn(user);
             AuthenticationProvider.MarkSignedIn();
-            NavigationManager.NavigateTo("userinfo");
+            NavigationManager.NavigateTo("/userinfo");
         }
-        else
+        catch(Exception e)
         {
-            messageStore.Add(editContext.Field("Email"), "Invalid login data");
-            messageStore.Add(editContext.Field("Password"), "Invalid login data");
-            editContext.NotifyValidationStateChanged();
+            userInput.Password = "";
+            isHidden = false;
+            errorMessage = e.Message;
         }
-    }
-
-    //TODO: Validate input using api and move it to validations folder
-    private async Task<bool> ValidateInput(EditContext context)
-    {
-        var serverCheck = userInput.Email == "root@gmail.com" && userInput.Password == "root";
-        return serverCheck;
     }
 
     protected async override Task OnInitializedAsync()
     {
         userInput = new SignInViewModel();
-        editContext = new EditContext(userInput);
-        messageStore = new ValidationMessageStore(editContext);
 
         var claims = (await authState).User;
 

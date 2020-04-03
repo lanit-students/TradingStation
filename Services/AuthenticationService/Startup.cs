@@ -30,7 +30,7 @@ namespace AuthenticationService
 
             services.AddSingleton<ITokensEngine, TokensEngine>();
             
-            services.AddTransient<ICommand<User, string>, LoginCommand>();
+            services.AddTransient<ICommand<UserEmailPassword, string>, LoginCommand>();
             services.AddTransient<ICommand<Guid>, LogoutCommand>();
 
             services.AddTransient<IValidator<UserToken>, UserTokenValidator>();
