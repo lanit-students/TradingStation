@@ -4,7 +4,6 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -13,10 +12,12 @@ namespace UserService.Commands
     public class CreateUserCommand : ICreateUserCommand
     {
         private readonly IBus busControl;
+        private readonly IValidator<UserEmailPassword> validator;
 
-        public CreateUserCommand([FromServices] IBus busControl)
+        public CreateUserCommand([FromServices] IBus busControl, [FromServices] IValidator<UserEmailPassword> validator)
         {
             this.busControl = busControl;
+            this.validator = validator;
         }
 
         private async Task<User> CreateUserInDataBaseService(UserEmailPassword data)
@@ -32,7 +33,7 @@ namespace UserService.Commands
 
         public async Task<Guid> Execute(UserEmailPassword data)
         {
-            CommonValidations.ValidateEmail(data.Email);
+            validator.ValidateAndThrow(data);
 
             User user = await CreateUserInDataBaseService(data);
 

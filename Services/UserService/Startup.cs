@@ -66,8 +66,8 @@ namespace UserService
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
 
             services.AddSingleton<HttpWebRequestWrapper, HttpWebRequestWrapper>();
+            
             services.AddTransient<IValidator<UserEmailPassword>, UserEmailPasswordValidator>();
-
 
             services.AddTransient<ICreateUserCommand, CreateUserCommand>();
 
