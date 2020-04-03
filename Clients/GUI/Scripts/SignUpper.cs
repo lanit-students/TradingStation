@@ -1,8 +1,5 @@
-using GUI.GUIModels;
-using System.Net;
+using GUI.ViewModels;
 using DTO;
-using System.IO;
-using System.Text.Json;
 using HttpWebRequestWrapperLib;
 
 namespace GUI.Scripts
