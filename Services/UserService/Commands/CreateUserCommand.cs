@@ -1,38 +1,48 @@
 ﻿using DTO;
 using Kernel;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using UserService.Interfaces;
 
 namespace UserService.Commands
 {
     public class CreateUserCommand : ICreateUserCommand
     {
-        private readonly IValidator<UserEmailPassword> validator;
-        public CreateUserCommand([FromServices] IValidator<UserEmailPassword> validator)
+        private readonly IBus busControl;
+
+        public CreateUserCommand([FromServices] IBus busControl)
         {
-            this.validator = validator;
+            this.busControl = busControl;
         }
 
-        public void Execute(UserEmailPassword userEmailPassword)
+        private async Task<User> CreateUserInDataBaseService(UserEmailPassword data)
         {
-            validator.ValidateAndThrow(userEmailPassword);
-            createUser(userEmailPassword);
+            var uri = new Uri("rabbitmq://localhost/DatabaseServiceCreate");
+
+            var client = busControl.CreateRequestClient<UserEmailPassword>(uri).Create(data);
+
+            var response = await client.GetResponse<User>();
+
+            return response.Message;
         }
 
-        private void createUser(UserEmailPassword userEmailPassword)
+        public async Task<Guid> Execute(UserEmailPassword data)
         {
-            try
+            CommonValidations.ValidateEmail(data.Email);
+
+            User user = await CreateUserInDataBaseService(data);
+
+            if (user.Email == null)
             {
-                return;
+                throw new Exception("Unable to create user =(");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
 
+            return user.Id;
+        }
     }
 }
 

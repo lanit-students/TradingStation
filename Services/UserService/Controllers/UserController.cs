@@ -1,7 +1,7 @@
-using System;
-using Microsoft.AspNetCore.Mvc;
-using IDeleteUserUserService.Interfaces;
 using DTO;
+using IDeleteUserUserService.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using UserService.Interfaces;
 
 namespace UserService.Controllers
@@ -10,15 +10,17 @@ namespace UserService.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        
+
         [Route("create")]
-        [HttpPost] 
+        [HttpPost]
         /// <summary>
         /// This method will be implemented in communication with other services
         /// </summary>
-        public void CreateUser([FromServices] ICreateUserCommand command, [FromBody] UserEmailPassword userEmailPassword)
+        public Guid CreateUser([FromServices] ICreateUserCommand command, [FromBody] UserEmailPassword userEmailPassword)
         {
-            command.Execute(userEmailPassword);
+            var res = command.Execute(userEmailPassword);
+
+            return res.Result;
         }
 
         [Route("delete")]
