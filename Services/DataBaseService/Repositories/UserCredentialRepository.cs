@@ -35,7 +35,7 @@ namespace DataBaseService.Repositories
         public void Delete(Guid data)
         {
             var user = dbContext.Find<DbUserCredential>(data);
-            if (user!=null)
+            if (!(user is null))
             {
                 user.IsExist = false;
                 dbContext.SaveChanges();
