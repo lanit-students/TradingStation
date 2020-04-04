@@ -1,4 +1,6 @@
-﻿namespace Kernel.CustomExceptions
+﻿using System;
+
+namespace Kernel.CustomExceptions
 {
     /// <summary>
     /// Means that the requested resource may be available in the future, which, however, does not guarantee the availability of previous content.
@@ -13,5 +15,7 @@
         public NotFoundException() { }
 
         public NotFoundException(string message) : base(message) { }
+
+        public NotFoundException(string message, Exception innerException) : base(message, innerException) { }
     }
 }
