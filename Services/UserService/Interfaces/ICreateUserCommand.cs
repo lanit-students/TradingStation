@@ -1,11 +1,11 @@
 ﻿using DTO;
-using System;
+using DTO.RestRequests;
 using System.Threading.Tasks;
 
 namespace UserService.Interfaces
 {
     public interface ICreateUserCommand
     {
-        Task<Guid> Execute(UserEmailPassword userEmailPassword);
+        Task<bool> Execute(CreateUserRequest request);
     }
 }

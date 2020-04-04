@@ -31,6 +31,7 @@ namespace NewsServiceTests.Utils
         public void CreateCentralBankNewsPublisherResultHasCorrectType()
         {
             var typeOfCreatedObject = NewsPublisherFactory.Create(centralBankNewsPublisherType).GetType();
+
             Assert.AreEqual(typeOfCreatedObject, centralBankNewsPublisher.GetType());
         }
     }

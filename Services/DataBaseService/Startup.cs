@@ -1,22 +1,22 @@
+using System;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
+using DataBaseService.Database;
+using DataBaseService.BrokerConsumers;
 using DataBaseService.Utils;
-using DataBaseService.Interfaces;
-using DataBaseService.DbModels;
 using DataBaseService.Repositories;
 using DataBaseService.Mappers;
 
-using DTO;
-
 using MassTransit;
-using System;
-using DatabaseService.BrokerConsumers;
 using GreenPipes;
-using DataBaseService.BrokerConsumers;
+using DataBaseService.Repositories.Interfaces;
+using DataBaseService.Mappers.Interfaces;
 
 namespace DataBaseService
 {
@@ -45,20 +45,13 @@ namespace DataBaseService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}Login", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
-                    ep.ConfigureConsumer<UserLoginConsumer>(serviceProvider);
-                });
-
-                cfg.ReceiveEndpoint($"{serviceName}Create", ep =>
-                {
-                    ep.PrefetchCount = 16;
-                    ep.UseMessageRetry(r => r.Interval(2, 100));
-
-                    ep.ConfigureConsumer<UserCreationConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<LoginConsumer>(serviceProvider);
                 });
             });
         }
@@ -68,23 +61,23 @@ namespace DataBaseService
             var migrationEngine = new MigrationEngine(Configuration);
             migrationEngine.Migrate();
 
+            services.AddHealthChecks();
+
             services.AddControllers();
 
-            services.AddDbContext<DataBaseContext>();
+            services.AddDbContext<TPlatformDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("TradingStationString"));
+            });
 
-            services.AddTransient<IRepository<UserEmailPassword>, UserCredentialRepository>();
-            services.AddTransient<IMapper<UserEmailPassword, DbUserCredential>, UserCredentialMapper>();
-
-            //var migrationEngine = new MigrationEngine(Configuration);
-            //migrationEngine.Migrate();
-
-            services.AddHealthChecks();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserMapper, UserMapper>();
 
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
-                x.AddConsumer<UserCreationConsumer>();
-                x.AddConsumer<UserLoginConsumer>();
+                x.AddConsumer<CreateUserConsumer>();
+                x.AddConsumer<LoginConsumer>();
             });
 
             services.AddMassTransitHostedService();

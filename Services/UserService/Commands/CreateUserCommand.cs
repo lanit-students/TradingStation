@@ -1,5 +1,8 @@
 ﻿using DTO;
+using DTO.BrokerRequests;
+using DTO.RestRequests;
 using Kernel;
+using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,29 +23,52 @@ namespace UserService.Commands
             this.validator = validator;
         }
 
-        private async Task<User> CreateUserInDataBaseService(UserEmailPassword data)
+        private async Task<bool> CreateUser(InternalCreateUserRequest request)
         {
-            var uri = new Uri("rabbitmq://localhost/DatabaseServiceCreate");
+            var uri = new Uri("rabbitmq://localhost/DatabaseService");
 
-            var client = busControl.CreateRequestClient<UserEmailPassword>(uri).Create(data);
+            var client = busControl.CreateRequestClient<InternalCreateUserRequest>(uri).Create(request);
 
-            var response = await client.GetResponse<User>();
+            var response = await client.GetResponse<OperationResult>();
 
-            return response.Message;
+            return response.Message.IsSuccess;
         }
 
-        public async Task<Guid> Execute(UserEmailPassword data)
+        public async Task<bool> Execute(CreateUserRequest request)
         {
             validator.ValidateAndThrow(data);
 
-            User user = await CreateUserInDataBaseService(data);
+            string passwordHash = ShaHash.GetPasswordHash(request.Password);
 
-            if (user.Email == null)
+            var user = new User
             {
-                throw new Exception("Unable to create user =(");
+                Id = Guid.NewGuid(),
+                Birthday = request.Birtday,
+                FirstName = request.FirstName,
+                LastName = request.LastName
+            };
+
+            var credential = new UserCredential
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                Email = request.Email,
+                PasswordHash = passwordHash
+            };
+
+            var internalCreateUserRequest = new InternalCreateUserRequest
+            {
+                User = user,
+                Credential = credential
+            };
+
+            var createUserResult = await CreateUser(internalCreateUserRequest);
+            if (!createUserResult)
+            {
+                throw new BadRequestException("Unable to create user");
             }
 
-            return user.Id;
+            return createUserResult;
         }
     }
 }
