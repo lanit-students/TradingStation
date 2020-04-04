@@ -1,24 +1,25 @@
-﻿using System.Security.Cryptography;
+﻿using Kernel.CustomExceptions;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Kernel
 {
-    public class ShaHash
+    public static class ShaHash
     {
-        public static string GetHash(string input)
+        public static string GetPasswordHash(string password)
         {
-            using (SHA1Managed sha1 = new SHA1Managed())
-            {
-                var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
-                var sringBuilder = new StringBuilder(hash.Length * 2);
+            if (string.IsNullOrEmpty(password))
+                throw new BadRequestException();
 
-                foreach (byte b in hash)
-                {
-                    sringBuilder.Append(b.ToString("X2"));
-                }
+            using var sha1 = new SHA1Managed();
 
-                return sringBuilder.ToString();
-            }
+            byte[] hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            var stringBuilder = new StringBuilder(hash.Length * 2);
+            stringBuilder.Append(string.Join(null, hash.Select(b => b.ToString("X2"))));
+
+            return stringBuilder.ToString();
         }
     }
 }

@@ -4,6 +4,6 @@ namespace IDeleteUserUserService.Interfaces
 {
     public interface IDeleteUserCommand
     {
-        void Execute(Guid userId);
+        bool Execute(Guid userId);
     }
 }

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace AuthenticationService.Validators
 {
-    public class UserEmailPasswordValidator : AbstractValidator<UserEmailPassword>
+    public class UserEmailPasswordValidator : AbstractValidator<UserCredential>
     {
         public UserEmailPasswordValidator()
         {

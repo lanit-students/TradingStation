@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using AuthenticationService.Interfaces;
 using DTO;
+using Kernel.CustomExceptions;
 
 namespace AuthenticationService
 {
@@ -15,28 +16,46 @@ namespace AuthenticationService
         private Dictionary<Guid, string> tokens = new Dictionary<Guid, string>();
 
         /// <inheritdoc />
-        public string GetToken(Guid userId)
+        public UserToken GetToken(Guid userId)
         {
+            if (userId == Guid.Empty)
+                throw new BadRequestException();
+
             var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 
             tokens[userId] = token;
 
-            return tokens[userId];
+            return new UserToken
+            {
+                UserId = userId,
+                Body = token
+            };
         }
 
         /// <inheritdoc />
-        public bool CheckToken(UserToken token)
+        public OperationResult CheckToken(UserToken token)
         {
-            return tokens.TryGetValue(token.UserId, out string tokenFromStorage) && tokenFromStorage == token.Body;
+            var result = new OperationResult
+            {
+                IsSuccess = tokens.TryGetValue(token.UserId, out string tokenFromStorage) && tokenFromStorage == token.Body
+            };
+
+            return result;
         }
 
         /// <inheritdoc />
-        public void DeleteToken(Guid userId)
+        public OperationResult DeleteToken(Guid userId)
         {
+            var result = new OperationResult();
+
             if (tokens.ContainsKey(userId))
             {
                 tokens.Remove(userId);
+
+                result.IsSuccess = true;
             }
+
+            return result;
         }
     }
 }

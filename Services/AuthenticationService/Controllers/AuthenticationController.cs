@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
 
-using AuthenticationService.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 using DTO;
-using FluentValidation;
+using AuthenticationService.Interfaces;
+using DTO.RestRequests;
 
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,27 +16,15 @@ namespace AuthenticationService.Controllers
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly ITokensEngine tokenEngine;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public AuthenticationController([FromServices] ITokensEngine tokenEngine)
-        {
-            this.tokenEngine = tokenEngine;
-        }
-
         /// <summary>
         /// Login user in system.
         /// Generates and returns an active token.
         /// </summary>
         [Route("login")]
         [HttpPost]
-        public async Task<string> Login([FromServices] ILoginCommand command, [FromBody] UserEmailPassword user)
+        public async Task<UserToken> Login([FromServices] ILoginCommand command, [FromBody] LoginRequest request)
         {
-            var result = await command.Execute(user);
-
-            return JsonSerializer.Serialize(result);
+            return await command.Execute(request);
         }
 
         /// <summary>
@@ -48,15 +38,16 @@ namespace AuthenticationService.Controllers
 
             return tokenEngine.CheckToken(token);
         }
+        
 
         /// <summary>
         /// Deletes a token.
         /// </summary>
         [Route("logout")]
         [HttpDelete]
-        public void Logout([FromServices] ICommand<int> command, [FromQuery] int userId)
+        public bool Logout([FromServices] ILogoutCommand command, [FromHeader] Guid userId)
         {
-            command.Execute(userId);
+            return command.Execute(userId);
         }
     }
 }

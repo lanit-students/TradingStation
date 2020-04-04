@@ -6,15 +6,15 @@
  {
      public class DeleteUserCommand : IDeleteUserCommand
      {
-         public void Execute(Guid userId)
+         public bool Execute(Guid userId)
          {
-            DeleteUser(userId);
+            return DeleteUser(userId);
          }
 
          //TODO fix from stub on request
-         private string DeleteUser(Guid userId)
+         private bool DeleteUser(Guid userId)
          {
-             return "Ok";
+             return false;
          }
      }
  }

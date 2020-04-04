@@ -1,21 +1,27 @@
-﻿using AuthenticationService.Interfaces;
+﻿using System;
+
 using Microsoft.AspNetCore.Mvc;
-using System;
+
+using AuthenticationService.Interfaces;
+using Kernel.CustomExceptions;
 
 namespace AuthenticationService.Commands
 {
-    public class LogoutCommand : ICommand<Guid>
+    public class LogoutCommand : ILogoutCommand
     {
-        private readonly ITokensEngine tokensEngine;
+        private readonly ITokensEngine _tokensEngine;
 
         public LogoutCommand([FromServices] ITokensEngine tokensEngine)
         {
-            this.tokensEngine = tokensEngine;
+            _tokensEngine = tokensEngine;
         }
 
-        public void Execute(Guid data)
+        public bool Execute(Guid userId)
         {
-            tokensEngine.DeleteToken(data);
+            if (userId == Guid.Empty)
+                throw new BadRequestException();
+
+            return _tokensEngine.DeleteToken(userId).IsSuccess;
         }
     }
 }

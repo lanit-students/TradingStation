@@ -1,10 +1,15 @@
-﻿using AuthenticationService.Interfaces;
-using System;
-using DTO;
-using Microsoft.AspNetCore.Mvc;
-using MassTransit;
+﻿using System;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+
+using MassTransit;
+
+using AuthenticationService.Interfaces;
+using DTO;
 using Kernel.CustomExceptions;
+using Kernel;
+using DTO.RestRequests;
 
 namespace AuthenticationService.Commands
 {
@@ -16,21 +21,23 @@ namespace AuthenticationService.Commands
         /// <summary>
         /// Get user ID from UserService.
         /// </summary>
-        private async Task<User> GetUserFromUserService(UserEmailPassword data)
+        private async Task<UserCredential> GetUserCredential(LoginRequest request)
         {
-            var uri = new Uri("rabbitmq://localhost/UserServiceLogin");
+            var uri = new Uri("rabbitmq://localhost/UserService_Login");
 
-            var client = busControl.CreateRequestClient<UserEmailPassword>(uri).Create(data);
+            var client = busControl.CreateRequestClient<LoginRequest>(uri).Create(request);
 
-            var response = await client.GetResponse<User>();
+            var response = await client.GetResponse<UserCredential>();
 
             return response.Message;
         }
 
-        private bool CheckUserCredentials(User user, UserEmailPassword credentials)
+        private bool CheckUserCredentials(UserCredential credential, LoginRequest request)
         {
-            return user.PasswordHash == credentials.PasswordHash
-                && user.Email == credentials.Email;
+            string passwordHash = ShaHash.GetPasswordHash(request.Password);
+
+            return credential.PasswordHash == passwordHash
+                && credential.Email == request.Email;
         }
 
         public LoginCommand(
@@ -41,15 +48,15 @@ namespace AuthenticationService.Commands
             this.busControl = busControl;
         }
 
-        public async Task<UserToken> Execute(UserEmailPassword data)
+        public async Task<UserToken> Execute(LoginRequest request)
         {
-            User user = await GetUserFromUserService(data);
+            UserCredential credential = await GetUserCredential(request);
 
-            if (!CheckUserCredentials(user, data))
+            if (!CheckUserCredentials(credential, request))
             {
-                throw new NotFoundException("User not found =(");
+                throw new ForbiddenException();
             }
-
+            
             var token = tokensEngine.GetToken(user.Id);
 
             var userToken = new UserToken()
@@ -58,7 +65,7 @@ namespace AuthenticationService.Commands
                 Body = token
             };
 
-            return userToken;
+            return tokensEngine.GetToken(credential.UserId);
         }
     }
 }

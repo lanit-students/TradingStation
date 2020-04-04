@@ -1,16 +1,17 @@
-﻿using DTO;
-using HttpWebRequestWrapperLib;
-using System.Text.Json;
+﻿﻿using DTO;
+using Kernel;
+using Kernel.Enums;
+using System;
 
 namespace GUI.Scripts
 {
     public static class SignInner
     {
-        public static UserToken SignIn(UserEmailPassword userInput)
+        public static void SignIn(UserCredential userInput)
         {
-            var wrapper = new HttpWebRequestWrapper();
-            var response = wrapper.Post("https://localhost:5001/authentication/login", null, userInput);
-            return JsonSerializer.Deserialize<UserToken>(response);
+            const string url = "http://localhost:5001/authentication/login";
+
+            var token = new RestClient<UserCredential, UserToken>(url, RestRequestType.POST).Execute(userInput);
         }
     }
 }
