@@ -6,11 +6,11 @@ namespace GUI.Scripts
 {
     public static class SignUpper
     {
-        public static void SignUp(UserEmailPassword data)
+        public static void SignUp(User user)
         {
             const string url = "https://localhost:5011/user/create";
 
-            var result = new RestClient<UserEmailPassword, bool>(url, RestRequestType.POST).Execute(data);
+            var result = new RestClient<User, bool>(url, RestRequestType.POST).Execute(user);
         }
     }
 }

@@ -1,17 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataBaseService.DbModels
+namespace DataBaseService.Database.Models
 {
     public class DbUserCredential
     {
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
+
+        [ForeignKey("UserId")]
+        public DbUser User { get; set; }
     }
 
-    public class UserConfiguration : IEntityTypeConfiguration<DbUserCredential>
+    public class DbUserCredentialConfiguration : IEntityTypeConfiguration<DbUserCredential>
     {
         public void Configure(EntityTypeBuilder<DbUserCredential> builder)
         {
@@ -23,15 +28,18 @@ namespace DataBaseService.DbModels
                 .HasColumnName("Id")
                 .IsRequired();
             builder
+                .Property(p => p.UserId)
+                .HasColumnName("UserId")
+                .IsRequired();
+            builder
                 .Property(p => p.Email)
                 .HasColumnName("Email")
                 .IsRequired()
-                .HasMaxLength(50);            
+                .HasMaxLength(50);
             builder
                 .Property(p => p.PasswordHash)
                 .HasColumnName("PasswordHash")
-                .IsRequired()
-                .HasMaxLength(40);
+                .IsRequired();
             builder
                 .HasIndex(p => p.Id)
                 .IsUnique();

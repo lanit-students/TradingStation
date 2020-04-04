@@ -11,6 +11,7 @@ using MassTransit.AspNetCoreIntegration;
 using Microsoft.Extensions.Configuration;
 using UserService.BrokerConsumers;
 using System;
+using Kernel.Middlewares;
 
 namespace UserService
 {
@@ -39,7 +40,7 @@ namespace UserService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}Login", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
@@ -80,7 +81,7 @@ namespace UserService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            //TODO app.UseMiddleware<TokenMiddleware>();
+            app.UseMiddleware<CheckTokenMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

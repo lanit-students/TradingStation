@@ -1,7 +1,9 @@
 using Kernel;
 using Kernel.Enums;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace KernelTests
 {
@@ -12,6 +14,8 @@ namespace KernelTests
         [Test]
         public void CreateNewRestClientTest()
         {
+            var a = JsonSerializer.Serialize(new DateTime(1985, 1, 21));
+
             Assert.NotNull(new RestClient<object, object>(Url, RestRequestType.GET));
         }
 

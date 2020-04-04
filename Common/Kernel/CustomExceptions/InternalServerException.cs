@@ -1,4 +1,6 @@
-﻿namespace Kernel.CustomExceptions
+﻿using System;
+
+namespace Kernel.CustomExceptions
 {
     public class InternalServerException : BaseException
     {
@@ -10,5 +12,7 @@
         public InternalServerException() { }
 
         public InternalServerException(string message) : base(message) { }
+
+        public InternalServerException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

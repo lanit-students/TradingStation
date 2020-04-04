@@ -32,7 +32,7 @@
 
     private void SaveDataClickHandler()
     {
-        var userInfo = new DTO.UserInformation(user.Name, user.Surname, user.DateOfBirth);
+        var userInfo = new DTO.User(); // TODO return logic user.Name, user.Surname, user.DateOfBirth);
 
         // This is in process (user/edit endpoint is another team's task)
         try

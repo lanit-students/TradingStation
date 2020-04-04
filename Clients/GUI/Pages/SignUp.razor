@@ -44,7 +44,7 @@
     {
         try
         {
-            SignUpper.SignUp(new UserEmailPassword(userInput.Email, userInput.Password));
+            SignUpper.SignUp(new User()); // TODO return logic userInput.Email, userInput.Password));
             NavigationManager.NavigateTo("/signin");
         }
         catch
