@@ -22,10 +22,11 @@ namespace Kernel.Middlewares
             _next = next;
             _bus = bus;
         }
+
         public async Task InvokeAsync(HttpContext context)
         {
             if (string.Equals(context.Request.Method, RestRequestType.POST.ToString(), StringComparison.OrdinalIgnoreCase)
-                && string.Equals(context.Request.Path, "/users/create", StringComparison.OrdinalIgnoreCase))
+                && string.Equals(context.Request.Path, "/user/create", StringComparison.OrdinalIgnoreCase))
             {
                 await _next.Invoke(context);
 

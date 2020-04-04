@@ -81,7 +81,7 @@ namespace UserService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            //app.UseMiddleware<CheckTokenMiddleware>();
+            app.UseMiddleware<CheckTokenMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
