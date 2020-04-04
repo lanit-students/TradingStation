@@ -6,7 +6,7 @@
     public class ForbiddenException : BaseException
     {
         public override int StatusCode => 403;
-        
+
         public override string Header => "Forbidden";
 
         /// <inheritdoc />
