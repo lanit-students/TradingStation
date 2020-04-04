@@ -5,10 +5,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using DataBaseService.Database.Migrations;
-using Kernel.CustomExceptions;
+
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+
+using DataBaseService.Database.Migrations;
+
+using Kernel.CustomExceptions;
 
 namespace DataBaseService.Utils
 {

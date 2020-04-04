@@ -12,11 +12,11 @@ using DataBaseService.BrokerConsumers;
 using DataBaseService.Utils;
 using DataBaseService.Repositories;
 using DataBaseService.Mappers;
+using DataBaseService.Repositories.Interfaces;
+using DataBaseService.Mappers.Interfaces;
 
 using MassTransit;
 using GreenPipes;
-using DataBaseService.Repositories.Interfaces;
-using DataBaseService.Mappers.Interfaces;
 
 namespace DataBaseService
 {
@@ -52,6 +52,7 @@ namespace DataBaseService
 
                     ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<LoginConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<FindConsumer>(serviceProvider);
                 });
             });
         }
@@ -78,6 +79,7 @@ namespace DataBaseService
                 x.AddBus(provider => CreateBus(provider));
                 x.AddConsumer<CreateUserConsumer>();
                 x.AddConsumer<LoginConsumer>();
+                x.AddConsumer<FindConsumer>();
             });
 
             services.AddMassTransitHostedService();

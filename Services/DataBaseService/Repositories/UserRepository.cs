@@ -1,9 +1,12 @@
-﻿using DataBaseService.Database;
+﻿using System;
+using System.Linq;
+
+using DataBaseService.Database;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
+
 using DTO;
-using System.Linq;
-using System;
+using Kernel.CustomExceptions;
 
 namespace DataBaseService.Repositories
 {
@@ -33,6 +36,22 @@ namespace DataBaseService.Repositories
         public UserCredential GetUserCredential(string email)
         {
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);
+            if (dbCredential is null)
+            {
+                throw new NotFoundException("User not found");                
+            }
+
+            return mapper.MapUserCredential(dbCredential);
+        }
+
+        public UserCredential GetUserCredentialById(Guid Id)
+        {
+            var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Id == Id);
+
+            if (dbCredential is null)
+            {
+                throw new NotFoundException("User not found");
+            }
 
             return mapper.MapUserCredential(dbCredential);
         }

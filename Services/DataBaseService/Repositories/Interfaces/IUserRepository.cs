@@ -1,8 +1,5 @@
-﻿using DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using DTO;
 
 namespace DataBaseService.Repositories.Interfaces
 {
@@ -13,5 +10,7 @@ namespace DataBaseService.Repositories.Interfaces
         void CreateUserCredential(UserCredential userCredential);
 
         UserCredential GetUserCredential(string email);
+
+        UserCredential GetUserCredentialById(Guid Id);
     }
 }
