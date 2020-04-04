@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using UserService.BrokerConsumers;
 using System;
 using Kernel.Middlewares;
+using Kernel;
 
 namespace UserService
 {
@@ -77,6 +78,13 @@ namespace UserService
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(CustomExceptionHandler.HandleCustomException);
+            });
+
+            app.UseHsts();
 
             app.UseHttpsRedirection();
 
