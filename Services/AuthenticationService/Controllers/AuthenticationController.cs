@@ -8,7 +8,7 @@ using AuthenticationService.Interfaces;
 using DTO.RestRequests;
 
 using System.Text.Json;
-using System.Threading.Tasks;
+using FluentValidation;
 
 namespace AuthenticationService.Controllers
 {
@@ -26,19 +26,6 @@ namespace AuthenticationService.Controllers
         {
             return await command.Execute(request);
         }
-
-        /// <summary>
-        /// Checks if token exist.
-        /// </summary>
-        [Route("check")]
-        [HttpPost]
-        public bool CheckToken([FromServices] IValidator<UserToken> validator, [FromBody] UserToken token)
-        {
-            validator.ValidateAndThrow(token);
-
-            return tokenEngine.CheckToken(token);
-        }
-        
 
         /// <summary>
         /// Deletes a token.

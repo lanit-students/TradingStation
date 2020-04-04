@@ -40,7 +40,7 @@ namespace UserService.Commands
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Birthday = request.Birtday,
+                Birthday = request.Birthday,
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };

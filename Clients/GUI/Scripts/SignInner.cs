@@ -1,17 +1,22 @@
 ﻿﻿using DTO;
+using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
-using System;
+using System.Threading.Tasks;
 
 namespace GUI.Scripts
 {
     public static class SignInner
     {
-        public static void SignIn(UserCredential userInput)
+        public static async Task<UserToken> SignIn(LoginRequest request)
         {
-            const string url = "http://localhost:5001/authentication/login";
+            const string url = "https://localhost:5001/authentication/login";
 
-            var token = new RestClient<UserCredential, UserToken>(url, RestRequestType.POST).Execute(userInput);
+            var client = new RestClient<LoginRequest, UserToken>(url, RestRequestType.POST);
+
+            var userToken = await client.Execute(request);
+
+            return userToken;
         }
     }
 }

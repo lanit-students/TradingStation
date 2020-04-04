@@ -30,7 +30,6 @@
     private Task<AuthenticationState> authState { get; set; }
     private SignInViewModel userInput;
     bool isHidden = true;
-    string errorMessage = "";
 
     private async Task TrySignIn()
     {
@@ -43,10 +42,11 @@
         try
         {
             await LocalStorage.ClearAsync();
-            var hash = ShaHash.GetHash(userInput.Password);
-            var credentials = new UserEmailPassword(userInput.Email, hash);
-            var userToken = SignInner.SignIn(credentials);
+
+            var userToken = await SignInner.SignIn(request);
+
             LocalStorage.SetItemAsync(userToken.UserId.ToString(), userToken.Body);
+
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
@@ -54,7 +54,6 @@
         {
             userInput.Password = "";
             isHidden = false;
-            errorMessage = "Unable to login, check your data and try again.";
         }
     }
 

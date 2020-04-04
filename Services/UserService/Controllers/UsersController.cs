@@ -10,7 +10,7 @@ namespace UserService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         /// <summary>
         /// This method will be implemented in communication with other services

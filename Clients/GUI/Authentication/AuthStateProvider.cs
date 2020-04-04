@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 
 namespace GUI.Authentication
 {
@@ -10,6 +11,13 @@ namespace GUI.Authentication
     /// </summary>
     public class AuthStateProvider : AuthenticationStateProvider
     {
+        private readonly ILocalStorageService localStorage;
+
+        public AuthStateProvider(ILocalStorageService localStorageService)
+        {
+            localStorage = localStorageService;
+        }
+
         /// <summary>
         /// <see cref="AuthenticationStateProvider.GetAuthenticationStateAsync"/>
         /// </summary>
@@ -45,6 +53,8 @@ namespace GUI.Authentication
         /// </summary>
         public void MarkSignedOut()
         {
+            localStorage.ClearAsync();
+
             var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymous)));

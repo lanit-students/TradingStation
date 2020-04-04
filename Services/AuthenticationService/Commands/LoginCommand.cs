@@ -56,14 +56,6 @@ namespace AuthenticationService.Commands
             {
                 throw new ForbiddenException();
             }
-            
-            var token = tokensEngine.GetToken(user.Id);
-
-            var userToken = new UserToken()
-            {
-                UserId = user.Id,
-                Body = token
-            };
 
             return tokensEngine.GetToken(credential.UserId);
         }
