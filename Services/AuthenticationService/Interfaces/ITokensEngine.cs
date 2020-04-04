@@ -11,16 +11,16 @@ namespace AuthenticationService.Interfaces
         /// <summary>
         /// Generate token for user and put it in storage.
         /// </summary>
-        string GetToken(Guid userId);
+        UserToken GetToken(Guid userId);
 
         /// <summary>
         /// Delete token from storage.
         /// </summary>
-        void DeleteToken(Guid userId);
+        OperationResult DeleteToken(Guid userId);
 
         /// <summary>
         /// Check token is in storage.
         /// </summary>
-        bool CheckToken(UserToken token);
+        OperationResult CheckToken(UserToken token);
     }
 }

@@ -1,13 +1,19 @@
-using DTO;
-using HttpWebRequestWrapperLib;
+using DTO.RestRequests;
+using Kernel;
+using Kernel.Enums;
+using System.Threading.Tasks;
 
 namespace GUI.Scripts
 {
     public static class SignUpper
     {
-        public static void SignUp(UserEmailPassword data)
+        public static async Task SignUp(CreateUserRequest user)
         {
-            new HttpWebRequestWrapper().Post("https://localhost:5011/user/create", null, data);
+            const string url = "https://localhost:5011/users/create";
+
+            var client = new RestClient<CreateUserRequest, bool>(url, RestRequestType.POST);
+
+            await client.Execute(user);
         }
     }
 }

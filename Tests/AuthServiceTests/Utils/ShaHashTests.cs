@@ -1,4 +1,4 @@
-﻿using AuthenticationService.Utils;
+﻿using Kernel;
 using Kernel.CustomExceptions;
 using NUnit.Framework;
 

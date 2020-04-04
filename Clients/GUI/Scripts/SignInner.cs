@@ -1,14 +1,20 @@
 ﻿using DTO;
-using HttpWebRequestWrapperLib;
+using DTO.RestRequests;
+using Kernel;
+using Kernel.Enums;
+using System.Threading.Tasks;
 
 namespace GUI.Scripts
 {
     public static class SignInner
     {
-        public static void SignIn(UserEmailPassword userInput)
+        public static async Task<UserToken> SignIn(LoginRequest request)
         {
-            var requestWrapper = new HttpWebRequestWrapper();
-            requestWrapper.Post("http://localhost:5001/authentication/login", null, userInput);
+            const string url = "https://localhost:5001/authentication/login";
+
+            var client = new RestClient<LoginRequest, UserToken>(url, RestRequestType.POST);
+
+            return await client.Execute(request);
         }
     }
 }

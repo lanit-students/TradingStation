@@ -1,28 +1,31 @@
-﻿using DTO;
+﻿using DataBaseService.Repositories.Interfaces;
+using DTO;
+using DTO.RestRequests;
+using Kernel;
 using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace DatabaseService.BrokerConsumers
 {
-    public class UserLoginConsumer : IConsumer<UserEmailPassword>
+    public class LoginConsumer : IConsumer<LoginRequest>
     {
-        private User GetUserFromDatabase(string userEmail)
+        private readonly IUserRepository _repository;
+
+        private UserCredential GetUserCredential(string email)
         {
-            // TODO: Implement asking the database here
-            return new User
-            {
-                Id = Guid.NewGuid(),
-                Email = "bla@bla.com",
-                PasswordHash = "some_pass_hash"
-            };
+            return _repository.GetUserCredential(email);
         }
 
-        public async Task Consume(ConsumeContext<UserEmailPassword> context)
+        public LoginConsumer([FromServices] IUserRepository repository)
         {
-            var user = GetUserFromDatabase(context.Message.Email);
+            _repository = repository;
+        }
 
-            await context.RespondAsync(user);
+        public async Task Consume(ConsumeContext<LoginRequest> context)
+        {
+            await context.RespondAsync(GetUserCredential(context.Message.Email));
         }
     }
 }
