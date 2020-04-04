@@ -1,7 +1,7 @@
 ﻿@page "/signin"
 @using Authentication
 @using ViewModels
-@using DTO
+@using DTO.RestRequests
 @using Scripts
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
@@ -37,7 +37,12 @@
 
     private void TrySignIn()
     {
-        var user = new UserEmailPassword(userInput.Email, userInput.Password);
+        var request = new LoginRequest
+        {
+            Email = userInput.Email,
+            Password = userInput.Password
+        };
+
         try
         {
             // TODO: add logic after MassTransit flow iw merged

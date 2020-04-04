@@ -1,13 +1,16 @@
 using DTO;
-using HttpWebRequestWrapperLib;
+using Kernel;
+using Kernel.Enums;
 
 namespace GUI.Scripts
 {
     public static class SignUpper
     {
-        public static void SignUp(UserEmailPassword data)
+        public static void SignUp(User user)
         {
-            new HttpWebRequestWrapper().Post("https://localhost:5011/user/create", null, data);
+            const string url = "https://localhost:5011/user/create";
+
+            var result = new RestClient<User, bool>(url, RestRequestType.POST).Execute(user);
         }
     }
 }

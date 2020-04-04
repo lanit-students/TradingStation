@@ -1,4 +1,3 @@
-using HttpWebRequestWrapperLib;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +11,7 @@ using MassTransit.AspNetCoreIntegration;
 using Microsoft.Extensions.Configuration;
 using UserService.BrokerConsumers;
 using System;
+using Kernel.Middlewares;
 
 namespace UserService
 {
@@ -40,7 +40,7 @@ namespace UserService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}Login", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
@@ -59,11 +59,6 @@ namespace UserService
             services.AddControllers();
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
-
-            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
-
-            services.AddSingleton<HttpWebRequestWrapper, HttpWebRequestWrapper>();
-
             services.AddTransient<ICreateUserCommand, CreateUserCommand>();
 
             services.AddMassTransit(x =>
@@ -86,7 +81,7 @@ namespace UserService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            //TODO app.UseMiddleware<TokenMiddleware>();
+            app.UseMiddleware<CheckTokenMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

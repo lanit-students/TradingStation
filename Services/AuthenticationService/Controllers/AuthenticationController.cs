@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
 
-using AuthenticationService.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 using DTO;
-using FluentValidation;
+using AuthenticationService.Interfaces;
+using DTO.RestRequests;
 
 namespace AuthenticationService.Controllers
 {
@@ -11,39 +13,15 @@ namespace AuthenticationService.Controllers
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly ITokensEngine tokenEngine;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public AuthenticationController([FromServices] ITokensEngine tokenEngine)
-        {
-            this.tokenEngine = tokenEngine;
-        }
-
         /// <summary>
         /// Login user in system.
         /// Generates and returns an active token.
         /// </summary>
         [Route("login")]
         [HttpPost]
-        public string Login([FromServices] ILoginCommand command, [FromBody] UserEmailPassword user)
+        public async Task<UserToken> Login([FromServices] ILoginCommand command, [FromBody] LoginRequest request)
         {
-            var result = command.Execute(user);
-
-            return result.Result;
-        }
-
-        /// <summary>
-        /// Checks if token exist.
-        /// </summary>
-        [Route("check")]
-        [HttpPost]
-        public bool CheckToken([FromServices] IValidator<UserToken> validator, [FromBody] UserToken token)
-        {
-            validator.ValidateAndThrow(token);
-
-            return tokenEngine.CheckToken(token);
+            return await command.Execute(request);
         }
 
         /// <summary>
@@ -51,9 +29,9 @@ namespace AuthenticationService.Controllers
         /// </summary>
         [Route("logout")]
         [HttpDelete]
-        public void Logout([FromServices] ICommand<int> command, [FromQuery] int userId)
+        public bool Logout([FromServices] ILogoutCommand command, [FromHeader] Guid userId)
         {
-            command.Execute(userId);
+            return command.Execute(userId);
         }
     }
 }

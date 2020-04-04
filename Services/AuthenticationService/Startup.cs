@@ -1,17 +1,20 @@
+using System;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using FluentValidation;
+using MassTransit;
+using GreenPipes;
+
+using AuthenticationService.BrokerConsumers;
 using AuthenticationService.Commands;
 using AuthenticationService.Interfaces;
-
-using DTO;
-using System;
-using FluentValidation;
 using AuthenticationService.Validators;
-using MassTransit;
+using DTO;
 
 namespace AuthenticationService
 {
@@ -39,6 +42,14 @@ namespace AuthenticationService
                     hst.Username($"{serviceName}_{serviceId}");
                     hst.Password($"{serviceId}");
                 });
+
+                cfg.ReceiveEndpoint($"{serviceName}", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<TokenConsumer>(serviceProvider);
+                });
             });
         }
 
@@ -50,16 +61,16 @@ namespace AuthenticationService
             services.AddControllers();
 
             services.AddSingleton<ITokensEngine, TokensEngine>();
-
             services.AddTransient<ILoginCommand, LoginCommand>();
-            
-            services.AddTransient<ICommand<Guid>, LogoutCommand>();
+            services.AddTransient<ILogoutCommand, LogoutCommand>();
 
             services.AddTransient<IValidator<UserToken>, UserTokenValidator>();
 
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
+
+                x.AddConsumer<TokenConsumer>();
             });
 
             services.AddMassTransitHostedService();
