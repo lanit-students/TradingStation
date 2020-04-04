@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ab1b6a8d-c603-4486-bfca-e25d1c3ef2c7",
+		"_postman_id": "0bfe8ffe-0a40-4b79-bec4-e0a00b8ce687",
 		"name": "UserService",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -43,6 +43,144 @@
 									"key": "userId",
 									"value": "C8E3BC62-8D33-421C-9191-5DA3F12070C4"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "CreateUser",
+			"item": [
+				{
+					"name": "With correct body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e99293a-94f5-4726-9781-a4a80260899b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"true\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\" : \"email2@yandex.ru\",\n\t\"Password\" : \"123\",\n\t\"FirstName\" : \"Lep\",\n\t\"LastName\" : \"Kor\",\n\t\"Birthday\" : \"2020-04-05\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5011/users/create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5011",
+							"path": [
+								"users",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Body without password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "39e85dc7-4cf3-474f-b21f-967a65d24e72",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\" : \"email@yandex.ru\",\n\t\"FirstName\" : \"Leo\",\n\t\"LastName\" : \"Kor\",\n\t\"Birthday\" : \"2020-04-05\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5011/users/create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5011",
+							"path": [
+								"users",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Body with empty fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "233e7c6b-e51a-49c6-9740-61c8891405b0",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\" : \"\",\n\t\"Password\" : \"\",\n\t\"FirstName\" : \"\",\n\t\"LastName\" : \"\",\n\t\"Birthday\" : \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5011/users/create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5011",
+							"path": [
+								"users",
+								"create"
 							]
 						}
 					},
