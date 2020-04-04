@@ -1,4 +1,6 @@
-﻿namespace Kernel.CustomExceptions
+﻿using System;
+
+namespace Kernel.CustomExceptions
 {
     /// <summary>
     /// Indicates that the server understood the request, but refuses to authorize it.
@@ -13,5 +15,7 @@
         public ForbiddenException() { }
 
         public ForbiddenException(string message) : base(message) { }
+
+        public ForbiddenException(string message, Exception innerException) : base(message, innerException) { }
     }
 }
