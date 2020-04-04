@@ -23,13 +23,20 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullEmail()
         {
-            CreateUserRequest user = new CreateUserRequest { Email = null };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = null,
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "Email must be.");
+                    error => error.ErrorMessage == ErrorsMessages.EmailEmpty);
 
             Assert.IsNotNull(expectedError);
         }
@@ -37,13 +44,19 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmptyEmail()
         {
-            CreateUserRequest user = new CreateUserRequest {Email = ""};
+            CreateUserRequest user = new CreateUserRequest {
+                Email = "",
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "Email address must not be empty.");
+                    error => error.ErrorMessage == ErrorsMessages.EmailEmpty);
 
             Assert.IsNotNull(expectedError);
         }
@@ -51,13 +64,20 @@ namespace UserServiceTests.Validators
         [Test]
         public void WrongEmail()
         {
-            CreateUserRequest user = new CreateUserRequest { Email = "wrong.mail" };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = "email.yandex.ru",
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "Email address must be in valid format.");
+                    error => error.ErrorMessage == ErrorsMessages.InvalidEmail);
 
             Assert.IsNotNull(expectedError);
         }
@@ -65,13 +85,19 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmptyPassword()
         {
-            CreateUserRequest user = new CreateUserRequest { Password = "" };
+            CreateUserRequest user = new CreateUserRequest {
+                Email = "email@yandex.ru",
+                Password = "",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "Password must not be empty.");
+                    error => error.ErrorMessage == ErrorsMessages.EmptyPassword);
 
             Assert.IsNotNull(expectedError);
         }
@@ -79,13 +105,20 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullPassword()
         {
-            CreateUserRequest user = new CreateUserRequest { Password = null };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = "email@yandex.ru",
+                Password = null,
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "Password must be.");
+                    error => error.ErrorMessage == ErrorsMessages.EmptyPassword);
 
             Assert.IsNotNull(expectedError);
         }
@@ -93,13 +126,19 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullFirstName()
         {
-            CreateUserRequest user = new CreateUserRequest { FirstName = null };
+            CreateUserRequest user = new CreateUserRequest {
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = null,
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "First name must be.");
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameEmpty);
 
             Assert.IsNotNull(expectedError);
         }
@@ -107,13 +146,18 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmptyFirstName()
         {
-            CreateUserRequest user = new CreateUserRequest { FirstName = "" };
+            CreateUserRequest user = new CreateUserRequest {
+                Email = "email@yandex.ru",
+                Password = "123",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "First name must not be empty.");
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameEmpty);
 
             Assert.IsNotNull(expectedError);
         }
@@ -121,13 +165,20 @@ namespace UserServiceTests.Validators
         [Test]
         public void FirstNameContainsNumbers()
         {
-            CreateUserRequest user = new CreateUserRequest { FirstName = "Vadik12" };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = "Leo12",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "First name must not contain numbers and etc.");
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameError);
 
             Assert.IsNotNull(expectedError);
         }
@@ -135,13 +186,20 @@ namespace UserServiceTests.Validators
         [Test]
         public void FirstNameFirstLetterIsNotUpperCase()
         {
-            CreateUserRequest user = new CreateUserRequest { FirstName = "vadik" };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = "leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "The first letter must be uppercase and the rest must be lowercase");
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameError);
 
             Assert.IsNotNull(expectedError);
         }
@@ -149,13 +207,20 @@ namespace UserServiceTests.Validators
         [Test]
         public void FirstNameRestLettersIsNotLowerCase()
         {
-            CreateUserRequest user = new CreateUserRequest { FirstName = "VaDik" };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = "LeO",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "The first letter must be uppercase and the rest must be lowercase");
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameError);
 
             Assert.IsNotNull(expectedError);
         }
@@ -163,13 +228,20 @@ namespace UserServiceTests.Validators
         [Test]
         public void WrongBirthday()
         {
-            CreateUserRequest user = new CreateUserRequest { Birthday = DateTime.Today.AddDays(1) };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Now.AddDays(1)
+            };
 
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "You cannot be born in the future.");
+                    error => error.ErrorMessage == ErrorsMessages.FutureErrorBirthday);
 
             Assert.IsNotNull(expectedError);
         }
@@ -177,16 +249,35 @@ namespace UserServiceTests.Validators
         [Test]
         public void MissBirthday()
         {
-            CreateUserRequest user = new CreateUserRequest { };
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor"
+            };
+            
             var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == "Birthday must not be empty.");
+                    error => error.ErrorMessage == ErrorsMessages.BirthdatEmpty);
 
             Assert.IsNotNull(expectedError);
         }
 
-
+        [Test]
+        public void Ok()
+        {
+            CreateUserRequest user = new CreateUserRequest { 
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+                };
+            
+            Assert.DoesNotThrow(() => validator.ValidateAndThrow(user));
+        }
     }
 }

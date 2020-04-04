@@ -13,44 +13,32 @@ namespace UserService.Validators
         public CreateUserRequestValidator()
         {
             RuleFor(user => user.Email)
-                .NotNull()
-                .WithMessage("Email must be.")
                 .NotEmpty()
-                .WithMessage("Email address must not be empty.")
+                .WithMessage(ErrorsMessages.EmailEmpty)
                 .EmailAddress()
-                .WithMessage("Email address must be in valid format.");
+                .WithMessage(ErrorsMessages.InvalidEmail);
 
             RuleFor(user => user.Password)
-                .NotNull()
-                .WithMessage("Password must be.")
                 .NotEmpty()
-                .WithMessage("Password must not be empty.");
+                .WithMessage(ErrorsMessages.EmptyPassword);
 
             RuleFor(user => user.FirstName)
-                .NotNull()
-                .WithMessage("First name must be.")
                 .NotEmpty()
-                .WithMessage("First name must not be empty.")
-                .Matches(@"^[a-zA-Z-']$")
-                .WithMessage("First name must not contain numbers and etc.")
-                .Matches(@"/^[a-z ,.'-]+$/i")
-                .WithMessage("The first letter must be uppercase and the rest must be lowercase");
+                .WithMessage(ErrorsMessages.FirstNameEmpty)
+                .Matches("^[A-Z][a-z]+$")
+                .WithMessage(ErrorsMessages.FirstNameError);
 
             RuleFor(user => user.LastName)
-                .NotNull()
-                .WithMessage("Last name must be.")
                 .NotEmpty()
-                .WithMessage("Last name address must not be empty.")
-                .Matches(@"^[a-zA-Z-']$")
-                .WithMessage("Last name must not contain numbers and etc.")
-                .Matches(@"/^[a-z ,.'-]+$/i")
-                .WithMessage("The first letter must be uppercase and the rest must be lowercase");
+                .WithMessage(ErrorsMessages.LastNameEmpty)
+                .Matches("^[A-Z][a-z]+$")
+                .WithMessage(ErrorsMessages.LastNameError);
 
             RuleFor(user => user.Birthday)
                 .NotEmpty()
-                .WithMessage("Birthday must not be empty.")
+                .WithMessage(ErrorsMessages.BirthdatEmpty)
                 .Must(birthday => birthday <= DateTime.Today)
-                .WithMessage("You cannot be born in the future.");
+                .WithMessage(ErrorsMessages.FutureErrorBirthday);
         }
     }
 }
