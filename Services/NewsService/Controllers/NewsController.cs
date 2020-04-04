@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -20,17 +19,16 @@ namespace NewsService.Controllers
     /// You can select only NewsService to start
     /// </summary>
 
-    public class NewsServiceController : ControllerBase
+    public class NewsController : ControllerBase
     {
-        [Route("info")]
-        [HttpPost]
-
         ///<summary>
         /// Return news depending on a publisher type
         /// </summary>
+        [Route("currencies")]
+        [HttpPost]
         public List<ExchangeRate> GetCurrencies(
-            [FromServices] IValidator<CurrencyRequest> validator,
-            [FromBody] CurrencyRequest requestParams)
+            [FromBody] CurrencyRequest requestParams,
+            [FromServices] IValidator<CurrencyRequest> validator)
         {
             validator.ValidateAndThrow(requestParams);
             List<ExchangeRate> rates = NewsPublisherFactory

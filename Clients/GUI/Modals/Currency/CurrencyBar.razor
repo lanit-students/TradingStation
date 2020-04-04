@@ -1,0 +1,34 @@
+﻿
+    @foreach (var rate in rates)
+    {
+        <p>
+            @rate.Code
+
+            @rate.Value
+        </p>
+    }
+
+@code {
+    [Parameter]
+    public List<string> codes { get; set; }
+
+    List<ExchangeRate> rates { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrencyRequest req = new CurrencyRequest();
+        req.CurrecyPublisher = NewsPublisherTypes.CentralBank;
+        req.CurrencyCodes = codes;
+
+        RestClient<CurrencyRequest, List<ExchangeRate>> r =
+            new RestClient<CurrencyRequest, List<ExchangeRate>>(
+                      "http://localhost:44384/news/currencies",
+                      RestRequestType.POST,
+                      null,
+                      default,
+                      null);
+
+        rates = r.Execute(req).Result;
+    }
+
+}

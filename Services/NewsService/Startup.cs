@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using FluentValidation;
+
+using DTO.NewsRequests.Currency;
+using NewsService.Validators;
+
 namespace NewsService
 {
     public class Startup
@@ -12,11 +17,22 @@ namespace NewsService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IValidator<CurrencyRequest>, CurrencyRequestValidator>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Title" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIIPA");
+            });
 
             if (env.IsDevelopment())
             {
@@ -33,8 +49,6 @@ namespace NewsService
             {
                 endpoints.MapControllers();
             });
-
-
         }
     }
 }
