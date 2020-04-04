@@ -16,7 +16,7 @@ namespace Kernel
 
             var response = new ErrorResponse
             {
-                UtcTime = DateTime.Now
+                UtcTime = DateTime.UtcNow
             };
 
             if (handler?.Error is BaseException)
