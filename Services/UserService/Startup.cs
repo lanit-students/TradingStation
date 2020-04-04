@@ -85,7 +85,7 @@ namespace UserService
             });
 
             app.UseHsts();
-
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
