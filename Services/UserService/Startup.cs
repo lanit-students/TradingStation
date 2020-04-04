@@ -1,6 +1,5 @@
 using DTO;
 using FluentValidation;
-using HttpWebRequestWrapperLib;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +14,7 @@ using MassTransit.AspNetCoreIntegration;
 using Microsoft.Extensions.Configuration;
 using UserService.BrokerConsumers;
 using System;
+using DTO.RestRequests;
 using Kernel.Middlewares;
 
 namespace UserService
@@ -66,9 +66,7 @@ namespace UserService
 
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
 
-            services.AddSingleton<HttpWebRequestWrapper, HttpWebRequestWrapper>();
-            
-            services.AddTransient<IValidator<UserEmailPassword>, UserEmailPasswordValidator>();
+            services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
 
             services.AddMassTransit(x =>
             {

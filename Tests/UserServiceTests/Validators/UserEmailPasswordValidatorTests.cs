@@ -1,88 +1,192 @@
-﻿using UserService.Validators;
+﻿using System;
+using UserService.Validators;
 using DTO;
 using FluentValidation;
 using NUnit.Framework;
 using System.Linq;
+using DTO.RestRequests;
 
 namespace UserServiceTests.Validators
 {
     public class UserEmailPasswordValidatorTests
     {
-        private UserEmailPassword emailPasswordHashEmpty = new UserEmailPassword(string.Empty, string.Empty);
+        private IValidator<CreateUserRequest> validator = new CreateUserRequestValidator();
 
-        private UserEmailPassword emailEmptyPasswordHashOk = new UserEmailPassword(string.Empty, new string('c', 40));
-
-        private UserEmailPassword passwordHashEmptyEmailOk = new UserEmailPassword("example@gmail.com", string.Empty);
-
-        private UserEmailPassword emailInvalidFormatPasswordHashOk = new UserEmailPassword("ololo", new string('c', 40));
-
-        private UserEmailPassword passwordHashTooShortEmailOk = new UserEmailPassword("example@gmail.com", "a");
-
-        private UserEmailPassword passwordHashTooLongEmailOk = new UserEmailPassword("example@gmail.com", new string('c', 41));
-
-
-        private IValidator<UserEmailPassword> validator;
-
-        [SetUp]
-        public void Initialize()
+        [Test]
+        public void AllFieldsEmpty()
         {
-            validator = new UserEmailPasswordValidator();
+            CreateUserRequest user = new CreateUserRequest();
+
+            Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
         }
 
         [Test]
-        public void UserEmailPasswordAllEmpty()
+        public void NullEmail()
         {
-            Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailPasswordHashEmpty));
-        }
+            CreateUserRequest user = new CreateUserRequest { Email = null };
 
-        [Test]
-        public void UserEmailPasswordEmptyEmail()
-        {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailEmptyPasswordHashOk));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Email address must not be empty.");
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "Email must be.");
 
             Assert.IsNotNull(expectedError);
         }
 
         [Test]
-        public void UserEmailPasswordEmptyPassword()
+        public void EmptyEmail()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashEmptyEmailOk));
+            CreateUserRequest user = new CreateUserRequest {Email = ""};
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password hash must not be empty.");
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "Email address must not be empty.");
 
             Assert.IsNotNull(expectedError);
         }
 
         [Test]
-        public void UserEmailPasswordInvalidEmailFormat()
+        public void WrongEmail()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(emailInvalidFormatPasswordHashOk));
+            CreateUserRequest user = new CreateUserRequest { Email = "wrong.mail" };
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Email address must be in valid format.");
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "Email address must be in valid format.");
 
             Assert.IsNotNull(expectedError);
         }
 
         [Test]
-        public void UserEmailPasswordTooShortPassword()
+        public void EmptyPassword()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashTooShortEmailOk));
+            CreateUserRequest user = new CreateUserRequest { Password = "" };
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's hash length must be 40 symbols.");
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "Password must not be empty.");
 
             Assert.IsNotNull(expectedError);
         }
 
         [Test]
-        public void UserEmailPasswordTooLongPassword()
+        public void NullPassword()
         {
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(passwordHashTooLongEmailOk));
+            CreateUserRequest user = new CreateUserRequest { Password = null };
 
-            var expectedError = validationResult.Errors.FirstOrDefault(error => error.ErrorMessage == "Password's hash length must be 40 symbols.");
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "Password must be.");
 
             Assert.IsNotNull(expectedError);
         }
+
+        [Test]
+        public void NullFirstName()
+        {
+            CreateUserRequest user = new CreateUserRequest { FirstName = null };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "First name must be.");
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void EmptyFirstName()
+        {
+            CreateUserRequest user = new CreateUserRequest { FirstName = "" };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "First name must not be empty.");
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void FirstNameContainsNumbers()
+        {
+            CreateUserRequest user = new CreateUserRequest { FirstName = "Vadik12" };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "First name must not contain numbers and etc.");
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void FirstNameFirstLetterIsNotUpperCase()
+        {
+            CreateUserRequest user = new CreateUserRequest { FirstName = "vadik" };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "The first letter must be uppercase and the rest must be lowercase");
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void FirstNameRestLettersIsNotLowerCase()
+        {
+            CreateUserRequest user = new CreateUserRequest { FirstName = "VaDik" };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "The first letter must be uppercase and the rest must be lowercase");
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void WrongBirthday()
+        {
+            CreateUserRequest user = new CreateUserRequest { Birthday = DateTime.Today.AddDays(1) };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "You cannot be born in the future.");
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void MissBirthday()
+        {
+            CreateUserRequest user = new CreateUserRequest { };
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == "Birthday must not be empty.");
+
+            Assert.IsNotNull(expectedError);
+        }
+
+
     }
 }

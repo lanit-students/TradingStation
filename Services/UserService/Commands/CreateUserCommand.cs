@@ -15,9 +15,9 @@ namespace UserService.Commands
     public class CreateUserCommand : ICreateUserCommand
     {
         private readonly IBus busControl;
-        private readonly IValidator<UserEmailPassword> validator;
+        private readonly IValidator<CreateUserRequest> validator;
 
-        public CreateUserCommand([FromServices] IBus busControl, [FromServices] IValidator<UserEmailPassword> validator)
+        public CreateUserCommand([FromServices] IBus busControl, [FromServices] IValidator<CreateUserRequest> validator)
         {
             this.busControl = busControl;
             this.validator = validator;
@@ -36,14 +36,14 @@ namespace UserService.Commands
 
         public async Task<bool> Execute(CreateUserRequest request)
         {
-            validator.ValidateAndThrow(data);
+            validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
 
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Birthday = request.Birtday,
+                Birthday = request.Birthday,
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
