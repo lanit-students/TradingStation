@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 using CentralBankIntegrationLib.XmlSerializationObjects;
 
-using DTO.CurrencyRequests;
+using DTO.NewsRequests.Currency;
 using Interfaces;
 
-namespace CentralBankIntegration
+namespace CBIntegration
 {
     /// <summary>
     /// Get reference information from Central Bank.

@@ -1,5 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using System;
+using System.Linq;
+using System.Collections.Generic;
+
+using FluentValidation;
+
+using DTO.NewsRequests;
+using DTO.NewsRequests.Currency;
 using NewsService.Utils;
 
 namespace NewsService.Controllers
@@ -14,15 +22,24 @@ namespace NewsService.Controllers
 
     public class NewsServiceController : ControllerBase
     {
-        [Route("getNews")]
-        [HttpGet]
+        [Route("info")]
+        [HttpPost]
 
         ///<summary>
         /// Return news depending on a publisher type
         /// </summary>
-        public String GetNews([FromQuery] NewsPublisherTypes newsPublisherType)
+        public List<ExchangeRate> GetCurrencies(
+            [FromServices] IValidator<CurrencyRequest> validator,
+            [FromBody] CurrencyRequest requestParams)
         {
-            return  NewsPublisherFactory.Create(newsPublisherType).GetNews();
+            validator.ValidateAndThrow(requestParams);
+            List<ExchangeRate> rates = NewsPublisherFactory
+                .Create(requestParams.CurrecyPublisher)
+                .GetCurrencies();
+
+            return rates
+                .Where(r => requestParams.CurrencyCodes.Contains(r.Code))
+                .ToList();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using DTO.CurrencyRequests;
+using DTO.NewsRequests.Currency;
 
 namespace Interfaces
 {

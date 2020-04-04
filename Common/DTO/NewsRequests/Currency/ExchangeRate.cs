@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace DTO.CurrencyRequests
+namespace DTO.NewsRequests.Currency
 {
     public class ExchangeRate
     {
