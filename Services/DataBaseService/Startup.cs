@@ -45,13 +45,25 @@ namespace DataBaseService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}_CreateUser", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
                     ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
+                });
+                cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
                     ep.ConfigureConsumer<LoginConsumer>(serviceProvider);
+                });
+                cfg.ReceiveEndpoint($"{serviceName}_GetById", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
                     ep.ConfigureConsumer<FindConsumer>(serviceProvider);
                 });
             });

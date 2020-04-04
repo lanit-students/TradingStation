@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class LoginConsumer : IConsumer<LoginRequest>
+    public class LoginConsumer : IConsumer<InternalLoginRequest>
     {
-        private readonly IUserRepository _repository;
+        private readonly IUserRepository userRepository;
 
         private UserCredential GetUserCredential(string email)
         {
@@ -24,9 +24,9 @@ namespace DataBaseService.BrokerConsumers
             _repository = repository;
         }
 
-        public async Task Consume(ConsumeContext<LoginRequest> context)
+        public Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
-            await context.RespondAsync(GetUserCredential(context.Message.Email));
+            throw new NotImplementedException();
         }
     }
 }
