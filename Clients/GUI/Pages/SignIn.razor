@@ -1,10 +1,7 @@
 ﻿@page "/signin"
-@using Authentication
-@using ViewModels
-@using DTO.RestRequests
-@using Scripts
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
 
 <h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password</h3>
 <div class="col-12">
@@ -33,9 +30,8 @@
     private Task<AuthenticationState> authState { get; set; }
     private SignInViewModel userInput;
     bool isHidden = true;
-    string errorMessage = "";
 
-    private void TrySignIn()
+    private async Task TrySignIn()
     {
         var request = new LoginRequest
         {
@@ -45,16 +41,20 @@
 
         try
         {
-            // TODO: add logic after MassTransit flow iw merged
-            //SignInner.SignIn(user);
+            await LocalStorage.ClearAsync();
+
+            var userToken = await SignInner.SignIn(request);
+
+            LocalStorage.SetItemAsync("id" ,userToken.UserId);
+            LocalStorage.SetItemAsync("token", userToken.Body);
+
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
-        catch(Exception e)
+        catch(NotFoundException)
         {
             userInput.Password = "";
             isHidden = false;
-            errorMessage = e.Message;
         }
     }
 

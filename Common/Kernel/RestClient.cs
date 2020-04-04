@@ -49,7 +49,7 @@ namespace Kernel
 
         private void WriteRequestBody(TIn bodyObject)
         {
-            if (bodyObject != null)
+            if (bodyObject == null)
                 return;
 
             using var streamWriter = new StreamWriter(_request.GetRequestStream());

@@ -1,16 +1,19 @@
-using DTO;
+using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
+using System.Threading.Tasks;
 
 namespace GUI.Scripts
 {
     public static class SignUpper
     {
-        public static void SignUp(User user)
+        public static async Task SignUp(CreateUserRequest user)
         {
-            const string url = "https://localhost:5011/user/create";
+            const string url = "https://localhost:5011/users/create";
 
-            var result = new RestClient<User, bool>(url, RestRequestType.POST).Execute(user);
+            var client = new RestClient<CreateUserRequest, bool>(url, RestRequestType.POST);
+
+            await client.Execute(user);
         }
     }
 }

@@ -14,9 +14,8 @@ using MassTransit.AspNetCoreIntegration;
 using Microsoft.Extensions.Configuration;
 using UserService.BrokerConsumers;
 using System;
-using DTO.RestRequests;
-using Kernel.Middlewares;
-
+using Kernel.Middlewares;
+
 namespace UserService
 {
     public class Startup
