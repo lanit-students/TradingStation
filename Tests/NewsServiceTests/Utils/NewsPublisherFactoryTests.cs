@@ -15,7 +15,7 @@ namespace NewsServiceTests.Utils
         [SetUp]
         public void Initialize()
         {
-            centralBankNewsPublisher = new CentralBankNewsPublisher();
+            centralBankNewsPublisher = new RussianCentralBankInfo();
         }
 
         [Test]

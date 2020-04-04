@@ -13,7 +13,7 @@ namespace NewsService.Utils
             switch (newsPublisherType)
             {
                 case NewsPublisherTypes.CentralBank:
-                    return new CentralBankNewsPublisher();
+                    return new RussianCentralBankInfo();
                 default:
                     //TODO change on custom exception
                         throw new NotImplementedException();
