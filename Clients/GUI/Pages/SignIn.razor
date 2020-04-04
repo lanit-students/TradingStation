@@ -1,7 +1,7 @@
 ﻿@page "/signin"
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject ILocalStorageService LocalStorage
 
 <h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password</h3>
 <div class="col-12">
@@ -45,7 +45,8 @@
 
             var userToken = await SignInner.SignIn(request);
 
-            await LocalStorage.SetItemAsync(userToken.UserId.ToString(), userToken.Body);
+            LocalStorage.SetItemAsync("id" ,userToken.UserId);
+            LocalStorage.SetItemAsync("token", userToken.Body);
 
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");

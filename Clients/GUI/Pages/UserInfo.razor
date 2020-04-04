@@ -1,6 +1,7 @@
 ﻿@page "/userinfo"
 @inject NavigationManager NavManager
 @inject IModalService Modal
+@inject ILocalStorageService LocalStorage
 @attribute [Authorize]
 
 <div class="col-12">
@@ -61,11 +62,9 @@
         // Trying to save changes
         else
         {
-            // Edit is inprocess in other team
+            // TODO: implement editing logic
             try
             {
-                var userInfo = new DTO.User(); // TODO return logic user.Name, user.Surname, user.DateOfBirth);
-
                 // This is in process (user/edit endpoint is another team's task)
                 if (IsPasswordBeingChanged)
                 {
@@ -99,29 +98,29 @@
     {
         // TODO: get it by id (another team task)
         user = new UserInfoViewModel();
-        // To call pop-up
-        user.Name = null;
-        user.Surname = null;
         // Some dummy data
+        user.Name = "Name";
+        user.Surname = "Surname";
         user.DateOfBirth = DateTime.Today;
         user.Email = "john.smith@gmail.com";
     }
 
     protected override void OnInitialized()
     {
+        user = new UserInfoViewModel();
         ErrorOccured = false;
         ErrorMessage = "";
         PopupVisible = false;
         IsEditModeDisabled = true;
         IsPasswordBeingChanged = false;
         InputStyleClass = "input-group-text";
-        // TODO: grab it from local storage
-        currentId = new Guid();
-        UpdateUserModel();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        currentId = await LocalStorage.GetItemAsync<Guid>("id");
+        UpdateUserModel();
+
         if (string.IsNullOrEmpty(user.Name))
         {
             var options = new ModalOptions() { HideCloseButton = true, DisableBackgroundCancel = true };

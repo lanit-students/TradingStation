@@ -32,16 +32,7 @@ namespace GUI.Authentication
         /// </summary>
         public void MarkSignedIn()
         {
-            // TODO: implement real logic using api
-
-            var identity = new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, "0"),
-                    new Claim(ClaimTypes.GivenName, "Admin's first name"),
-                    new Claim(ClaimTypes.Surname, "Admin's last name"),
-                    new Claim(ClaimTypes.DateOfBirth, "xxxxx"),
-                    new Claim(ClaimTypes.Email, "root@gmail.com")
-                }, "Fake authentication type");
+            var identity = new ClaimsIdentity("auth");
 
             var claims = new ClaimsPrincipal(identity);
 

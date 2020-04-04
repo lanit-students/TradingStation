@@ -72,7 +72,10 @@
             };
 
             var userToken = await SignInner.SignIn(signinRequest);
-            LocalStorage.SetItemAsync(userToken.UserId.ToString(), userToken.Body);
+
+            LocalStorage.SetItemAsync("id", userToken.UserId);
+            LocalStorage.SetItemAsync("token", userToken.Body);
+
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
@@ -92,7 +95,6 @@
         {
             userInput = new SignUpViewModel();
             isErrorDisplayed = true;
-            //errorMessage = "Something misterious went wrong";
             errorMessage = e.Message;
         }
     }

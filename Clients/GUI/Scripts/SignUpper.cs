@@ -9,7 +9,7 @@ namespace GUI.Scripts
     {
         public static async Task SignUp(CreateUserRequest user)
         {
-            const string url = "https://localhost:5011/user/create";
+            const string url = "https://localhost:5011/users/create";
 
             var client = new RestClient<CreateUserRequest, bool>(url, RestRequestType.POST);
 
