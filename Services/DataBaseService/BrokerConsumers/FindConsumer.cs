@@ -12,16 +12,16 @@ namespace DataBaseService.BrokerConsumers
 {
     public class FindConsumer : IConsumer<InternalFindUserRequest>
     {
-        private readonly IUserRepository _repository;
+        private readonly IUserRepository userRepository;
 
         private UserCredential GetUserCredentialById(Guid Id)
         {
-            return _repository.GetUserCredentialById(Id);
+            return userRepository.GetUserCredentialById(Id);
         }
 
         public FindConsumer([FromServices] IUserRepository repository)
         {
-            _repository = repository;
+            userRepository = repository;
         }
 
         public async Task Consume(ConsumeContext<InternalFindUserRequest> context)

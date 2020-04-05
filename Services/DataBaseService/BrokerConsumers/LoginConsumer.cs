@@ -16,17 +16,17 @@ namespace DataBaseService.BrokerConsumers
 
         private UserCredential GetUserCredential(string email)
         {
-            return _repository.GetUserCredential(email);
+            return userRepository.GetUserCredential(email);
         }
 
         public LoginConsumer([FromServices] IUserRepository repository)
         {
-            _repository = repository;
+            userRepository = repository;
         }
 
-        public Task Consume(ConsumeContext<InternalLoginRequest> context)
+        public async Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
-            throw new NotImplementedException();
+            await context.RespondAsync(GetUserCredential(context.Message.Email));
         }
     }
 }
