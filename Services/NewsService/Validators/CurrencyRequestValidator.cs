@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using FluentValidation;
+﻿using FluentValidation;
 
 using DTO.NewsRequests.Currency;
 
@@ -15,15 +10,15 @@ namespace NewsService.Validators
         {
             RuleFor(r => r)
                 .NotNull()
-                .WithMessage("Request parameters must be not null");
+                .WithMessage("Request parameters must be not null.");
 
             RuleFor(r => r.CurrencyCodes)
                 .NotNull()
-                .WithMessage("List with currency codes must be not null");
+                .WithMessage("List with currency codes must be not null.");
 
             RuleFor(r => r)
                 .Must(r => r.CurrencyCodes.Count > 0)
-                .WithMessage("You must set currency codes");
+                .WithMessage("You must set currency codes.");
         }
     }
 }

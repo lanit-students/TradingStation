@@ -33,7 +33,7 @@ namespace AuthenticationServiceTests.Validators
         [Test]
         public void UserTokenValidateAllBad()
         {
-            Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(tokenBadEverything));
+            var ex = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(tokenBadEverything));
         }
 
         [Test]

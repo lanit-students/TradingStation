@@ -39,22 +39,20 @@ namespace NewsServiceTests.Validators
         [Test]
         public void NullRequestValidate()
         {
-            var ex = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(NullRequest));
-            Assert.AreEqual("Request parameters must be not null", ex.Errors.FirstOrDefault().ErrorMessage);
+            var ex = Assert.Throws<ArgumentNullException>(() => validator.ValidateAndThrow(NullRequest));
         }
 
         [Test]
         public void NullCodesRequestValidate()
         {
-            var ex = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(NullCodesRequest));
-            Assert.AreEqual("Request parameters must be not null", ex.Errors.FirstOrDefault().ErrorMessage);
+            var ex = Assert.Throws<NullReferenceException>(() => validator.ValidateAndThrow(NullCodesRequest));
         }
 
         [Test]
         public void EmptyCodesRequestValidate()
         {
             var ex = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(EmptyCodesRequest));
-            Assert.AreEqual("Request parameters must be not null", ex.Errors.FirstOrDefault().ErrorMessage);
+            Assert.AreEqual("You must set currency codes.", ex.Errors.FirstOrDefault().ErrorMessage);
         }
     }
 }
