@@ -115,7 +115,7 @@ namespace UserService.Validators {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The first letter must be uppercase and the rest must be lowercase. First name must contain only letters.
+        ///   Looks up a localized string similar to The first letter must be uppercase and the rest must be lowercase. First name must contain only letters..
         /// </summary>
         public static string FirstNameError {
             get {
@@ -129,6 +129,15 @@ namespace UserService.Validators {
         public static string FirstNameTooLong {
             get {
                 return ResourceManager.GetString("FirstNameTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First name is too short.
+        /// </summary>
+        public static string FirstNameTooShort {
+            get {
+                return ResourceManager.GetString("FirstNameTooShort", resourceCulture);
             }
         }
         
@@ -165,6 +174,15 @@ namespace UserService.Validators {
         public static string LastNameTooLong {
             get {
                 return ResourceManager.GetString("LastNameTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last name is too short.
+        /// </summary>
+        public static string LastNameTooShort {
+            get {
+                return ResourceManager.GetString("LastNameTooShort", resourceCulture);
             }
         }
     }

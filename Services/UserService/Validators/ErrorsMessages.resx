@@ -136,10 +136,13 @@
     <value>First name must not be empty.</value>
   </data>
   <data name="FirstNameError" xml:space="preserve">
-    <value>The first letter must be uppercase and the rest must be lowercase. First name must contain only letters</value>
+    <value>The first letter must be uppercase and the rest must be lowercase. First name must contain only letters.</value>
   </data>
   <data name="FirstNameTooLong" xml:space="preserve">
     <value>First name is too long</value>
+  </data>
+  <data name="FirstNameTooShort" xml:space="preserve">
+    <value>First name is too short</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Email address must be in valid format.</value>
@@ -152,5 +155,8 @@
   </data>
   <data name="LastNameTooLong" xml:space="preserve">
     <value>Last name is too long</value>
+  </data>
+  <data name="LastNameTooShort" xml:space="preserve">
+    <value>Last name is too short</value>
   </data>
 </root>
