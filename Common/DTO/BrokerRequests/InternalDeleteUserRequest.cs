@@ -5,6 +5,6 @@ namespace DTO.BrokerRequests
 {
     public class InternalDeleteUserRequest
     {
-        public Guid Id { get; set; }
+        public Guid UserIdCredential { get; set; }
     }
 }

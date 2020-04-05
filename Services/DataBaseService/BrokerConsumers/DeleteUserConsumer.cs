@@ -18,7 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private OperationResult DeleteUser(InternalDeleteUserRequest request)
         {
-            userRepository.DeleteUser(request.Id);
+            userRepository.DeleteUser(request.UserIdCredential);
 
             return new OperationResult
             {
@@ -28,9 +28,9 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalDeleteUserRequest> context)
         {
-            var creationResult = DeleteUser(context.Message);
+            var deleteResult = DeleteUser(context.Message);
 
-            await context.RespondAsync(creationResult);
+            await context.RespondAsync(deleteResult);
         }
     }
 }
