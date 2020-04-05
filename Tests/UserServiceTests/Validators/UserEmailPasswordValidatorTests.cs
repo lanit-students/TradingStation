@@ -411,7 +411,7 @@ namespace UserServiceTests.Validators
                 Password = "123",
                 FirstName = "Leo",
                 LastName = "Kor",
-                Birthday = DateTime.Today
+                Birthday = DateTime.Today.AddYears(-19)
                 };
             
             Assert.DoesNotThrow(() => validator.ValidateAndThrow(user));
