@@ -386,7 +386,7 @@ namespace UserServiceTests.Validators
         }
 
         [Test]
-        public void FirstName1Letter()
+        public void FirstNameConsistOnlyOneLetter()
         {
             var user = new CreateUserRequest
             {
@@ -407,9 +407,8 @@ namespace UserServiceTests.Validators
 
         }
 
-
         [Test]
-        public void Ok()
+        public void ValidData()
         {
             var user = new CreateUserRequest { 
                 Email = "email@yandex.ru",
