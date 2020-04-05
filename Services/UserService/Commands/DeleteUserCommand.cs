@@ -1,20 +1,49 @@
  using System;
+using System.Threading.Tasks;
+using DTO;
+using DTO.BrokerRequests;
+using DTO.RestRequests;
+using IDeleteUserUserService.Interfaces;
+using Kernel.CustomExceptions;
+using MassTransit;
 
- using IDeleteUserUserService.Interfaces;
-
- namespace UserService.Commands
+namespace UserService.Commands
  {
      public class DeleteUserCommand : IDeleteUserCommand
      {
-         public bool Execute(Guid userId)
-         {
-            return DeleteUser(userId);
-         }
+        private readonly IBus busControl;
+        
+        public DeleteUserCommand(IBus busControl)
+        {
+            this.busControl = busControl;
+        }
 
-         //TODO fix from stub on request
-         private bool DeleteUser(Guid userId)
+        public async Task<bool> Execute(DeleteUserRequest request)
          {
-             return false;
+            var id = request.UserId;
+
+            // Validation for id in common validation or validation for DeleteUserRequest? 
+
+            var user = new InternalDeleteUserRequest { UserId = id };
+
+            var deleteUserResult = await deleteUser(user);
+            if (!deleteUserResult)
+            {
+                throw new BadRequestException("Unable to delete user.");
+            }
+            return deleteUserResult;
+        }
+
+         
+         private async Task<bool> deleteUser(InternalDeleteUserRequest request)
+         {
+            var uri = new Uri("rabbitmq://localhost/DatabaseService");
+
+            var client = busControl.CreateRequestClient<InternalDeleteUserRequest>(uri).Create(request);
+
+            var response = await client.GetResponse<OperationResult>();
+
+            return response.Message.IsSuccess;
          }
      }
  }
