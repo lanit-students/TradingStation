@@ -70,11 +70,29 @@ namespace UserService.Validators {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are too young.
+        /// </summary>
+        public static string BirthdayYoung {
+            get {
+                return ResourceManager.GetString("BirthdayYoung", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email must not be empty..
         /// </summary>
         public static string EmailEmpty {
             get {
                 return ResourceManager.GetString("EmailEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login length up to 50 characters.
+        /// </summary>
+        public static string EmailTooLong {
+            get {
+                return ResourceManager.GetString("EmailTooLong", resourceCulture);
             }
         }
         
@@ -102,6 +120,15 @@ namespace UserService.Validators {
         public static string FirstNameError {
             get {
                 return ResourceManager.GetString("FirstNameError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First name is too long.
+        /// </summary>
+        public static string FirstNameTooLong {
+            get {
+                return ResourceManager.GetString("FirstNameTooLong", resourceCulture);
             }
         }
         
@@ -138,6 +165,15 @@ namespace UserService.Validators {
         public static string LastNameError {
             get {
                 return ResourceManager.GetString("LastNameError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last name is too long.
+        /// </summary>
+        public static string LastNameTooLong {
+            get {
+                return ResourceManager.GetString("LastNameTooLong", resourceCulture);
             }
         }
     }

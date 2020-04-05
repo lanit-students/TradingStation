@@ -15,6 +15,8 @@ namespace UserService.Validators
             RuleFor(user => user.Email)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.EmailEmpty)
+                .MaximumLength(50)
+                .WithMessage(ErrorsMessages.EmailTooLong)
                 .EmailAddress()
                 .WithMessage(ErrorsMessages.InvalidEmail);
 
@@ -25,12 +27,16 @@ namespace UserService.Validators
             RuleFor(user => user.FirstName)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.FirstNameEmpty)
+                .MaximumLength(32)
+                .WithMessage(ErrorsMessages.FirstNameTooLong)
                 .Matches("^[A-Z][a-z]+$")
                 .WithMessage(ErrorsMessages.FirstNameError);
 
             RuleFor(user => user.LastName)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.LastNameEmpty)
+                .MaximumLength(32)
+                .WithMessage(ErrorsMessages.LastNameTooLong)
                 .Matches("^[A-Z][a-z]+$")
                 .WithMessage(ErrorsMessages.LastNameError);
 
@@ -38,7 +44,10 @@ namespace UserService.Validators
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.BirthdatEmpty)
                 .Must(birthday => birthday <= DateTime.Today)
-                .WithMessage(ErrorsMessages.FutureErrorBirthday);
+                .WithMessage(ErrorsMessages.FutureErrorBirthday)
+                .Must(birthday => birthday.AddYears(18) <= DateTime.Today)
+                .WithMessage(ErrorsMessages.BirthdayYoung);
+
         }
     }
 }

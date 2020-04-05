@@ -120,8 +120,14 @@
   <data name="BirthdatEmpty" xml:space="preserve">
     <value>Birthday must not be empty.</value>
   </data>
+  <data name="BirthdayYoung" xml:space="preserve">
+    <value>You are too young</value>
+  </data>
   <data name="EmailEmpty" xml:space="preserve">
     <value>Email must not be empty.</value>
+  </data>
+  <data name="EmailTooLong" xml:space="preserve">
+    <value>Login length up to 50 characters</value>
   </data>
   <data name="EmptyPassword" xml:space="preserve">
     <value>Password must not be empty.</value>
@@ -131,6 +137,9 @@
   </data>
   <data name="FirstNameError" xml:space="preserve">
     <value>The first letter must be uppercase and the rest must be lowercase. First name must contain only letters</value>
+  </data>
+  <data name="FirstNameTooLong" xml:space="preserve">
+    <value>First name is too long</value>
   </data>
   <data name="FutureErrorBirthday" xml:space="preserve">
     <value>You cannot be born in the future.</value>
@@ -143,5 +152,8 @@
   </data>
   <data name="LastNameError" xml:space="preserve">
     <value>The first letter must be uppercase and the rest must be lowercase. Last name must contain only letters</value>
+  </data>
+  <data name="LastNameTooLong" xml:space="preserve">
+    <value>Last name is too long</value>
   </data>
 </root>

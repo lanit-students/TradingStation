@@ -267,6 +267,143 @@ namespace UserServiceTests.Validators
         }
 
         [Test]
+        public void MissEmail()
+        {
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.EmailEmpty);
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void MissPassword()
+        {
+            CreateUserRequest user = new CreateUserRequest
+            {
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.EmptyPassword);
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void MissFirstName()
+        {
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Password = "123",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameEmpty);
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void MissLastName()
+        {
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Password = "123",
+                FirstName = "Leo",
+                Birthday = DateTime.Today
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.LastNameEmpty);
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void EmailTooLong()
+        {
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Email = new string('c', 50) + "@ya.ru",
+                Password = "123",
+                FirstName = "Leo",
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.EmailTooLong);
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void FirstNameTooLong()
+        {
+            CreateUserRequest user = new CreateUserRequest
+            {
+                Password = "123",
+                FirstName = "C" + new string('c', 40),
+                LastName = "Kor",
+                Birthday = DateTime.Today
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameTooLong);
+
+            Assert.IsNotNull(expectedError);
+        }
+
+        [Test]
+        public void BirthdayYoung()
+        {
+            CreateUserRequest user = new CreateUserRequest
+            {
+                LastName = "Kor",
+                Birthday = DateTime.Today.AddYears(-17)
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.BirthdayYoung);
+
+            Assert.IsNotNull(expectedError);
+        }
+
+
+        [Test]
         public void Ok()
         {
             CreateUserRequest user = new CreateUserRequest { 
