@@ -12,6 +12,7 @@ namespace DataBaseService.Database.Models
         public Guid UserId { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
+        public bool IsActive { get; set; }
 
         [ForeignKey("UserId")]
         public DbUser User { get; set; }
@@ -48,6 +49,10 @@ namespace DataBaseService.Database.Models
                 .HasIndex(p => p.Email)
                 .IsUnique()
                 .IsClustered();
+            builder
+               .Property(p => p.IsActive)
+               .HasColumnName("IsActive")
+               .HasDefaultValue(0);
         }
     }
 }

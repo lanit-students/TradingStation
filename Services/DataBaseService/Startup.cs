@@ -52,6 +52,7 @@ namespace DataBaseService
 
                     ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
                 });
+
                 cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
                 {
                     ep.PrefetchCount = 16;
@@ -59,12 +60,23 @@ namespace DataBaseService
 
                     ep.ConfigureConsumer<LoginConsumer>(serviceProvider);
                 });
-                cfg.ReceiveEndpoint($"{serviceName}_GetById", ep =>
+
+                cfg.ReceiveEndpoint($"{serviceName}_GetById", ep =>                
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
-                    ep.ConfigureConsumer<FindConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<FindConsumer>(serviceProvider);                    
+                });
+
+
+                cfg.ReceiveEndpoint($"{serviceName}_DeleteUser", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+                    
+
+                    ep.ConfigureConsumer<DeleteUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -92,6 +104,7 @@ namespace DataBaseService
                 x.AddConsumer<CreateUserConsumer>();
                 x.AddConsumer<LoginConsumer>();
                 x.AddConsumer<FindConsumer>();
+                x.AddConsumer<DeleteUserConsumer>();
             });
 
             services.AddMassTransitHostedService();

@@ -12,5 +12,7 @@ namespace DataBaseService.Repositories.Interfaces
         UserCredential GetUserCredential(string email);
 
         UserCredential GetUserCredentialById(Guid Id);
+
+        void DeleteUser(Guid userIdCredential);
     }
 }
