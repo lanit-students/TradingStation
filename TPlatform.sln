@@ -48,8 +48,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsServiceTests", "Tests\N
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KernelTests", "Tests\KernelTests\KernelTests.csproj", "{1CDE1465-17B4-4A84-A88A-F215E4C4097A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingUpModelValidationTests", "SingUpModelValidationTests\SingUpModelValidationTests.csproj", "{DEFD6F20-92F7-4BA4-A316-358352F6FE9F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,10 +126,6 @@ Global
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DEFD6F20-92F7-4BA4-A316-358352F6FE9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DEFD6F20-92F7-4BA4-A316-358352F6FE9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DEFD6F20-92F7-4BA4-A316-358352F6FE9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DEFD6F20-92F7-4BA4-A316-358352F6FE9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,7 +149,6 @@ Global
 		{67520E13-DB95-43E1-A3A0-002E41AD26A4} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
 		{E1DE4770-65E0-43CF-8D92-837D394CE4B8} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
-		{DEFD6F20-92F7-4BA4-A316-358352F6FE9F} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6D82083-4A32-48DC-BD04-F40E561E5F7B}
