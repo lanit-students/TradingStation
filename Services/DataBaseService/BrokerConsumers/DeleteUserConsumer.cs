@@ -1,9 +1,9 @@
-﻿using MassTransit;
-using DTO.BrokerRequests;
-using System.Threading.Tasks;
-using DataBaseService.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
+using DTO.BrokerRequests;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
