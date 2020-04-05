@@ -1,15 +1,13 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.RestRequests;
-using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
-namespace DatabaseService.BrokerConsumers
+namespace DataBaseService.BrokerConsumers
 {
-    public class LoginConsumer : IConsumer<LoginRequest>
+    public class LoginUserConsumer : IConsumer<LoginRequest>
     {
         private readonly IUserRepository _repository;
 
@@ -18,7 +16,7 @@ namespace DatabaseService.BrokerConsumers
             return _repository.GetUserCredential(email);
         }
 
-        public LoginConsumer([FromServices] IUserRepository repository)
+        public LoginUserConsumer([FromServices] IUserRepository repository)
         {
             _repository = repository;
         }
