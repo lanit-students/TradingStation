@@ -23,7 +23,7 @@ namespace AuthenticationService.Commands
         /// </summary>
         private async Task<UserCredential> GetUserCredential(LoginRequest request)
         {
-            var uri = new Uri("rabbitmq://localhost/UserService_Login");
+            var uri = new Uri("rabbitmq://localhost/UserService");
 
             var client = busControl.CreateRequestClient<LoginRequest>(uri).Create(request);
 

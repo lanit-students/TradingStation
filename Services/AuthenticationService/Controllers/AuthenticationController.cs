@@ -7,9 +7,6 @@ using DTO;
 using DTO.RestRequests;
 using AuthenticationService.Interfaces;
 
-using System.Text.Json;
-using FluentValidation;
-
 namespace AuthenticationService.Controllers
 {
     [ApiController]

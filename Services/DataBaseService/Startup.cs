@@ -51,7 +51,8 @@ namespace DataBaseService
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
                     ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
-                    ep.ConfigureConsumer<LoginConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<DeleteUserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -77,7 +78,8 @@ namespace DataBaseService
             {
                 x.AddBus(provider => CreateBus(provider));
                 x.AddConsumer<CreateUserConsumer>();
-                x.AddConsumer<LoginConsumer>();
+                x.AddConsumer<LoginUserConsumer>();
+                x.AddConsumer<DeleteUserConsumer>();
             });
 
             services.AddMassTransitHostedService();
