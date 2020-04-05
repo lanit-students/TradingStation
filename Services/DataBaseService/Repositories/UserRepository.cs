@@ -25,6 +25,7 @@ namespace DataBaseService.Repositories
         {
             dbContext.Users.Add(mapper.MapToDbUser(user));
             dbContext.SaveChanges();
+
         }
 
         public void CreateUserCredential(UserCredential userCredential)
@@ -38,7 +39,7 @@ namespace DataBaseService.Repositories
             }
             else
             {
-                throw new ForbiddenException("User not found");
+                throw new ForbiddenException("User already exists");
             }
             
         }
@@ -48,7 +49,7 @@ namespace DataBaseService.Repositories
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);
             if (dbCredential is null)
             {
-                throw new ForbiddenException("User not found");               
+                throw new NotFoundException("User not found");               
             }
 
             return mapper.MapUserCredential(dbCredential);
@@ -60,7 +61,7 @@ namespace DataBaseService.Repositories
 
             if (dbCredential is null)
             {
-                throw new ForbiddenException("User not found");
+                throw new NotFoundException("User not found");
             }
 
             return mapper.MapUserCredential(dbCredential);
