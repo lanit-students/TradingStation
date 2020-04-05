@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BirthdatEmpty" xml:space="preserve">
+  <data name="BirthdayEmpty" xml:space="preserve">
     <value>Birthday must not be empty.</value>
   </data>
   <data name="BirthdayYoung" xml:space="preserve">
@@ -140,9 +140,6 @@
   </data>
   <data name="FirstNameTooLong" xml:space="preserve">
     <value>First name is too long</value>
-  </data>
-  <data name="FutureErrorBirthday" xml:space="preserve">
-    <value>You cannot be born in the future.</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Email address must be in valid format.</value>

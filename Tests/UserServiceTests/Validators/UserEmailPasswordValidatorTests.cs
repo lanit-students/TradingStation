@@ -241,7 +241,7 @@ namespace UserServiceTests.Validators
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == ErrorsMessages.FutureErrorBirthday);
+                    error => error.ErrorMessage == ErrorsMessages.BirthdayYoung);
 
             Assert.IsNotNull(expectedError);
         }
@@ -261,7 +261,7 @@ namespace UserServiceTests.Validators
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == ErrorsMessages.BirthdatEmpty);
+                    error => error.ErrorMessage == ErrorsMessages.BirthdayEmpty);
 
             Assert.IsNotNull(expectedError);
         }
@@ -380,24 +380,6 @@ namespace UserServiceTests.Validators
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
                     error => error.ErrorMessage == ErrorsMessages.FirstNameTooLong);
-
-            Assert.IsNotNull(expectedError);
-        }
-
-        [Test]
-        public void BirthdayYoung()
-        {
-            CreateUserRequest user = new CreateUserRequest
-            {
-                LastName = "Kor",
-                Birthday = DateTime.Today.AddYears(-17)
-            };
-
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
-
-            var expectedError =
-                validationResult.Errors.FirstOrDefault(
-                    error => error.ErrorMessage == ErrorsMessages.BirthdayYoung);
 
             Assert.IsNotNull(expectedError);
         }

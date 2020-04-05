@@ -42,9 +42,7 @@ namespace UserService.Validators
 
             RuleFor(user => user.Birthday)
                 .NotEmpty()
-                .WithMessage(ErrorsMessages.BirthdatEmpty)
-                .Must(birthday => birthday <= DateTime.Today)
-                .WithMessage(ErrorsMessages.FutureErrorBirthday)
+                .WithMessage(ErrorsMessages.BirthdayEmpty)
                 .Must(birthday => birthday.AddYears(18) <= DateTime.Today)
                 .WithMessage(ErrorsMessages.BirthdayYoung);
 

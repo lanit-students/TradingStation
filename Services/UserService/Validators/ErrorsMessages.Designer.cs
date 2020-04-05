@@ -63,9 +63,9 @@ namespace UserService.Validators {
         /// <summary>
         ///   Looks up a localized string similar to Birthday must not be empty..
         /// </summary>
-        public static string BirthdatEmpty {
+        public static string BirthdayEmpty {
             get {
-                return ResourceManager.GetString("BirthdatEmpty", resourceCulture);
+                return ResourceManager.GetString("BirthdayEmpty", resourceCulture);
             }
         }
         
@@ -129,15 +129,6 @@ namespace UserService.Validators {
         public static string FirstNameTooLong {
             get {
                 return ResourceManager.GetString("FirstNameTooLong", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You cannot be born in the future..
-        /// </summary>
-        public static string FutureErrorBirthday {
-            get {
-                return ResourceManager.GetString("FutureErrorBirthday", resourceCulture);
             }
         }
         
