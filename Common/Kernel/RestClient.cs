@@ -39,12 +39,17 @@ namespace Kernel
             using var responseStream = response.GetResponseStream();
             using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
 
-            return JsonSerializer.Deserialize<TOut>(streamReader.ReadToEnd());
+            return JsonSerializer.Deserialize<TOut>(
+                streamReader.ReadToEnd(),
+                new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
         }
 
         private void WriteRequestBody(TIn bodyObject)
         {
-            if (bodyObject != null)
+            if (bodyObject == null)
                 return;
 
             using var streamWriter = new StreamWriter(_request.GetRequestStream());

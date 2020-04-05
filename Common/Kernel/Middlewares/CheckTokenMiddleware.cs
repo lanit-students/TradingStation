@@ -22,6 +22,7 @@ namespace Kernel.Middlewares
             _next = next;
             _bus = bus;
         }
+
         public async Task InvokeAsync(HttpContext context)
         {
             if (string.Equals(context.Request.Method, RestRequestType.POST.ToString(), StringComparison.OrdinalIgnoreCase)
