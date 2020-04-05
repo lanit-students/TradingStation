@@ -30,7 +30,9 @@ namespace DataBaseService.Repositories
 
         public void CreateUserCredential(UserCredential userCredential)
         {
-            var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == userCredential.Email);
+            var dbCredential = dbContext.UsersCredentials
+                .FirstOrDefault(uc => String.Equals(uc.Email == userCredential.Email,
+                StringComparison.OrdinalIgnoreCase));
 
             if (dbCredential is null)
             {
@@ -39,7 +41,7 @@ namespace DataBaseService.Repositories
             }
             else
             {
-                throw new ForbiddenException("User already exists");
+                throw new BadRequestException("User already exists");
             }
             
         }
