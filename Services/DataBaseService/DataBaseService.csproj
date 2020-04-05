@@ -7,11 +7,13 @@
   <ItemGroup>
     <None Remove="Database\Migrations\Scripts\04.2020\0001_CreateUsersTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0002_CreateUsersCredentialsTable.sql" />
+    <None Remove="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0002_CreateUsersCredentialsTable.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0001_CreateUsersTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
   </ItemGroup>
 
   <ItemGroup>
