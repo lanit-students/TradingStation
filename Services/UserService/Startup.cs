@@ -13,6 +13,9 @@ using UserService.BrokerConsumers;
 using System;
 using Kernel.Middlewares;
 using Kernel;
+using UserService.Validators;
+using DTO.RestRequests;
+using FluentValidation;
 
 namespace UserService
 {
@@ -61,7 +64,7 @@ namespace UserService
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
             services.AddTransient<ICreateUserCommand, CreateUserCommand>();
-
+            services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<UserLoginConsumer>();

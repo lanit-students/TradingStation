@@ -1,30 +1,32 @@
- using System;
+using System;
 using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
 using DTO.RestRequests;
+using FluentValidation;
 using IDeleteUserUserService.Interfaces;
 using Kernel.CustomExceptions;
 using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UserService.Commands
  {
      public class DeleteUserCommand : IDeleteUserCommand
      {
         private readonly IBus busControl;
+        private readonly IValidator<DeleteUserRequest> validator;
         
-        public DeleteUserCommand(IBus busControl)
+        public DeleteUserCommand([FromServices]IBus busControl, [FromServices] IValidator<DeleteUserRequest> validator)
         {
             this.busControl = busControl;
+            this.validator = validator;
         }
 
         public async Task<bool> Execute(DeleteUserRequest request)
          {
-            var id = request.UserId;
+            validator.ValidateAndThrow(request);
 
-            // Validation for id in common validation or validation for DeleteUserRequest? 
-
-            var user = new InternalDeleteUserRequest { UserId = id };
+            var user = new InternalDeleteUserRequest { UserId = request.UserId };
 
             var deleteUserResult = await deleteUser(user);
             if (!deleteUserResult)
