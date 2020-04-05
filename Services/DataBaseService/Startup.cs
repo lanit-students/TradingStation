@@ -45,13 +45,28 @@ namespace DataBaseService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}_CreateUser", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
                     ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
+                });
+
+                cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
                     ep.ConfigureConsumer<LoginConsumer>(serviceProvider);
+                });
+
+                cfg.ReceiveEndpoint($"{serviceName}_DeleteUser", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<DeleteUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -78,6 +93,7 @@ namespace DataBaseService
                 x.AddBus(provider => CreateBus(provider));
                 x.AddConsumer<CreateUserConsumer>();
                 x.AddConsumer<LoginConsumer>();
+                x.AddConsumer<DeleteUserConsumer>();
             });
 
             services.AddMassTransitHostedService();
