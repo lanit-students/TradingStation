@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DTO;
-using DTO.BrokerRequests;
 using DTO.RestRequests;
 using FluentValidation;
 

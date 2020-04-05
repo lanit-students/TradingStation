@@ -56,6 +56,11 @@
             userInput.Password = "";
             isHidden = false;
         }
+        catch (ForbiddenException)
+        {
+            userInput.Password = "";
+            isHidden = false;
+        }
     }
 
     protected async override Task OnInitializedAsync()
