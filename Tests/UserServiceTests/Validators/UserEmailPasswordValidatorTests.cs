@@ -1,6 +1,5 @@
 ﻿using System;
 using UserService.Validators;
-using DTO;
 using FluentValidation;
 using NUnit.Framework;
 using System.Linq;

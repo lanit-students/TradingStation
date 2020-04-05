@@ -12,8 +12,6 @@ using DataBaseService.BrokerConsumers;
 using DataBaseService.Utils;
 using DataBaseService.Repositories;
 using DataBaseService.Mappers;
-using DataBaseService.Repositories.Interfaces;
-using DataBaseService.Mappers.Interfaces;
 
 using MassTransit;
 using GreenPipes;
@@ -45,11 +43,13 @@ namespace DataBaseService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}_CreateUser", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
+                    ep.ConfigureConsumer<DeleteUserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
                 });
 
@@ -74,9 +74,9 @@ namespace DataBaseService
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
-                    
 
                     ep.ConfigureConsumer<DeleteUserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -102,8 +102,8 @@ namespace DataBaseService
             {
                 x.AddBus(provider => CreateBus(provider));
                 x.AddConsumer<CreateUserConsumer>();
-                x.AddConsumer<LoginConsumer>();
                 x.AddConsumer<FindConsumer>();
+                x.AddConsumer<LoginUserConsumer>();
                 x.AddConsumer<DeleteUserConsumer>();
             });
 
