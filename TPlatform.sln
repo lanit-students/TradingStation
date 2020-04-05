@@ -46,7 +46,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseServiceTests", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsServiceTests", "Tests\NewsServiceTests\NewsServiceTests.csproj", "{E1DE4770-65E0-43CF-8D92-837D394CE4B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KernelTests", "Tests\KernelTests\KernelTests.csproj", "{1CDE1465-17B4-4A84-A88A-F215E4C4097A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KernelTests", "Tests\KernelTests\KernelTests.csproj", "{1CDE1465-17B4-4A84-A88A-F215E4C4097A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
