@@ -26,7 +26,7 @@ namespace UserService.Commands
          {
             validator.ValidateAndThrow(request);
 
-            var user = new InternalDeleteUserRequest { UserCredentialsId = request.UserCredentialsId };
+            var user = new InternalDeleteUserRequest { UserId = request.UserId };
 
             var deleteUserResult = await deleteUser(user);
             if (!deleteUserResult)

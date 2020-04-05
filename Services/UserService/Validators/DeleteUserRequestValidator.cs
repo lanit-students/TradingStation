@@ -7,7 +7,7 @@ namespace UserService.Validators
     {
         public DeleteUserRequestValidator()
         {
-            RuleFor(request => request.UserCredentialsId)
+            RuleFor(request => request.UserId)
                 .NotNull()
                 .WithMessage("Id must be not null")
                 .NotEmpty()

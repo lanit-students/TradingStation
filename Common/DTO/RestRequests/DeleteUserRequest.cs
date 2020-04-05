@@ -5,6 +5,6 @@ namespace DTO.RestRequests
 {
     public class DeleteUserRequest
     {
-        public Guid UserCredentialsId { get; set; }
+        public Guid UserId { get; set; }
     }
 }
