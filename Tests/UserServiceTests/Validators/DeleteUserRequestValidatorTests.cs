@@ -26,14 +26,14 @@ namespace UserServiceTests.Validators
         [Test]
         public void IdIsEmpty()
         {
-            var request = new DeleteUserRequest { UserId = Guid.Empty };
+            var request = new DeleteUserRequest { UserCredentialsId = Guid.Empty };
             Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
         }
 
         [Test]
         public void IdIsOk()
         {
-            var request = new DeleteUserRequest { UserId = Guid.NewGuid() };
+            var request = new DeleteUserRequest { UserCredentialsId = Guid.NewGuid() };
             Assert.DoesNotThrow(() => validator.ValidateAndThrow(request));
         }
     }
