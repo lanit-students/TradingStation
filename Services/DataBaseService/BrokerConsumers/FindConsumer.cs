@@ -14,9 +14,9 @@ namespace DataBaseService.BrokerConsumers
     {
         private readonly IUserRepository userRepository;
 
-        private UserCredential GetUserCredentialById(Guid Id)
+        private UserCredential GetUserCredentialById(Guid userCredentialId)
         {
-            return userRepository.GetUserCredentialById(Id);
+            return userRepository.GetUserCredentialById(userCredentialId);
         }
 
         public FindConsumer([FromServices] IUserRepository repository)

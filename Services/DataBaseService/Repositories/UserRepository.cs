@@ -55,9 +55,9 @@ namespace DataBaseService.Repositories
             return mapper.MapUserCredential(dbCredential);
         }
 
-        public UserCredential GetUserCredentialById(Guid Id)
+        public UserCredential GetUserCredentialById(Guid userCredentialId)
         {
-            var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Id == Id);
+            var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Id == userCredentialId);
 
             if (dbCredential is null)
             {
