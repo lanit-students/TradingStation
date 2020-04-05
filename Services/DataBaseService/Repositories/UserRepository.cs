@@ -38,12 +38,12 @@ namespace DataBaseService.Repositories
 
             return mapper.MapUserCredential(dbCredential);
         }
-        public void DeleteUser(Guid userIdCredential)
+        public void DeleteUser(Guid userId)
         {
-            var dbUserCredential = dbContext.Find<DbUserCredential>(userIdCredential);
+            var dbUserCredential = dbContext.Find<DbUserCredential>(userId);
             if (dbUserCredential == null)
             {
-                throw new ForbiddenException("Not found User for delete");
+                throw new ForbiddenException("Not found User for delete or not confirm");
             }
             if(dbUserCredential.IsActive==false)
             {
