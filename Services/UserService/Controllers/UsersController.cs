@@ -1,6 +1,8 @@
+using AuthenticationService.Utils;
 using DTO;
 using DTO.RestRequests;
 using IDeleteUserUserService.Interfaces;
+using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -19,6 +21,16 @@ namespace UserService.Controllers
         [HttpPost]
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
         {
+            CreateUserRequesValidator validator = new CreateUserRequesValidator();
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                string errMessage = "";
+                foreach (var i in validationResult.Errors)
+                    errMessage += i.ErrorMessage +"  \n";
+                throw new BadRequestException(errMessage);
+            }
+
             return await command.Execute(request);
         }
 
