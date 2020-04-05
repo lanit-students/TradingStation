@@ -16,6 +16,7 @@ using UserService.BrokerConsumers;
 using System;
 using DTO.RestRequests;
 using Kernel.Middlewares;
+using Kernel;
 
 namespace UserService
 {
@@ -85,6 +86,13 @@ namespace UserService
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(CustomExceptionHandler.HandleCustomException);
+            });
+
+            app.UseHsts();
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
