@@ -15,6 +15,7 @@ using AuthenticationService.Commands;
 using AuthenticationService.Interfaces;
 using AuthenticationService.Validators;
 using DTO;
+using Kernel;
 
 namespace AuthenticationService
 {
@@ -83,6 +84,13 @@ namespace AuthenticationService
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(CustomExceptionHandler.HandleCustomException);
+            });
+
+            app.UseHsts();
 
             app.UseHttpsRedirection();
 
