@@ -9,9 +9,9 @@ namespace UserService.Validators
         {
             RuleFor(request => request.UserId)
                 .NotNull()
-                .WithMessage("Id must be not null")
+                .WithMessage(ErrorsMessages.IdNull)
                 .NotEmpty()
-                .WithMessage("Id must be not empty");
+                .WithMessage(ErrorsMessages.IdEmpty);
         }
     }
 }
