@@ -4,6 +4,8 @@ using DataBaseService.Mappers.Interfaces;
 using DTO;
 using System.Linq;
 using System;
+using Kernel.CustomExceptions;
+using DataBaseService.Database.Models;
 
 namespace DataBaseService.Repositories
 {
@@ -35,6 +37,20 @@ namespace DataBaseService.Repositories
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);
 
             return mapper.MapUserCredential(dbCredential);
+        }
+        public void DeleteUser(Guid Id)
+        {
+            var user = dbContext.Find<DbUserCredential>(Id);
+            if (user == null)
+            {
+                throw new ForbiddenException("Not found User for delete");
+            }
+            if(user.IsActive==false)
+            {
+                throw new ForbiddenException("User was deleted early");
+            }
+             user.IsActive = false;
+             dbContext.SaveChanges();
         }
     }
 }
