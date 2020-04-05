@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTO.BrokerRequests
+﻿namespace DTO.BrokerRequests
 {
     public class InternalCreateUserRequest
     {

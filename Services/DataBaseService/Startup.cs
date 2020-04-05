@@ -45,28 +45,14 @@ namespace DataBaseService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}_CreateUser", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
                     ep.ConfigureConsumer<CreateUserConsumer>(serviceProvider);
-                });
-
-                cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
-                {
-                    ep.PrefetchCount = 16;
-                    ep.UseMessageRetry(r => r.Interval(2, 100));
-
-                    ep.ConfigureConsumer<LoginConsumer>(serviceProvider);
-                });
-
-                cfg.ReceiveEndpoint($"{serviceName}_DeleteUser", ep =>
-                {
-                    ep.PrefetchCount = 16;
-                    ep.UseMessageRetry(r => r.Interval(2, 100));
-
                     ep.ConfigureConsumer<DeleteUserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -92,7 +78,7 @@ namespace DataBaseService
             {
                 x.AddBus(provider => CreateBus(provider));
                 x.AddConsumer<CreateUserConsumer>();
-                x.AddConsumer<LoginConsumer>();
+                x.AddConsumer<LoginUserConsumer>();
                 x.AddConsumer<DeleteUserConsumer>();
             });
 

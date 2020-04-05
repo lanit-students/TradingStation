@@ -1,4 +1,3 @@
-using DTO;
 using FluentValidation;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -45,12 +44,12 @@ namespace UserService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
-                    ep.ConfigureConsumer<UserLoginConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -71,7 +70,7 @@ namespace UserService
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<UserLoginConsumer>();
+                x.AddConsumer<LoginUserConsumer>();
                 x.AddBus(provider => CreateBus(provider));
             });
 
@@ -92,7 +91,7 @@ namespace UserService
             });
 
             app.UseHsts();
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
