@@ -2,7 +2,7 @@
 {
     public enum NewsPublisherTypes
     {
-        CentralBank = 1
+        CentralBank
     }
 }
 
