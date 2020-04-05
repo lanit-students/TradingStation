@@ -29,6 +29,8 @@ namespace UserService.Validators
                 .WithMessage(ErrorsMessages.FirstNameEmpty)
                 .MaximumLength(32)
                 .WithMessage(ErrorsMessages.FirstNameTooLong)
+                .MinimumLength(2)
+                .WithMessage(ErrorsMessages.FirstNameTooShort)
                 .Matches("^[A-Z][a-z]+$")
                 .WithMessage(ErrorsMessages.FirstNameError);
 
@@ -37,6 +39,8 @@ namespace UserService.Validators
                 .WithMessage(ErrorsMessages.LastNameEmpty)
                 .MaximumLength(32)
                 .WithMessage(ErrorsMessages.LastNameTooLong)
+                .MinimumLength(2)
+                .WithMessage(ErrorsMessages.LastNameTooShort)
                 .Matches("^[A-Z][a-z]+$")
                 .WithMessage(ErrorsMessages.LastNameError);
 

@@ -15,7 +15,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void AllFieldsEmpty()
         {
-            CreateUserRequest user = new CreateUserRequest();
+            var user = new CreateUserRequest();
 
             Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
         }
@@ -23,7 +23,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullEmail()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = null,
                 Password = "123",
@@ -44,7 +44,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmptyEmail()
         {
-            CreateUserRequest user = new CreateUserRequest {
+            var user = new CreateUserRequest {
                 Email = "",
                 Password = "123",
                 FirstName = "Leo",
@@ -62,9 +62,9 @@ namespace UserServiceTests.Validators
         }
 
         [Test]
-        public void WrongEmail()
+        public void InvalidEmail()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = "email.yandex.ru",
                 Password = "123",
@@ -85,7 +85,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmptyPassword()
         {
-            CreateUserRequest user = new CreateUserRequest {
+            var user = new CreateUserRequest {
                 Email = "email@yandex.ru",
                 Password = "",
                 FirstName = "Leo",
@@ -105,7 +105,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullPassword()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = "email@yandex.ru",
                 Password = null,
@@ -126,7 +126,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullFirstName()
         {
-            CreateUserRequest user = new CreateUserRequest {
+            var user = new CreateUserRequest {
                 Email = "email@yandex.ru",
                 Password = "123",
                 FirstName = null,
@@ -146,7 +146,8 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmptyFirstName()
         {
-            CreateUserRequest user = new CreateUserRequest {
+            var user = new CreateUserRequest {
+                FirstName = "",
                 Email = "email@yandex.ru",
                 Password = "123",
                 LastName = "Kor",
@@ -165,7 +166,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void FirstNameContainsNumbers()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = "email@yandex.ru",
                 Password = "123",
@@ -186,7 +187,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void FirstNameFirstLetterIsNotUpperCase()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = "email@yandex.ru",
                 Password = "123",
@@ -205,9 +206,9 @@ namespace UserServiceTests.Validators
         }
 
         [Test]
-        public void FirstNameRestLettersIsNotLowerCase()
+        public void FirstNameRestLettersAreNotLowerCase()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = "email@yandex.ru",
                 Password = "123",
@@ -228,7 +229,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void WrongBirthday()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = "email@yandex.ru",
                 Password = "123",
@@ -249,7 +250,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void MissBirthday()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = "email@yandex.ru",
                 Password = "123",
@@ -269,7 +270,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void MissEmail()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Password = "123",
                 FirstName = "Leo",
@@ -289,7 +290,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void MissPassword()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 FirstName = "Leo",
                 LastName = "Kor",
@@ -308,7 +309,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void MissFirstName()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Password = "123",
                 LastName = "Kor",
@@ -327,7 +328,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void MissLastName()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Password = "123",
                 FirstName = "Leo",
@@ -346,7 +347,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmailTooLong()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Email = new string('c', 50) + "@ya.ru",
                 Password = "123",
@@ -367,7 +368,7 @@ namespace UserServiceTests.Validators
         [Test]
         public void FirstNameTooLong()
         {
-            CreateUserRequest user = new CreateUserRequest
+            var user = new CreateUserRequest
             {
                 Password = "123",
                 FirstName = "C" + new string('c', 40),
@@ -384,11 +385,33 @@ namespace UserServiceTests.Validators
             Assert.IsNotNull(expectedError);
         }
 
+        [Test]
+        public void FirstName1Letter()
+        {
+            var user = new CreateUserRequest
+            {
+                Email = "email@yandex.ru",
+                Password = "123",
+                FirstName = "C",
+                LastName = "Kor",
+                Birthday = DateTime.Today.AddYears(-18)
+            };
+
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+
+            var expectedError =
+                validationResult.Errors.FirstOrDefault(
+                    error => error.ErrorMessage == ErrorsMessages.FirstNameTooShort);
+
+            Assert.IsNotNull(expectedError);
+
+        }
+
 
         [Test]
         public void Ok()
         {
-            CreateUserRequest user = new CreateUserRequest { 
+            var user = new CreateUserRequest { 
                 Email = "email@yandex.ru",
                 Password = "123",
                 FirstName = "Leo",
