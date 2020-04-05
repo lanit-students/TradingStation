@@ -23,7 +23,6 @@ namespace DataBaseService.Repositories
 
         public void CreateUser(User user)
         {
-            var email = user.Email;
             dbContext.Users.Add(mapper.MapToDbUser(user));
             dbContext.SaveChanges();
         }
