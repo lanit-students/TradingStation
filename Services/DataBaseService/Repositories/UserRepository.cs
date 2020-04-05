@@ -28,19 +28,43 @@ namespace DataBaseService.Repositories
 
         public void CreateUserCredential(UserCredential userCredential)
         {
-            dbContext.UsersCredentials.Add(mapper.MapToDbUserCredential(userCredential));
-            dbContext.SaveChanges();
+            var dbCredential = dbContext.UsersCredentials
+                .FirstOrDefault(uc => uc.Email == userCredential.Email);
+            if (dbCredential == null)
+            {
+                throw new BadRequestException("User already exist");
+            }
+            else
+            {
+                dbContext.UsersCredentials.Add(mapper.MapToDbUserCredential(userCredential));
+                dbContext.SaveChanges();
+            }
         }
 
         public UserCredential GetUserCredential(string email)
         {
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);
+            if (dbCredential == null)
+            {
+                throw new NotFoundException("User not found");
+            }
 
             return mapper.MapUserCredential(dbCredential);
         }
-        public void DeleteUser(Guid userIdCredential)
+
+        public User GetUserById(Guid userId)
         {
-            var dbUserCredential = dbContext.Find<DbUserCredential>(userIdCredential);
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
+            if (dbUser == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+            return mapper.MapUser(dbUser);
+        }
+
+        public void DeleteUser(Guid userId)
+        {
+            var dbUserCredential = dbContext.Find<DbUserCredential>(userId);
             if (dbUserCredential == null)
             {
                 throw new ForbiddenException("Not found User for delete");

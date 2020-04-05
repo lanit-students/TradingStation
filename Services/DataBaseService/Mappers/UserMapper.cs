@@ -31,7 +31,13 @@ namespace DataBaseService.Mappers
 
         public User MapUser(DbUser dbUser)
         {
-            throw new NotImplementedException();
+            return new User
+            {
+                Id = dbUser.Id,                
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
+                Birthday = dbUser.Birthday
+            };
         }
 
         public UserCredential MapUserCredential(DbUserCredential dbUserCredential)
