@@ -7,10 +7,7 @@ namespace DTO.NewsRequests.Currency
     {
         public CurrencyRequest() { }
 
-        [JsonPropertyName("bank_name")]
         public NewsPublisherTypes CurrecyPublisher { get; set; }
-
-        [JsonPropertyName("currency_codes")]
         public List<string> CurrencyCodes { get; set; }
     }
 }

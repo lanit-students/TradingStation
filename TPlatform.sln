@@ -48,13 +48,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsServiceTests", "Tests\N
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KernelTests", "Tests\KernelTests\KernelTests.csproj", "{1CDE1465-17B4-4A84-A88A-F215E4C4097A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanTests", "PostmanTests", "{102E58AF-3D46-4EDB-A2FC-2EF6A7DB7415}"
-	ProjectSection(SolutionItems) = preProject
-		PostmanTests\NewsService.postman_collection.json = PostmanTests\NewsService.postman_collection.json
-		PostmanTests\OperationService.postman_collection.json = PostmanTests\OperationService.postman_collection.json
-		PostmanTests\UserService.postman_collection.json = PostmanTests\UserService.postman_collection.json
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
