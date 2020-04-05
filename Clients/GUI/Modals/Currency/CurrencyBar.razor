@@ -1,34 +1,43 @@
 ﻿
-    @foreach (var rate in rates)
+    <p class="badge-dark" style="margin-bottom:1px">CURRENCY RATE</p>
+@if (Rates != null)
+{
+    @foreach (var r in Rates)
     {
-        <p>
-            @rate.Code
-
-            @rate.Value
-        </p>
+        <div class="text-center container-fluid" style="white-space:nowrap">
+            <span class="item i-body">@r.Code</span>
+            <span class="item i-body">@r.Value</span>
+        </div>
     }
+}
+@if (Codes == null || Codes.Count == 0)
+{
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+}
 
 @code {
     [Parameter]
-    public List<string> codes { get; set; }
+    public List<string> Codes { get; set; }
 
-    List<ExchangeRate> rates { get; set; }
+    List<ExchangeRate> Rates { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        CurrencyRequest req = new CurrencyRequest();
-        req.CurrecyPublisher = NewsPublisherTypes.CentralBank;
-        req.CurrencyCodes = codes;
+        if (Codes != null && Codes.Count > 1)
+        {
+            CurrencyRequest req = new CurrencyRequest();
+            req.CurrecyPublisher = NewsPublisherTypes.CentralBank;
+            req.CurrencyCodes = Codes;
+            string url = "http://localhost:5006/News/currencies";
 
-        RestClient<CurrencyRequest, List<ExchangeRate>> r =
-            new RestClient<CurrencyRequest, List<ExchangeRate>>(
-                      "http://localhost:44384/news/currencies",
-                      RestRequestType.POST,
-                      null,
-                      default,
-                      null);
+            RestClient<CurrencyRequest, List<ExchangeRate>> client = new RestClient<CurrencyRequest, List<ExchangeRate>>(url, RestRequestType.POST);
 
-        rates = r.Execute(req).Result;
+
+            Rates = await client.Execute(req);
+        }
+        else
+            await base.OnInitializedAsync();
     }
-
 }

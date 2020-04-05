@@ -26,25 +26,18 @@ namespace NewsService.Controllers
         /// </summary>
         [Route("currencies")]
         [HttpPost]
-        public string GetCurrencies(
-            //[FromBody] CurrencyRequest requestParams,
+        public List<ExchangeRate> GetCurrencies(
+            [FromBody] CurrencyRequest requestParams,
             [FromServices] IValidator<CurrencyRequest> validator)
         {
-            CurrencyRequest requestParams = new CurrencyRequest
-            {
-                CurrencyCodes = new List<string> { "eur", "usd" },
-                CurrecyPublisher = NewsPublisherTypes.CentralBank
-            };
-
             validator.ValidateAndThrow(requestParams);
             List<ExchangeRate> rates = NewsPublisherFactory
                 .Create(requestParams.CurrecyPublisher)
                 .GetCurrencies();
 
-            return "hhh";
-                //rates
-                //.Where(r => requestParams.CurrencyCodes.Contains(r.Code))
-                //.ToList();
+            return rates
+                .Where(r => requestParams.CurrencyCodes.Contains(r.Code))
+                .ToList();
         }
     }
 }
