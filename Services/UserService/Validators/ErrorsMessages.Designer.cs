@@ -142,6 +142,24 @@ namespace UserService.Validators {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id must be not empty.
+        /// </summary>
+        public static string IdEmpty {
+            get {
+                return ResourceManager.GetString("IdEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id must be not null.
+        /// </summary>
+        public static string IdNull {
+            get {
+                return ResourceManager.GetString("IdNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email address must be in valid format..
         /// </summary>
         public static string InvalidEmail {
