@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace NewsServiceTests.Validators
 {
-    class CurrencyRequestValidatorTests
+    public class CurrencyRequestValidatorTests
     {
         private CurrencyRequest NullRequest = null;
 
@@ -38,13 +38,13 @@ namespace NewsServiceTests.Validators
         [Test]
         public void NullRequestValidate()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => validator.ValidateAndThrow(NullRequest));
+            Assert.Throws<ArgumentNullException>(() => validator.ValidateAndThrow(NullRequest));
         }
 
         [Test]
         public void NullCodesRequestValidate()
         {
-            var ex = Assert.Throws<NullReferenceException>(() => validator.ValidateAndThrow(NullCodesRequest));
+            Assert.Throws<NullReferenceException>(() => validator.ValidateAndThrow(NullCodesRequest));
         }
 
         [Test]

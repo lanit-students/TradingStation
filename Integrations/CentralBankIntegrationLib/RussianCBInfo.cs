@@ -30,7 +30,7 @@ namespace CBIntegration
 
         public List<ExchangeRate> GetCurrencies()
         {
-            List<ExchangeRate> rates = new List<ExchangeRate>();
+            var rates = new List<ExchangeRate>();
             for(int i = 0; i < data.Currencies.Count; i++)
             {
                 rates.Add(new ExchangeRate { Code = data[i].CharCode, Value = data[i].ValueInDigits });
