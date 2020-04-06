@@ -38,6 +38,19 @@ namespace DataBaseService.Repositories
 
             return mapper.MapUserCredential(dbCredential);
         }
+
+        public User GetUserById(Guid userId)
+        {
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
+            if (dbUser == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            var email = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).Email;
+            return mapper.MapUser(dbUser, email);
+        }
+
         public void DeleteUser(Guid userId)
         {
             var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
@@ -54,4 +67,3 @@ namespace DataBaseService.Repositories
         }
     }
 }
-
