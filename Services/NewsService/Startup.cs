@@ -21,7 +21,7 @@ namespace NewsService
         {
             services.AddControllers();
             services.AddTransient<IValidator<CurrencyRequest>, CurrencyRequestValidator>();
-            services.AddTransient<IEqualityComparer<string>, CustomStringComparer>();
+            services.AddTransient<IEqualityComparer<string>, RegisterIgnoreStringComparer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

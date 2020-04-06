@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NewsService.Utils
 {
-    public class CustomStringComparer : EqualityComparer<string>
+    public class RegisterIgnoreStringComparer : EqualityComparer<string>
     {
         public override bool Equals([AllowNull] string x, [AllowNull] string y)
         {

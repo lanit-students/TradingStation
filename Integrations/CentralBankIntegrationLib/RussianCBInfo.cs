@@ -16,8 +16,8 @@ namespace CBIntegration
     /// </summary>
     public class RussianCBInfo : INewsPublisher
     {
-        DataFromCB data;
-        Uri uri;
+        private DataFromCB data;
+        private Uri uri;
 
         public RussianCBInfo(Uri uri)
         {
@@ -31,7 +31,7 @@ namespace CBIntegration
         public List<ExchangeRate> GetCurrencies()
         {
             var rates = new List<ExchangeRate>();
-            for(int i = 0; i < data.Currencies.Count; i++)
+            for (int i = 0; i < data.Currencies.Count; i++)
             {
                 rates.Add(new ExchangeRate { Code = data[i].CharCode, Value = data[i].ValueInDigits });
             }

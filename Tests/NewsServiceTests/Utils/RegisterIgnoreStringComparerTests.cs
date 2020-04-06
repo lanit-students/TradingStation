@@ -6,14 +6,14 @@ using NewsService.Utils;
 
 namespace NewsServiceTests.Utils
 {
-    public class CustomStringComparerTests
+    public class RegisterIgnoreStringComparerTests
     {
         private IEqualityComparer<string> comparer;
 
         [SetUp]
         public void Initialize()
         {
-            comparer = new CustomStringComparer();
+            comparer = new RegisterIgnoreStringComparer();
         }
 
         [Test]

@@ -35,7 +35,7 @@ namespace NewsService.Controllers
             validator.ValidateAndThrow(requestParams);
 
             List<ExchangeRate> rates = NewsPublisherFactory
-                .Create(requestParams.CurrecyPublisher)
+                .Create(requestParams.CurrencyPublisher)
                 .GetCurrencies();
 
             return rates
