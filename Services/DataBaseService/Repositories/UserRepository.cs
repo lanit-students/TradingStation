@@ -46,7 +46,9 @@ namespace DataBaseService.Repositories
             {
                 throw new NotFoundException("User not found");
             }
-            return mapper.MapUser(dbUser);
+
+            var email = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).Email;
+            return mapper.MapUser(dbUser, email);
         }
 
         public void DeleteUser(Guid userIdCredential)

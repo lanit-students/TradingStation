@@ -29,11 +29,12 @@ namespace DataBaseService.Mappers
             };
         }
 
-        public User MapUser(DbUser dbUser)
+        public User MapUser(DbUser dbUser, string email)
         {
             return new User
             {
                 Id = dbUser.Id,
+                Email = email,
                 FirstName = dbUser.FirstName,
                 LastName = dbUser.LastName,
                 Birthday = dbUser.Birthday
