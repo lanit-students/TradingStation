@@ -30,7 +30,7 @@
         if (Codes != null && Codes.Count > 1)
         {
             CurrencyRequest req = new CurrencyRequest();
-            req.CurrecyPublisher = NewsPublisherTypes.CentralBank;
+            req.CurrencyPublisher = NewsPublisherTypes.CentralBank;
             req.CurrencyCodes = Codes;
             string url = "http://localhost:5006/News/currencies";
 
