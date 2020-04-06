@@ -9,6 +9,7 @@ namespace UserService.Validators
         public CreateUserRequestValidator()
         {
             RuleFor(user => user.Email)
+                .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.EmailEmpty)
                 .MaximumLength(50)
@@ -17,10 +18,12 @@ namespace UserService.Validators
                 .WithMessage(ErrorsMessages.InvalidEmail);
 
             RuleFor(user => user.Password)
+                .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.EmptyPassword);
 
             RuleFor(user => user.FirstName)
+                .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.FirstNameEmpty)
                 .MaximumLength(32)
@@ -31,6 +34,7 @@ namespace UserService.Validators
                 .WithMessage(ErrorsMessages.FirstNameError);
 
             RuleFor(user => user.LastName)
+                .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.LastNameEmpty)
                 .MaximumLength(32)
@@ -41,9 +45,10 @@ namespace UserService.Validators
                 .WithMessage(ErrorsMessages.LastNameError);
 
             RuleFor(user => user.Birthday)
+                .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.BirthdayEmpty)
-                .Must(birthday => birthday.AddYears(18) <= DateTime.Today)
+                .Must(birthday => ((birthday.AddYears(18) <= DateTime.Today) && (DateTime.Now.Year-birthday.Year < 120)) )
                 .WithMessage(ErrorsMessages.BirthdayYoung);
 
         }
