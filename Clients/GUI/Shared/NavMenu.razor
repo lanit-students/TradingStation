@@ -1,12 +1,44 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Trading station</a>
+@using Authentication
+@inject AuthStateProvider AuthenticationProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Trading Station</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-
+    <ul class="nav flex-column">
+        <AuthorizeView>
+            <Authorized>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="userinfo" Match="NavLinkMatch.All">
+                        <span class="oi oi-people" aria-hidden="true"></span> User Info
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="signin" @onclick="@SignOut" Match="NavLinkMatch.All">
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Sign Out
+                    </NavLink>
+                </li>
+            </Authorized>
+            <NotAuthorized>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="signup">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Sign Up
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="signin" Match="NavLinkMatch.All">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Sign In
+                    </NavLink>
+                </li>
+            </NotAuthorized>
+        </AuthorizeView>
+    </ul>
 </div>
 
 @code {
@@ -17,5 +49,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void SignOut()
+    {
+        LocalStorage.ClearAsync();
+        AuthenticationProvider.MarkSignedOut();
     }
 }
