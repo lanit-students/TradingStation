@@ -1,7 +1,4 @@
-﻿using DTO;
-using Kernel.CustomExceptions;
-using Kernel.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -9,6 +6,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+
+using DTO;
+using Kernel.CustomExceptions;
+using Kernel.Enums;
 
 namespace Kernel
 {
