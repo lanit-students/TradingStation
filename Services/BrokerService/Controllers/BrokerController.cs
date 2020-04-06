@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using BrokerServices;
 using BrokerServices.Utils;
 using Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrokerService.Controllers
@@ -16,12 +12,12 @@ namespace BrokerService.Controllers
     {
         [Route("getAllCurrencies")]
         [HttpGet]
-        public List<IMarketInstrument> GetAllCurrencies(BankType bankType)
+        public List<IMarketInstrument> GetAllCurrencies([FromBody] BankType bankType)
         {
             return BrokerFactory.Create(bankType).GetAllCurrencies();
         }
 
-        [Route("getAllCurrency")]
+        [Route("getCurrency")]
         [HttpGet]
         public IMarketInstrument GetCurrency([FromBody] BankType bankType, string idCurrency)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
-using BrokerService.Utils;
+using DTO;
 using Interfaces;
+using TinkoffIntegrationLib;
 
 namespace BrokerServices.Utils
 {
@@ -8,7 +9,11 @@ namespace BrokerServices.Utils
     {
         public static IBroker Create(BankType bankType)
         {
-            if (bankType == BankType.TinkoffBank) return 
+            var brokerData = new CreateBrokerData();
+            //token and depth?
+            if (bankType == BankType.TinkoffBank) return new TinkoffBankBroker(brokerData);
+            //Exception?
+            throw new Exception("Bank is not found.");
         }
     }
 }
