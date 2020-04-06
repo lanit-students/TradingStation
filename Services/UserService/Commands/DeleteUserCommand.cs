@@ -1,20 +1,51 @@
- using System;
+using System;
+using System.Threading.Tasks;
+using DTO;
+using DTO.BrokerRequests;
+using DTO.RestRequests;
+using FluentValidation;
+using IDeleteUserUserService.Interfaces;
+using Kernel.CustomExceptions;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 
- using IDeleteUserUserService.Interfaces;
-
- namespace UserService.Commands
+namespace UserService.Commands
  {
      public class DeleteUserCommand : IDeleteUserCommand
      {
-         public bool Execute(Guid userId)
-         {
-            return DeleteUser(userId);
-         }
+        private readonly IBus busControl;
+        private readonly IValidator<DeleteUserRequest> validator;
+        
+        public DeleteUserCommand([FromServices]IBus busControl, [FromServices] IValidator<DeleteUserRequest> validator)
+        {
+            this.busControl = busControl;
+            this.validator = validator;
+        }
 
-         //TODO fix from stub on request
-         private bool DeleteUser(Guid userId)
+        public async Task<bool> Execute(DeleteUserRequest request)
          {
-             return false;
+            validator.ValidateAndThrow(request);
+
+            var user = new InternalDeleteUserRequest { UserId = request.UserId };
+
+            var deleteUserResult = await deleteUser(user);
+            if (!deleteUserResult)
+            {
+                throw new BadRequestException("Unable to delete user.");
+            }
+            return deleteUserResult;
+        }
+
+         
+         private async Task<bool> deleteUser(InternalDeleteUserRequest request)
+         {
+            var uri = new Uri("rabbitmq://localhost/DatabaseService");
+
+            var client = busControl.CreateRequestClient<InternalDeleteUserRequest>(uri).Create(request);
+
+            var response = await client.GetResponse<OperationResult>();
+
+            return response.Message.IsSuccess;
          }
      }
  }

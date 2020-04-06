@@ -1,8 +1,9 @@
+﻿
 using System;
 
-namespace DTO.BrokerRequests
+namespace DTO.RestRequests
 {
-    public class InternalDeleteUserRequest
+    public class DeleteUserRequest
     {
         public Guid UserId { get; set; }
     }
