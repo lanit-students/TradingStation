@@ -68,7 +68,7 @@ namespace DataBaseService.Repositories
             var dbUserCredential = dbContext.Find<DbUserCredential>(userId);
             if (dbUserCredential == null)
             {
-                throw new ForbiddenException("Not found User for delete");
+                throw new NotFoundException("Not found User for delete");
             }
             if(dbUserCredential.IsActive==false)
             {
