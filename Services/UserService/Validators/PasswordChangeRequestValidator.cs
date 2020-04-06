@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace UserService.Validators
 {
-    public class EditUserPasswordValidator: AbstractValidator<EditUserRequest>
+    public class PasswordChangeRequestValidator: AbstractValidator<PasswordChangeRequest>
     {
-        public EditUserPasswordValidator()
+        public PasswordChangeRequestValidator()
         {
             RuleFor(user => user.OldPassword)
                 .NotEmpty()

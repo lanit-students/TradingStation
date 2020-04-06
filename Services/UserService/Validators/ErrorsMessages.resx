@@ -144,6 +144,9 @@
   <data name="FirstNameTooShort" xml:space="preserve">
     <value>First name is too short</value>
   </data>
+  <data name="IdIsNullOrEmpty" xml:space="preserve">
+    <value>Id is null or empty</value>
+  </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Email address must be in valid format.</value>
   </data>

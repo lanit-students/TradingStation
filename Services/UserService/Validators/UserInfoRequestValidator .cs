@@ -4,10 +4,22 @@ using System;
 
 namespace UserService.Validators
 {
-    public class EditUserInfoValidator : AbstractValidator<EditUserRequest>
+    public class UserInfoRequestValidator : AbstractValidator<UserInfoRequest>
     {
-        public EditUserInfoValidator ()
+        public UserInfoRequestValidator ()
         {
+            RuleFor(user => user.UserId)
+                .NotEmpty()
+                .WithMessage(ErrorsMessages.IdIsNullOrEmpty);
+
+            RuleFor(user => user.Email)
+                .NotEmpty()
+                .WithMessage(ErrorsMessages.EmailEmpty)
+                .MaximumLength(50)
+                .WithMessage(ErrorsMessages.EmailTooLong)
+                .EmailAddress()
+                .WithMessage(ErrorsMessages.InvalidEmail);
+
             RuleFor(user => user.FirstName)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.FirstNameEmpty)

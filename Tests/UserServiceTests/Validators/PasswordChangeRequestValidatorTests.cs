@@ -1,37 +1,33 @@
 ﻿using DTO.RestRequests;
 using FluentValidation;
 using NUnit.Framework;
-using System;
 using System.Linq;
 using UserService.Validators;
 
 namespace UserServiceTests.Validators
 {
-    public class EditUserPasswordValidatorTests
+    public class PasswordChangeRequestValidatorTests
     {
-        private IValidator<EditUserRequest> validator = new EditUserPasswordValidator();
+        private IValidator<PasswordChangeRequest> validator = new PasswordChangeRequestValidator();
 
         [Test]
         public void AllFieldsEmpty()
         {
-            var user = new EditUserRequest();
+            var request = new PasswordChangeRequest();
 
-            Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+            Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
         }
 
         [Test]
         public void EmptyOldPassword()
         {
-            var user = new EditUserRequest()
+            var request = new PasswordChangeRequest()
             {
                 OldPassword = "",
                 NewPassword = "password",
-                FirstName = "Leo",
-                LastName = "Kor",
-                Birthday = DateTime.Today.AddYears(-19)
             };
 
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
@@ -43,16 +39,13 @@ namespace UserServiceTests.Validators
         [Test]
         public void EmptyNewPassword()
         {
-            var user = new EditUserRequest()
+            var request = new PasswordChangeRequest()
             {
                 OldPassword = "password",
                 NewPassword = "",
-                FirstName = "Leo",
-                LastName = "Kor",
-                Birthday = DateTime.Today.AddYears(-19)
             };
 
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
@@ -64,16 +57,13 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullOldPassword()
         {
-            var user = new EditUserRequest()
+            var request = new PasswordChangeRequest()
             {
                 OldPassword = null,
-                NewPassword = "password",
-                FirstName = "Leo",
-                LastName = "Kor",
-                Birthday = DateTime.Today.AddYears(-19)
+                NewPassword = "newPassword",
             };
 
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
@@ -85,16 +75,13 @@ namespace UserServiceTests.Validators
         [Test]
         public void NullNewPassword()
         {
-            var user = new EditUserRequest()
+            var request = new PasswordChangeRequest()
             {
-                OldPassword = "password",
+                OldPassword = "oldPassword",
                 NewPassword = null,
-                FirstName = "Leo",
-                LastName = "Kor",
-                Birthday = DateTime.Today.AddYears(-19)
             };
 
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
@@ -106,16 +93,13 @@ namespace UserServiceTests.Validators
         [Test]
         public void OldAndNewPasswordsEqual()
         {
-            var user = new EditUserRequest()
+            var request = new PasswordChangeRequest()
             {
                 OldPassword = "password",
                 NewPassword = "password",
-                FirstName = "Leo",
-                LastName = "Kor",
-                Birthday = DateTime.Today.AddYears(-19)
             };
 
-            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(user));
+            var validationResult = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
 
             var expectedError =
                 validationResult.Errors.FirstOrDefault(
@@ -127,16 +111,13 @@ namespace UserServiceTests.Validators
         [Test]
         public void ValidPasswordData()
         {
-            var user = new EditUserRequest()
+            var request = new PasswordChangeRequest()
             {
                 OldPassword = "oldPassword",
                 NewPassword = "newPassword",
-                FirstName = "Leo",
-                LastName = "Kor",
-                Birthday = DateTime.Today.AddYears(-19)
             };
 
-            Assert.DoesNotThrow(() => validator.ValidateAndThrow(user));
+            Assert.DoesNotThrow(() => validator.ValidateAndThrow(request));
         }
     }
 }

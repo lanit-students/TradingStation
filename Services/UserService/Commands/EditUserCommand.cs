@@ -9,25 +9,28 @@ namespace UserService.Commands
 {
     public class EditUserCommand : IEditUserCommand
     {
-        private readonly IValidator<EditUserRequest> userInfoValidator;
-        private readonly IValidator<EditUserRequest> userPasswordValidator;
+        private readonly IValidator<UserInfoRequest> userInfoValidator;
+        private readonly IValidator<PasswordChangeRequest> passwordChangeValidator;
         
         public EditUserCommand
-            ([FromServices] IValidator<EditUserRequest> userInfoValidator, 
-            [FromServices] IValidator<EditUserRequest> userPasswordValidator)
+            ([FromServices] IValidator<UserInfoRequest> userInfoValidator, 
+            [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator)
         {
             this.userInfoValidator = userInfoValidator;
-            this.userPasswordValidator = userPasswordValidator;
+            this.passwordChangeValidator = passwordChangeValidator;
         }
         
         public Task<bool> Execute(EditUserRequest request)
         {
-            if (!(string.IsNullOrEmpty(request.OldPassword)
-                    || string.IsNullOrEmpty(request.NewPassword)))
+            var passwordRequest = request.PasswordRequest;
+            var userInfo = request.UserInfo;
+            
+            if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
+                    || string.IsNullOrEmpty(passwordRequest.NewPassword)))
             {
-                userPasswordValidator.ValidateAndThrow(request);
+                passwordChangeValidator.ValidateAndThrow(passwordRequest);
             }
-            userInfoValidator.ValidateAndThrow(request);
+            userInfoValidator.ValidateAndThrow(userInfo);
 
             // TODO Realise edit user logic
             throw new NotImplementedException();
