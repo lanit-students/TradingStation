@@ -146,6 +146,11 @@
   </data>
   <data name="IdIsNullOrEmpty" xml:space="preserve">
     <value>Id is null or empty</value>
+  <data name="IdEmpty" xml:space="preserve">
+    <value>Id must be not empty</value>
+  </data>
+  <data name="IdNull" xml:space="preserve">
+    <value>Id must be not null</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Email address must be in valid format.</value>

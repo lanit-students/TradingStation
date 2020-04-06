@@ -7,7 +7,7 @@ using DTO.RestRequests;
 
 namespace UserServiceTests.Validators
 {
-    public class UserEmailPasswordValidatorTests
+    public class CreateUserRequestValidatorTests
     {
         private IValidator<CreateUserRequest> validator = new CreateUserRequestValidator();
 
