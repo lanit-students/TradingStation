@@ -38,6 +38,17 @@ namespace DataBaseService.Repositories
 
             return mapper.MapUserCredential(dbCredential);
         }
+
+        public User GetUserById(Guid userId)
+        {
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
+            if (dbUser == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+            return mapper.MapUser(dbUser);
+        }
+
         public void DeleteUser(Guid userIdCredential)
         {
             var dbUserCredential = dbContext.Find<DbUserCredential>(userIdCredential);

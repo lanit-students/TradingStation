@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class DeleteUserConsumer : IConsumer<InternalGetUserByIdRequest>
+    public class DeleteUserConsumer : IConsumer<InternalDeleteUserRequest>
     {
         private readonly IUserRepository userRepository;
 
@@ -16,7 +16,7 @@ namespace DataBaseService.BrokerConsumers
             this.userRepository = userRepository;
         }
 
-        private OperationResult DeleteUser(InternalGetUserByIdRequest request)
+        private OperationResult DeleteUser(InternalDeleteUserRequest request)
         {
             userRepository.DeleteUser(request.UserId);
 
@@ -26,7 +26,7 @@ namespace DataBaseService.BrokerConsumers
             };
         }
 
-        public async Task Consume(ConsumeContext<InternalGetUserByIdRequest> context)
+        public async Task Consume(ConsumeContext<InternalDeleteUserRequest> context)
         {
             var deleteResult = DeleteUser(context.Message);
 

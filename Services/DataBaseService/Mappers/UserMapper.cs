@@ -33,7 +33,7 @@ namespace DataBaseService.Mappers
         {
             return new User
             {
-                Id = dbUser.Id,                
+                Id = dbUser.Id,
                 FirstName = dbUser.FirstName,
                 LastName = dbUser.LastName,
                 Birthday = dbUser.Birthday
