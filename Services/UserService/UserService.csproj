@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="MassTransit" Version="6.2.3" />
     <PackageReference Include="MassTransit.AspNetCore" Version="6.2.3" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="6.2.3" />
@@ -23,6 +24,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Urls.resx</DependentUpon>
     </Compile>
+    <Compile Update="Validators\ErrorsMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ErrorsMessages.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +39,10 @@
     <EmbeddedResource Update="Properties\Urls.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Urls.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Validators\ErrorsMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorsMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

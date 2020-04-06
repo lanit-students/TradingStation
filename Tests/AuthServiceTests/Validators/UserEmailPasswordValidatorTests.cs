@@ -1,10 +1,4 @@
-﻿using AuthenticationService.Validators;
-using DTO;
-using FluentValidation;
-using NUnit.Framework;
-using System.Linq;
-
-namespace AuthenticationServiceTests.Validators
+﻿namespace AuthenticationServiceTests.Validators
 {
     public class UserEmailPasswordValidatorTests
     {

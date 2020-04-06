@@ -6,6 +6,7 @@ using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using FluentValidation;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -14,10 +15,12 @@ namespace UserService.Commands
     public class CreateUserCommand : ICreateUserCommand
     {
         private readonly IBus busControl;
+        private readonly IValidator<CreateUserRequest> validator;
 
-        public CreateUserCommand([FromServices] IBus busControl)
+        public CreateUserCommand([FromServices] IBus busControl, [FromServices] IValidator<CreateUserRequest> validator)
         {
             this.busControl = busControl;
+            this.validator = validator;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
@@ -33,7 +36,7 @@ namespace UserService.Commands
 
         public async Task<bool> Execute(CreateUserRequest request)
         {
-            CommonValidations.ValidateEmail(request.Email);
+            validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
 

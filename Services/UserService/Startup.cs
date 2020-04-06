@@ -1,3 +1,4 @@
+using FluentValidation;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,12 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UserService.Commands;
 using UserService.Interfaces;
+using UserService.Validators;
 using MassTransit;
 using GreenPipes;
 using MassTransit.AspNetCoreIntegration;
 using Microsoft.Extensions.Configuration;
 using UserService.BrokerConsumers;
 using System;
+using DTO.RestRequests;
 using Kernel.Middlewares;
 using Kernel;
 
@@ -41,12 +44,12 @@ namespace UserService
                     hst.Password($"{serviceId}");
                 });
 
-                cfg.ReceiveEndpoint($"{serviceName}_Login", ep =>
+                cfg.ReceiveEndpoint($"{serviceName}", ep =>
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
-                    ep.ConfigureConsumer<UserLoginConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -60,11 +63,14 @@ namespace UserService
             services.AddControllers();
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
-            services.AddTransient<ICreateUserCommand, CreateUserCommand>();
+
+            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
+
+            services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<UserLoginConsumer>();
+                x.AddConsumer<LoginUserConsumer>();
                 x.AddBus(provider => CreateBus(provider));
             });
 
@@ -85,7 +91,7 @@ namespace UserService
             });
 
             app.UseHsts();
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
