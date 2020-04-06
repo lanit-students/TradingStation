@@ -159,4 +159,7 @@
   <data name="LastNameTooShort" xml:space="preserve">
     <value>Last name is too short</value>
   </data>
+  <data name="OldAndNewPasswordsEqual" xml:space="preserve">
+    <value>Old and new passwords are equal</value>
+  </data>
 </root>

@@ -4,9 +4,9 @@ using System;
 
 namespace UserService.Validators
 {
-    public class EditUserInformationRequestValidator : AbstractValidator<EditUserRequest>
+    public class EditUserInfoValidator : AbstractValidator<EditUserRequest>
     {
-        public EditUserInformationRequestValidator ()
+        public EditUserInfoValidator ()
         {
             RuleFor(user => user.FirstName)
                 .NotEmpty()

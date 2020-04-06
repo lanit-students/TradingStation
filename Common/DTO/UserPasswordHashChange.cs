@@ -1,7 +1,7 @@
 ﻿
 namespace DTO
 {
-    public class UserPasswordChange
+    public class UserPasswordHashChange
     {
         public string OldPasswordHash { get; set; }
         public string NewPasswordHash { get; set; }

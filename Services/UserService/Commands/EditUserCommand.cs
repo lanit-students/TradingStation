@@ -1,7 +1,7 @@
 ﻿using DTO.RestRequests;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -9,14 +9,26 @@ namespace UserService.Commands
 {
     public class EditUserCommand : IEditUserCommand
     {
-        public EditUserCommand()
+        private readonly IValidator<EditUserRequest> userInfoValidator;
+        private readonly IValidator<EditUserRequest> userPasswordValidator;
+        
+        public EditUserCommand
+            ([FromServices] IValidator<EditUserRequest> userInfoValidator, 
+            [FromServices] IValidator<EditUserRequest> userPasswordValidator)
         {
-
+            this.userInfoValidator = userInfoValidator;
+            this.userPasswordValidator = userPasswordValidator;
         }
         
-
         public Task<bool> Execute(EditUserRequest request)
         {
+            if (!(string.IsNullOrEmpty(request.OldPassword)
+                    || string.IsNullOrEmpty(request.NewPassword)))
+            {
+                userPasswordValidator.ValidateAndThrow(request);
+            }
+            userInfoValidator.ValidateAndThrow(request);
+
             throw new NotImplementedException();
         }
     }

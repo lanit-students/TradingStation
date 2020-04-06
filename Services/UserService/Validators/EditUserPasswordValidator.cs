@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace UserService.Validators
 {
-    public class EditUserPasswordRequestValidator: AbstractValidator<EditUserRequest>
+    public class EditUserPasswordValidator: AbstractValidator<EditUserRequest>
     {
-        public EditUserPasswordRequestValidator()
+        public EditUserPasswordValidator()
         {
             RuleFor(user => user.OldPassword)
                 .NotEmpty()
@@ -13,6 +13,9 @@ namespace UserService.Validators
             RuleFor(user => user.NewPassword)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.EmptyPassword);
+            RuleFor(user => user.OldPassword)
+                 .NotEqual(user => user.NewPassword)
+                 .WithMessage(ErrorsMessages.OldAndNewPasswordsEqual);
         }
     }
 }

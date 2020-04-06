@@ -185,5 +185,14 @@ namespace UserService.Validators {
                 return ResourceManager.GetString("LastNameTooShort", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old and new passwords are equal.
+        /// </summary>
+        public static string OldAndNewPasswordsEqual {
+            get {
+                return ResourceManager.GetString("OldAndNewPasswordsEqual", resourceCulture);
+            }
+        }
     }
 }
