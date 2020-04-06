@@ -4,6 +4,6 @@ namespace DTO.BrokerRequests
     public class InternalEditUserInfoRequest
     {
         public User User { get; set; }
-        public UserPasswordHashChange UserPasswords { get; set;}
+        public PasswordChangeRequest UserPasswords { get; set;}
     }
 }

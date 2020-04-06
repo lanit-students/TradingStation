@@ -29,6 +29,7 @@ namespace UserService.Commands
             }
             userInfoValidator.ValidateAndThrow(request);
 
+            // TODO Realise edit user logic
             throw new NotImplementedException();
         }
     }
