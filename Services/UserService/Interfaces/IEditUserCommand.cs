@@ -1,10 +1,10 @@
-﻿using DTO;
-using System.Net;
+﻿using DTO.RestRequests;
+using System.Threading.Tasks;
 
 namespace UserService.Interfaces
 {
     public interface IEditUserCommand
     {
-        void Execute(UserEmailPassword userEmailPassword);
+        Task<bool> Execute(CreateUserRequest request, string newPassword);
     }
 }

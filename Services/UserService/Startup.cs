@@ -66,6 +66,8 @@ namespace UserService
 
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
 
+            services.AddTransient<ICreateUserCommand, CreateUserCommand>();
+
             services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
 
             services.AddMassTransit(x =>

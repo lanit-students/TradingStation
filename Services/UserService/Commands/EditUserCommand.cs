@@ -1,37 +1,82 @@
 ﻿using DTO;
+using DTO.BrokerRequests;
+using DTO.RestRequests;
+using FluentValidation;
 using Kernel;
+using Kernel.CustomExceptions;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 using UserService.Interfaces;
+using UserService.Validators;
 
 namespace UserService.Commands
 {
     public class EditUserCommand : IEditUserCommand
-
     {
-        public void Execute(UserEmailPassword userEmailPassword)
+        private readonly IBus busControl;
+        private readonly IValidator<CreateUserRequest> validator;
+        private readonly IValidator<string> validatorForPassword;
+        public EditUserCommand([FromServices] IBus busControl, [FromServices] IValidator<CreateUserRequest> validator,
+            IValidator<string> validatorForPassword)
         {
-            try
-            {
-                CommonValidations.ValidateEmail(userEmailPassword.Email);
-                editUser(userEmailPassword);
-                return;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            this.busControl = busControl;
+            this.validator = validator;
+            this.validatorForPassword = validatorForPassword;
         }
 
-        private void editUser(UserEmailPassword userEmailPassword)
+        public async Task<bool> Execute(CreateUserRequest request, string newPassword)
         {
-            try
+            CreateUserRequestValidator createUserRequestValidator = new CreateUserRequestValidator();
+            validator.ValidateAndThrow(request);
+            validatorForPassword.ValidateAndThrow(newPassword);
+
+            string passwordHash = ShaHash.GetPasswordHash(newPassword);
+
+            if (newPassword == null)
             {
-                return;
+                throw new NotFoundException("Unable to edit user");
             }
-            catch (Exception ex)
+            var user = new User
             {
-                Console.WriteLine(ex.Message);
+                Id = Guid.NewGuid(),
+                Birthday = request.Birthday,
+                FirstName = request.FirstName,
+                LastName = request.LastName
+            };
+            var credential = new UserCredential
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                Email = request.Email,
+                PasswordHash = passwordHash
+            };
+
+            var internalCreateUserRequest = new InternalCreateUserRequest
+            {
+                User = user,
+                Credential = credential
+            };
+
+            var editUserResult = await EditUser(internalCreateUserRequest);
+            if (!editUserResult)
+            {
+                throw new BadRequestException("Unable to edit user");
             }
+
+            return editUserResult;
+        }
+
+        private async Task<bool> EditUser(InternalCreateUserRequest request)
+        {
+            var uri = new Uri("rabbitmq://localhost/DatabaseService");
+
+            var client = busControl.CreateRequestClient<InternalCreateUserRequest>(uri).Create(request);
+
+            var response = await client.GetResponse<OperationResult>();
+
+            return response.Message.IsSuccess;
         }
 
     }
