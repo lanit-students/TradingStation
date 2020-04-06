@@ -1,6 +1,9 @@
-﻿using Interfaces;
-using CentralBankIntegration;
-using System;
+﻿using System;
+
+using Interfaces;
+using DTO.NewsRequests;
+
+using CBIntegration;
 
 namespace NewsService.Utils
 {
@@ -13,7 +16,7 @@ namespace NewsService.Utils
             switch (newsPublisherType)
             {
                 case NewsPublisherTypes.CentralBank:
-                    return new CentralBankNewsPublisher();
+                    return new RussianCBInfo();
                 default:
                     //TODO change on custom exception
                         throw new NotImplementedException();

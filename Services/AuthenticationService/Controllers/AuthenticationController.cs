@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using DTO;
-using AuthenticationService.Interfaces;
 using DTO.RestRequests;
+using AuthenticationService.Interfaces;
 
 namespace AuthenticationService.Controllers
 {

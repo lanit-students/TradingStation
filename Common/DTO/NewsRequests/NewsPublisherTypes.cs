@@ -1,4 +1,4 @@
-﻿namespace NewsService
+﻿namespace DTO.NewsRequests
 {
     public enum NewsPublisherTypes
     {

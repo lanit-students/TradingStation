@@ -1,9 +1,11 @@
-﻿using AuthenticationService.Validators;
-using DTO;
-using FluentValidation;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
+
+using NUnit.Framework;
+using FluentValidation;
+
+using DTO;
+using AuthenticationService.Validators;
 
 namespace AuthenticationServiceTests.Validators
 {
