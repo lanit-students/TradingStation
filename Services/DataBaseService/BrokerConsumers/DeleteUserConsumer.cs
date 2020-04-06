@@ -18,7 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private OperationResult DeleteUser(InternalDeleteUserRequest request)
         {
-            userRepository.DeleteUser(request.UserIdCredential);
+            userRepository.DeleteUser(request.UserId);
 
             return new OperationResult
             {
