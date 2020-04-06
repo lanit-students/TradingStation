@@ -1,9 +1,11 @@
-﻿using Interfaces;
-using NewsService;
-using NewsService.Utils;
+﻿using System;
+
 using NUnit.Framework;
-using CentralBankIntegration;
-using System;
+
+using Interfaces;
+using CBIntegration;
+using DTO.NewsRequests;
+using NewsService.Utils;
 
 namespace NewsServiceTests.Utils
 {
@@ -15,7 +17,7 @@ namespace NewsServiceTests.Utils
         [SetUp]
         public void Initialize()
         {
-            centralBankNewsPublisher = new CentralBankNewsPublisher();
+            centralBankNewsPublisher = new RussianCBInfo();
         }
 
         [Test]

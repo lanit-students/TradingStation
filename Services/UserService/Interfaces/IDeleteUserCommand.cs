@@ -1,9 +1,10 @@
-using System;
+using DTO.RestRequests;
+using System.Threading.Tasks;
 
 namespace IDeleteUserUserService.Interfaces
 {
     public interface IDeleteUserCommand
     {
-        bool Execute(Guid userId);
+        Task<bool> Execute(DeleteUserRequest request);
     }
 }

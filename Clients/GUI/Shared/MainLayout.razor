@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using GUI.Modals.Currency
+@inherits LayoutComponentBase
 
 <div class="sidebar">
     <NavMenu />
@@ -10,4 +11,14 @@
     </div>
 </div>
 
+<div class="newsbar sidebar">
+    <div class="newsbar-item currencies text-center">
+        <CurrencyBar Codes="codes" />
+    </div>
+</div>
+
 <BlazoredModal />
+
+@code{
+    List<string> codes = new List<string> { "USD", "EUR" };
+}
