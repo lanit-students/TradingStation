@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -28,15 +29,17 @@ namespace NewsService.Controllers
         [HttpPost]
         public List<ExchangeRate> GetCurrencies(
             [FromBody] CurrencyRequest requestParams,
-            [FromServices] IValidator<CurrencyRequest> validator)
+            [FromServices] IValidator<CurrencyRequest> validator,
+            [FromServices] IEqualityComparer<string> comparer)
         {
             validator.ValidateAndThrow(requestParams);
+
             List<ExchangeRate> rates = NewsPublisherFactory
                 .Create(requestParams.CurrecyPublisher)
                 .GetCurrencies();
 
             return rates
-                .Where(r => requestParams.CurrencyCodes.Contains(r.Code))
+                .Where(r =>  requestParams.CurrencyCodes.Contains(r.Code, comparer))
                 .ToList();
         }
     }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +9,7 @@ using FluentValidation;
 
 using DTO.NewsRequests.Currency;
 using NewsService.Validators;
+using NewsService.Utils;
 
 namespace NewsService
 {
@@ -18,6 +21,7 @@ namespace NewsService
         {
             services.AddControllers();
             services.AddTransient<IValidator<CurrencyRequest>, CurrencyRequestValidator>();
+            services.AddTransient<IEqualityComparer<string>, CustomStringComparer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
