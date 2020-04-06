@@ -30,6 +30,7 @@ namespace DataBaseService.Repositories
         {
             var dbCredential = dbContext.UsersCredentials
                 .FirstOrDefault(uc => uc.Email == userCredential.Email);
+
             if (dbCredential == null)
             {
                 throw new BadRequestException("User already exist");
