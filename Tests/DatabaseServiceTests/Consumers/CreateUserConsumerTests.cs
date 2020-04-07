@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DatabaseServiceTests.UserLogic
+namespace DatabaseServiceTests.UserLogic.Consumers
 {
-    class CreateUserTests
+    class CreateUserConsumerTests
     {
     }
 }

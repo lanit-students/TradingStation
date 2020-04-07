@@ -1,9 +1,13 @@
-﻿using DataBaseService.Repositories.Interfaces;
+﻿using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+using MassTransit;
+
 using DTO;
 using DTO.BrokerRequests;
-using MassTransit;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using DataBaseService.Repositories.Interfaces;
+
+
 
 namespace DataBaseService.BrokerConsumers
 {
@@ -19,7 +23,7 @@ namespace DataBaseService.BrokerConsumers
         private OperationResult CreateUser(InternalCreateUserRequest request)
         {
             userRepository.CreateUser(request.User);
-            userRepository.CreateUserCredential(request.Credential);            
+            userRepository.CreateUserCredential(request.Credential);
 
             return new OperationResult
             {
