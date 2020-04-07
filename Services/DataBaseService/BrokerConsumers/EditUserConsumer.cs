@@ -3,9 +3,6 @@ using DTO;
 using DTO.BrokerRequests;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
@@ -22,7 +19,6 @@ namespace DataBaseService.BrokerConsumers
         private OperationResult EditUser(InternalEditUserInfoRequest request)
         {
             userRepository.EditUser(request.User,request.UserPasswords);
-            
 
             return new OperationResult
             {
