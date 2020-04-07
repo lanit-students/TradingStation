@@ -32,11 +32,15 @@ namespace UserService.Commands
         {
             var passwordRequest = request.PasswordRequest;
             var userInfo = request.UserInfo;
+            string oldPasswordHash = null;
+            string newPasswordHash = null;
             try
             {
                 if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
                         || string.IsNullOrEmpty(passwordRequest.NewPassword)))
                 {
+                    ShaHash.GetPasswordHash(passwordRequest.OldPassword);
+                    ShaHash.GetPasswordHash(passwordRequest.NewPassword);
                     passwordChangeValidator.ValidateAndThrow(passwordRequest);
                 }
             } 
@@ -47,8 +51,6 @@ namespace UserService.Commands
 
             userInfoValidator.ValidateAndThrow(userInfo);
 
-            string oldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword);
-            string newPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword);
             var user = new User
             {
                 Id = userInfo.UserId,
