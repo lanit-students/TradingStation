@@ -5,6 +5,7 @@ using DTO;
 using System.Linq;
 using System;
 using Kernel.CustomExceptions;
+using DataBaseService.Database.Models;
 
 namespace DataBaseService.Repositories
 {
@@ -53,19 +54,16 @@ namespace DataBaseService.Repositories
         public void DeleteUser(Guid userId)
         {
             var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
-
-            if (dbUserCredential is null)
+            if (dbUserCredential == null)
             {
-                throw new NotFoundException("Not found User for delete");
+                throw new ForbiddenException("Not found User for delete");
             }
-
-            if(!dbUserCredential.IsActive)
+            if(dbUserCredential.IsActive==false)
             {
-                throw new BadRequestException("User was deleted early or not confirmed");
+                throw new ForbiddenException("User was deleted early or not confirmed");
             }
-
-            dbUserCredential.IsActive = false;
-            dbContext.SaveChanges();
+             dbUserCredential.IsActive = false;
+             dbContext.SaveChanges();
         }
     }
 }

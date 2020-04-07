@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Xml.Serialization;
 
 namespace CentralBankIntegrationLib.XmlSerializationObjects
