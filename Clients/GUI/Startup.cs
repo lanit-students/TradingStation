@@ -1,5 +1,5 @@
-using Blazored.LocalStorage;
 using Blazored.Modal;
+using Blazored.SessionStorage;
 using GUI.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -25,7 +25,7 @@ namespace GUI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddBlazoredLocalStorage();
+            services.AddBlazoredSessionStorage();
 
             services.AddBlazoredModal();
 
