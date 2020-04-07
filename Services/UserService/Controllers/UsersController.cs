@@ -28,7 +28,7 @@ namespace UserService.Controllers
 
         [Route("delete")]
         [HttpDelete]
-        public async Task<bool> DeleteUser([FromServices] IDeleteUserCommand command, [FromBody] UserIdRequest request)
+        public async Task<bool> DeleteUser([FromServices] IDeleteUserCommand command, [FromBody] DeleteUserRequest request)
         {
             return await command.Execute(request);
         }

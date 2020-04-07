@@ -2,7 +2,7 @@
 
 namespace DTO.RestRequests
 {
-    public class UserIdRequest
+    public class DeleteUserRequest
     {
         public Guid UserId { get; set; }
     }

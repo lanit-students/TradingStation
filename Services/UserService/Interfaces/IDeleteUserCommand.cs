@@ -5,6 +5,6 @@ namespace IDeleteUserUserService.Interfaces
 {
     public interface IDeleteUserCommand
     {
-        Task<bool> Execute(UserIdRequest request);
+        Task<bool> Execute(DeleteUserRequest request);
     }
 }

@@ -14,15 +14,15 @@ namespace UserService.Commands
      public class DeleteUserCommand : IDeleteUserCommand
      {
         private readonly IBus busControl;
-        private readonly IValidator<UserIdRequest> validator;
+        private readonly IValidator<DeleteUserRequest> validator;
 
-        public DeleteUserCommand([FromServices]IBus busControl, [FromServices] IValidator<UserIdRequest> validator)
+        public DeleteUserCommand([FromServices]IBus busControl, [FromServices] IValidator<DeleteUserRequest> validator)
         {
             this.busControl = busControl;
             this.validator = validator;
         }
 
-        public async Task<bool> Execute(UserIdRequest request)
+        public async Task<bool> Execute(DeleteUserRequest request)
          {
             validator.ValidateAndThrow(request);
 

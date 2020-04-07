@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace UserService.Validators
 {
-    public class UserIdRequestValidator: AbstractValidator<UserIdRequest>
+    public class DeleteUserRequestValidator: AbstractValidator<DeleteUserRequest>
     {
-        public UserIdRequestValidator()
+        public DeleteUserRequestValidator()
         {
             RuleFor(request => request.UserId)
                 .NotEmpty()

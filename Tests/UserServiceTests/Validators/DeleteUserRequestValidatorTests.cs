@@ -8,32 +8,32 @@ namespace UserServiceTests.Validators
 {
     public class DeleteUserRequestValidatorTests
     {
-        private IValidator<UserIdRequest> validator;
+        private IValidator<DeleteUserRequest> validator;
 
         [SetUp]
         public void Initialize()
         {
-            validator = new UserIdRequestValidator();
+            validator = new DeleteUserRequestValidator();
         }
         
         [Test]
         public void IdIsNull()
         {
-            var request = new UserIdRequest();
+            var request = new DeleteUserRequest();
             Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
         }
 
         [Test]
         public void IdIsEmpty()
         {
-            var request = new UserIdRequest { UserId = Guid.Empty };
+            var request = new DeleteUserRequest { UserId = Guid.Empty };
             Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(request));
         }
 
         [Test]
         public void IdIsOk()
         {
-            var request = new UserIdRequest { UserId = Guid.NewGuid() };
+            var request = new DeleteUserRequest { UserId = Guid.NewGuid() };
             Assert.DoesNotThrow(() => validator.ValidateAndThrow(request));
         }
     }
