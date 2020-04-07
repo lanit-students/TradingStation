@@ -66,8 +66,11 @@ namespace UserService
             services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
 
             services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
-
             services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
+
+            services.AddTransient<IEditUserCommand, EditUserCommand>();
+            services.AddTransient<IValidator<UserInfoRequest>, UserInfoRequestValidator>();
+            services.AddTransient<IValidator<PasswordChangeRequest>, PasswordChangeRequestValidator>();
 
             services.AddMassTransit(x =>
             {
