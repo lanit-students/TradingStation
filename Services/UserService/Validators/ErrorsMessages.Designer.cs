@@ -142,20 +142,11 @@ namespace UserService.Validators {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Id must be not empty.
+        ///   Looks up a localized string similar to Id is null or empty.
         /// </summary>
-        public static string IdEmpty {
+        public static string IdIsNullOrEmpty {
             get {
-                return ResourceManager.GetString("IdEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Id must be not null.
-        /// </summary>
-        public static string IdNull {
-            get {
-                return ResourceManager.GetString("IdNull", resourceCulture);
+                return ResourceManager.GetString("IdIsNullOrEmpty", resourceCulture);
             }
         }
         
@@ -201,6 +192,15 @@ namespace UserService.Validators {
         public static string LastNameTooShort {
             get {
                 return ResourceManager.GetString("LastNameTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old and new passwords are equal.
+        /// </summary>
+        public static string OldAndNewPasswordsEqual {
+            get {
+                return ResourceManager.GetString("OldAndNewPasswordsEqual", resourceCulture);
             }
         }
     }
