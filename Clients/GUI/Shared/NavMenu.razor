@@ -1,7 +1,7 @@
 @using Authentication
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject Blazored.SessionStorage.ISessionStorageService Storage
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Trading Station</a>
@@ -53,7 +53,7 @@
 
     private void SignOut()
     {
-        LocalStorage.ClearAsync();
+        Storage.ClearAsync();
         AuthenticationProvider.MarkSignedOut();
     }
 }
