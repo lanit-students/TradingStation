@@ -18,19 +18,22 @@ namespace UserService.Commands
         private readonly IBus busControl;
         private readonly IValidator<CreateUserRequest> validator;
         private readonly IValidator<string> validatorForPassword;
+        private readonly IValidator<Guid> validatorForId;
         public EditUserCommand([FromServices] IBus busControl, [FromServices] IValidator<CreateUserRequest> validator,
-            IValidator<string> validatorForPassword)
+            IValidator<string> validatorForPassword, IValidator<Guid> validatorForId)
         {
             this.busControl = busControl;
             this.validator = validator;
             this.validatorForPassword = validatorForPassword;
+            this.validatorForId = validatorForId;
         }
 
-        public async Task<bool> Execute(CreateUserRequest request, string newPassword)
+        public async Task<bool> Execute(CreateUserRequest request, string newPassword, Guid id)
         {
             CreateUserRequestValidator createUserRequestValidator = new CreateUserRequestValidator();
             validator.ValidateAndThrow(request);
             validatorForPassword.ValidateAndThrow(newPassword);
+            validatorForId.ValidateAndThrow(id);
 
             string passwordHash = ShaHash.GetPasswordHash(newPassword);
 
@@ -40,14 +43,14 @@ namespace UserService.Commands
             }
             var user = new User
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 Birthday = request.Birthday,
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
             var credential = new UserCredential
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 UserId = user.Id,
                 Email = request.Email,
                 PasswordHash = passwordHash
