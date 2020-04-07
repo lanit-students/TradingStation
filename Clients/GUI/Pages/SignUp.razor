@@ -1,7 +1,7 @@
 ﻿@page "/signup"
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
-@inject ILocalStorageService LocalStorage
+@inject ISessionStorageService Storage
 
 <div class="col-12">
     <h3><b>Sign up</b></h3>
@@ -63,7 +63,7 @@
             };
 
             await SignUpper.SignUp(request);
-            await LocalStorage.ClearAsync();
+            await Storage.ClearAsync();
 
             var signinRequest = new LoginRequest
             {
@@ -73,8 +73,8 @@
 
             var userToken = await SignInner.SignIn(signinRequest);
 
-            LocalStorage.SetItemAsync("id", userToken.UserId);
-            LocalStorage.SetItemAsync("token", userToken.Body);
+            Storage.SetItemAsync("id", userToken.UserId);
+            Storage.SetItemAsync("token", userToken.Body);
 
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
