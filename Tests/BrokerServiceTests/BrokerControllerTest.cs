@@ -50,27 +50,27 @@ namespace BrokerServiceTests
         [Test]
         public void GetCurrency_ReturnIMarketInstrument()
         {
-            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
+            Assert.That(brokerController.GetCurrency(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
         }
         [Test]
         public void GetAllCurrencies_ReturnListIMarketInstrument()
         {
-            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is List<IMarketInstrument>);
+            Assert.That(brokerController.GetAllCurrencies(BrokerServices.BankType.TinkoffBank) is List<IMarketInstrument>);
         }
         [Test]
         public void GetAllStocks_ReturnListIMarketInstrument()
         {
-            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is List<IMarketInstrument>);
+            Assert.That(brokerController.GetAllStocks(BrokerServices.BankType.TinkoffBank) is List<IMarketInstrument>);
         }
         [Test]
         public void GetStock_ReturnIMarketInstrument()
         {
-            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
+            Assert.That(brokerController.GetStock(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
         }
         [Test]
         public void GetAllBonds_ReturnListIMarketInstrument()
         {
-            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is List<IMarketInstrument>);
+            Assert.That(brokerController.GetAllBonds(BrokerServices.BankType.TinkoffBank) is List<IMarketInstrument>);
         }
         [Test]
         public void GetBond_ReturnIMarketInstrument()
