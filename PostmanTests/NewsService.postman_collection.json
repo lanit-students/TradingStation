@@ -1,60 +1,57 @@
 {
 	"info": {
-		"_postman_id": "4b7f2405-fb2b-41e0-a757-689faa2ab3a0",
+		"_postman_id": "4fea0b97-f1c6-4640-abe2-7148f8a3f020",
 		"name": "NewsService",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "GetNewsFromCentralBank",
+			"name": "GetCurrenciesFromBank",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "0103ef4b-2d37-4f5a-9ea2-420cd534654c",
 						"exec": [
-							"pm.test(\"Status code name has string\", function () {",
-							"    pm.response.to.have.status(\"OK\");",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"Top - 5 exchange rates:\");",
+							"",
+							"pm.test(\"Body matches currency codes\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"USD\", \"JPY\", \"GPB\", \"CNY\", \"EUR\");",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"USD - \");",
+							"",
+							"pm.test(\"Body matches currency codes &&\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"USD\" && \"JPY\" && \"GPB\" && \"CNY\" && \"EUR\");",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"EUR - \");",
-							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"CNY - \");",
-							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"JPY - \");",
-							"});"
+							""
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"bank_name\": 0,\n\t\"currency_codes\":[\n\t\t\"USD\",\n\t\t\"EUR\",\n\t\t\"GBP\",\n\t\t\"CNY\",\n\t\t\"JPY\"\n\t\t]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "https://localhost:5007/NewsService/getNews?newsPublisherType=CentralBank",
+					"raw": "https://localhost:5007/news/currencies",
 					"protocol": "https",
 					"host": [
 						"localhost"
 					],
 					"port": "5007",
 					"path": [
-						"NewsService",
-						"getNews"
-					],
-					"query": [
-						{
-							"key": "newsPublisherType",
-							"value": "CentralBank"
-						}
+						"news",
+						"currencies"
 					]
 				}
 			},

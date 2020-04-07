@@ -181,3 +181,68 @@ app {
         display: block;
     }
 }
+
+.newsbar {
+    width: 120px;
+    height: 100vh;
+    color: #d7d7d7;
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    padding: 1px;
+    align-items: center;
+    transition: 0.5s width;
+}
+
+.newsbar-item {
+    color: black;
+    font-size: 0.7rem;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    padding: 3px;
+    margin: 5px;
+    background-color: #d7d7d7;
+    display: block;
+}
+
+    .newsbar-item .currencies {
+        opacity: 0.5;
+    }
+
+    .newsbar-item .news {
+        opacity: 1;
+    }
+
+.item {
+    padding: 1px;
+}
+
+.n-active {
+    display: none;
+}
+
+.cur-icon {
+    background-size: 75px 75px;
+}
+
+    .cur-icon .rub-icon {
+        background-image: url(/images/currencies/rub.png)
+    }
+
+    .cur-icon .usd-icon {
+        background-image: url(/images/currencies/usd.png)
+    }
+
+    .cur-icon .eur-icon {
+        background-image: url(/images/currencies/eur.png)
+    }
+
+    .cur-icon .cny-icon {
+        background-image: url(/images/currencies/cny.png)
+    }
+
+    .cur-icon .jpy-icon {
+        background-image: url(/images/currencies/jpy.png)
+    }
+
+    .cur-icon .gbp-icon {
+        background-image: url(/images/currencies/gbp.png)
+    }

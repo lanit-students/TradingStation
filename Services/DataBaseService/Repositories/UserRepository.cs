@@ -38,20 +38,32 @@ namespace DataBaseService.Repositories
 
             return mapper.MapUserCredential(dbCredential);
         }
-        public void DeleteUser(Guid userIdCredential)
+
+        public User GetUserById(Guid userId)
         {
-            var dbUserCredential = dbContext.Find<DbUserCredential>(userIdCredential);
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
+            if (dbUser == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            var email = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).Email;
+            return mapper.MapUser(dbUser, email);
+        }
+
+        public void DeleteUser(Guid userId)
+        {
+            var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
             if (dbUserCredential == null)
             {
                 throw new ForbiddenException("Not found User for delete");
             }
             if(dbUserCredential.IsActive==false)
             {
-                throw new ForbiddenException("User was deleted early");
+                throw new ForbiddenException("User was deleted early or not confirmed");
             }
              dbUserCredential.IsActive = false;
              dbContext.SaveChanges();
         }
     }
 }
-
