@@ -6,15 +6,15 @@ namespace GUI.ViewModels
     public class UserInfoViewModel
     {
         [Required(ErrorMessage = "Name is required")]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Surname is required")]
-        public string Surname { get; set; }
+        public string LastName { get; set; }
 
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Date of birth is required")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime Birthday { get; set; }
 
         public string OldPassword { get; set; }
 
