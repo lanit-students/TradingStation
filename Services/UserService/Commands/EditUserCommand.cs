@@ -37,10 +37,8 @@ namespace UserService.Commands
                     || string.IsNullOrEmpty(passwordRequest.NewPassword)))
             {
                 passwordChangeValidator.ValidateAndThrow(passwordRequest);
-            } else
-            {
-                throw new BadRequestException("Password is null or empty");
             }
+
             userInfoValidator.ValidateAndThrow(userInfo);
 
             string oldPasswordHash = ShaHash.GetPasswordHash(request.PasswordRequest.OldPassword);
@@ -50,7 +48,8 @@ namespace UserService.Commands
                 Id = request.UserInfo.UserId,
                 Birthday = request.UserInfo.Birthday,
                 FirstName = request.UserInfo.FirstName,
-                LastName = request.UserInfo.LastName
+                LastName = request.UserInfo.LastName,
+                Email = request.UserInfo.Email
             };
 
             var passwordHashChangeRequest = new PasswordHashChangeRequest
