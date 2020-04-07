@@ -1,29 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace DataBaseService.Database.Models
 {
-    public class DbUser : IEquatable<DbUser>
+    public class DbUser
     {
-        public static bool operator ==(DbUser first, DbUser second)
-        {
-            if (((object)first) == null
-                || ((object)second == null))
-                return Object.Equals(first, second);
-
-            return first.Equals(second);
-        }
-
-        public static bool operator !=(DbUser first, DbUser second)
-        {
-            if (((object)first) == null
-                || ((object)second) == null)
-                return !Object.Equals(first, second);
-
-            return !first.Equals(second);
-        }
 
         public Guid Id { get; set; }
         public string FirstName { get; set; }
