@@ -81,14 +81,22 @@ namespace DataBaseService.Repositories
                 {
                     var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == user.Id);
 
-                    if (dbUserCredential != null)   dbUserCredential.PasswordHash = password.NewPasswordHash;
-                    else throw new NotFoundException("Not found User to change pasword");
+                    if (dbUserCredential != null)
+                    {
+                        dbUserCredential.PasswordHash = password.NewPasswordHash;
+                    }
+                    else
+                    {
+                        throw new NotFoundException("Not found User to change pasword");
+                    }
                 }
 
                 dbContext.SaveChanges();
             }
             else
+            {
                 throw new NotFoundException("Not found User to change");
+            }
 
         }
     }
