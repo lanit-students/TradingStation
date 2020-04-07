@@ -23,9 +23,7 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalGetUserByIdRequest> context)
         {
-            var creationResult = GetUserById(context.Message);
-
-            await context.RespondAsync(creationResult);
+            await context.RespondAsync(GetUserById(context.Message));
         }
     }
 }

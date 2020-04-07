@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTO.RestRequests
+﻿namespace DTO.RestRequests
 {
     public class EditUserRequest
     {

@@ -19,7 +19,7 @@ namespace UserService.Commands
         private readonly IBus busControl;
 
         public EditUserCommand
-            ([FromServices] IValidator<UserInfoRequest> userInfoValidator, 
+            ([FromServices] IValidator<UserInfoRequest> userInfoValidator,
             [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator,
             [FromServices] IBus busControl)
         {
@@ -27,7 +27,7 @@ namespace UserService.Commands
             this.userInfoValidator = userInfoValidator;
             this.passwordChangeValidator = passwordChangeValidator;
         }
-        
+
         public async Task<bool> Execute(EditUserRequest request)
         {
             var passwordRequest = request.PasswordRequest;
@@ -40,11 +40,11 @@ namespace UserService.Commands
                 passwordChangeValidator.ValidateAndThrow(passwordRequest);
                 passwordHashChangeRequest = new PasswordHashChangeRequest
                 {
-                     OldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword),
-                     NewPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword)
+                    OldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword),
+                    NewPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword)
                 };
             }
-           
+
             userInfoValidator.ValidateAndThrow(userInfo);
 
             var user = new User
