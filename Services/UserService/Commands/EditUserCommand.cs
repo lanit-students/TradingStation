@@ -39,8 +39,8 @@ namespace UserService.Commands
                 if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
                         || string.IsNullOrEmpty(passwordRequest.NewPassword)))
                 {
-                    ShaHash.GetPasswordHash(passwordRequest.OldPassword);
-                    ShaHash.GetPasswordHash(passwordRequest.NewPassword);
+                    oldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword);
+                    newPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword);
                     passwordChangeValidator.ValidateAndThrow(passwordRequest);
                 }
             } 
