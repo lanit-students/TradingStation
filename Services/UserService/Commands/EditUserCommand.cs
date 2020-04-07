@@ -39,7 +39,8 @@ namespace UserService.Commands
                 {
                     passwordChangeValidator.ValidateAndThrow(passwordRequest);
                 }
-            } catch (Exception e)
+            } 
+            catch 
             {
                 throw new BadRequestException("Unable to edit");
             }
