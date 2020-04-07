@@ -8,6 +8,6 @@ namespace BrokerService
     public static class Constants
     {
         internal static int Depth = 5;
-        public static string Token = "example";
+        public static string Token = "5c092622a19ac14bd086c3bc";
     }
 }
