@@ -56,14 +56,37 @@ namespace DataBaseService.Repositories
             var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
             if (dbUserCredential == null)
             {
-                throw new ForbiddenException("Not found User for delete");
+                throw new NotFoundException("Not found User for delete");
             }
             if(dbUserCredential.IsActive==false)
             {
-                throw new ForbiddenException("User was deleted early or not confirmed");
+                throw new BadRequestException("User was deleted early or not confirmed");
             }
              dbUserCredential.IsActive = false;
              dbContext.SaveChanges();
+        }
+
+        public void EditUser(User user, PasswordHashChangeRequest password)
+        {
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == user.Id);
+            if (dbUser == null)
+            {
+                dbUser.LastName = user.LastName;
+                dbUser.FirstName = user.FirstName;
+                dbUser.Birthday = user.Birthday;
+                dbContext.SaveChanges();
+
+                if (password != null)
+                { 
+                    var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == user.Id);
+
+                    if (dbUserCredential != null)   dbUserCredential.PasswordHash = password.NewPasswordHash;
+                    else throw new NotFoundException("Not found User to change pasword");
+                }
+            }
+            else
+                throw new NotFoundException("Not found User to change");
+
         }
     }
 }

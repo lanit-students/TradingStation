@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using DataBaseService.Database.Models;
+using DTO;
 using System;
 
 namespace DataBaseService.Repositories.Interfaces
@@ -14,5 +15,6 @@ namespace DataBaseService.Repositories.Interfaces
         User GetUserById(Guid userId);
 
         void DeleteUser(Guid userIdCredential);
+        void EditUser(User user, PasswordHashChangeRequest password);
     }
 }

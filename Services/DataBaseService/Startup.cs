@@ -54,6 +54,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<DeleteUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
                 });
             });
         }
@@ -82,6 +83,7 @@ namespace DataBaseService
                 x.AddConsumer<LoginUserConsumer>();
                 x.AddConsumer<DeleteUserConsumer>();
                 x.AddConsumer<GetUserByIdConsumer>();
+                x.AddConsumer<EditUserConsumer>();
             });
 
             services.AddMassTransitHostedService();
