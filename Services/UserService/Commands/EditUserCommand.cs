@@ -1,5 +1,10 @@
-﻿using DTO.RestRequests;
+﻿using DTO;
+using DTO.BrokerRequests;
+using DTO.RestRequests;
 using FluentValidation;
+using Kernel;
+using Kernel.CustomExceptions;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -11,7 +16,8 @@ namespace UserService.Commands
     {
         private readonly IValidator<UserInfoRequest> userInfoValidator;
         private readonly IValidator<PasswordChangeRequest> passwordChangeValidator;
-        
+        private readonly IBus busControl;
+
         public EditUserCommand
             ([FromServices] IValidator<UserInfoRequest> userInfoValidator, 
             [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator)
@@ -20,7 +26,7 @@ namespace UserService.Commands
             this.passwordChangeValidator = passwordChangeValidator;
         }
         
-        public Task<bool> Execute(EditUserRequest request)
+        public async Task<bool> Execute(EditUserRequest request)
         {
             var passwordRequest = request.PasswordRequest;
             var userInfo = request.UserInfo;
@@ -32,8 +38,46 @@ namespace UserService.Commands
             }
             userInfoValidator.ValidateAndThrow(userInfo);
 
-            // TODO Realise edit user logic
-            throw new NotImplementedException();
+            string oldPasswordHash = ShaHash.GetPasswordHash(request.PasswordRequest.OldPassword);
+            string newPasswordHash = ShaHash.GetPasswordHash(request.PasswordRequest.NewPassword);
+            var user = new User
+            {
+                Id = request.UserInfo.UserId,
+                Birthday = request.UserInfo.Birthday,
+                FirstName = request.UserInfo.FirstName,
+                LastName = request.UserInfo.LastName
+            };
+
+            var passwordHashChangeRequest = new PasswordHashChangeRequest
+            {
+                OldPasswordHash = oldPasswordHash,
+                NewPasswordHash = newPasswordHash
+            };
+
+            var internalEditUserInfoRequest = new InternalEditUserInfoRequest
+            {
+                User = user,
+                UserPasswords = passwordHashChangeRequest
+            };
+
+            var editUserResult = await EditUser(internalEditUserInfoRequest);
+            if (!editUserResult)
+            {
+                throw new BadRequestException("Unable to create user");
+            }
+
+            return editUserResult;
+        }
+
+        private async Task<bool> EditUser(InternalEditUserInfoRequest request)
+        {
+            var uri = new Uri("rabbitmq://localhost/DatabaseService");
+
+            var client = busControl.CreateRequestClient<InternalEditUserInfoRequest>(uri).Create(request);
+
+            var response = await client.GetResponse<OperationResult>();
+
+            return response.Message.IsSuccess;
         }
     }
 }
