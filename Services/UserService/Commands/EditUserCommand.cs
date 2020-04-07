@@ -32,24 +32,29 @@ namespace UserService.Commands
         {
             var passwordRequest = request.PasswordRequest;
             var userInfo = request.UserInfo;
-            
-            if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
-                    || string.IsNullOrEmpty(passwordRequest.NewPassword)))
+            try
             {
-                passwordChangeValidator.ValidateAndThrow(passwordRequest);
+                if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
+                        || string.IsNullOrEmpty(passwordRequest.NewPassword)))
+                {
+                    passwordChangeValidator.ValidateAndThrow(passwordRequest);
+                }
+            } catch (Exception e)
+            {
+                throw new BadRequestException("Unable to edit");
             }
 
             userInfoValidator.ValidateAndThrow(userInfo);
 
-            string oldPasswordHash = ShaHash.GetPasswordHash(request.PasswordRequest.OldPassword);
-            string newPasswordHash = ShaHash.GetPasswordHash(request.PasswordRequest.NewPassword);
+            string oldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword);
+            string newPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword);
             var user = new User
             {
-                Id = request.UserInfo.UserId,
-                Birthday = request.UserInfo.Birthday,
-                FirstName = request.UserInfo.FirstName,
-                LastName = request.UserInfo.LastName,
-                Email = request.UserInfo.Email
+                Id = userInfo.UserId,
+                Birthday = userInfo.Birthday,
+                FirstName = userInfo.FirstName,
+                LastName = userInfo.LastName,
+                Email = userInfo.Email
             };
 
             var passwordHashChangeRequest = new PasswordHashChangeRequest
