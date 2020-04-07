@@ -26,5 +26,10 @@ namespace GUI.ViewModels
 
         [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; }
+
+        public SignUpViewModel()
+        {
+            Birthday = DateTime.Today;
+        }
     }
 }
