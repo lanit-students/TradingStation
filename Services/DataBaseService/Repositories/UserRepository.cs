@@ -62,8 +62,8 @@ namespace DataBaseService.Repositories
             {
                 throw new ForbiddenException("User was deleted early or not confirmed");
             }
-             dbUserCredential.IsActive = false;
-             dbContext.SaveChanges();
+            dbUserCredential.IsActive = false;
+            dbContext.SaveChanges();
         }
     }
 }
