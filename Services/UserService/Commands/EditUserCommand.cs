@@ -68,7 +68,7 @@ namespace UserService.Commands
             var editUserResult = await EditUser(internalEditUserInfoRequest);
             if (!editUserResult)
             {
-                throw new BadRequestException("Unable to create user");
+                throw new BadRequestException("Unable to edit");
             }
 
             return editUserResult;
