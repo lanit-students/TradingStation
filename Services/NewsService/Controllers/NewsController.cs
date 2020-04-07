@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections.Generic;
 
 using FluentValidation;
+
+using DTO.NewsRequests;
 using DTO.NewsRequests.Currency;
 using NewsService.Utils;
 

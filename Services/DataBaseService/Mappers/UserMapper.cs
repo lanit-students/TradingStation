@@ -1,6 +1,6 @@
-﻿using DataBaseService.Database.Models;
+﻿using DTO;
+using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
-using DTO;
 
 namespace DataBaseService.Mappers
 {

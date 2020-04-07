@@ -1,7 +1,7 @@
 ﻿@page "/signin"
 @inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
-@inject ISessionStorageService Storage
+@inject ILocalStorageService LocalStorage
 
 <h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password</h3>
 <div class="col-12">
@@ -41,12 +41,12 @@
 
         try
         {
-            await Storage.ClearAsync();
+            await LocalStorage.ClearAsync();
 
             var userToken = await SignInner.SignIn(request);
 
-            Storage.SetItemAsync("id" ,userToken.UserId);
-            Storage.SetItemAsync("token", userToken.Body);
+            LocalStorage.SetItemAsync("id" ,userToken.UserId);
+            LocalStorage.SetItemAsync("token", userToken.Body);
 
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");

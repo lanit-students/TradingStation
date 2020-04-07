@@ -1,4 +1,4 @@
-﻿namespace BrokerServices
+﻿namespace BrokerServices.Enums
 {
     public enum BankType
     {

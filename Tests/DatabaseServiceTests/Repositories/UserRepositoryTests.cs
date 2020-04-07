@@ -13,9 +13,9 @@ using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
 
 
-namespace DatabaseServiceTests.UserLogic.Repositories
+namespace DatabaseServiceTests.Repositories
 {
-    class UserRepositoryTests
+    public class UserRepositoryTests
     {
         IUserRepository repository;
         Mock<IUserMapper> mapper;
@@ -37,7 +37,7 @@ namespace DatabaseServiceTests.UserLogic.Repositories
         DbUserCredential dbCredential;
         #endregion
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Initialize()
         {
             dbOptions = new DbContextOptionsBuilder<TPlatformDbContext>()

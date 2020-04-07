@@ -35,9 +35,9 @@ namespace UserService.Controllers
 
         [Route("get")]
         [HttpGet]
-        public async Task<User> GetUser([FromServices] IGetUserByIdCommand command, [FromHeader] Guid userId)
+        public User GetUser([FromHeader] Guid userId)
         {
-            return await command.Execute(userId);
+            return null;
         }
     }
 }
