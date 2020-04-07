@@ -6,8 +6,9 @@ using NUnit.Framework;
 using DTO;
 using DataBaseService.Mappers;
 using DataBaseService.Database.Models;
+using DatabaseServiceTests.Comparators;
 
-namespace DatabaseServiceTests.UserLogic.Mappers
+namespace DatabaseServiceTests.Mappers
 {
     public class UserMapperTests
     {
@@ -26,11 +27,15 @@ namespace DatabaseServiceTests.UserLogic.Mappers
 
         User user;
         DbUser dbUser;
-
         UserCredential credential;
         DbUserCredential dbCredential;
 
-        [SetUp]
+        UserComparer userComparer = new UserComparer();
+        DbUserComparer dbUserComparer = new DbUserComparer();
+        UserCredentialsComparer userCredentialsComparer = new UserCredentialsComparer();
+        DbUserCredentialsComparer dbUserCredentialsComparer = new DbUserCredentialsComparer();
+
+        [OneTimeSetUp]
         public void Initialize()
         {
             mapper = new UserMapper();
@@ -73,32 +78,32 @@ namespace DatabaseServiceTests.UserLogic.Mappers
         public void MapUser()
         {
             Assert.AreEqual(
-                dbUser,
-                mapper.MapToDbUser(user));
+                true,
+                dbUserComparer.Equals(dbUser, mapper.MapToDbUser(user)));
         }
 
         [Test]
         public void MapDbUser()
         {
             Assert.AreEqual(
-                user,
-                mapper.MapUser(dbUser, email));
+                true,
+                userComparer.Equals(user, mapper.MapUser(dbUser, email)));
         }
 
         [Test]
         public void MapCredential()
         {
             Assert.AreEqual(
-                dbCredential,
-                mapper.MapToDbUserCredential(credential));
+                true,
+                dbUserCredentialsComparer.Equals(dbCredential, mapper.MapToDbUserCredential(credential)));
         }
 
         [Test]
         public void MapDbCredential()
         {
             Assert.AreEqual(
-                credential,
-                mapper.MapUserCredential(dbCredential));
+                true,
+                userCredentialsComparer.Equals(credential, mapper.MapUserCredential(dbCredential)));
         }
 
     }

@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataBaseService.Database.Models
 {
-    public class DbUserCredential : IEquatable<DbUserCredential>
+    public class DbUserCredential
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
@@ -16,45 +16,6 @@ namespace DataBaseService.Database.Models
 
         [ForeignKey("UserId")]
         public DbUser User { get; set; }
-
-        public bool Equals([AllowNull] DbUserCredential other)
-        {
-            if (other == null)
-                return false;
-
-            if (Id == other.Id
-                && UserId == other.UserId
-                && Email == other.Email
-                && PasswordHash == other.PasswordHash
-                && IsActive == other.IsActive
-                && User == other.User)
-                return true;
-            else
-                return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-                return false;
-
-            DbUser dbUserObj = obj as DbUser;
-            if (dbUserObj == null)
-                return false;
-            else
-                return Equals(dbUserObj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (Id.ToString()
-                + UserId.ToString()
-                + Email
-                + PasswordHash
-                + IsActive.ToString()
-                + User.GetHashCode().ToString())
-                .GetHashCode();
-        }
     }
 
     public class DbUserCredentialConfiguration : IEntityTypeConfiguration<DbUserCredential>
