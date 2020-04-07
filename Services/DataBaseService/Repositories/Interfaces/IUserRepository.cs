@@ -5,7 +5,7 @@ namespace DataBaseService.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        void CreateUser(User user);
+        void CreateUser(User user, string email);
 
         void CreateUserCredential(UserCredential userCredential);
 
