@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
 
 using NUnit.Framework;
 using Moq;
@@ -38,7 +35,6 @@ namespace DatabaseServiceTests.UserLogic.Repositories
         DbUser dbUser;
         UserCredential credential;
         DbUserCredential dbCredential;
-
         #endregion
 
         [SetUp]
