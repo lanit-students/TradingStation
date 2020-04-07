@@ -78,7 +78,7 @@ namespace DatabaseServiceTests
         public void DeleteNotExistUser()
         {
             var options = new DbContextOptionsBuilder<TPlatformDbContext>()
-                .UseInMemoryDatabase(databaseName: "DeleteUserIsActiveFalse")
+                .UseInMemoryDatabase(databaseName: "DeleteNotExistUser")
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
