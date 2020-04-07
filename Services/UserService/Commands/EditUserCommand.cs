@@ -32,23 +32,19 @@ namespace UserService.Commands
         {
             var passwordRequest = request.PasswordRequest;
             var userInfo = request.UserInfo;
-            string oldPasswordHash = null;
-            string newPasswordHash = null;
-            try
-            {
-                if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
-                        || string.IsNullOrEmpty(passwordRequest.NewPassword)))
-                {
-                    oldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword);
-                    newPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword);
-                    passwordChangeValidator.ValidateAndThrow(passwordRequest);
-                }
-            } 
-            catch 
-            {
-                throw new BadRequestException("Unable to edit");
-            }
+            PasswordHashChangeRequest passwordHashChangeRequest = null;
 
+            if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
+                    || string.IsNullOrEmpty(passwordRequest.NewPassword)))
+            {
+                passwordChangeValidator.ValidateAndThrow(passwordRequest);
+                passwordHashChangeRequest = new PasswordHashChangeRequest
+                {
+                     OldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword),
+                     NewPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword)
+                };
+            }
+           
             userInfoValidator.ValidateAndThrow(userInfo);
 
             var user = new User
@@ -58,12 +54,6 @@ namespace UserService.Commands
                 FirstName = userInfo.FirstName,
                 LastName = userInfo.LastName,
                 Email = userInfo.Email
-            };
-
-            var passwordHashChangeRequest = new PasswordHashChangeRequest
-            {
-                OldPasswordHash = oldPasswordHash,
-                NewPasswordHash = newPasswordHash
             };
 
             var internalEditUserInfoRequest = new InternalEditUserInfoRequest
