@@ -20,8 +20,10 @@ namespace UserService.Commands
 
         public EditUserCommand
             ([FromServices] IValidator<UserInfoRequest> userInfoValidator, 
-            [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator)
+            [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator,
+            [FromServices] IBus busControl)
         {
+            this.busControl = busControl;
             this.userInfoValidator = userInfoValidator;
             this.passwordChangeValidator = passwordChangeValidator;
         }
