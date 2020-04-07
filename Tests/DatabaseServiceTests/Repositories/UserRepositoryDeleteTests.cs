@@ -12,11 +12,11 @@ namespace DatabaseServiceTests
 {
     public class UserRepositoryDeleteTests
     {
-        UserRepository userRepository;
-        DbUserCredential dbUserCredential;
-        UserMapper mapper;
-        Guid userId;
-        Guid id;
+        private UserRepository userRepository;
+        private DbUserCredential dbUserCredential;
+        private UserMapper mapper;
+        private Guid userId;
+        private Guid id;
 
         [SetUp]
         public void Initialize()
@@ -43,7 +43,7 @@ namespace DatabaseServiceTests
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
-            var userRepository = new UserRepository(mapper, dbContext);
+            userRepository = new UserRepository(mapper, dbContext);
 
             dbContext.UsersCredentials.Add(dbUserCredential);
             dbContext.SaveChanges();
@@ -51,7 +51,7 @@ namespace DatabaseServiceTests
             userRepository.DeleteUser(userId);
             var expectedField = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).IsActive;
 
-            Assert.AreEqual(false, expectedField);
+            Assert.IsFalse(expectedField);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace DatabaseServiceTests
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
-            var userRepository = new UserRepository(mapper, dbContext);
+            userRepository = new UserRepository(mapper, dbContext);
 
             dbContext.UsersCredentials.Add(dbUserCredential);
             dbContext.SaveChanges();
@@ -82,7 +82,7 @@ namespace DatabaseServiceTests
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
-            var userRepository = new UserRepository(mapper, dbContext);
+            userRepository = new UserRepository(mapper, dbContext);
 
             dbContext.UsersCredentials.Add(dbUserCredential);
             dbContext.SaveChanges();
