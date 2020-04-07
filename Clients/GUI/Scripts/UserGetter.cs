@@ -15,11 +15,7 @@ namespace GUI.Scripts
 
             const string url = "https://localhost:5011/users/get";
 
-            var query = new Dictionary<string, string>();
-
-            query.Add("userId", id.ToString());
-
-            var client = new RestClient<object, User>(url, RestRequestType.GET, userToken, queryParams: query);
+            var client = new RestClient<object, User>(url, RestRequestType.GET, userToken);
 
             return await client.Execute();
         }
