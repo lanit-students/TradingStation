@@ -5,7 +5,6 @@ using DTO;
 using System.Linq;
 using System;
 using Kernel.CustomExceptions;
-using DataBaseService.Database.Models;
 
 namespace DataBaseService.Repositories
 {
@@ -20,8 +19,10 @@ namespace DataBaseService.Repositories
             this.dbContext = dbContext;
         }
 
-        public void CreateUser(User user)
-        {
+        public void CreateUser(User user, string email)
+        {        
+            if (dbContext.UsersCredentials.Any(userCredential => userCredential.Email == email))
+                throw new BadRequestException("This email is already taken by someone.");
             dbContext.Users.Add(mapper.MapToDbUser(user));
             dbContext.SaveChanges();
         }
@@ -54,11 +55,13 @@ namespace DataBaseService.Repositories
         public void DeleteUser(Guid userId)
         {
             var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
-            if (dbUserCredential == null)
+
+            if (dbUserCredential is null)
             {
                 throw new NotFoundException("Not found User for delete");
             }
-            if(dbUserCredential.IsActive==false)
+
+            if(!dbUserCredential.IsActive)
             {
                 throw new BadRequestException("User was deleted early or not confirmed");
             }

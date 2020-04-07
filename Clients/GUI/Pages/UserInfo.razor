@@ -1,29 +1,29 @@
 ﻿@page "/userinfo"
 @inject NavigationManager NavManager
 @inject IModalService Modal
-@inject ILocalStorageService LocalStorage
+@inject ISessionStorageService Storage
 @attribute [Authorize]
 
-<div class="col-12">
+<div class="col-md-auto">
     <h3><b>User Info</b></h3>
     <hr />
     <EditForm Model="@user">
         <DataAnnotationsValidator />
         <div class="form-group">
             <label for="Name">Name:</label>
-            <InputText class="@InputStyleClass" disabled="@IsEditModeDisabled" @bind-Value="user.Name" />
+            <InputText class="@InputStyleClass" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
         </div>
         <div class="form-group">
             <label for="Surname">Surname:</label>
-            <InputText class="@InputStyleClass" disabled="@IsEditModeDisabled" @bind-Value="user.Surname" />
+            <InputText class="@InputStyleClass" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
         </div>
         <div class="form-group">
             <label for="Birthday">Birthday:</label>
-            <InputDate class="@InputStyleClass" disabled="@IsEditModeDisabled" @bind-Value="@user.DateOfBirth" />
+            <InputDate class="@InputStyleClass" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
         </div>
         <div class="form-group">
             <label for="Email">Email:</label>
-            <InputText class="form-control col-3" disabled="disabled" @bind-Value="@user.Email" />
+            <InputText class="@InputStyleClass" disabled="true" @bind-Value="@user.Email" />
         </div>
         <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
             <label for="OldPassword">Enter old password: </label>
@@ -50,9 +50,10 @@
     public string InputStyleClass { get; set; }
     public bool ErrorOccured { get; set; }
     private UserInfoViewModel user;
-    private Guid currentId;
+    private Guid id;
+    private string token;
 
-    private void EditInfoClickHandler()
+    private async Task EditInfoClickHandler()
     {
         if (IsEditModeDisabled)
         {
@@ -74,12 +75,17 @@
                 {
                     //UserEditor.EditUser(currentId, userInfo);
                 }
+
+                await UpdateUserModel();
             }
-            // This must be changed to a custom exception later
+            catch (ForbiddenException e)
+            {
+                ErrorMessage = e.Message;
+                ErrorOccured = true;
+            }
             catch (Exception)
             {
-                // This will be changed to real error message
-                ErrorMessage = "error";
+                ErrorMessage = "Error occured";
                 ErrorOccured = true;
             }
 
@@ -94,15 +100,29 @@
         IsPasswordBeingChanged ^= true;
     }
 
-    private void UpdateUserModel()
+    private async Task UpdateUserModel()
     {
-        // TODO: get it by id (another team task)
-        user = new UserInfoViewModel();
-        // Some dummy data
-        user.Name = "Name";
-        user.Surname = "Surname";
-        user.DateOfBirth = DateTime.Today;
-        user.Email = "john.smith@gmail.com";
+        try
+        {
+            var requestResult = await UserGetter.GetUserById(id, token);
+
+            user = new UserInfoViewModel()
+            {
+                FirstName = requestResult.FirstName,
+                LastName = requestResult.LastName,
+                Birthday = requestResult.Birthday,
+                Email = requestResult.Email
+            };
+        }
+        catch (NotFoundException)
+        {
+            ErrorMessage = "Unable to get user information";
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "Error occured";
+            ErrorOccured = true;
+        }
     }
 
     protected override void OnInitialized()
@@ -118,22 +138,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        currentId = await LocalStorage.GetItemAsync<Guid>("id");
-        UpdateUserModel();
+        id = await Storage.GetItemAsync<Guid>("id");
+        token = await Storage.GetItemAsync<string>("token");
 
-        if (string.IsNullOrEmpty(user.Name))
+        if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
         {
-            var options = new ModalOptions() { HideCloseButton = true, DisableBackgroundCancel = true };
-
-            var parameters = new ModalParameters();
-            parameters.Add("userId", currentId);
-
-            var formModal = Modal.Show<Modals.SetUserDataModal>("Set your personal data", parameters, options);
-            var modalResult = await formModal.Result;
-            user.Name = (modalResult.Data as SetUserDataViewModel).Name;
-            user.Surname = (modalResult.Data as SetUserDataViewModel).Surname;
-            user.DateOfBirth = (modalResult.Data as SetUserDataViewModel).DateOfBirth;
-            // Notifying the component
+            await UpdateUserModel();
             StateHasChanged();
         }
     }
