@@ -12,12 +12,16 @@ namespace UserService.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        /// <summary>
-        /// This method will be implemented in communication with other services
-        /// </summary>
         [Route("create")]
         [HttpPost]
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
+        {
+            return await command.Execute(request);
+        }
+
+        [Route("edit")]
+        [HttpPut]
+        public async Task<bool> EditUser([FromServices] IEditUserCommand command, [FromBody] EditUserRequest request)
         {
             return await command.Execute(request);
         }

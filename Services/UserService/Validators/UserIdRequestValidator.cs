@@ -8,10 +8,8 @@ namespace UserService.Validators
         public UserIdRequestValidator()
         {
             RuleFor(request => request.UserId)
-                .NotNull()
-                .WithMessage(ErrorsMessages.IdNull)
                 .NotEmpty()
-                .WithMessage(ErrorsMessages.IdEmpty);
+                .WithMessage(ErrorsMessages.IdIsNullOrEmpty);
         }
     }
 }
