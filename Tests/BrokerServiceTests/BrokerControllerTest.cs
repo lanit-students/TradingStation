@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Interfaces;
 using BrokerService.Controllers;
 using System;
+using BrokerService;
 
 namespace BrokerServiceTests
 {
@@ -44,6 +45,11 @@ namespace BrokerServiceTests
         public void GetBond_ReturnAggregateException()
         {
             Assert.Throws<AggregateException>(() => brokerController.GetBond(BrokerServices.BankType.TinkoffBank, "wrong string"));
+        }
+        [Test]
+        public void Example()
+        {
+            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
         }
     }
 }

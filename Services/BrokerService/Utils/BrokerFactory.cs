@@ -1,6 +1,7 @@
-﻿using System;
+﻿using BrokerService;
 using DTO;
 using Interfaces;
+using Kernel.CustomExceptions;
 using TinkoffIntegrationLib;
 
 namespace BrokerServices.Utils
@@ -10,10 +11,10 @@ namespace BrokerServices.Utils
         internal static IBroker Create(BankType bankType)
         {
             var brokerData = new CreateBrokerData();
-            //token and depth?
+            brokerData.Depth = Constants.Depth;
+            brokerData.Token = Constants.Token;
             if (bankType == BankType.TinkoffBank) return new TinkoffBankBroker(brokerData);
-            //Exception?
-            throw new Exception("Bank is not found.");
+            throw new BadRequestException("We can't do it with this bank.");
         }
     }
 }
