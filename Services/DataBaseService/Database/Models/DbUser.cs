@@ -1,16 +1,70 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataBaseService.Database.Models
 {
-    public class DbUser
+    public class DbUser : IEquatable<DbUser>
     {
+        public static bool operator ==(DbUser first, DbUser second)
+        {
+            if (((object)first) == null
+                || ((object)second == null))
+                return Object.Equals(first, second);
+
+            return first.Equals(second);
+        }
+
+        public static bool operator !=(DbUser first, DbUser second)
+        {
+            if (((object)first) == null
+                || ((object)second) == null)
+                return !Object.Equals(first, second);
+
+            return !first.Equals(second);
+        }
+
         public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
 
+        public bool Equals([AllowNull] DbUser other)
+        {
+            if (other == null)
+                return false;
+
+            if (Id == other.Id
+                && FirstName == other.FirstName
+                && LastName == other.LastName
+                && Birthday == other.Birthday)
+                return true;
+            else
+                return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            DbUser dbUserObj = obj as DbUser;
+            if (dbUserObj == null)
+                return false;
+            else
+                return Equals(dbUserObj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Id.ToString()
+                + FirstName
+                + LastName
+                + Birthday.ToString()
+                + GetType().ToString())
+                .GetHashCode();
+        }
     }
 
     public class DbUserConfiguration : IEntityTypeConfiguration<DbUser>
