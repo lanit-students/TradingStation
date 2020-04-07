@@ -32,7 +32,7 @@ namespace Kernel
 
         private async Task<TOut> GetResponse()
         {
-            var response = (HttpWebResponse)await _request.GetResponseAsync();
+            using var response = (HttpWebResponse)await _request.GetResponseAsync();
 
             if (response.StatusCode != HttpStatusCode.OK)
                 throw GetCustomException(response.StatusCode);

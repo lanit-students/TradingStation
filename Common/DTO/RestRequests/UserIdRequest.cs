@@ -3,7 +3,7 @@ using System;
 
 namespace DTO.RestRequests
 {
-    public class DeleteUserRequest
+    public class UserIdRequest
     {
         public Guid UserId { get; set; }
     }

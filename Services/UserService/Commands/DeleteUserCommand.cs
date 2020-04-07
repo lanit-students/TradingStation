@@ -14,21 +14,21 @@ namespace UserService.Commands
      public class DeleteUserCommand : IDeleteUserCommand
      {
         private readonly IBus busControl;
-        private readonly IValidator<DeleteUserRequest> validator;
-        
-        public DeleteUserCommand([FromServices]IBus busControl, [FromServices] IValidator<DeleteUserRequest> validator)
+        private readonly IValidator<UserIdRequest> validator;
+
+        public DeleteUserCommand([FromServices]IBus busControl, [FromServices] IValidator<UserIdRequest> validator)
         {
             this.busControl = busControl;
             this.validator = validator;
         }
 
-        public async Task<bool> Execute(DeleteUserRequest request)
+        public async Task<bool> Execute(UserIdRequest request)
          {
             validator.ValidateAndThrow(request);
 
             var user = new InternalDeleteUserRequest { UserId = request.UserId };
 
-            var deleteUserResult = await deleteUser(user);
+            var deleteUserResult = await DeleteUser(user);
             if (!deleteUserResult)
             {
                 throw new BadRequestException("Unable to delete user.");
@@ -36,8 +36,8 @@ namespace UserService.Commands
             return deleteUserResult;
         }
 
-         
-         private async Task<bool> deleteUser(InternalDeleteUserRequest request)
+
+         private async Task<bool> DeleteUser(InternalDeleteUserRequest request)
          {
             var uri = new Uri("rabbitmq://localhost/DatabaseService");
 

@@ -5,7 +5,6 @@ using DTO;
 using System.Linq;
 using System;
 using Kernel.CustomExceptions;
-using DataBaseService.Database.Models;
 
 namespace DataBaseService.Repositories
 {

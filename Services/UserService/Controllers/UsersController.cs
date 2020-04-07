@@ -24,16 +24,16 @@ namespace UserService.Controllers
 
         [Route("delete")]
         [HttpDelete]
-        public async Task<bool> DeleteUser([FromServices] IDeleteUserCommand command, [FromBody] DeleteUserRequest request)
+        public async Task<bool> DeleteUser([FromServices] IDeleteUserCommand command, [FromBody] UserIdRequest request)
         {
             return await command.Execute(request);
         }
 
         [Route("get")]
         [HttpGet]
-        public User GetUser([FromHeader] Guid userId)
+        public async Task<User> GetUser([FromServices] IGetUserByIdCommand command, [FromQuery] Guid userId)
         {
-            return null;
+            return await command.Execute(userId);
         }
     }
 }

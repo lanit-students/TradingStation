@@ -62,12 +62,15 @@ namespace UserService
 
             services.AddControllers();
 
-            services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
-            services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
+            services.AddTransient<IValidator<UserIdRequest>, UserIdRequestValidator>();
 
-            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
+            services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
+
+            services.AddTransient<IGetUserByIdCommand, GetUserByIdCommand>();
 
             services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
+
+            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
 
             services.AddMassTransit(x =>
             {

@@ -50,7 +50,8 @@
     public string InputStyleClass { get; set; }
     public bool ErrorOccured { get; set; }
     private UserInfoViewModel user;
-    private Guid currentId;
+    private Guid id;
+    private string token;
 
     private void EditInfoClickHandler()
     {
@@ -94,15 +95,27 @@
         IsPasswordBeingChanged ^= true;
     }
 
-    private void UpdateUserModel()
+    private async Task UpdateUserModel()
     {
-        // TODO: get it by id (another team task)
-        user = new UserInfoViewModel();
-        // Some dummy data
-        user.Name = "Name";
-        user.Surname = "Surname";
-        user.DateOfBirth = DateTime.Today;
-        user.Email = "john.smith@gmail.com";
+        try
+        {
+            //var requestResult = await UserGetter.GetUserById(id, token);
+            //
+            user = new UserInfoViewModel();
+            //user.Name = requestResult.FirstName;
+            //user.Surname = requestResult.LastName;
+            //user.DateOfBirth = requestResult.Birthday;
+            //user.Email = requestResult.Email;
+        }
+        catch (NotFoundException)
+        {
+            ErrorMessage = "Unable to get user information";
+        }
+        catch (Exception e)
+        {
+            ErrorMessage = e.Message;
+            ErrorOccured = true;
+        }
     }
 
     protected override void OnInitialized()
@@ -118,15 +131,16 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        currentId = await LocalStorage.GetItemAsync<Guid>("id");
-        UpdateUserModel();
+        id = await LocalStorage.GetItemAsync<Guid>("id");
+        token = await LocalStorage.GetItemAsync<string>("token");
+        UpdateUserModel().Wait();
 
         if (string.IsNullOrEmpty(user.Name))
         {
             var options = new ModalOptions() { HideCloseButton = true, DisableBackgroundCancel = true };
 
             var parameters = new ModalParameters();
-            parameters.Add("userId", currentId);
+            parameters.Add("userId", id);
 
             var formModal = Modal.Show<Modals.SetUserDataModal>("Set your personal data", parameters, options);
             var modalResult = await formModal.Result;
