@@ -10,8 +10,9 @@ using System.Linq;
 
 namespace DatabaseServiceTests
 {
-    public class DeleteUserTest
+    public class UserRepositoryDeleteTests
     {
+        UserRepository userRepository;
         DbUserCredential dbUserCredential;
         UserMapper mapper;
         Guid userId;
@@ -68,13 +69,29 @@ namespace DatabaseServiceTests
 
             dbUserCredential.IsActive = false;
 
-            var exception = Assert.Throws<ForbiddenException>(() => userRepository.DeleteUser(userId));
+            var exception = Assert.Throws<BadRequestException>(() => userRepository.DeleteUser(userId));
 
             Assert.AreEqual("User was deleted early or not confirmed", exception.Message);
         }
 
-        //[Test]
-        //public void DeleteNotExistUser()
-        //{ }
+        [Test]
+        public void DeleteNotExistUser()
+        {
+            var options = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "DeleteUserIsActiveFalse")
+                .Options;
+
+            using var dbContext = new TPlatformDbContext(options);
+            var userRepository = new UserRepository(mapper, dbContext);
+
+            dbContext.UsersCredentials.Add(dbUserCredential);
+            dbContext.SaveChanges();
+
+            userId = Guid.NewGuid();
+
+            var exception = Assert.Throws<NotFoundException>(() => userRepository.DeleteUser(userId));
+
+            Assert.AreEqual("Not found User for delete", exception.Message);
+        }
     }
 }

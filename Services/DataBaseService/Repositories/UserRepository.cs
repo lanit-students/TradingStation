@@ -56,11 +56,11 @@ namespace DataBaseService.Repositories
             var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
             if (dbUserCredential == null)
             {
-                throw new ForbiddenException("Not found User for delete");
+                throw new NotFoundException("Not found User for delete");
             }
             if(dbUserCredential.IsActive==false)
             {
-                throw new ForbiddenException("User was deleted early or not confirmed");
+                throw new BadRequestException("User was deleted early or not confirmed");
             }
             dbUserCredential.IsActive = false;
             dbContext.SaveChanges();
