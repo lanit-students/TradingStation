@@ -7,8 +7,6 @@ using DTO;
 using DTO.BrokerRequests;
 using DataBaseService.Repositories.Interfaces;
 
-
-
 namespace DataBaseService.BrokerConsumers
 {
     public class CreateUserConsumer : IConsumer<InternalCreateUserRequest>
