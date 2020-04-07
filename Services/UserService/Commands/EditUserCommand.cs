@@ -37,6 +37,9 @@ namespace UserService.Commands
                     || string.IsNullOrEmpty(passwordRequest.NewPassword)))
             {
                 passwordChangeValidator.ValidateAndThrow(passwordRequest);
+            } else
+            {
+                throw new BadRequestException("Password is null or empty");
             }
             userInfoValidator.ValidateAndThrow(userInfo);
 
