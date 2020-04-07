@@ -3,6 +3,7 @@ using Interfaces;
 using BrokerService.Controllers;
 using System;
 using BrokerService;
+using System.Collections.Generic;
 
 namespace BrokerServiceTests
 {
@@ -47,7 +48,32 @@ namespace BrokerServiceTests
             Assert.Throws<AggregateException>(() => brokerController.GetBond(BrokerServices.BankType.TinkoffBank, "wrong string"));
         }
         [Test]
-        public void Example()
+        public void GetCurrency_ReturnIMarketInstrument()
+        {
+            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
+        }
+        [Test]
+        public void GetAllCurrencies_ReturnListIMarketInstrument()
+        {
+            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is List<IMarketInstrument>);
+        }
+        [Test]
+        public void GetAllStocks_ReturnListIMarketInstrument()
+        {
+            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is List<IMarketInstrument>);
+        }
+        [Test]
+        public void GetStock_ReturnIMarketInstrument()
+        {
+            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
+        }
+        [Test]
+        public void GetAllBonds_ReturnListIMarketInstrument()
+        {
+            Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is List<IMarketInstrument>);
+        }
+        [Test]
+        public void GetBond_ReturnIMarketInstrument()
         {
             Assert.That(brokerController.GetBond(BrokerServices.BankType.TinkoffBank, Constants.Token) is IMarketInstrument);
         }
