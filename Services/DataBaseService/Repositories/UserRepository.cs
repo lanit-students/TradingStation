@@ -1,10 +1,11 @@
-﻿using DataBaseService.Database;
+﻿using System;
+using System.Linq;
+
+using DTO;
+using Kernel.CustomExceptions;
+using DataBaseService.Database;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
-using DTO;
-using System.Linq;
-using System;
-using Kernel.CustomExceptions;
 
 namespace DataBaseService.Repositories
 {
@@ -20,7 +21,7 @@ namespace DataBaseService.Repositories
         }
 
         public void CreateUser(User user, string email)
-        {        
+        {
             if (dbContext.UsersCredentials.Any(userCredential => userCredential.Email == email))
                 throw new BadRequestException("This email is already taken by someone.");
             dbContext.Users.Add(mapper.MapToDbUser(user));
