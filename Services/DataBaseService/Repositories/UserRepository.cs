@@ -19,8 +19,10 @@ namespace DataBaseService.Repositories
             this.dbContext = dbContext;
         }
 
-        public void CreateUser(User user)
-        {
+        public void CreateUser(User user, string email)
+        {        
+            if (dbContext.UsersCredentials.Any(userCredential => userCredential.Email == email))
+                throw new BadRequestException("This email is already taken by someone.");
             dbContext.Users.Add(mapper.MapToDbUser(user));
             dbContext.SaveChanges();
         }
@@ -63,7 +65,6 @@ namespace DataBaseService.Repositories
             {
                 throw new BadRequestException("User was deleted early or not confirmed");
             }
-
             dbUserCredential.IsActive = false;
             dbContext.SaveChanges();
         }
