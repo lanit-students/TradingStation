@@ -34,14 +34,13 @@ namespace UserService.Commands
             var userInfo = request.UserInfo;
             PasswordHashChangeRequest passwordHashChangeRequest = null;
 
-            if (!(string.IsNullOrEmpty(passwordRequest.OldPassword)
-                    || string.IsNullOrEmpty(passwordRequest.NewPassword)))
+            if (passwordRequest != null)
             {
                 passwordChangeValidator.ValidateAndThrow(passwordRequest);
                 passwordHashChangeRequest = new PasswordHashChangeRequest
                 {
-                    OldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword),
-                    NewPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword)
+                    OldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword),
+                    NewPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword)
                 };
             }
 

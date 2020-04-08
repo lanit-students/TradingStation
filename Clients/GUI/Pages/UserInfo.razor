@@ -50,8 +50,7 @@
     public string InputStyleClass { get; set; }
     public bool ErrorOccured { get; set; }
     private UserInfoViewModel user;
-    private Guid id;
-    private string token;
+    private UserToken userToken;
 
     private async Task EditInfoClickHandler()
     {
@@ -60,32 +59,46 @@
             IsEditModeDisabled = false;
             InputStyleClass = "form-control col-3";
         }
-        // Trying to save changes
         else
         {
-            // TODO: implement editing logic
             try
             {
-                // This is in process (user/edit endpoint is another team's task)
+                var userInfo = new UserInfoRequest()
+                {
+                    UserId = userToken.UserId,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Birthday = user.Birthday
+                };
+
+                var request = new EditUserRequest()
+                {
+                    UserInfo = userInfo,
+                    PasswordRequest = null
+                };
+
                 if (IsPasswordBeingChanged)
                 {
-                    //UserEditor.EditUser(currentId, userInfo, user.OldPassword, user.NewPassword);
+                    var passwordRequest = new PasswordChangeRequest()
+                    {
+                        OldPassword = user.OldPassword,
+                        NewPassword = user.NewPassword
+                    };
+
+                    request.PasswordRequest = passwordRequest;
                 }
-                else
-                {
-                    //UserEditor.EditUser(currentId, userInfo);
-                }
+
+                await UserEditor.EditUser(userToken, request);
 
                 await UpdateUserModel();
             }
-            catch (ForbiddenException e)
+            catch (Exception e) when (
+                e is ForbiddenException ||
+                e is NotFoundException ||
+                e is ValidationException)
             {
                 ErrorMessage = e.Message;
-                ErrorOccured = true;
-            }
-            catch (Exception)
-            {
-                ErrorMessage = "Error occured";
                 ErrorOccured = true;
             }
 
@@ -104,7 +117,7 @@
     {
         try
         {
-            var requestResult = await UserGetter.GetUserById(id, token);
+            var requestResult = await UserGetter.GetUserById(userToken);
 
             user = new UserInfoViewModel()
             {
@@ -127,6 +140,7 @@
 
     protected override void OnInitialized()
     {
+        userToken = new UserToken();
         user = new UserInfoViewModel();
         ErrorOccured = false;
         ErrorMessage = "";
@@ -138,8 +152,8 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        id = await Storage.GetItemAsync<Guid>("id");
-        token = await Storage.GetItemAsync<string>("token");
+        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+        userToken.Body = await Storage.GetItemAsync<string>("token");
 
         if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
         {

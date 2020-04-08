@@ -23,7 +23,10 @@ namespace DataBaseService.Repositories
         public void CreateUser(User user, string email)
         {
             if (dbContext.UsersCredentials.Any(userCredential => userCredential.Email == email))
+            {
                 throw new BadRequestException("This email is already taken by someone.");
+            }
+
             dbContext.Users.Add(mapper.MapToDbUser(user));
             dbContext.SaveChanges();
         }
@@ -85,6 +88,11 @@ namespace DataBaseService.Repositories
 
                     if (dbUserCredential != null)
                     {
+                        if (dbUserCredential.PasswordHash != password.OldPasswordHash)
+                        {
+                            throw new ForbiddenException("Can't change password, old password is wrong");
+                        }
+
                         dbUserCredential.PasswordHash = password.NewPasswordHash;
                     }
                     else
