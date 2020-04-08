@@ -13,27 +13,27 @@ namespace DatabaseServiceTests.Mappers
     public class UserMapperTests
     {
         #region BIO
-        Guid userId = Guid.NewGuid();
-        Guid credentialId = Guid.NewGuid();
+        private Guid userId = Guid.NewGuid();
+        private Guid credentialId = Guid.NewGuid();
 
-        string firstName = "Adam";
-        string lastName = "Yablokov";
-        string email = "adam.ya@eden.org";
-        DateTime birth = DateTime.MinValue;
-        string passwordHash = "passwordHash";
+        private string firstName = "Adam";
+        private string lastName = "Yablokov";
+        private string email = "adam.ya@eden.org";
+        private DateTime birth = DateTime.MinValue;
+        private string passwordHash = "passwordHash";
         #endregion
 
         IUserMapper mapper;
 
-        User user;
-        DbUser dbUser;
-        UserCredential credential;
-        DbUserCredential dbCredential;
+        private User user;
+        private DbUser dbUser;
+        private UserCredential credential;
+        private DbUserCredential dbCredential;
 
-        UserComparer userComparer = new UserComparer();
-        DbUserComparer dbUserComparer = new DbUserComparer();
-        UserCredentialsComparer userCredentialsComparer = new UserCredentialsComparer();
-        DbUserCredentialsComparer dbUserCredentialsComparer = new DbUserCredentialsComparer();
+        private UserComparer userComparer = new UserComparer();
+        private DbUserComparer dbUserComparer = new DbUserComparer();
+        private UserCredentialsComparer userCredentialsComparer = new UserCredentialsComparer();
+        private DbUserCredentialsComparer dbUserCredentialsComparer = new DbUserCredentialsComparer();
 
         [OneTimeSetUp]
         public void Initialize()

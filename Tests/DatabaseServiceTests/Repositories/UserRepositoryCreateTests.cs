@@ -15,27 +15,27 @@ using DataBaseService.Mappers.Interfaces;
 
 namespace DatabaseServiceTests.Repositories
 {
-    public class UserRepositoryTests
+    public class UserRepositoryCreateTests
     {
-        IUserRepository repository;
-        Mock<IUserMapper> mapper;
-        DbContextOptions<TPlatformDbContext> dbOptionsCreateUser;
-        DbContextOptions<TPlatformDbContext> dbOptionsCreateCredential;
+        private IUserRepository repository;
+        private Mock<IUserMapper> mapper;
+        private DbContextOptions<TPlatformDbContext> dbOptionsCreateUser;
+        private DbContextOptions<TPlatformDbContext> dbOptionsCreateCredential;
 
         #region BIO
-        Guid userId = Guid.NewGuid();
-        Guid credentialId = Guid.NewGuid();
+        private Guid userId = Guid.NewGuid();
+        private Guid credentialId = Guid.NewGuid();
 
-        string firstName = "Adam";
-        string lastName = "Yablokov";
-        string email = "adam.ya@eden.org";
-        DateTime birth = DateTime.MinValue;
-        string passwordHash = "passwordHash";
+        private string firstName = "Adam";
+        private string lastName = "Yablokov";
+        private string email = "adam.ya@eden.org";
+        private DateTime birth = DateTime.MinValue;
+        private string passwordHash = "passwordHash";
 
-        User user;
-        DbUser dbUser;
-        UserCredential credential;
-        DbUserCredential dbCredential;
+        private User user;
+        private DbUser dbUser;
+        private UserCredential credential;
+        private DbUserCredential dbCredential;
         #endregion
 
         [SetUp]
