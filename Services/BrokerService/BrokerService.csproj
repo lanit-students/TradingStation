@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
     <ProjectReference Include="..\..\Integrations\TinkoffIntegrationLib\TinkoffIntegrationLib.csproj" />
   </ItemGroup>
 

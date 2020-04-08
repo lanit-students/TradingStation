@@ -20,7 +20,7 @@ namespace BrokerServiceTests
         [Test]
         public void GetCurrency_ReturnAggregateException()
         {
-            Assert.Throws<AggregateException>(() => brokerController.GetCurrency(BrokerServices.BankType.TinkoffBank, "wrong string"));
+            Assert.Throws<AggregateException>(() => brokerController.GetCurrency(BrokerServices.BankType.TinkoffBank, "wrongstring"));
         }
         [Test]
         public void GetAllCurrencies_ReturnAggregateException()
