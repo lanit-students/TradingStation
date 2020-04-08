@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using FluentValidation;
 
+using DTO.NewsRequests;
 using DTO.NewsRequests.Currency;
 using NewsService.Validators;
 using System.Linq;
@@ -16,13 +17,13 @@ namespace NewsServiceTests.Validators
 
         private CurrencyRequest NullCodesRequest = new CurrencyRequest
         {
-            CurrencyPublisher = NewsPublisherTypes.CentralBank,
+            CurrencyPublisher = CurrencyRateProviderTypes.CentralBank,
             CurrencyCodes = null
         };
 
         private CurrencyRequest EmptyCodesRequest = new CurrencyRequest
         {
-            CurrencyPublisher = NewsPublisherTypes.CentralBank,
+            CurrencyPublisher = CurrencyRateProviderTypes.CentralBank,
             CurrencyCodes = new List<string>()
         };
 

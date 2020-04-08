@@ -5,13 +5,14 @@ using NUnit.Framework;
 using Interfaces;
 using CBIntegration;
 using NewsService.Utils;
+using DTO.NewsRequests;
 
 namespace NewsServiceTests.Utils
 {
-    public class NewsPublisherFactoryTests
+    public class CurrencyRateProviderFactoryTests
     {
-        private NewsPublisherTypes centralBankNewsPublisherType = NewsPublisherTypes.CentralBank;
-        private INewsPublisher centralBankNewsPublisher;
+        private CurrencyRateProviderTypes centralBankType = CurrencyRateProviderTypes.CentralBank;
+        private ICurrencyRateProvider centralBankNewsPublisher;
 
         [SetUp]
         public void Initialize()
@@ -22,16 +23,16 @@ namespace NewsServiceTests.Utils
         [Test]
         public void CreateReturnsNotNullNewsPublisher()
         {
-            foreach (NewsPublisherTypes type in Enum.GetValues(typeof(NewsPublisherTypes)))
+            foreach (CurrencyRateProviderTypes type in Enum.GetValues(typeof(CurrencyRateProviderTypes)))
             {
-                Assert.NotNull(NewsPublisherFactory.Create(type));
+                Assert.NotNull(CurrencyRateProviderFactory.Create(type));
             }
         }
 
         [Test]
         public void CreateCentralBankNewsPublisherResultHasCorrectType()
         {
-            var typeOfCreatedObject = NewsPublisherFactory.Create(centralBankNewsPublisherType).GetType();
+            var typeOfCreatedObject = CurrencyRateProviderFactory.Create(centralBankType).GetType();
 
             Assert.AreEqual(typeOfCreatedObject, centralBankNewsPublisher.GetType());
         }
