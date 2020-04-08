@@ -11,17 +11,17 @@ namespace NewsServiceTests.Utils
 {
     public class CurrencyRateProviderFactoryTests
     {
-        private CurrencyRateProviderTypes centralBankType = CurrencyRateProviderTypes.CentralBank;
-        private ICurrencyRateProvider centralBankNewsPublisher;
+        private CurrencyRateProviderTypes centralBank = CurrencyRateProviderTypes.CentralBank;
+        private ICurrencyRateProvider centralBankCurrencyrateProvider;
 
         [SetUp]
         public void Initialize()
         {
-            centralBankNewsPublisher = new RussianCBInfo();
+            centralBankCurrencyrateProvider = new RussianCBInfo();
         }
 
         [Test]
-        public void CreateReturnsNotNullNewsPublisher()
+        public void CreateReturnsNotNullCurrencyRateProvider()
         {
             foreach (CurrencyRateProviderTypes type in Enum.GetValues(typeof(CurrencyRateProviderTypes)))
             {
@@ -30,11 +30,11 @@ namespace NewsServiceTests.Utils
         }
 
         [Test]
-        public void CreateCentralBankNewsPublisherResultHasCorrectType()
+        public void CreateCentralBankCurrencyRateProviderResultHasCorrectType()
         {
-            var typeOfCreatedObject = CurrencyRateProviderFactory.Create(centralBankType).GetType();
+            var typeOfCreatedObject = CurrencyRateProviderFactory.Create(centralBank).GetType();
 
-            Assert.AreEqual(typeOfCreatedObject, centralBankNewsPublisher.GetType());
+            Assert.AreEqual(typeOfCreatedObject, centralBankCurrencyrateProvider.GetType());
         }
     }
 }
