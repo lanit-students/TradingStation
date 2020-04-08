@@ -93,14 +93,12 @@
 
                 await UpdateUserModel();
             }
-            catch (ForbiddenException e)
+            catch (Exception e) when (
+                e is ForbiddenException ||
+                e is NotFoundException ||
+                e is ValidationException)
             {
                 ErrorMessage = e.Message;
-                ErrorOccured = true;
-            }
-            catch (Exception)
-            {
-                ErrorMessage = "Error occured";
                 ErrorOccured = true;
             }
 

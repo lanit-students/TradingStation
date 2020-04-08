@@ -18,7 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private OperationResult EditUser(InternalEditUserInfoRequest request)
         {
-            userRepository.EditUser(request.User,request.UserPasswords);
+            userRepository.EditUser(request.User, request.UserPasswords);
 
             return new OperationResult
             {
@@ -28,9 +28,9 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalEditUserInfoRequest> context)
         {
-            var deleteResult = EditUser(context.Message);
+            var editResult = EditUser(context.Message);
 
-            await context.RespondAsync(deleteResult);
+            await context.RespondAsync(editResult);
         }
     }
 }
