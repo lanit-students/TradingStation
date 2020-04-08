@@ -68,5 +68,37 @@ namespace DataBaseService.Repositories
             dbUserCredential.IsActive = false;
             dbContext.SaveChanges();
         }
+
+        public void EditUser(User user, PasswordHashChangeRequest password)
+        {
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == user.Id);
+            if (dbUser != null)
+            {
+                dbUser.LastName = user.LastName;
+                dbUser.FirstName = user.FirstName;
+                dbUser.Birthday = user.Birthday;
+
+                if (password != null)
+                {
+                    var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == user.Id);
+
+                    if (dbUserCredential != null)
+                    {
+                        dbUserCredential.PasswordHash = password.NewPasswordHash;
+                    }
+                    else
+                    {
+                        throw new NotFoundException("Not found User to change pasword");
+                    }
+                }
+
+                dbContext.SaveChanges();
+            }
+            else
+            {
+                throw new NotFoundException("Not found User to change");
+            }
+
+        }
     }
 }
