@@ -14,5 +14,7 @@ namespace DataBaseService.Repositories.Interfaces
         User GetUserById(Guid userId);
 
         void DeleteUser(Guid userIdCredential);
+
+        void EditUser(User user, PasswordHashChangeRequest password);
     }
 }
