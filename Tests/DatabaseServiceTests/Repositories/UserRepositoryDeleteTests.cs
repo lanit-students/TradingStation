@@ -8,7 +8,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 
-namespace DatabaseServiceTests
+namespace DatabaseServiceTests.Repositories
 {
     public class UserRepositoryDeleteTests
     {
