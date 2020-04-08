@@ -19,7 +19,8 @@ namespace DatabaseServiceTests.Repositories
     {
         IUserRepository repository;
         Mock<IUserMapper> mapper;
-        DbContextOptions<TPlatformDbContext> dbOptions;
+        DbContextOptions<TPlatformDbContext> dbOptionsCreateUser;
+        DbContextOptions<TPlatformDbContext> dbOptionsCreateCredential;
 
         #region BIO
         Guid userId = Guid.NewGuid();
@@ -37,11 +38,15 @@ namespace DatabaseServiceTests.Repositories
         DbUserCredential dbCredential;
         #endregion
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Initialize()
         {
-            dbOptions = new DbContextOptionsBuilder<TPlatformDbContext>()
+            dbOptionsCreateUser = new DbContextOptionsBuilder<TPlatformDbContext>()
                 .UseInMemoryDatabase(databaseName: "Create_new_user_test")
+                .Options;
+
+            dbOptionsCreateCredential = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "Create_new_credential_test")
                 .Options;
 
             user = new User
@@ -91,7 +96,7 @@ namespace DatabaseServiceTests.Repositories
         [Test]
         public void CreateUserTest()
         {
-            using var dbContext = new TPlatformDbContext(dbOptions);
+            using var dbContext = new TPlatformDbContext(dbOptionsCreateUser);
             repository = new UserRepository(mapper.Object, dbContext);
             repository.CreateUser(user, email);
 
@@ -104,13 +109,14 @@ namespace DatabaseServiceTests.Repositories
                 .Result);
         }
 
+        [Test]
         public void CreateUserCredential()
         {
-            using var dbContext = new TPlatformDbContext(dbOptions);
+            using var dbContext = new TPlatformDbContext(dbOptionsCreateCredential);
             repository = new UserRepository(mapper.Object, dbContext);
             repository.CreateUserCredential(credential);
 
-            Assert.AreEqual(1, dbContext.Users.CountAsync().Result);
+            Assert.AreEqual(1, dbContext.UsersCredentials.CountAsync().Result);
             Assert.AreEqual(
                 dbCredential,
                 dbContext
@@ -118,8 +124,5 @@ namespace DatabaseServiceTests.Repositories
                 .FirstOrDefaultAsync()
                 .Result);
         }
-
-
-
     }
 }

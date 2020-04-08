@@ -77,33 +77,25 @@ namespace DatabaseServiceTests.Mappers
         [Test]
         public void MapUser()
         {
-            Assert.AreEqual(
-                true,
-                dbUserComparer.Equals(dbUser, mapper.MapToDbUser(user)));
+            Assert.IsTrue(dbUserComparer.Equals(dbUser, mapper.MapToDbUser(user)));
         }
 
         [Test]
         public void MapDbUser()
         {
-            Assert.AreEqual(
-                true,
-                userComparer.Equals(user, mapper.MapUser(dbUser, email)));
+            Assert.IsTrue(userComparer.Equals(user, mapper.MapUser(dbUser, email)));
         }
 
         [Test]
         public void MapCredential()
         {
-            Assert.AreEqual(
-                true,
-                dbUserCredentialsComparer.Equals(dbCredential, mapper.MapToDbUserCredential(credential)));
+            Assert.IsTrue(dbUserCredentialsComparer.Equals(dbCredential, mapper.MapToDbUserCredential(credential)));
         }
 
         [Test]
         public void MapDbCredential()
         {
-            Assert.AreEqual(
-                true,
-                userCredentialsComparer.Equals(credential, mapper.MapUserCredential(dbCredential)));
+            Assert.IsTrue(userCredentialsComparer.Equals(credential, mapper.MapUserCredential(dbCredential)));
         }
 
     }
