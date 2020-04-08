@@ -10,6 +10,8 @@ using FluentValidation;
 using DTO.NewsRequests.Currency;
 using NewsService.Validators;
 using NewsService.Utils;
+using NewsService.Interfaces;
+using NewsService.Commands;
 
 namespace NewsService
 {
@@ -22,6 +24,9 @@ namespace NewsService
             services.AddControllers();
             services.AddTransient<IValidator<CurrencyRequest>, CurrencyRequestValidator>();
             services.AddTransient<IEqualityComparer<string>, RegisterIgnoreStringComparer>();
+
+            services.AddTransient<IGetCurrenciesCommand, GetCurrenciesCommand>();
+            services.AddTransient<IGetNewsCommand, GetNewsCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

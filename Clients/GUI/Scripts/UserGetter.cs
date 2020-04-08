@@ -1,8 +1,6 @@
 ﻿using DTO;
 using Kernel;
 using Kernel.Enums;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GUI.Scripts

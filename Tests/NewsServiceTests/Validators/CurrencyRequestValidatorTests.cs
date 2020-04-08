@@ -5,7 +5,6 @@ using NUnit.Framework;
 using FluentValidation;
 
 using DTO.NewsRequests.Currency;
-using DTO.NewsRequests;
 using NewsService.Validators;
 using System.Linq;
 

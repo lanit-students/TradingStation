@@ -14,7 +14,7 @@ namespace CBIntegration
     /// <summary>
     /// Get reference information from Central Bank.
     /// </summary>
-    public class RussianCBInfo : INewsPublisher
+    public class RussianCBInfo : ICurrencyRateProvider
     {
         private DataFromCB data;
         private Uri uri;

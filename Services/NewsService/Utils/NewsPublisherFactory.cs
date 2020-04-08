@@ -1,9 +1,9 @@
 ﻿using System;
 
 using Interfaces;
-using DTO.NewsRequests;
 
-using CBIntegration;
+using RssIntegrationLib;
+using NewsService.Enums;
 
 namespace NewsService.Utils
 {
@@ -15,8 +15,8 @@ namespace NewsService.Utils
         {
             switch (newsPublisherType)
             {
-                case NewsPublisherTypes.CentralBank:
-                    return new RussianCBInfo();
+                case NewsPublisherTypes.Rambler:
+                    return new RamblerRssReader();
                 default:
                     //TODO change on custom exception
                         throw new NotImplementedException();

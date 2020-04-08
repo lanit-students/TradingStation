@@ -1,8 +1,7 @@
 ﻿namespace DTO.NewsRequests
 {
-    public enum NewsPublisherTypes
+    public enum CurrencyRateProviderTypes
     {
         CentralBank
     }
 }
-

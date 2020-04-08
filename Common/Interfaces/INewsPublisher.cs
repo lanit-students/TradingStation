@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-using DTO.NewsRequests.Currency;
+using DTO;
 
 namespace Interfaces
 {
@@ -9,6 +8,6 @@ namespace Interfaces
     /// </summary>
     public interface INewsPublisher
     {
-        List<ExchangeRate> GetCurrencies();
+        IEnumerable<NewsItem> GetNews(string feedUrl);
     }
 }

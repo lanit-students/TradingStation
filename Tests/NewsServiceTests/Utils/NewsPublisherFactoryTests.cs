@@ -4,7 +4,6 @@ using NUnit.Framework;
 
 using Interfaces;
 using CBIntegration;
-using DTO.NewsRequests;
 using NewsService.Utils;
 
 namespace NewsServiceTests.Utils
