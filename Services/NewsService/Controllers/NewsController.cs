@@ -34,7 +34,7 @@ namespace NewsService.Controllers
             return command.Execute(requestParams, comparer);
         }
 
-        [Route("newsfeed")]
+        [Route("getnews")]
         [HttpGet]
         public IEnumerable<NewsItem> GetNews([FromServices] IGetNewsCommand command, [FromHeader] string feedUrl)
         {

@@ -12,6 +12,7 @@ using NewsService.Validators;
 using NewsService.Utils;
 using NewsService.Interfaces;
 using NewsService.Commands;
+using Kernel;
 
 namespace NewsService
 {
@@ -36,6 +37,11 @@ namespace NewsService
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(CustomExceptionHandler.HandleCustomException);
+            });
 
             app.UseHttpsRedirection();
 
