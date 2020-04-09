@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataBaseService.Database.Models
 {
@@ -10,6 +11,9 @@ namespace DataBaseService.Database.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
+
+        [ForeignKey("UserAvatarId")]
+        public Guid UserAvatarId { get; set; }
 
     }
 
@@ -36,6 +40,9 @@ namespace DataBaseService.Database.Models
                 .Property(p => p.Birthday)
                 .HasColumnName("Birthday")
                 .IsRequired();
+            builder
+                .Property(p => p.UserAvatarId)
+                .HasColumnName("UserAvatarId");
         }
     }
 }
