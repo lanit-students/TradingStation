@@ -10,13 +10,13 @@ namespace NewsService.Utils
     {
         public static ICurrencyExchangeRateProvider Create(CurrencyExchangeRateProviderTypes currencyRateProviderType)
         {
-            switch (currencyRateProviderType)
+            return currencyRateProviderType switch
             {
-                case CurrencyExchangeRateProviderTypes.CentralBank:
-                    return new RussianCBInfo();
-                default:
-                    throw new BadRequestException("Invalid currency exchange rate provider type.");
-            }
+                CurrencyExchangeRateProviderTypes.CentralBank =>
+                    new RussianCBInfo(),
+                _ =>
+                    throw new BadRequestException("Invalid currency exchange rate provider type.")
+            };
         }
     }
 }

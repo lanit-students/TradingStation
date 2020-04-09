@@ -14,13 +14,12 @@ namespace NewsService.Utils
 
         public static INewsPublisher Create(NewsPublisherTypes newsPublisherType)
         {
-            switch (newsPublisherType)
-            {
-                case NewsPublisherTypes.Rambler:
-                    return new RamblerRssReader();
-                default:
-                    throw new BadRequestException("Invalid news publisher type.");
-            }
+            return newsPublisherType switch {
+                NewsPublisherTypes.Rambler =>
+                    new RamblerRssReader(),
+                _ =>
+                    throw new BadRequestException("Invalid news publisher type.")
+            };
         }
     }
 }
