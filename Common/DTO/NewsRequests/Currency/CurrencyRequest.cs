@@ -8,7 +8,7 @@ namespace DTO.NewsRequests.Currency
         public CurrencyRequest() { }
 
         [JsonPropertyName("bank_name")]
-        public CurrencyRateProviderTypes CurrencyPublisher { get; set; }
+        public CurrencyExchangeRateProviderTypes CurrencyPublisher { get; set; }
 
         [JsonPropertyName("currency_codes")]
         public List<string> CurrencyCodes { get; set; }

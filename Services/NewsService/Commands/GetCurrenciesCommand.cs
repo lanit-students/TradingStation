@@ -11,7 +11,7 @@ namespace NewsService.Commands
     {
         public List<ExchangeRate> Execute(CurrencyRequest requestParams, IEqualityComparer<string> comparer)
         {
-            List<ExchangeRate> rates = CurrencyRateProviderFactory
+            List<ExchangeRate> rates = CurrencyExchangeRateProviderFactory
                 .Create(requestParams.CurrencyPublisher)
                 .GetCurrencies();
 

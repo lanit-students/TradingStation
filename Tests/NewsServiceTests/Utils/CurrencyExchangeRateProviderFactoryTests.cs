@@ -9,10 +9,10 @@ using DTO.NewsRequests;
 
 namespace NewsServiceTests.Utils
 {
-    public class CurrencyRateProviderFactoryTests
+    public class CurrencyExchangeRateProviderFactoryTests
     {
-        private CurrencyRateProviderTypes centralBank = CurrencyRateProviderTypes.CentralBank;
-        private ICurrencyRateProvider centralBankCurrencyrateProvider;
+        private CurrencyExchangeRateProviderTypes centralBank = CurrencyExchangeRateProviderTypes.CentralBank;
+        private ICurrencyExchangeRateProvider centralBankCurrencyrateProvider;
 
         [SetUp]
         public void Initialize()
@@ -23,16 +23,16 @@ namespace NewsServiceTests.Utils
         [Test]
         public void CreateReturnsNotNullCurrencyRateProvider()
         {
-            foreach (CurrencyRateProviderTypes type in Enum.GetValues(typeof(CurrencyRateProviderTypes)))
+            foreach (CurrencyExchangeRateProviderTypes type in Enum.GetValues(typeof(CurrencyExchangeRateProviderTypes)))
             {
-                Assert.NotNull(CurrencyRateProviderFactory.Create(type));
+                Assert.NotNull(CurrencyExchangeRateProviderFactory.Create(type));
             }
         }
 
         [Test]
         public void CreateCentralBankCurrencyRateProviderResultHasCorrectType()
         {
-            var typeOfCreatedObject = CurrencyRateProviderFactory.Create(centralBank).GetType();
+            var typeOfCreatedObject = CurrencyExchangeRateProviderFactory.Create(centralBank).GetType();
 
             Assert.AreEqual(typeOfCreatedObject, centralBankCurrencyrateProvider.GetType());
         }

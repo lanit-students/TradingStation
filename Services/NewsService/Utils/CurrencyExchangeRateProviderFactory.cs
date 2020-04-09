@@ -5,13 +5,13 @@ using System;
 
 namespace NewsService.Utils
 {
-    public class CurrencyRateProviderFactory
+    public class CurrencyExchangeRateProviderFactory
     {
-        public static ICurrencyRateProvider Create(CurrencyRateProviderTypes currencyRateProviderType)
+        public static ICurrencyExchangeRateProvider Create(CurrencyExchangeRateProviderTypes currencyRateProviderType)
         {
             switch (currencyRateProviderType)
             {
-                case CurrencyRateProviderTypes.CentralBank:
+                case CurrencyExchangeRateProviderTypes.CentralBank:
                     return new RussianCBInfo();
                 default:
                     //TODO change on custom exception

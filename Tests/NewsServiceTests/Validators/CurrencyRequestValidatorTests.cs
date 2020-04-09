@@ -17,13 +17,13 @@ namespace NewsServiceTests.Validators
 
         private CurrencyRequest NullCodesRequest = new CurrencyRequest
         {
-            CurrencyPublisher = CurrencyRateProviderTypes.CentralBank,
+            CurrencyPublisher = CurrencyExchangeRateProviderTypes.CentralBank,
             CurrencyCodes = null
         };
 
         private CurrencyRequest EmptyCodesRequest = new CurrencyRequest
         {
-            CurrencyPublisher = CurrencyRateProviderTypes.CentralBank,
+            CurrencyPublisher = CurrencyExchangeRateProviderTypes.CentralBank,
             CurrencyCodes = new List<string>()
         };
 

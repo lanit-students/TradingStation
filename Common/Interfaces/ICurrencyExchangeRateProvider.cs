@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Interfaces
 {
-    public interface ICurrencyRateProvider
+    public interface ICurrencyExchangeRateProvider
     {
         List<ExchangeRate> GetCurrencies();
     }
