@@ -28,7 +28,7 @@ namespace CentralBankIntegrationLib.XmlSerializationObjects
             get
             {
                 decimal val;
-                //Todo: Add log
+                //TODO: Add log
                 Decimal.TryParse(ValueInString, out val);
 
                 if (FaceValue > 1)

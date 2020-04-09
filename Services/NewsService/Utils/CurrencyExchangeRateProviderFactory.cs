@@ -1,6 +1,7 @@
 ﻿using CBIntegration;
 using DTO.NewsRequests;
 using Interfaces;
+using Kernel.CustomExceptions;
 using System;
 
 namespace NewsService.Utils
@@ -14,8 +15,7 @@ namespace NewsService.Utils
                 case CurrencyExchangeRateProviderTypes.CentralBank:
                     return new RussianCBInfo();
                 default:
-                    //TODO change on custom exception
-                    throw new NotImplementedException();
+                    throw new BadRequestException("Invalid currency exchange rate provider type.");
             }
         }
     }

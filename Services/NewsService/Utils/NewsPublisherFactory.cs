@@ -4,6 +4,7 @@ using Interfaces;
 
 using RssIntegrationLib;
 using NewsService.Enums;
+using Kernel.CustomExceptions;
 
 namespace NewsService.Utils
 {
@@ -18,8 +19,7 @@ namespace NewsService.Utils
                 case NewsPublisherTypes.Rambler:
                     return new RamblerRssReader();
                 default:
-                    //TODO change on custom exception
-                        throw new NotImplementedException();
+                    throw new BadRequestException("Invalid news publisher type.");
             }
         }
     }
