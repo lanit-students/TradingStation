@@ -33,9 +33,9 @@ namespace DataBaseService.Mappers
         {
             return new DbUserAvatar
             {
-                Id = user.Id,
-                Avatar = user.Avatar,
-                TypeAvatar = user.TypeAvatar
+                Id = userAvatar.Id,
+                Avatar = userAvatar.Avatar,
+                TypeAvatar = userAvatar.TypeAvatar
             };
         }
 
@@ -67,9 +67,9 @@ namespace DataBaseService.Mappers
         {
             return new UserAvatar
             {
-                Id = user.Id,
-                Avatar = user.Avatar,
-                TypeAvatar = user.TypeAvatar
+                Id = userAvatar.Id,
+                Avatar = userAvatar.Avatar,
+                TypeAvatar = userAvatar.TypeAvatar
             };
         }
     }
