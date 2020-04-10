@@ -21,6 +21,7 @@ namespace DatabaseServiceTests.Repositories
         private Mock<IUserMapper> mapper;
         private DbContextOptions<TPlatformDbContext> dbOptionsCreateUser;
         private DbContextOptions<TPlatformDbContext> dbOptionsCreateCredential;
+        private DbContextOptions<TPlatformDbContext> dbOptionsCreateAvatar;
 
         #region BIO
         private Guid userId = Guid.NewGuid();
@@ -31,14 +32,18 @@ namespace DatabaseServiceTests.Repositories
         private string email = "adam.ya@eden.org";
         private DateTime birth = DateTime.MinValue;
         private string passwordHash = "passwordHash";
+        private string typeAvatar = "jpeg";
+        private byte[] avatar = { 0, 0, 0, 25 };
 
         private User user;
         private DbUser dbUser;
         private UserCredential credential;
         private DbUserCredential dbCredential;
+        private UserAvatar userAvatar;
+        private DbUserAvatar dbUserAvatar;
         #endregion
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Initialize()
         {
             dbOptionsCreateUser = new DbContextOptionsBuilder<TPlatformDbContext>()
@@ -47,6 +52,10 @@ namespace DatabaseServiceTests.Repositories
 
             dbOptionsCreateCredential = new DbContextOptionsBuilder<TPlatformDbContext>()
                 .UseInMemoryDatabase(databaseName: "Create_new_credential_test")
+                .Options;
+
+            dbOptionsCreateAvatar = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "Create_new_avatar_test")
                 .Options;
 
             user = new User
@@ -82,6 +91,20 @@ namespace DatabaseServiceTests.Repositories
                 PasswordHash = passwordHash
             };
 
+            userAvatar = new UserAvatar
+            {
+                Id = userId,
+                TypeAvatar = typeAvatar,
+                Avatar = avatar
+            };
+
+            dbUserAvatar = new DbUserAvatar
+            {
+                Id = userId,
+                TypeAvatar = typeAvatar,
+                Avatar = avatar
+            };
+
             mapper = new Mock<IUserMapper>();
 
             mapper
@@ -91,6 +114,10 @@ namespace DatabaseServiceTests.Repositories
             mapper
                 .Setup(m => m.MapToDbUser(user))
                 .Returns(dbUser);
+
+            mapper
+                .Setup(m => m.MapToDbUserAvatar(userAvatar))
+                .Returns(dbUserAvatar);
         }
 
         [Test]
@@ -123,6 +150,22 @@ namespace DatabaseServiceTests.Repositories
                 .UsersCredentials
                 .FirstOrDefaultAsync()
                 .Result);
+        }
+
+        [Test]
+        public void CreateUserAvatar()
+        {
+            using var dbContext = new TPlatformDbContext(dbOptionsCreateAvatar);
+            repository = new UserRepository(mapper.Object, dbContext);
+            repository.CreateUserAvatar(userAvatar);
+
+            Assert.AreEqual(1, dbContext.UserAvatars.CountAsync().Result);
+            Assert.AreEqual(
+                dbUserAvatar,
+                dbContext
+                    .UserAvatars
+                    .FirstOrDefaultAsync()
+                    .Result);
         }
     }
 }
