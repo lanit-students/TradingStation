@@ -29,6 +29,16 @@ namespace DataBaseService.Mappers
             };
         }
 
+        public DbUserAvatar MapToDbUserAvatar(UserAvatar userAvatar)
+        {
+            return new DbUserAvatar
+            {
+                Id = user.Id,
+                Avatar = user.Avatar,
+                TypeAvatar = user.TypeAvatar
+            };
+        }
+
         public User MapUser(DbUser dbUser, string email)
         {
             return new User
@@ -50,6 +60,16 @@ namespace DataBaseService.Mappers
                 UserId = dbUserCredential.UserId,
                 Email = dbUserCredential.Email,
                 PasswordHash = dbUserCredential.PasswordHash
+            };
+        }
+
+        public UserAvatar MapUserAvatar(DbUserAvatar userAvatar)
+        {
+            return new UserAvatar
+            {
+                Id = user.Id,
+                Avatar = user.Avatar,
+                TypeAvatar = user.TypeAvatar
             };
         }
     }

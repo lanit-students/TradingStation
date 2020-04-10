@@ -19,6 +19,7 @@ namespace DataBaseService.BrokerConsumers
         private OperationResult CreateUser(InternalCreateUserRequest request)
         {
             userRepository.CreateUser(request.User, request.Credential.Email);
+            userRepository.CreateUserAvatar(request.UserAvatar);
             userRepository.CreateUserCredential(request.Credential);
 
             return new OperationResult

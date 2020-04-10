@@ -37,6 +37,13 @@ namespace DataBaseService.Repositories
             dbContext.SaveChanges();
         }
 
+        public void CreateUserAvatar(UserAvatar userAvatar)
+        {
+            if (userAvatar == null) return;
+            dbContext.UserAvatars.Add(mapper.MapToDbUserAvatar(userAvatar));
+            dbContext.SaveChanges();
+        }
+
         public UserCredential GetUserCredential(string email)
         {
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);

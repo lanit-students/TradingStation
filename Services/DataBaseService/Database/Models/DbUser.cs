@@ -8,12 +8,13 @@ namespace DataBaseService.Database.Models
     public class DbUser
     {
         public Guid Id { get; set; }
+        public Guid UserAvatarId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
 
         [ForeignKey("UserAvatarId")]
-        public Guid UserAvatarId { get; set; }
+        public DbUserAvatar UserAvatar { get; set; }
 
     }
 
@@ -40,6 +41,9 @@ namespace DataBaseService.Database.Models
                 .Property(p => p.Birthday)
                 .HasColumnName("Birthday")
                 .IsRequired();
+            builder
+                .HasIndex(p => p.Id)
+                .IsUnique();
             builder
                 .Property(p => p.UserAvatarId)
                 .HasColumnName("UserAvatarId");
