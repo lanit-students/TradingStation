@@ -10,9 +10,11 @@ namespace BrokerServices.Utils
     {
         internal static IBroker Create(BankType bankType)
         {
-            var brokerData = new CreateBrokerData();
-            brokerData.Depth = Constants.Depth;
-            brokerData.Token = Constants.Token;
+            var brokerData = new CreateBrokerData
+            {
+                Depth = Constants.Depth,
+                Token = Constants.Token
+            };   
             if (bankType == BankType.TinkoffBank) return new TinkoffBankBroker(brokerData);
             throw new BadRequestException("We can't do it with this bank.");
         }

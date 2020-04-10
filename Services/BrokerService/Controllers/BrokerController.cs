@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BrokerService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class BrokerController : ControllerBase
     {
