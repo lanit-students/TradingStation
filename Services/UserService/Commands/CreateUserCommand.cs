@@ -76,7 +76,6 @@ namespace UserService.Commands
                 PasswordHash = passwordHash
             };
             
-
             var internalCreateUserRequest = new InternalCreateUserRequest
             {
                 User = user,
