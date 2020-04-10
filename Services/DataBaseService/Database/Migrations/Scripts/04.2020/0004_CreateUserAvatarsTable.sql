@@ -1,4 +1,4 @@
-﻿CREATE TABLE dbo.UserAvatars (
+﻿CREATE TABLE dbo.UsersAvatars (
 	[Id] UNIQUEIDENTIFIER NOT NULL UNIQUE,
 	Avatar VARBINARY(MAX) NOT NULL,
 	TypeAvatar NVARCHAR(20) NOT NULL,
@@ -8,10 +8,10 @@ GO
 ALTER TABLE dbo.Users ADD UserAvatarId UNIQUEIDENTIFIER
 GO
 ALTER TABLE dbo.Users ADD CONSTRAINT
-	FK_Users_UserAvatars FOREIGN KEY
+	FK_Users_UsersAvatars FOREIGN KEY
 	(
 	UserAvatarId
-	) REFERENCES dbo.UserAvatars
+	) REFERENCES dbo.UsersAvatars
 	(
 	Id
 	) ON UPDATE NO ACTION
