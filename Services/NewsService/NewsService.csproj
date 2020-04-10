@@ -8,6 +8,7 @@
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
     <ProjectReference Include="..\..\Common\Interfaces\Interfaces.csproj" />
     <ProjectReference Include="..\..\Integrations\CentralBankIntegrationLib\CentralBankIntegrationLib.csproj" />
+    <ProjectReference Include="..\..\Integrations\RssIntegrationLib\RssIntegrationLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

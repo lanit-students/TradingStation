@@ -1,23 +1,21 @@
 ﻿using System;
-
-using NUnit.Framework;
-
 using Interfaces;
-using CBIntegration;
-using DTO.NewsRequests;
+using NewsService.Enums;
 using NewsService.Utils;
+using NUnit.Framework;
+using RssIntegrationLib;
 
 namespace NewsServiceTests.Utils
 {
     public class NewsPublisherFactoryTests
     {
-        private NewsPublisherTypes centralBankNewsPublisherType = NewsPublisherTypes.CentralBank;
-        private INewsPublisher centralBankNewsPublisher;
+        private NewsPublisherTypes ramblerType = NewsPublisherTypes.Rambler;
+        private INewsPublisher ramblerNewsPublisher;
 
         [SetUp]
         public void Initialize()
         {
-            centralBankNewsPublisher = new RussianCBInfo();
+            ramblerNewsPublisher = new RamblerRssReader();
         }
 
         [Test]
@@ -30,11 +28,11 @@ namespace NewsServiceTests.Utils
         }
 
         [Test]
-        public void CreateCentralBankNewsPublisherResultHasCorrectType()
+        public void CreateRamblerNewsPublisherResultHasCorrectType()
         {
-            var typeOfCreatedObject = NewsPublisherFactory.Create(centralBankNewsPublisherType).GetType();
+            var typeOfCreatedObject = NewsPublisherFactory.Create(ramblerType).GetType();
 
-            Assert.AreEqual(typeOfCreatedObject, centralBankNewsPublisher.GetType());
+            Assert.AreEqual(typeOfCreatedObject, ramblerNewsPublisher.GetType());
         }
     }
 }
