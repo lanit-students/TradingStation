@@ -1,3 +1,4 @@
+
 using Blazored.Modal;
 using Blazored.SessionStorage;
 using GUI.Authentication;
@@ -32,7 +33,6 @@ namespace GUI
             services.AddScoped<AuthStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(
                     provider => provider.GetRequiredService<AuthStateProvider>());
-
             services.AddServerSideBlazor().AddHubOptions(o =>
             {
                 o.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB

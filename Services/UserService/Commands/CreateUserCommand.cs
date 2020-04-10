@@ -39,28 +39,17 @@ namespace UserService.Commands
             validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
-            User user;
+            User user = new User
+            {
+                Id = Guid.NewGuid(),
+                Birthday = request.Birthday,
+                FirstName = request.FirstName,
+                LastName = request.LastName
+            };
             UserAvatar userAvatar = null;
-            if (request.Avatar.Length == 0)
+            if (request.Avatar != null && request.AvatarType != null)
             {
-                user = new User
-                {
-                    Id = Guid.NewGuid(),
-                    Birthday = request.Birthday,
-                    FirstName = request.FirstName,
-                    LastName = request.LastName
-                };
-            }
-            else
-            {
-                user = new User
-                {
-                    Id = Guid.NewGuid(),
-                    UserAvatarId = Guid.NewGuid(),
-                    Birthday = request.Birthday,
-                    FirstName = request.FirstName,
-                    LastName = request.LastName
-                };
+                user.UserAvatarId = Guid.NewGuid();
                 userAvatar = new UserAvatar
                 {
                     Id = user.UserAvatarId,

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
+using GUI.ViewModels;
 using Microsoft.AspNetCore.Components;
 
 namespace GUI.Components
@@ -73,10 +75,7 @@ namespace GUI.Components
             ActiveStep = step ?? throw new ArgumentNullException(nameof(step));
 
             ActiveStepIx = StepsIndex(step);
-            if (ActiveStepIx == Steps.Count - 1)
-                IsLastStep = true;
-            else
-                IsLastStep = false;
+            IsLastStep = ActiveStepIx == Steps.Count - 1;
         }
 
         /// <summary>
