@@ -67,7 +67,9 @@
                 LastName = userInput.LastName,
                 Birthday = userInput.Birthday,
                 Email = userInput.Email,
-                Password = userInput.Password
+                Password = userInput.Password,
+                AvatarType = userInput.TypeAvatar,
+                Avatar = userInput.Avatar
             };
 
             await SignUpper.SignUp(request);
