@@ -1,8 +1,7 @@
-﻿namespace DTO.NewsRequests
+﻿namespace NewsService.Enums
 {
     public enum NewsPublisherTypes
     {
-        CentralBank
+        Rambler
     }
 }
-
