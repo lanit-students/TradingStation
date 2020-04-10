@@ -13,7 +13,8 @@ namespace DataBaseService.Mappers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Birthday = user.Birthday
+                Birthday = user.Birthday,
+                UserAvatarId = user.UserAvatarId
             };
         }
 
@@ -36,7 +37,8 @@ namespace DataBaseService.Mappers
                 Email = email,
                 FirstName = dbUser.FirstName,
                 LastName = dbUser.LastName,
-                Birthday = dbUser.Birthday
+                Birthday = dbUser.Birthday,
+                UserAvatarId = dbUser.UserAvatarId
             };
         }
 
