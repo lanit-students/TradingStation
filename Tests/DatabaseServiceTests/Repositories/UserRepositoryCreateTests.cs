@@ -40,7 +40,7 @@ namespace DatabaseServiceTests.Repositories
         private UserCredential credential;
         private DbUserCredential dbCredential;
         private UserAvatar userAvatar;
-        private DbUserAvatar dbUserAvatar;
+        private DbUsersAvatars dbUserAvatar;
         #endregion
 
         [OneTimeSetUp]
@@ -98,7 +98,7 @@ namespace DatabaseServiceTests.Repositories
                 Avatar = avatar
             };
 
-            dbUserAvatar = new DbUserAvatar
+            dbUserAvatar = new DbUsersAvatars
             {
                 Id = userId,
                 TypeAvatar = typeAvatar,

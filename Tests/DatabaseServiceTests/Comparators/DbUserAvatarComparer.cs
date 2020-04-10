@@ -6,9 +6,9 @@ using DataBaseService.Database.Models;
 
 namespace DatabaseServiceTests.Comparators
 {
-    class DbUserAvatarComparer : EqualityComparer<DbUserAvatar>
+    class DbUserAvatarComparer : EqualityComparer<DbUsersAvatars>
     {
-        public override bool Equals([AllowNull] DbUserAvatar x, [AllowNull] DbUserAvatar y)
+        public override bool Equals([AllowNull] DbUsersAvatars x, [AllowNull] DbUsersAvatars y)
         {
             if (x == null && y == null)
                 return true;
@@ -24,7 +24,7 @@ namespace DatabaseServiceTests.Comparators
                 return false;
         }
 
-        public override int GetHashCode([DisallowNull] DbUserAvatar obj)
+        public override int GetHashCode([DisallowNull] DbUsersAvatars obj)
         {
             return (obj.Id.ToString()
                     + obj.Avatar

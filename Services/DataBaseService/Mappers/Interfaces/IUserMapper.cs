@@ -9,9 +9,9 @@ namespace DataBaseService.Mappers.Interfaces
 
         DbUser MapToDbUser(User user);
 
-        UserAvatar MapUserAvatar(DbUserAvatar userAvatar);
+        UserAvatar MapUserAvatar(DbUsersAvatars userAvatar);
 
-        DbUserAvatar MapToDbUserAvatar(UserAvatar userAvatar);
+        DbUsersAvatars MapToDbUserAvatar(UserAvatar userAvatar);
         
         UserCredential MapUserCredential(DbUserCredential dbUserCredential);
 

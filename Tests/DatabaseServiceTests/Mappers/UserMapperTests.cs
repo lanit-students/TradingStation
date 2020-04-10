@@ -33,7 +33,7 @@ namespace DatabaseServiceTests.Mappers
         private UserCredential credential;
         private DbUserCredential dbCredential;
         private UserAvatar userAvatar;
-        private DbUserAvatar dbUserAvatar;
+        private DbUsersAvatars dbUserAvatar;
 
         private UserComparer userComparer = new UserComparer();
         private DbUserComparer dbUserComparer = new DbUserComparer();
@@ -87,7 +87,7 @@ namespace DatabaseServiceTests.Mappers
                 TypeAvatar = typeAvatar
             };
 
-            dbUserAvatar = new DbUserAvatar()
+            dbUserAvatar = new DbUsersAvatars()
             {
                 Id = credentialId,
                 Avatar = avatar,

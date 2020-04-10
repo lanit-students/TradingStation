@@ -14,7 +14,7 @@ namespace DataBaseService.Database.Models
         public DateTime Birthday { get; set; }
 
         [ForeignKey("UserAvatarId")]
-        public DbUserAvatar UserAvatar { get; set; }
+        public DbUsersAvatars UserAvatar { get; set; }
 
     }
 

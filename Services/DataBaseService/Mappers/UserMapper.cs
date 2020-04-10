@@ -29,9 +29,9 @@ namespace DataBaseService.Mappers
             };
         }
 
-        public DbUserAvatar MapToDbUserAvatar(UserAvatar userAvatar)
+        public DbUsersAvatars MapToDbUserAvatar(UserAvatar userAvatar)
         {
-            return new DbUserAvatar
+            return new DbUsersAvatars
             {
                 Id = userAvatar.Id,
                 Avatar = userAvatar.Avatar,
@@ -63,7 +63,7 @@ namespace DataBaseService.Mappers
             };
         }
 
-        public UserAvatar MapUserAvatar(DbUserAvatar userAvatar)
+        public UserAvatar MapUserAvatar(DbUsersAvatars userAvatar)
         {
             return new UserAvatar
             {

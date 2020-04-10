@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataBaseService.Database.Models
 {
-    public class DbUserAvatar
+    public class DbUsersAvatars
     {
         public Guid Id { get; set; }
         public byte[] Avatar { get; set; }
         public string TypeAvatar { get; set; }
     }
 
-    public class DbUserAvatarConfiguration : IEntityTypeConfiguration<DbUserAvatar>
+    public class DbUserAvatarConfiguration : IEntityTypeConfiguration<DbUsersAvatars>
     {
-        public void Configure(EntityTypeBuilder<DbUserAvatar> builder)
+        public void Configure(EntityTypeBuilder<DbUsersAvatars> builder)
         {
             builder
                 .ToTable("UserAvatars")
