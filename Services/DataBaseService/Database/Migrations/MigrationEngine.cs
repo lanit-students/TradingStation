@@ -160,7 +160,7 @@ namespace DataBaseService.Utils
         private void CreateDatabase(string connectionString)
         {
             var createDbScript = "IF DB_ID('TradingStation') IS NULL CREATE DATABASE [TradingStation];";
-            var createLogDbScript = "IF DB_ID('LogsDataBase') IS NULL CREATE DATABASE [LogsDataBase];";
+            var createLogDbScript = "IF DB_ID('TradingStationLogs') IS NULL CREATE DATABASE [TradingStationLogs];";
 
             try
             {
@@ -203,7 +203,7 @@ namespace DataBaseService.Utils
             }
 
             var createLogsTableScript = new StringBuilder();
-            createLogsTableScript.AppendLine("USE [LogsDataBase]; ");
+            createLogsTableScript.AppendLine("USE [TradingStationLogs]; ");
             createLogsTableScript.AppendLine("CREATE TABLE [dbo].[_Logs] ");
             createLogsTableScript.AppendLine("([Id] [uniqueidentifier] NOT NULL, ");
             createLogsTableScript.AppendLine("[Type] [nvarchar](50) NOT NULL, ");
