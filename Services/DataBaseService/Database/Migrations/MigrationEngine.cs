@@ -160,14 +160,17 @@ namespace DataBaseService.Utils
         private void CreateDatabase(string connectionString)
         {
             var createDbScript = "IF DB_ID('TradingStation') IS NULL CREATE DATABASE [TradingStation];";
+            var createLogDbScript = "IF DB_ID('TradingStationLogs') IS NULL CREATE DATABASE [TradingStationLogs];";
 
             try
             {
                 using var conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                using var command = new SqlCommand(createDbScript, conn);
-                command.ExecuteNonQuery();
+                using var commandFirst = new SqlCommand(createDbScript, conn);
+                using var commandSecond = new SqlCommand(createLogDbScript, conn);
+                commandFirst.ExecuteNonQuery();
+                commandSecond.ExecuteNonQuery();
             }
             catch
             {
@@ -192,6 +195,30 @@ namespace DataBaseService.Utils
                 conn.Open();
 
                 using var command = new SqlCommand(createTableScript.ToString(), conn);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exc)
+            {
+                throw new InternalServerException("Can't execute migration scripts.", exc);
+            }
+
+            var createLogsTableScript = new StringBuilder();
+            createLogsTableScript.AppendLine("USE [TradingStationLogs]; ");
+            createLogsTableScript.AppendLine("CREATE TABLE [dbo].[_Logs] ");
+            createLogsTableScript.AppendLine("([Id] [uniqueidentifier] NOT NULL, ");
+            createLogsTableScript.AppendLine("[Type] [nvarchar](50) NOT NULL, ");
+            createLogsTableScript.AppendLine("[Time] [datetime] NOT NULL, ");
+            createLogsTableScript.AppendLine("[Message] [nvarchar](max) NOT NULL, ");
+            createLogsTableScript.AppendLine("[ServiceName] [nvarchar](50) NOT NULL, ");
+            createLogsTableScript.AppendLine("[ParentId] [uniqueidentifier] NULL, ");
+            createLogsTableScript.AppendLine("CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED(Id));");
+
+            try
+            {
+                using var conn = new SqlConnection(connectionString);
+                conn.Open();
+
+                using var command = new SqlCommand(createLogsTableScript.ToString(), conn);
                 command.ExecuteNonQuery();
             }
             catch (Exception exc)
