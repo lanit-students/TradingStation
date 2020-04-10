@@ -160,14 +160,17 @@ namespace DataBaseService.Utils
         private void CreateDatabase(string connectionString)
         {
             var createDbScript = "IF DB_ID('TradingStation') IS NULL CREATE DATABASE [TradingStation];";
+            var createLogDbScript = "IF DB_ID('LogsDataBase') IS NULL CREATE DATABASE [LogsDataBase];";
 
             try
             {
                 using var conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                using var command = new SqlCommand(createDbScript, conn);
-                command.ExecuteNonQuery();
+                using var commandFirst = new SqlCommand(createDbScript, conn);
+                using var commandSecond = new SqlCommand(createLogDbScript, conn);
+                commandFirst.ExecuteNonQuery();
+                commandSecond.ExecuteNonQuery();
             }
             catch
             {
