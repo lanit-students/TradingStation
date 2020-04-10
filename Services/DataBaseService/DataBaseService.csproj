@@ -8,14 +8,14 @@
     <None Remove="Database\Migrations\Scripts\04.2020\0001_CreateUsersTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0002_CreateUsersCredentialsTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
-    <None Remove="Database\Migrations\Scripts\04.2020\0004_CreateUserAvatarsTable.sql" />
+    <None Remove="Database\Migrations\Scripts\04.2020\0004_CreateUsersAvatarsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0002_CreateUsersCredentialsTable.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0001_CreateUsersTable.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
-    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0004_CreateUserAvatarsTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0004_CreateUsersAvatarsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
