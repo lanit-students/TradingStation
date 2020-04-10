@@ -204,6 +204,7 @@ namespace DataBaseService.Utils
 
             var createLogsTableScript = new StringBuilder();
             createLogsTableScript.AppendLine("USE [TradingStationLogs]; ");
+            createLogsTableScript.AppendLine($"IF OBJECT_ID('dbo.[_Logs]', 'U') IS NULL ");
             createLogsTableScript.AppendLine("CREATE TABLE [dbo].[_Logs] ");
             createLogsTableScript.AppendLine("([Id] [uniqueidentifier] NOT NULL, ");
             createLogsTableScript.AppendLine("[Type] [nvarchar](50) NOT NULL, ");
