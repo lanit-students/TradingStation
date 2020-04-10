@@ -1,9 +1,10 @@
 ﻿using System;
 
 using Interfaces;
-using DTO.NewsRequests;
 
-using CBIntegration;
+using RssIntegrationLib;
+using NewsService.Enums;
+using Kernel.CustomExceptions;
 
 namespace NewsService.Utils
 {
@@ -13,14 +14,12 @@ namespace NewsService.Utils
 
         public static INewsPublisher Create(NewsPublisherTypes newsPublisherType)
         {
-            switch (newsPublisherType)
-            {
-                case NewsPublisherTypes.CentralBank:
-                    return new RussianCBInfo();
-                default:
-                    //TODO change on custom exception
-                        throw new NotImplementedException();
-            }
+            return newsPublisherType switch {
+                NewsPublisherTypes.Rambler =>
+                    new RamblerRssReader(),
+                _ =>
+                    throw new BadRequestException("Invalid news publisher type.")
+            };
         }
     }
 }

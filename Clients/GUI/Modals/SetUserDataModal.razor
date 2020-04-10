@@ -20,6 +20,8 @@
 </EditForm>
 
 @code {
+    // TODO decide if we need this
+
     [Parameter]
     public Guid userId { get; set; }
     [CascadingParameter]
@@ -32,19 +34,19 @@
 
     private void SaveDataClickHandler()
     {
-        var userInfo = new DTO.User(); // TODO return logic user.Name, user.Surname, user.DateOfBirth);
+        var userInfo = new DTO.User();
 
-        // This is in process (user/edit endpoint is another team's task)
         try
         {
             //UserEditor.EditUser(userId, userInfo);
             BlazoredModal.Close(ModalResult.Ok(user));
         }
-        // This must be changed to a custom exception later
-        catch (Exception)
+        catch (Exception e) when (
+            e is ForbiddenException ||
+            e is NotFoundException ||
+            e is ValidationException)
         {
-            // This will be changed to real error message
-            ErrorMessage = "error";
+            ErrorMessage = e.Message;
             ErrorOccured = true;
         }
     }
