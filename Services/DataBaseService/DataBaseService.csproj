@@ -8,7 +8,6 @@
     <None Remove="Database\Migrations\Scripts\04.2020\0001_CreateUsersTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0002_CreateUsersCredentialsTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
-    <None Remove="Database\Migrations\Scripts\04.2020\0004_CreateLogsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +34,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
     <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0004_CreateLogsTable.sql" />
   </ItemGroup>
 
 </Project>
