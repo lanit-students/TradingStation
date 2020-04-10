@@ -1,0 +1,100 @@
+﻿@page "/signupwiz"
+@using GUI.Components
+@using GUI.Scripts
+@using GUI.ViewModels
+@inject NavigationManager NavigationManager
+
+<Wizard Id="DemoWizard">
+    <WizardStep Name="First Step">
+        <EditForm Model="@userInput" OnValidSubmit="@TrySignUp">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label for="Name">Name:</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.FirstName" placeholder="Your name" />
+            </div>
+            <div class="form-group">
+                <label for="Surname">Surname:</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.LastName" placeholder="Your surname" />
+            </div>
+            <div class="form-group">
+                <label for="Birthday">Birthday:</label>
+                <InputDate class="form-control col-3" @bind-Value="userInput.Birthday" />
+            </div>
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+            </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.Password" placeholder="*****" />
+            </div>
+
+            <div class="form-group">
+                <label for="ConfirmPassword">Confirm Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+            </div>
+            <br />
+
+            <ValidationSummary />
+            @if (isErrorDisplayed)
+            {
+                <label style=" color: red;"> @errorMessage </label>
+                <br />
+            }
+
+
+        </EditForm>
+    </WizardStep>
+    <WizardStep Name="Second Step">
+        <div class="row">
+            <p>Wow, you've reached the second step!</p>
+        </div>
+    </WizardStep>
+</Wizard>
+
+@code {
+    bool isErrorDisplayed = false;
+    string errorMessage = "";
+    private SignUpViewModel userInput;
+
+    public async Task TrySignUp()
+    {
+        try
+        {
+            var request = new CreateUserRequest
+            {
+                FirstName = userInput.FirstName,
+                LastName = userInput.LastName,
+                Birthday = userInput.Birthday,
+                Email = userInput.Email,
+                Password = userInput.Password
+            };
+
+            await SignUpper.SignUp(request);
+            NavigationManager.NavigateTo("/signin");
+        }
+        catch (BadRequestException)
+        {
+            userInput = new SignUpViewModel();
+            isErrorDisplayed = true;
+            errorMessage = "Something went wrong during registration";
+        }
+        catch (NotFoundException)
+        {
+            userInput = new SignUpViewModel();
+            isErrorDisplayed = true;
+            errorMessage = "Something went wrong during signing you in";
+        }
+        catch (Exception e)
+        {
+            userInput = new SignUpViewModel();
+            isErrorDisplayed = true;
+            errorMessage = e.Message;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        userInput = new SignUpViewModel();
+    }
+}

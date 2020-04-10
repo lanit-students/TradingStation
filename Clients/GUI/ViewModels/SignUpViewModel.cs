@@ -12,6 +12,7 @@ namespace GUI.ViewModels
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Surname is required")]
+        [StringLength(32, ErrorMessage = "LastName is too long.")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Date of birth is required")]
@@ -29,7 +30,7 @@ namespace GUI.ViewModels
 
         public SignUpViewModel()
         {
-            Birthday = DateTime.Today;
+            Birthday = DateTime.Today.AddYears(-18);
         }
     }
 }
