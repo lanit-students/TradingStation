@@ -39,15 +39,35 @@ namespace UserService.Commands
             validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
-
-            var user = new User
+            User user;
+            UserAvatar userAvatar = null;
+            if (request.Avatar.Length == 0)
             {
-                Id = Guid.NewGuid(),
-                Birthday = request.Birthday,
-                FirstName = request.FirstName,
-                LastName = request.LastName
-            };
-
+                user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    Birthday = request.Birthday,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName
+                };
+            }
+            else
+            {
+                user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    UserAvatarId = Guid.NewGuid(),
+                    Birthday = request.Birthday,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName
+                };
+                userAvatar = new UserAvatar
+                {
+                    Id = user.UserAvatarId,
+                    Avatar = request.Avatar,
+                    TypeAvatar = request.AvatarType
+                };
+            }
             var credential = new UserCredential
             {
                 Id = Guid.NewGuid(),
@@ -55,11 +75,13 @@ namespace UserService.Commands
                 Email = request.Email,
                 PasswordHash = passwordHash
             };
+            
 
             var internalCreateUserRequest = new InternalCreateUserRequest
             {
                 User = user,
-                Credential = credential
+                Credential = credential,
+                UserAvatar = userAvatar
             };
 
             var createUserResult = await CreateUser(internalCreateUserRequest);
