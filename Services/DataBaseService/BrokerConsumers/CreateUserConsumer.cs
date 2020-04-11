@@ -19,16 +19,12 @@ namespace DataBaseService.BrokerConsumers
 
         private OperationResult CreateUser(InternalCreateUserRequest request)
         {
-            
-            if (request.UserAvatar == null)
-            {
-                request.User.UserAvatarId = Guid.Parse("6FF619FF-8B86-D011-B42D-00C04FC964FF");
-            }
-            else
+            userRepository.CreateUser(request.User, request.Credential.Email);
+            if (request.UserAvatar != null)
             {
                 userRepository.CreateUserAvatar(request.UserAvatar);
             }
-            userRepository.CreateUser(request.User, request.Credential.Email);
+
             userRepository.CreateUserCredential(request.Credential);
 
             return new OperationResult

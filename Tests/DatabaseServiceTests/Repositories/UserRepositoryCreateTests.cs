@@ -32,7 +32,7 @@ namespace DatabaseServiceTests.Repositories
         private string email = "adam.ya@eden.org";
         private DateTime birth = DateTime.MinValue;
         private string passwordHash = "passwordHash";
-        private string typeAvatar = "jpeg";
+        private string avatarExtension = "jpeg";
         private byte[] avatar = { 0, 0, 0, 25 };
 
         private User user;
@@ -94,14 +94,14 @@ namespace DatabaseServiceTests.Repositories
             userAvatar = new UserAvatar
             {
                 Id = userId,
-                TypeAvatar = typeAvatar,
+                AvatarExtension = avatarExtension,
                 Avatar = avatar
             };
 
             dbUserAvatar = new DbUsersAvatars
             {
                 Id = userId,
-                TypeAvatar = typeAvatar,
+                AvatarExtension = avatarExtension,
                 Avatar = avatar
             };
 
@@ -159,11 +159,11 @@ namespace DatabaseServiceTests.Repositories
             repository = new UserRepository(mapper.Object, dbContext);
             repository.CreateUserAvatar(userAvatar);
 
-            Assert.AreEqual(1, dbContext.UserAvatars.CountAsync().Result);
+            Assert.AreEqual(1, dbContext.UsersAvatars.CountAsync().Result);
             Assert.AreEqual(
                 dbUserAvatar,
                 dbContext
-                    .UserAvatars
+                    .UsersAvatars
                     .FirstOrDefaultAsync()
                     .Result);
         }

@@ -18,7 +18,8 @@ namespace DatabaseServiceTests.Comparators
             if (
                 x.Id == y.Id
                 && x.Avatar == y.Avatar
-                && String.CompareOrdinal(x.TypeAvatar, y.TypeAvatar) == 0)
+                && x.UserId == y.UserId
+                && String.CompareOrdinal(x.AvatarExtension, y.AvatarExtension) == 0)
                 return true;
             else
                 return false;
@@ -27,8 +28,9 @@ namespace DatabaseServiceTests.Comparators
         public override int GetHashCode([DisallowNull] DbUsersAvatars obj)
         {
             return (obj.Id.ToString()
+                    + obj.UserId
                     + obj.Avatar
-                    + obj.TypeAvatar
+                    + obj.AvatarExtension
                     + obj.GetType().ToString()).
                 GetHashCode();
         }

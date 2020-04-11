@@ -84,14 +84,16 @@ namespace DatabaseServiceTests.Mappers
             {
                 Id = credentialId,
                 Avatar = avatar,
-                TypeAvatar = typeAvatar
+                AvatarExtension = typeAvatar,
+                UserId = userId
             };
 
             dbUserAvatar = new DbUsersAvatars()
             {
                 Id = credentialId,
                 Avatar = avatar,
-                TypeAvatar = typeAvatar
+                AvatarExtension = typeAvatar,
+                UserId = userId
             };
         }
 

@@ -45,18 +45,19 @@ namespace UserService.Commands
                 Birthday = request.Birthday,
                 FirstName = request.FirstName,
                 LastName = request.LastName
-        };
+            };
             UserAvatar userAvatar = null;
-            if (request.Avatar != null && request.AvatarType != null)
+            if (request.Avatar != null && request.AvatarExtension != null)
             {
-                user.UserAvatarId = new Guid();
                 userAvatar = new UserAvatar
                 {
-                    Id = user.UserAvatarId,
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
                     Avatar = request.Avatar,
-                    TypeAvatar = request.AvatarType
+                    AvatarExtension = request.AvatarExtension
                 };
             }
+
             var credential = new UserCredential
             {
                 Id = Guid.NewGuid(),
@@ -64,7 +65,7 @@ namespace UserService.Commands
                 Email = request.Email,
                 PasswordHash = passwordHash
             };
-            
+
             var internalCreateUserRequest = new InternalCreateUserRequest
             {
                 User = user,

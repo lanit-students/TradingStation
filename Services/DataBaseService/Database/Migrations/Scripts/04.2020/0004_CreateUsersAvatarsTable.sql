@@ -1,28 +1,18 @@
 ﻿CREATE TABLE dbo.UsersAvatars (
 	[Id] UNIQUEIDENTIFIER UNIQUE NOT NULL,
-	Avatar VARBINARY(MAX) NOT NULL,
-	TypeAvatar NVARCHAR(20) NOT NULL,
-	CONSTRAINT [PK_UserAvatars] PRIMARY KEY ([Id] ASC)
+	[Avatar] VARBINARY(MAX) NOT NULL,
+	[AvatarExtension] NVARCHAR(20) NOT NULL,
+	[UserId]        UNIQUEIDENTIFIER NOT NULL,
+	CONSTRAINT [PK_UsersAvatars] PRIMARY KEY ([Id] ASC)
 )
 GO
-ALTER TABLE dbo.Users ADD UserAvatarId UNIQUEIDENTIFIER
-GO
-ALTER TABLE dbo.Users ADD CONSTRAINT
-	FK_Users_UsersAvatars FOREIGN KEY 
+ALTER TABLE dbo.UsersAvatars ADD CONSTRAINT
+	FK_UsersAvatars_Users FOREIGN KEY 
 	(
-	UserAvatarId 
-	) REFERENCES dbo.UsersAvatars 
+	UserId 
+	) REFERENCES dbo.Users 
 	(
 	Id
 	) ON UPDATE NO ACTION
 	ON DELETE NO ACTION
 GO
-
-INSERT INTO [dbo].[UsersAvatars]
-           ([Id]
-           ,[Avatar]
-           ,[TypeAvatar])
-     VALUES
-           ('6FF619FF-8B86-D011-B42D-00C04FC964FF'
-           ,0
-           ,'')

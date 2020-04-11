@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,8 +8,12 @@ namespace DataBaseService.Database.Models
     public class DbUsersAvatars
     {
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public byte[] Avatar { get; set; }
-        public string TypeAvatar { get; set; }
+        public string AvatarExtension { get; set; }
+
+        [ForeignKey("UserId")]
+        public DbUser User { get; set; }
     }
 
     public class DbUserAvatarConfiguration : IEntityTypeConfiguration<DbUsersAvatars>
@@ -30,8 +35,12 @@ namespace DataBaseService.Database.Models
                 .HasColumnName("Avatar")
                 .IsRequired();
             builder
-                .Property(p => p.TypeAvatar)
-                .HasColumnName("TypeAvatar")
+                .Property(p => p.AvatarExtension)
+                .HasColumnName("AvatarExtension")
+                .IsRequired();
+            builder
+                .Property(p => p.UserId)
+                .HasColumnName("UserId")
                 .IsRequired();
         }
     }
