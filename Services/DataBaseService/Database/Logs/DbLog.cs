@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.Database.Models
 {
-    public class DbLogs
+    public class DbLog
     {
         public Guid Id { get; set; }
         public Guid ParentId { get; set; }
@@ -17,9 +17,9 @@ namespace DataBaseService.Database.Models
         public string ServiceName { get; set; }
     }
 
-    public class DbLogsConfiguration : IEntityTypeConfiguration<DbLogs>
+    public class DbLogsConfiguration : IEntityTypeConfiguration<DbLog>
     {
-        public void Configure(EntityTypeBuilder<DbLogs> builder)
+        public void Configure(EntityTypeBuilder<DbLog> builder)
         {
             builder
                 .ToTable("_Logs")

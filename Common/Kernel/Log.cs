@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Kernel
 {
-    class Logs
+    public class Log
     {
         public Guid Id { get; set; }
         public Guid ParentId { get; set; }
