@@ -8,7 +8,7 @@ namespace DataBaseService.Database
 {
     public class TPlatformLogsDbContext : DbContext
     {
-        public DbSet<DbLogs> Logs { get; set; }
+        public DbSet<DbLog> Logs { get; set; }
 
         public TPlatformLogsDbContext(DbContextOptions<TPlatformLogsDbContext> options) : base(options) { }
 
