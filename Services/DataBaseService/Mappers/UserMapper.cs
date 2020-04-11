@@ -13,7 +13,7 @@ namespace DataBaseService.Mappers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Birthday = user.Birthday,
+                Birthday = user.Birthday
             };
         }
 

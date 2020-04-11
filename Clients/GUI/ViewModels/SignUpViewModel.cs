@@ -11,13 +11,13 @@ namespace GUI.ViewModels
     public class SignUpViewModel
     {
         [Required(ErrorMessage = "Name is required")]
-        [StringLength(32, ErrorMessage = "First name is too long.")]
-        [NameValidation]
+        [StringLength(32, ErrorMessage = "Name is too long.")]
+        [NameValidation("Name")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Surname is required")]
-        [StringLength(32, ErrorMessage = "Last name is too long.")]
-        [NameValidation]
+        [StringLength(32, ErrorMessage = "Surname is too long.")]
+        [NameValidation("Surname")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Date of birth is required")]

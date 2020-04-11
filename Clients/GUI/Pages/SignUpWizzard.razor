@@ -1,71 +1,73 @@
 ﻿@page "/signup"
-@using System.IO
 @using GUI.Components
-@using GUI.Scripts
-@using GUI.ViewModels
 @inject NavigationManager NavigationManager
-<EditForm Model="@userInput" OnValidSubmit="@TrySignUp">
-        <Wizard Id="Wizard">
-            <WizardStep Name="First Step">
-                <DataAnnotationsValidator />
-                <div class="form-group">
-                    <label for="Name">Name:</label>
-                    <InputText class="form-control col-3" @bind-Value="userInput.FirstName" placeholder="Your name" />
-                </div>
-                <div class="form-group">
-                    <label for="Surname">Surname:</label>
-                    <InputText class="form-control col-3" @bind-Value="userInput.LastName" placeholder="Your surname" />
-                </div>
-                <div class="form-group">
-                    <label for="Birthday">Birthday:</label>
-                    <InputDate class="form-control col-3" @bind-Value="userInput.Birthday" />
-                </div>
-                <div class="form-group">
-                    <label for="Email">Email</label>
-                    <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
-                </div>
-                <div class="form-group">
-                    <label for="Password">Password</label>
-                    <InputText class="form-control col-3" type="password" @bind-Value="userInput.Password" placeholder="*****" />
-                </div>
+<EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
+    <Wizard Id="Wizard" HasError="@HasError">
+        <WizardStep Name="First Step">
+            <DataAnnotationsValidator />
+            <div class="form-group mt-5">
+                <label for="Name">Name:</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.FirstName" placeholder="Your name" />
+            </div>
+            <div class="form-group">
+                <label for="Surname">Surname:</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.LastName" placeholder="Your surname" />
+            </div>
+            <div class="form-group">
+                <label for="Birthday">Birthday:</label>
+                <InputDate class="form-control col-3" @bind-Value="userInput.Birthday" />
+            </div>
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+            </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.Password" placeholder="*****" />
+            </div>
 
-                <div class="form-group">
-                    <label for="ConfirmPassword">Confirm Password</label>
-                    <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
-                </div>
+            <div class="form-group">
+                <label for="ConfirmPassword">Confirm Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+            </div>
+            <br />
+
+            <ValidationSummary />
+            @if (isErrorDisplayed)
+            {
+                <label style=" color: red;"> @serverErrorMessages </label>
                 <br />
+            }
 
-                <ValidationSummary />
-                @if (isErrorDisplayed)
-                {
-                    <label style=" color: red;"> @errorMessage </label>
+        </WizardStep>
+        <WizardStep Name="Second Step">
+            <div class="row">
+                <div class="container m-5">
+                    <label>Send your avatar</label>
                     <br />
-                }
-
-            </WizardStep>
-            <WizardStep Name="Second Step">
-                <div class="row">
-                    <div class="container m-5">
-                        <label>Send your avatar</label>
+                    <InputFile OnChange="HandleSelection" />
+                    <br />
+                    @if (isErrorDisplayed)
+                    {
+                        <label style="color: red;"> @serverErrorMessages </label>
                         <br />
-                        <InputFile OnChange="HandleSelection" />
-                        <br />
-                        @if (isErrorDisplayed)
-                        {
-                            <label style="color: red;"> @errorMessage </label>
-                            <br />
-                        }
-                        <ValidationSummary />
-                    </div>
+                    }
                 </div>
-            </WizardStep>
-        </Wizard>
-    </EditForm>
+            </div>
+        </WizardStep>
+    </Wizard>
+</EditForm>
 
 @code {
     bool isErrorDisplayed = false;
-    string errorMessage = "";
+    string serverErrorMessages = "";
     private SignUpViewModel userInput;
+    private EditContext editContext;
+
+    private bool HasError()
+    {
+        return editContext.Validate();
+    }
 
     public async Task TrySignUp()
     {
@@ -87,27 +89,25 @@
         }
         catch (BadRequestException)
         {
-            userInput = new SignUpViewModel();
             isErrorDisplayed = true;
-            errorMessage = "Something went wrong during registration";
+            serverErrorMessages = "Something went wrong during registration";
         }
         catch (NotFoundException)
         {
-            userInput = new SignUpViewModel();
             isErrorDisplayed = true;
-            errorMessage = "Something went wrong during signing you in";
+            serverErrorMessages = "Something went wrong during signing you in";
         }
         catch (Exception e)
         {
-            userInput = new SignUpViewModel();
             isErrorDisplayed = true;
-            errorMessage = e.Message;
+            serverErrorMessages = e.Message;
         }
     }
 
     protected override void OnInitialized()
     {
         userInput = new SignUpViewModel();
+        editContext = new EditContext(userInput);
     }
 
     async Task HandleSelection(IFileListEntry[] files)

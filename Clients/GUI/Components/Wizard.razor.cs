@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GUI.Components
 {
@@ -19,6 +20,12 @@ namespace GUI.Components
         /// </summary>
         [Parameter]
         public string Id { get; set; }
+
+        /// <summary>
+        /// Function to check that there are no errors
+        /// </summary>
+        [Parameter]
+        public Func<bool> HasError { get; set; }
 
         /// <summary>
         /// The ChildContent container for <see cref="WizardStep"/>
@@ -47,7 +54,6 @@ namespace GUI.Components
         /// <summary>
         /// Sets the <see cref="ActiveStep"/> to the previous Index
         /// </summary>
-
         protected internal void GoBack()
         {
             if (ActiveStepIx > 0)
@@ -59,6 +65,7 @@ namespace GUI.Components
         /// </summary>
         protected internal void GoNext()
         {
+            if (!HasError()) return;
             if (ActiveStepIx < Steps.Count - 1)
                 SetActive(Steps[(Steps.IndexOf(ActiveStep) + 1)]);
         }
@@ -67,7 +74,6 @@ namespace GUI.Components
         /// Populates the <see cref="ActiveStep"/> the Sets the passed in <see cref="WizardStep"/> instance as the
         /// </summary>
         /// <param name="step">The WizardStep</param>
-
         protected internal void SetActive(WizardStep step)
         {
             ActiveStep = step ?? throw new ArgumentNullException(nameof(step));
@@ -82,6 +88,7 @@ namespace GUI.Components
         /// <param name="step">The WizardStep</param>
         /// <returns></returns>
         public int StepsIndex(WizardStep step) => StepsIndexInternal(step);
+
         protected int StepsIndexInternal(WizardStep step)
         {
             if (step == null)
@@ -89,6 +96,7 @@ namespace GUI.Components
 
             return Steps.IndexOf(step);
         }
+
         /// <summary>
         /// Adds a <see cref="WizardStep"/> to the WizardSteps list
         /// </summary>
