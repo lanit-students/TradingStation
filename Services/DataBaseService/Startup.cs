@@ -58,6 +58,13 @@ namespace DataBaseService
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
+                });
+
+                cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
                     ep.ConfigureConsumer<AddLogConsumer>(serviceProvider);
                 });
             });
@@ -87,15 +94,12 @@ namespace DataBaseService
             services.AddTransient<IUserMapper, UserMapper>();
             services.AddTransient<ILogMapper, LogMapper>();
 
-
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
-                x.AddConsumer<CreateUserConsumer>();
-                x.AddConsumer<LoginUserConsumer>();
-                x.AddConsumer<DeleteUserConsumer>();
-                x.AddConsumer<GetUserByIdConsumer>();
-                x.AddConsumer<EditUserConsumer>();
+
+                x.AddUserConsumers();
+
                 x.AddConsumer<AddLogConsumer>();
             });
 

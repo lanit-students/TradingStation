@@ -1,7 +1,6 @@
 ﻿using DataBaseService.Database;
 using DataBaseService.Database.Logs.Interfaces;
 using Kernel;
-using System;
 
 namespace DataBaseService.Repositories
 {
@@ -16,9 +15,9 @@ namespace DataBaseService.Repositories
             this.dbContext = dbContext;
         }
 
-        public void AddLogs(Log log)
+        public void Save(LogMessage log)
         {
-            dbContext.Logs.Add(mapper.MapToDbLog(log));
+            dbContext.Logs.Add(mapper.Map(log));
             dbContext.SaveChanges();
         }
     }

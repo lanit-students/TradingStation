@@ -1,5 +1,4 @@
 ﻿using DataBaseService.Database.Logs.Interfaces;
-using DTO;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class AddLogConsumer : IConsumer<Log>
+    public class AddLogConsumer : IConsumer<LogMessage>
     {
         private readonly ILogRepository logRepository;
 
@@ -16,21 +15,11 @@ namespace DataBaseService.BrokerConsumers
             this.logRepository = logRepository;
         }
 
-        private OperationResult AddLog(Log log)
+        public Task Consume(ConsumeContext<LogMessage> context)
         {
-            logRepository.AddLogs(log);
+            logRepository.Save(context.Message);
 
-            return new OperationResult
-            {
-                IsSuccess = true
-            };
-        }
-
-        public async Task Consume(ConsumeContext<Log> context)
-        {
-            var addResult = AddLog(context.Message);
-
-            await context.RespondAsync(addResult);
+            return Task.FromResult(0);
         }
     }
 }

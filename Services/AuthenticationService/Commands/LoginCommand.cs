@@ -10,6 +10,7 @@ using DTO;
 using Kernel.CustomExceptions;
 using Kernel;
 using DTO.RestRequests;
+using Microsoft.Extensions.Logging;
 
 namespace AuthenticationService.Commands
 {

@@ -7,8 +7,8 @@ namespace DataBaseService.Database.Models
     public class DbLog
     {
         public Guid Id { get; set; }
-        public Guid ParentId { get; set; }
-        public string Type { get; set; }
+        public Guid? ParentId { get; set; }
+        public int Level { get; set; }
         public DateTime Time { get; set; }
         public string Message { get; set; }
         public string ServiceName { get; set; }
@@ -19,7 +19,7 @@ namespace DataBaseService.Database.Models
         public void Configure(EntityTypeBuilder<DbLog> builder)
         {
             builder
-                .ToTable("_Logs")
+                .ToTable("Logs")
                 .HasKey(p => p.Id);
             builder
                 .Property(p => p.Id)
@@ -30,8 +30,8 @@ namespace DataBaseService.Database.Models
                 .HasColumnName("ParentId")
                 .IsRequired();
             builder
-                .Property(p => p.Type)
-                .HasColumnName("Type")
+                .Property(p => p.Level)
+                .HasColumnName("Level")
                 .IsRequired();
             builder
                 .Property(p => p.Time)
