@@ -39,7 +39,6 @@ namespace DataBaseService.Repositories
 
         public void CreateUserAvatar(UserAvatar userAvatar)
         {
-            if (userAvatar == null) return;
             dbContext.UsersAvatars.Add(mapper.MapToDbUserAvatar(userAvatar));
             dbContext.SaveChanges();
         }

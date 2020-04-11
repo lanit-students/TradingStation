@@ -45,7 +45,7 @@ namespace UserService.Commands
                 Birthday = request.Birthday,
                 FirstName = request.FirstName,
                 LastName = request.LastName
-            };
+        };
             UserAvatar userAvatar = null;
             if (request.Avatar != null && request.AvatarType != null)
             {

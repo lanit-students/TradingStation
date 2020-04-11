@@ -46,7 +46,8 @@ namespace DataBaseService.Database.Models
                 .IsUnique();
             builder
                 .Property(p => p.UserAvatarId)
-                .HasColumnName("UserAvatarId");
+                .HasColumnName("UserAvatarId")
+                .IsRequired();
         }
     }
 }

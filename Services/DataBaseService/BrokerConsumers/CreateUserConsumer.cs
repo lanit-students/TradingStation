@@ -1,4 +1,5 @@
-﻿using DataBaseService.Repositories.Interfaces;
+﻿using System;
+using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
 using MassTransit;
@@ -18,7 +19,15 @@ namespace DataBaseService.BrokerConsumers
 
         private OperationResult CreateUser(InternalCreateUserRequest request)
         {
-            userRepository.CreateUserAvatar(request.UserAvatar);
+            
+            if (request.UserAvatar == null)
+            {
+                request.User.UserAvatarId = Guid.Parse("6FF619FF-8B86-D011-B42D-00C04FC964FF");
+            }
+            else
+            {
+                userRepository.CreateUserAvatar(request.UserAvatar);
+            }
             userRepository.CreateUser(request.User, request.Credential.Email);
             userRepository.CreateUserCredential(request.Credential);
 

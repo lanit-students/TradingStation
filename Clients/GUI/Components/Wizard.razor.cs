@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
-using GUI.ViewModels;
 using Microsoft.AspNetCore.Components;
 
 namespace GUI.Components

@@ -20,7 +20,11 @@ namespace DataBaseService.Database.Models
                 .HasKey(p => p.Id);
             builder
                 .Property(p => p.Id)
-                .HasColumnName("Id");
+                .HasColumnName("Id")
+                .IsRequired();
+            builder
+                .HasIndex(p => p.Id)
+                .IsUnique();
             builder
                 .Property(p => p.Avatar)
                 .HasColumnName("Avatar")
