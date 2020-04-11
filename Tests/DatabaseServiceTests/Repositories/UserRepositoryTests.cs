@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-
 using NUnit.Framework;
 using Microsoft.EntityFrameworkCore;
-
 using DTO;
 using Kernel.CustomExceptions;
 using DataBaseService.Database;
@@ -19,41 +17,55 @@ namespace DatabaseServiceTests.Repositories
     public class UserRepositoryDeleteTests
     {
         #region Common
+
         private Guid userId = Guid.NewGuid();
         private Guid credentialId = Guid.NewGuid();
 
         private IUserRepository repository;
         private IUserMapper mapper;
+
         #endregion
 
         #region Create user test
+
         private DbContextOptions<TPlatformDbContext> dbOptionsCreateUser;
         private DbContextOptions<TPlatformDbContext> dbOptionsCreateCredential;
+        private DbContextOptions<TPlatformDbContext> dbOptionsCreateAvatar;
 
         private string firstName = "Adam";
         private string lastName = "Yablokov";
         private string email = "adam.ya@eden.org";
         private DateTime birth = DateTime.MinValue;
         private string passwordHash = "passwordHash";
+        private string avatarExtension = "jpeg";
+        private byte[] avatar = { 0, 0, 0, 25 };
 
         private User user;
         private DbUser dbUser;
         private UserCredential credential;
         private DbUserCredential dbCredential;
+        private UserAvatar userAvatar;
+        private DbUsersAvatars dbUserAvatar;
+
         #endregion
 
         #region Delete user tests
+
         private DbUserCredential dbUserCredential;
+
         #endregion
 
         [OneTimeSetUp]
         public void Initialize()
         {
             #region Common
+
             mapper = new UserMapper();
+
             #endregion
 
             #region Create user tests
+
             user = new User
             {
                 Id = userId,
@@ -87,6 +99,22 @@ namespace DatabaseServiceTests.Repositories
                 PasswordHash = passwordHash
             };
 
+            userAvatar = new UserAvatar
+            {
+                Id = userId,
+                AvatarExtension = avatarExtension,
+                Avatar = avatar,
+                UserId = dbUser.Id
+            };
+
+            dbUserAvatar = new DbUsersAvatars
+            {
+                Id = userId,
+                AvatarExtension = avatarExtension,
+                Avatar = avatar,
+                UserId = dbUser.Id
+            };
+
             dbOptionsCreateUser = new DbContextOptionsBuilder<TPlatformDbContext>()
                 .UseInMemoryDatabase(databaseName: "Create_new_user_test")
                 .Options;
@@ -94,9 +122,15 @@ namespace DatabaseServiceTests.Repositories
             dbOptionsCreateCredential = new DbContextOptionsBuilder<TPlatformDbContext>()
                 .UseInMemoryDatabase(databaseName: "Create_new_credential_test")
                 .Options;
+
+            dbOptionsCreateAvatar = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "Create_new_avatar_test")
+                .Options;
+
             #endregion
 
             #region Delete user tests
+
             dbUserCredential = new DbUserCredential
             {
                 Id = credentialId,
@@ -105,10 +139,12 @@ namespace DatabaseServiceTests.Repositories
                 PasswordHash = "hashpassword",
                 IsActive = true
             };
+
             #endregion
         }
 
         #region Create user tests
+
         [Test]
         public void CreateUserTest()
         {
@@ -121,9 +157,9 @@ namespace DatabaseServiceTests.Repositories
             Assert.IsTrue(comparer.Equals(
                 dbUser,
                 dbContext
-                .Users
-                .FirstOrDefaultAsync()
-                .Result));
+                    .Users
+                    .FirstOrDefaultAsync()
+                    .Result));
         }
 
         [Test]
@@ -138,13 +174,33 @@ namespace DatabaseServiceTests.Repositories
             Assert.IsTrue(comparer.Equals(
                 dbCredential,
                 dbContext
-                .UsersCredentials
-                .FirstOrDefaultAsync()
-                .Result));
+                    .UsersCredentials
+                    .FirstOrDefaultAsync()
+                    .Result));
         }
+
+
+        [Test]
+        public void CreateUserAvatar()
+        {
+            using var dbContext = new TPlatformDbContext(dbOptionsCreateAvatar);
+            repository = new UserRepository(mapper, dbContext);
+            repository.CreateUser(user,email);
+            repository.CreateUserAvatar(userAvatar);
+            DbUserAvatarComparer comparer = new DbUserAvatarComparer();
+            Assert.AreEqual(1, dbContext.UsersAvatars.CountAsync().Result);
+            Assert.IsTrue(comparer.Equals(
+                dbUserAvatar,
+                dbContext
+                    .UsersAvatars
+                    .FirstOrDefaultAsync()
+                    .Result));
+        }
+
         #endregion
 
         #region Delete user tests
+
         [Test]
         public void DeleteUserOk()
         {
@@ -208,6 +264,7 @@ namespace DatabaseServiceTests.Repositories
             // Come back
             userId = temp;
         }
+
         #endregion
     }
 }
