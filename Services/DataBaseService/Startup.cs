@@ -17,6 +17,9 @@ using MassTransit;
 using GreenPipes;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
+using Kernel;
+using DataBaseService.Database.Logs;
+using DataBaseService.Database.Logs.Interfaces;
 
 namespace DataBaseService
 {
@@ -55,6 +58,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<AddLogConsumer>(serviceProvider);
                 });
             });
         }
@@ -73,8 +77,16 @@ namespace DataBaseService
                 options.UseSqlServer(Configuration.GetConnectionString("TradingStationString"));
             });
 
+            services.AddDbContext<TPlatformLogDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("TradingStationLogsString"));
+            });
+
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
+            services.AddTransient<ILogMapper, LogMapper>();
+
 
             services.AddMassTransit(x =>
             {
@@ -84,6 +96,7 @@ namespace DataBaseService
                 x.AddConsumer<DeleteUserConsumer>();
                 x.AddConsumer<GetUserByIdConsumer>();
                 x.AddConsumer<EditUserConsumer>();
+                x.AddConsumer<AddLogConsumer>();
             });
 
             services.AddMassTransitHostedService();
