@@ -16,12 +16,11 @@ namespace DataBaseService.Database.Models
         public void Configure(EntityTypeBuilder<DbUsersAvatars> builder)
         {
             builder
-                .ToTable("UserAvatars")
+                .ToTable("UsersAvatars")
                 .HasKey(p => p.Id);
             builder
                 .Property(p => p.Id)
-                .HasColumnName("Id")
-                .IsRequired();
+                .HasColumnName("Id");
             builder
                 .Property(p => p.Avatar)
                 .HasColumnName("Avatar")

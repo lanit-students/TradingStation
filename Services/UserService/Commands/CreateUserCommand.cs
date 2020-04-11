@@ -49,7 +49,7 @@ namespace UserService.Commands
             UserAvatar userAvatar = null;
             if (request.Avatar != null && request.AvatarType != null)
             {
-                user.UserAvatarId = Guid.NewGuid();
+                user.UserAvatarId = new Guid();
                 userAvatar = new UserAvatar
                 {
                     Id = user.UserAvatarId,
