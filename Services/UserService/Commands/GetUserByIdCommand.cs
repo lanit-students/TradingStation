@@ -10,22 +10,18 @@ namespace UserService.Commands
 {
     public class GetUserByIdCommand : IGetUserByIdCommand
     {
-        private readonly IBus busControl;
+        private readonly IRequestClient<InternalGetUserByIdRequest> client;
 
-        public GetUserByIdCommand([FromServices]IBus busControl)
+        public GetUserByIdCommand([FromServices]IRequestClient<InternalGetUserByIdRequest> client)
         {
-            this.busControl = busControl;
+            this.client = client;
         }
 
         private async Task<User> GetUserById(InternalGetUserByIdRequest request)
         {
-            var uri = new Uri("rabbitmq://localhost/DatabaseService");
+            var result = await client.GetResponse<User>(request);
 
-            var client = busControl.CreateRequestClient<InternalGetUserByIdRequest>(uri).Create(request);
-
-            var response = await client.GetResponse<User>();
-
-            return response.Message;
+            return result.Message;
         }
 
         public async Task<User> Execute(Guid request)
