@@ -2,7 +2,7 @@
 
 namespace DataBaseService.Database.Logs.Interfaces
 {
-    interface ILogRepository
+    public interface ILogRepository
     {
         void AddLogs(Log log);
     }
