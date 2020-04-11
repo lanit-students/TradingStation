@@ -142,6 +142,18 @@ namespace UserService.Validators {
         }
         
         /// <summary>
+<<<<<<< HEAD
+=======
+        ///   Ищет локализованную строку, похожую на Id is null or empty.
+        /// </summary>
+        public static string IdIsNullOrEmpty {
+            get {
+                return ResourceManager.GetString("IdIsNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+>>>>>>> develop
         ///   Ищет локализованную строку, похожую на Email address must be in valid format..
         /// </summary>
         public static string InvalidEmail {
@@ -183,6 +195,15 @@ namespace UserService.Validators {
         public static string LastNameTooShort {
             get {
                 return ResourceManager.GetString("LastNameTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Old and new passwords are equal.
+        /// </summary>
+        public static string OldAndNewPasswordsEqual {
+            get {
+                return ResourceManager.GetString("OldAndNewPasswordsEqual", resourceCulture);
             }
         }
     }

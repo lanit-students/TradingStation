@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="79bc964b-3110-4ef4-b5bf-73759d570514" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Clients/GUI/Modals/Currency/CurrencyBar.razor" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Clients/GUI/Scripts/UserGetter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/BrokerRequests/InternalEditUserInfoRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/BrokerRequests/InternalGetUserByIdRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/NewsItem.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/NewsRequests/Currency/CurrencyRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/NewsRequests/Currency/ExchangeRate.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/NewsRequests/CurrencyRateProviderTypes.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/PasswordHashChangeRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/RestRequests/DeleteUserRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/RestRequests/EditUserRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/RestRequests/PasswordChangeRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/DTO/RestRequests/UserInfoRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Common/Interfaces/ICurrencyExchangeRateProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/RussianCBInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/XmlSerializationObjects/Currency.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Integrations/RssIntegrationLib/RamblerRssReader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Integrations/RssIntegrationLib/RssIntegrationLib.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/DataBaseService/BrokerConsumers/EditUserConsumer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/DataBaseService/BrokerConsumers/GetUserByIdConsumer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Commands/GetCurrenciesCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Commands/GetNewsCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Controllers/NewsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Interfaces/IGetCurrenciesCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Interfaces/IGetNewsCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Utils/CurrencyExchangeRateProviderFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Utils/RegisterIgnoreStringComparer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/NewsService/Validators/CurrencyRequestValidator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService/Commands/EditUserCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService/Commands/GetUserByIdCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService/Interfaces/IEditUserCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService/Interfaces/IGetUserByIdCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService/Validators/DeleteUserRequestValidator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService/Validators/PasswordChangeRequestValidator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService/Validators/UserInfoRequestValidator .cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/DatabaseServiceTests/Comparators/DbUserComparer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/DatabaseServiceTests/Comparators/DbUserCredentialsComparer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/DatabaseServiceTests/Comparators/UserComparer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/DatabaseServiceTests/Comparators/UserCredentialsComparer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/DatabaseServiceTests/Mappers/UserMapperTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/DatabaseServiceTests/Repositories/UserRepositoryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/NewsServiceTests/Utils/CurrencyExchangeRateProviderFactoryTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/NewsServiceTests/Utils/RegisterIgnoreStringComparerTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/NewsServiceTests/Validators/CurrencyRequestValidatorTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/UserServiceTests/Validators/DeleteUserRequestValidatorTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/UserServiceTests/Validators/PasswordChangeRequestValidatorTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/UserServiceTests/Validators/UserInfoRequestValidatorTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Authentication/AuthStateProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Authentication/AuthStateProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/GUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/GUI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Modals/SetUserDataModal.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Modals/SetUserDataModal.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Pages/SignIn.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Pages/SignIn.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Pages/SignUp.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Pages/SignUp.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Pages/UserInfo.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Pages/UserInfo.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Scripts/UserEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Scripts/UserEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Shared/MainLayout.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Shared/MainLayout.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Shared/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Shared/NavMenu.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/ViewModels/SignUpViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/ViewModels/SignUpViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/ViewModels/UserInfoViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/ViewModels/UserInfoViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/_Imports.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/_Imports.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Clients/GUI/wwwroot/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/Clients/GUI/wwwroot/css/site.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/DTO/BrokerRequests/InternalDeleteUserRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Common/DTO/BrokerRequests/InternalDeleteUserRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/DTO/DTO.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Common/DTO/DTO.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/DTO/ExchangeRate.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/Interfaces/INewsPublisher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Common/Interfaces/INewsPublisher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common/Kernel/RestClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Common/Kernel/RestClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/CentralBankNewsPublisher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/CentralBankNewsPublisher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/XmlSerializationObjects/DataFromCB.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/XmlSerializationObjects/DataFromCB.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/XmlSerializationObjects/ValCurse.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Integrations/CentralBankIntegrationLib/XmlSerializationObjects/Valute.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PostmanTests/NewsService.postman_collection.json" beforeDir="false" afterPath="$PROJECT_DIR$/PostmanTests/NewsService.postman_collection.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/AuthenticationService/Controllers/AuthenticationController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/AuthenticationService/Controllers/AuthenticationController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/BrokerConsumers/CreateUserConsumer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/BrokerConsumers/CreateUserConsumer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/BrokerConsumers/DeleteUserConsumer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/BrokerConsumers/DeleteUserConsumer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/Database/Migrations/MigrationEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/Database/Migrations/MigrationEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/Mappers/Interfaces/IUserMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/Mappers/Interfaces/IUserMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/Mappers/UserMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/Mappers/UserMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/Repositories/Interfaces/IUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/Repositories/Interfaces/IUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/Repositories/UserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/Repositories/UserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DataBaseService/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DataBaseService/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/NewsService/Controllers/NewsPublisherController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/NewsService/NewsPublisherTypes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/NewsService/Enums/NewsPublisherTypes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/NewsService/NewsService.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Services/NewsService/NewsService.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/NewsService/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/NewsService/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/NewsService/Utils/NewsPublisherFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/NewsService/Utils/NewsPublisherFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/UserService/Commands/DeleteUserCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/UserService/Commands/DeleteUserCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/UserService/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/UserService/Controllers/UsersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/UserService/Interfaces/IDeleteUserCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/UserService/Interfaces/IDeleteUserCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/UserService/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/UserService/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/UserService/Validators/ErrorsMessages.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/UserService/Validators/ErrorsMessages.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/UserService/Validators/ErrorsMessages.resx" beforeDir="false" afterPath="$PROJECT_DIR$/Services/UserService/Validators/ErrorsMessages.resx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TPlatform.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TPlatform.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/AuthServiceTests/Validators/UserTokenValidatorTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/AuthServiceTests/Validators/UserTokenValidatorTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/DatabaseServiceTests/DatabaseServiceTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/DatabaseServiceTests/DatabaseServiceTests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/NewsServiceTests/Utils/NewsPublisherFactoryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/NewsServiceTests/Utils/NewsPublisherFactoryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/UserServiceTests/Validators/UserEmailPasswordValidatorTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/UserServiceTests/Validators/CreateUserRequestValidatorTests.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1aOTygjgesjI8nRtw6GmsTvHzGa" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="79bc964b-3110-4ef4-b5bf-73759d570514" name="Default Changelist" comment="" />
+      <created>1586605896442</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1586605896442</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1586605902200">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1586605902200" />
+  </component>
+</project>

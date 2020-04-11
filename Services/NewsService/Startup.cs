@@ -1,7 +1,18 @@
+using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using FluentValidation;
+
+using DTO.NewsRequests.Currency;
+using NewsService.Validators;
+using NewsService.Utils;
+using NewsService.Interfaces;
+using NewsService.Commands;
+using Kernel;
 
 namespace NewsService
 {
@@ -12,16 +23,25 @@ namespace NewsService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IValidator<CurrencyRequest>, CurrencyRequestValidator>();
+            services.AddTransient<IEqualityComparer<string>, RegisterIgnoreStringComparer>();
+
+            services.AddTransient<IGetCurrenciesCommand, GetCurrenciesCommand>();
+            services.AddTransient<IGetNewsCommand, GetNewsCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(CustomExceptionHandler.HandleCustomException);
+            });
 
             app.UseHttpsRedirection();
 
@@ -33,8 +53,6 @@ namespace NewsService
             {
                 endpoints.MapControllers();
             });
-
-
         }
     }
 }

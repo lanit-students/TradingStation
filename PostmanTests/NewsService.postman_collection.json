@@ -1,35 +1,164 @@
 {
 	"info": {
-		"_postman_id": "4b7f2405-fb2b-41e0-a757-689faa2ab3a0",
+		"_postman_id": "ec1382cb-1152-480a-9e8c-25807cdd1dbc",
 		"name": "NewsService",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "GetNewsFromCentralBank",
+			"name": "GetCurrenciesFromBank",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "0103ef4b-2d37-4f5a-9ea2-420cd534654c",
 						"exec": [
-							"pm.test(\"Status code name has string\", function () {",
-							"    pm.response.to.have.status(\"OK\");",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"Top - 5 exchange rates:\");",
+							"",
+							"pm.test(\"Body matches currency codes\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"USD\", \"JPY\", \"GPB\", \"CNY\", \"EUR\");",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"USD - \");",
+							"",
+							"pm.test(\"Body matches currency codes &&\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"USD\" && \"JPY\" && \"GPB\" && \"CNY\" && \"EUR\");",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"EUR - \");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"bank_name\": 0,\n\t\"currency_codes\":[\n\t\t\"USD\",\n\t\t\"EUR\",\n\t\t\"GBP\",\n\t\t\"CNY\",\n\t\t\"JPY\"\n\t\t]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5007/news/currencies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5007",
+					"path": [
+						"news",
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvalidNewsPublisher",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c304368-9e50-491f-be60-6a11d12e5124",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"CNY - \");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "feedUrl",
+						"value": "https://somepublisher.org/rss/news",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5006/news/getnews",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5006",
+					"path": [
+						"news",
+						"getnews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvalidRamblerRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6da110d1-be0d-4dc1-a5c1-4aa215bc3f5b",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
 							"});",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"JPY - \");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "feedUrl",
+						"value": "https://finance.rambler.ru/rss/olololo",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5006/news/getnews",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5006",
+					"path": [
+						"news",
+						"getnews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ValidRamblerBusinessRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f482accd-2552-4e89-a11f-976045cb2b65",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Body matches news item format\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"title\");",
+							"    pm.expect(pm.response.text()).to.include(\"link\");",
+							"    pm.expect(pm.response.text()).to.include(\"pubDate\");",
+							"    pm.expect(pm.response.text()).to.include(\"description\");",
+							"    pm.expect(pm.response.text()).to.include(\"category\");",
+							"    pm.expect(pm.response.text()).to.include(\"author\");",
 							"});"
 						],
 						"type": "text/javascript"
@@ -38,23 +167,123 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "feedUrl",
+						"value": "https://finance.rambler.ru/rss/business/",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "https://localhost:5007/NewsService/getNews?newsPublisherType=CentralBank",
-					"protocol": "https",
+					"raw": "http://localhost:5006/news/getnews",
+					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5007",
+					"port": "5006",
 					"path": [
-						"NewsService",
-						"getNews"
+						"news",
+						"getnews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ValidRamblerEconomicsRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7edd13a7-23a0-44fc-b671-776623fbd6a5",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Body matches news item format\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"title\");",
+							"    pm.expect(pm.response.text()).to.include(\"link\");",
+							"    pm.expect(pm.response.text()).to.include(\"pubDate\");",
+							"    pm.expect(pm.response.text()).to.include(\"description\");",
+							"    pm.expect(pm.response.text()).to.include(\"category\");",
+							"    pm.expect(pm.response.text()).to.include(\"author\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "feedUrl",
+						"value": "https://finance.rambler.ru/rss/economics",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5006/news/getnews",
+					"protocol": "http",
+					"host": [
+						"localhost"
 					],
-					"query": [
-						{
-							"key": "newsPublisherType",
-							"value": "CentralBank"
-						}
+					"port": "5006",
+					"path": [
+						"news",
+						"getnews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ValidRamblerMarketsRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "482682d2-25f8-4c13-b927-995650963578",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Body matches news item format\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"title\");",
+							"    pm.expect(pm.response.text()).to.include(\"link\");",
+							"    pm.expect(pm.response.text()).to.include(\"pubDate\");",
+							"    pm.expect(pm.response.text()).to.include(\"description\");",
+							"    pm.expect(pm.response.text()).to.include(\"category\");",
+							"    pm.expect(pm.response.text()).to.include(\"author\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "feedUrl",
+						"value": "https://finance.rambler.ru/rss/markets",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5006/news/getnews",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5006",
+					"path": [
+						"news",
+						"getnews"
 					]
 				}
 			},

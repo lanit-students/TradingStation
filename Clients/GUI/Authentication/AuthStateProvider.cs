@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Blazored.LocalStorage;
+using System;
+using Blazored.SessionStorage;
 
 namespace GUI.Authentication
 {
@@ -10,11 +11,11 @@ namespace GUI.Authentication
     /// </summary>
     public class AuthStateProvider : AuthenticationStateProvider
     {
-        private readonly ILocalStorageService localStorage;
+        private readonly ISessionStorageService storage;
 
-        public AuthStateProvider(ILocalStorageService localStorageService)
+        public AuthStateProvider(ISessionStorageService sessionStorageService)
         {
-            localStorage = localStorageService;
+            storage = sessionStorageService;
         }
 
         /// <summary>
@@ -22,8 +23,9 @@ namespace GUI.Authentication
         /// </summary>
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var anonymous = new ClaimsPrincipal(new ClaimsIdentity(""));
-            return await Task.FromResult(new AuthenticationState(anonymous));
+            var id = await storage.GetItemAsync<Guid>("id");
+            var user = new ClaimsPrincipal(new ClaimsIdentity(id == Guid.Empty ? "" : "auth"));
+            return await Task.FromResult(new AuthenticationState(user));
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace GUI.Authentication
         /// </summary>
         public void MarkSignedOut()
         {
-            localStorage.ClearAsync();
+            storage.ClearAsync();
 
             var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 

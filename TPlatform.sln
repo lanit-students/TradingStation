@@ -48,7 +48,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsServiceTests", "Tests\N
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KernelTests", "Tests\KernelTests\KernelTests.csproj", "{1CDE1465-17B4-4A84-A88A-F215E4C4097A}"
 EndProject
+<<<<<<< HEAD
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrokerServiceTests", "Tests\BrokerServiceTests\BrokerServiceTests.csproj", "{09E46152-F3B6-45AC-AD5A-D737B0DB54FC}"
+=======
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanTests", "PostmanTests", "{35BA8A98-D86F-47F7-BAC7-75FDF552C084}"
+	ProjectSection(SolutionItems) = preProject
+		PostmanTests\NewsService.postman_collection.json = PostmanTests\NewsService.postman_collection.json
+		PostmanTests\OperationService.postman_collection.json = PostmanTests\OperationService.postman_collection.json
+		PostmanTests\UserService.postman_collection.json = PostmanTests\UserService.postman_collection.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RssIntegrationLib", "Integrations\RssIntegrationLib\RssIntegrationLib.csproj", "{6C7F6642-34E4-4C39-B481-43F9840E7285}"
+>>>>>>> develop
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,10 +139,17 @@ Global
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{09E46152-F3B6-45AC-AD5A-D737B0DB54FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09E46152-F3B6-45AC-AD5A-D737B0DB54FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09E46152-F3B6-45AC-AD5A-D737B0DB54FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E46152-F3B6-45AC-AD5A-D737B0DB54FC}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+		{6C7F6642-34E4-4C39-B481-43F9840E7285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C7F6642-34E4-4C39-B481-43F9840E7285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C7F6642-34E4-4C39-B481-43F9840E7285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C7F6642-34E4-4C39-B481-43F9840E7285}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> develop
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,7 +173,11 @@ Global
 		{67520E13-DB95-43E1-A3A0-002E41AD26A4} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
 		{E1DE4770-65E0-43CF-8D92-837D394CE4B8} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
 		{1CDE1465-17B4-4A84-A88A-F215E4C4097A} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
+<<<<<<< HEAD
 		{09E46152-F3B6-45AC-AD5A-D737B0DB54FC} = {518E8EC1-F28E-45B5-BAB0-070B57AEE4E6}
+=======
+		{6C7F6642-34E4-4C39-B481-43F9840E7285} = {5FD6BC94-2E65-41F9-B36B-91D91F15EF53}
+>>>>>>> develop
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6D82083-4A32-48DC-BD04-F40E561E5F7B}

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using DTO;
+using DTO.RestRequests;
+using Kernel;
+using Kernel.Enums;
 
 namespace GUI.Scripts
 {
@@ -12,11 +15,13 @@ namespace GUI.Scripts
         /// <param name="userInfo">Updated information</param>
         /// <param name="oldPassword">If not null, there is an attempt to change password</param>
         /// <param name="newPassword">Same as with oldPassword</param>
-        public static void EditUser(Guid id, User userInfo, string oldPassword = null, string newPassword = null)
+        public static async Task EditUser(UserToken userToken, EditUserRequest request)
         {
-            // I don't want to try creating any implementation here because
-            // this command has not been implemented in UserService yet
-            // so there's no documentation for usage or anything like that.
+            const string url = "https://localhost:5011/users/edit";
+
+            var client = new RestClient<EditUserRequest, bool>(url, RestRequestType.PUT, userToken);
+
+            await client.Execute(request);
         }
     }
 }

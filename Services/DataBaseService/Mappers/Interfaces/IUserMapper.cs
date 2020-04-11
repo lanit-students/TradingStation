@@ -5,7 +5,7 @@ namespace DataBaseService.Mappers.Interfaces
 {
     public interface IUserMapper
     {
-        User MapUser(DbUser dbUser);
+        User MapUser(DbUser dbUser, string email);
 
         DbUser MapToDbUser(User user);
 

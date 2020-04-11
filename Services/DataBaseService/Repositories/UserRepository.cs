@@ -1,11 +1,11 @@
-﻿using DataBaseService.Database;
+﻿using System;
+using System.Linq;
+
+using DTO;
+using Kernel.CustomExceptions;
+using DataBaseService.Database;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
-using DTO;
-using System.Linq;
-using System;
-using Kernel.CustomExceptions;
-using DataBaseService.Database.Models;
 
 namespace DataBaseService.Repositories
 {
@@ -20,8 +20,13 @@ namespace DataBaseService.Repositories
             this.dbContext = dbContext;
         }
 
-        public void CreateUser(User user)
+        public void CreateUser(User user, string email)
         {
+            if (dbContext.UsersCredentials.Any(userCredential => userCredential.Email == email))
+            {
+                throw new BadRequestException("This email is already taken by someone.");
+            }
+
             dbContext.Users.Add(mapper.MapToDbUser(user));
             dbContext.SaveChanges();
         }
@@ -38,20 +43,71 @@ namespace DataBaseService.Repositories
 
             return mapper.MapUserCredential(dbCredential);
         }
-        public void DeleteUser(Guid userIdCredential)
+
+        public User GetUserById(Guid userId)
         {
-            var dbUserCredential = dbContext.Find<DbUserCredential>(userIdCredential);
-            if (dbUserCredential == null)
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
+            if (dbUser == null)
             {
-                throw new ForbiddenException("Not found User for delete");
+                throw new NotFoundException("User not found");
             }
-            if(dbUserCredential.IsActive==false)
+
+            var email = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).Email;
+            return mapper.MapUser(dbUser, email);
+        }
+
+        public void DeleteUser(Guid userId)
+        {
+            var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
+
+            if (dbUserCredential is null)
             {
-                throw new ForbiddenException("User was deleted early");
+                throw new NotFoundException("Not found User for delete");
             }
-             dbUserCredential.IsActive = false;
-             dbContext.SaveChanges();
+
+            if(!dbUserCredential.IsActive)
+            {
+                throw new BadRequestException("User was deleted early or not confirmed");
+            }
+            dbUserCredential.IsActive = false;
+            dbContext.SaveChanges();
+        }
+
+        public void EditUser(User user, PasswordHashChangeRequest password)
+        {
+            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == user.Id);
+            if (dbUser != null)
+            {
+                dbUser.LastName = user.LastName;
+                dbUser.FirstName = user.FirstName;
+                dbUser.Birthday = user.Birthday;
+
+                if (password != null)
+                {
+                    var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == user.Id);
+
+                    if (dbUserCredential != null)
+                    {
+                        if (dbUserCredential.PasswordHash != password.OldPasswordHash)
+                        {
+                            throw new ForbiddenException("Can't change password, old password is wrong");
+                        }
+
+                        dbUserCredential.PasswordHash = password.NewPasswordHash;
+                    }
+                    else
+                    {
+                        throw new NotFoundException("Not found User to change pasword");
+                    }
+                }
+
+                dbContext.SaveChanges();
+            }
+            else
+            {
+                throw new NotFoundException("Not found User to change");
+            }
+
         }
     }
 }
-

@@ -12,9 +12,6 @@ namespace UserService.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        /// <summary>
-        /// This method will be implemented in communication with other services
-        /// </summary>
         [Route("create")]
         [HttpPost]
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
@@ -22,18 +19,25 @@ namespace UserService.Controllers
             return await command.Execute(request);
         }
 
+        [Route("edit")]
+        [HttpPut]
+        public async Task<bool> EditUser([FromServices] IEditUserCommand command, [FromBody] EditUserRequest request)
+        {
+            return await command.Execute(request);
+        }
+
         [Route("delete")]
         [HttpDelete]
-        public bool DeleteUser([FromServices] IDeleteUserCommand command, [FromHeader] Guid userId)
+        public async Task<bool> DeleteUser([FromServices] IDeleteUserCommand command, [FromBody] DeleteUserRequest request)
         {
-            return command.Execute(userId);
+            return await command.Execute(request);
         }
 
         [Route("get")]
         [HttpGet]
-        public User GetUser([FromHeader] Guid userId)
+        public async Task<User> GetUser([FromServices] IGetUserByIdCommand command, [FromHeader] Guid userId)
         {
-            return null;
+            return await command.Execute(userId);
         }
     }
 }

@@ -1,4 +1,3 @@
-using FluentValidation;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,16 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UserService.Commands;
 using UserService.Interfaces;
-using UserService.Validators;
 using MassTransit;
 using GreenPipes;
 using MassTransit.AspNetCoreIntegration;
 using Microsoft.Extensions.Configuration;
 using UserService.BrokerConsumers;
 using System;
-using DTO.RestRequests;
 using Kernel.Middlewares;
 using Kernel;
+using UserService.Validators;
+using DTO.RestRequests;
+using FluentValidation;
 
 namespace UserService
 {
@@ -62,11 +62,18 @@ namespace UserService
 
             services.AddControllers();
 
+            services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
+
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
 
-            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
+            services.AddTransient<IGetUserByIdCommand, GetUserByIdCommand>();
 
+            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
             services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
+
+            services.AddTransient<IEditUserCommand, EditUserCommand>();
+            services.AddTransient<IValidator<UserInfoRequest>, UserInfoRequestValidator>();
+            services.AddTransient<IValidator<PasswordChangeRequest>, PasswordChangeRequestValidator>();
 
             services.AddMassTransit(x =>
             {

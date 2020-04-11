@@ -1,8 +1,7 @@
-﻿namespace NewsService
+﻿namespace NewsService.Enums
 {
     public enum NewsPublisherTypes
     {
-        CentralBank
+        Rambler
     }
 }
-
