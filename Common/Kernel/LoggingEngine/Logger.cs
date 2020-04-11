@@ -11,27 +11,16 @@ namespace Kernel.LoggingEngine
         private readonly IBus busControl;
         private static object _lock = new object();
 
-        public Logger(IBus busControl)
+        public Logger([FromServices]IBus busControl)
         {
             this.busControl = busControl;
         }
 
-        private async Task<Log> AddLog(Log log)
+        private async void AddLog(Log log)
         {
             var uri = new Uri("rabbitmq://localhost/DatabaseService");
 
-            var client = busControl.CreateRequestClient<Log>(uri).Create(log);
-
-            var response = await client.GetResponse<Log>();
-
-            return response.Message;
-        }
-
-        public async Task<Log> Execute(Log log)
-        {
-            var user = await AddLog(log);
-
-            return user;
+            busControl.Publish<Log>(uri).Start();
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -50,7 +39,8 @@ namespace Kernel.LoggingEngine
             if (formatter != null)
             {
                 lock (_lock)
-                {                    
+                {
+
                 }
             }
         }
