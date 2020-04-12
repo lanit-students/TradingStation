@@ -39,7 +39,7 @@ namespace UserService.Commands
             validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
-            User user = new User
+            var user = new User
             {
                 Id = Guid.NewGuid(),
                 Birthday = request.Birthday,

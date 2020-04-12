@@ -1,5 +1,7 @@
 ﻿@page "/signup"
 @using GUI.Components
+@using GUI.Scripts
+@using GUI.ViewModels
 @inject NavigationManager NavigationManager
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
     <Wizard Id="Wizard" HasError="@HasError">
@@ -137,9 +139,9 @@
         showLoading = true;
         errorMessage = "";
         var file = files[^1];
-        fileName = file.Name;
         if (file != null)
         {
+            fileName = file.Name;
             // 2MB =  2097152 byte 
             if (file.Size > 2097152)
             {
@@ -147,7 +149,7 @@
                 showLoading = false;
                 return;
             }
-            var ms = new MemoryStream();
+            using var ms = new MemoryStream();
             await file.Data.CopyToAsync(ms);
             userInput.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
             userInput.Avatar = ms.ToArray();

@@ -25,7 +25,6 @@ namespace GUI.Components
         [Parameter]
         public string Name { get; set; }
 
-
         protected override void OnInitialized()
         {
             Parent.AddStep(this);
