@@ -72,7 +72,6 @@ namespace UserService.Commands
                 Credential = credential,
                 UserAvatar = userAvatar
             };
-
             var createUserResult = await CreateUser(internalCreateUserRequest);
             if (!createUserResult)
             {

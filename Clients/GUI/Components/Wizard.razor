@@ -5,7 +5,7 @@
             {
                 <li id="step-@(StepsIndex(step) + 1)" class="nav-item">
                     <a class="nav-link @((ActiveStep == step) ? "active" : "")" href="javascript: void(0)"
-                       @onclick="@(e=> SetActive(step))">@step.Name</a>
+                       @onclick="@(() =>  SetActive(step))">@step.Name</a>
                 </li>
             }
         </ul>

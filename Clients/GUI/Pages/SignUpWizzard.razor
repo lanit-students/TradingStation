@@ -33,9 +33,9 @@
             <br />
 
             <ValidationSummary />
-            @if (isErrorDisplayed)
+            @if (errorServerMessage.Length != 0)
             {
-                <label style=" color: red;"> @serverErrorMessages </label>
+                <label style=" color: red;"> @errorServerMessage </label>
                 <br />
             }
 
@@ -50,16 +50,16 @@
                     <br />
                     <label>@fileName</label>
                     <br />
-                    @if (errorMessageFile.Length != 0)
-                    {
-                        <label style="color: red;"> @errorMessageFile </label>
-                        <br />
-                    }
                     <button class="btn btn-secondary btn-sm" type="button" @onclick="ClearFile">clear</button>
                     <br />
-                    @if (isErrorDisplayed)
+                    @if (errorMessage.Length != 0)
                     {
-                        <label style="color: red;"> @serverErrorMessages </label>
+                        <label style="color: red;"> @errorMessage </label>
+                        <br />
+                    }
+                    @if (errorServerMessage.Length != 0)
+                    {
+                        <label style=" color: red;"> @errorServerMessage </label>
                         <br />
                     }
                 </div>
@@ -75,21 +75,21 @@
 </EditForm>
 
 @code {
-    bool isErrorDisplayed = false;
-    string serverErrorMessages = "";
     private SignUpViewModel userInput;
     private EditContext editContext;
-    private string errorMessageFile = "";
     private string fileName = "";
     private bool showLoading = false;
+    private string errorMessage = "";
+    private string errorServerMessage = "";
 
     private bool HasError()
     {
-        return !editContext.Validate() || errorMessageFile.Length != 0;
+        return !editContext.Validate() || errorMessage.Length != 0;
     }
 
     public async Task TrySignUp()
     {
+        errorServerMessage = "";
         showLoading = true;
         if (HasError())
         {
@@ -114,18 +114,11 @@
         }
         catch (BadRequestException)
         {
-            isErrorDisplayed = true;
-            serverErrorMessages = "Something went wrong during registration";
-        }
-        catch (NotFoundException)
-        {
-            isErrorDisplayed = true;
-            serverErrorMessages = "Something went wrong during signing you in";
+            errorServerMessage = "Something went wrong during registration";
         }
         catch (Exception e)
         {
-            isErrorDisplayed = true;
-            serverErrorMessages = e.Message;
+            errorServerMessage = "The server cannot process your request.";
         }
         finally
         {
@@ -142,7 +135,7 @@
     async Task HandleSelection(IFileListEntry[] files)
     {
         showLoading = true;
-        errorMessageFile = "";
+        errorMessage = "";
         var file = files[^1];
         fileName = file.Name;
         if (file != null)
@@ -150,7 +143,7 @@
             // 2MB =  2097152 byte 
             if (file.Size > 2097152)
             {
-                errorMessageFile = "File is too big. Only 2 MB";
+                errorMessage = "File is too big. Only 2 MB";
                 showLoading = false;
                 return;
             }
@@ -164,8 +157,8 @@
 
     private void ClearFile()
     {
+        errorMessage = "";
         fileName = "";
-        errorMessageFile = "";
         userInput.Avatar = null;
         userInput.AvatarExtension = null;
     }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GUI.ViewModels;
 
-namespace GUI.CustomValidationAtributes
+namespace GUI.CustomValidationAttributes
 {
     public class NameValidation : ValidationAttribute
     {

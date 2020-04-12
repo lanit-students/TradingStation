@@ -1,4 +1,3 @@
-
 using Blazored.Modal;
 using Blazored.SessionStorage;
 using GUI.Authentication;
