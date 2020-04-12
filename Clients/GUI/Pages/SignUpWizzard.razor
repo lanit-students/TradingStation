@@ -85,7 +85,7 @@
 
     private bool HasError()
     {
-        return !editContext.Validate() && errorMessageFile.Length != 0;
+        return !editContext.Validate() || errorMessageFile.Length != 0;
     }
 
     public async Task TrySignUp()
@@ -93,6 +93,7 @@
         showLoading = true;
         if (HasError())
         {
+            showLoading = false;
             return;
         }
         try
@@ -140,6 +141,7 @@
 
     async Task HandleSelection(IFileListEntry[] files)
     {
+        showLoading = true;
         errorMessageFile = "";
         var file = files[^1];
         fileName = file.Name;
@@ -149,6 +151,7 @@
             if (file.Size > 2097152)
             {
                 errorMessageFile = "File is too big. Only 2 MB";
+                showLoading = false;
                 return;
             }
             var ms = new MemoryStream();
@@ -156,6 +159,7 @@
             userInput.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
             userInput.Avatar = ms.ToArray();
         }
+        showLoading = false;
     }
 
     private void ClearFile()

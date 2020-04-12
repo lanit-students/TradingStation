@@ -75,9 +75,9 @@ namespace GUI.Components
         /// Populates the <see cref="ActiveStep"/> the Sets the passed in <see cref="WizardStep"/> instance as the
         /// </summary>
         /// <param name="step">The WizardStep</param>
-        protected internal void SetActive(WizardStep step)
+        protected internal void SetActive(WizardStep step, bool isFirst = false)
         {
-            if(HasError()) return;
+            if(!isFirst && HasError()) return;
             ActiveStep = step;
             ActiveStepIx = StepsIndex(step);
             IsLastStep = ActiveStepIx == Steps.Count - 1;
@@ -108,7 +108,7 @@ namespace GUI.Components
         {
             if (firstRender)
             {
-                SetActive(Steps[0]);
+                SetActive(Steps[0], true);
                 StateHasChanged();
             }
         }
