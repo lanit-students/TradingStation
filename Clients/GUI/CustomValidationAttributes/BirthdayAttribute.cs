@@ -17,7 +17,7 @@ namespace GUI.CustomValidationAttributes
         {
             var birthday = (DateTime) value;
             
-            if (birthday.AddYears(18) > DateTime.Now)
+            if (birthday.AddYears(18) >= DateTime.Now)
             {
                 return new ValidationResult(GetErrorMessageTooYoung());
             }
