@@ -15,6 +15,7 @@ namespace DataBaseService.Utils
     public class MigrationEngine
     {
         private const string ExecutedScriptsTableName = "__ExecutedScripts";
+        private const string LogsTableName = "Logs";
         private const string ScriptsFolderName = "DataBaseService.Database.Migrations.Scripts";
 
         private readonly IConfiguration configuration;
@@ -40,6 +41,10 @@ namespace DataBaseService.Utils
             var allScripts = GetAllScripts();
             if (allScripts?.Count == 0)
                 return;
+
+            CreateLogsDatabase(connectionStringInitial);
+
+            CreateLogsTable(connectionStringInitial);
 
             CreateDatabase(connectionStringInitial);
 
@@ -157,9 +162,8 @@ namespace DataBaseService.Utils
             return result;
         }
 
-        private void CreateDatabase(string connectionString)
+        private void CreateLogsDatabase(string connectionString)
         {
-            var createDbScript = "IF DB_ID('TradingStation') IS NULL CREATE DATABASE [TradingStation];";
             var createLogDbScript = "IF DB_ID('TradingStationLogs') IS NULL CREATE DATABASE [TradingStationLogs];";
 
             try
@@ -167,14 +171,58 @@ namespace DataBaseService.Utils
                 using var conn = new SqlConnection(connectionString);
                 conn.Open();
 
-                using var commandFirst = new SqlCommand(createDbScript, conn);
-                using var commandSecond = new SqlCommand(createLogDbScript, conn);
-                commandFirst.ExecuteNonQuery();
-                commandSecond.ExecuteNonQuery();
+                using var command = new SqlCommand(createLogDbScript, conn);
+                command.ExecuteNonQuery();
             }
             catch
             {
                 throw new InternalServerException();
+            }
+        }
+
+        private void CreateDatabase(string connectionString)
+        {
+            var createDbScript = "IF DB_ID('TradingStation') IS NULL CREATE DATABASE [TradingStation];";
+
+            try
+            {
+                using var conn = new SqlConnection(connectionString);
+                conn.Open();
+
+                using var commandFirst = new SqlCommand(createDbScript, conn);
+                commandFirst.ExecuteNonQuery();
+            }
+            catch
+            {
+                throw new InternalServerException();
+            }
+        }
+
+        private void CreateLogsTable(string connectionString)
+        {
+            var createLogsTableScript = new StringBuilder();
+            createLogsTableScript.AppendLine("USE [TradingStationLogs]; ");
+            createLogsTableScript.AppendLine($"IF OBJECT_ID('dbo.[{LogsTableName}]', 'U') IS NULL ");
+            createLogsTableScript.AppendLine($"CREATE TABLE [dbo].[{LogsTableName}] ");
+            createLogsTableScript.AppendLine("([Id] [uniqueidentifier] NOT NULL, ");
+            createLogsTableScript.AppendLine("[Level] [int] NOT NULL, ");
+            createLogsTableScript.AppendLine("[Time] [datetime] NOT NULL, ");
+            createLogsTableScript.AppendLine("[Message] [nvarchar](max) NOT NULL, ");
+            createLogsTableScript.AppendLine("[ServiceName] [nvarchar](50) NOT NULL, ");
+            createLogsTableScript.AppendLine("[ParentId] [uniqueidentifier] NULL, ");
+            createLogsTableScript.AppendLine("CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED(Id));");
+
+            try
+            {
+                using var conn = new SqlConnection(connectionString);
+                conn.Open();
+
+                using var command = new SqlCommand(createLogsTableScript.ToString(), conn);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exc)
+            {
+                throw new InternalServerException("Can't execute migration scripts.", exc);
             }
         }
 
@@ -195,31 +243,6 @@ namespace DataBaseService.Utils
                 conn.Open();
 
                 using var command = new SqlCommand(createTableScript.ToString(), conn);
-                command.ExecuteNonQuery();
-            }
-            catch (Exception exc)
-            {
-                throw new InternalServerException("Can't execute migration scripts.", exc);
-            }
-
-            var createLogsTableScript = new StringBuilder();
-            createLogsTableScript.AppendLine("USE [TradingStationLogs]; ");
-            createLogsTableScript.AppendLine($"IF OBJECT_ID('dbo.[_Logs]', 'U') IS NULL ");
-            createLogsTableScript.AppendLine("CREATE TABLE [dbo].[_Logs] ");
-            createLogsTableScript.AppendLine("([Id] [uniqueidentifier] NOT NULL, ");
-            createLogsTableScript.AppendLine("[Type] [nvarchar](50) NOT NULL, ");
-            createLogsTableScript.AppendLine("[Time] [datetime] NOT NULL, ");
-            createLogsTableScript.AppendLine("[Message] [nvarchar](max) NOT NULL, ");
-            createLogsTableScript.AppendLine("[ServiceName] [nvarchar](50) NOT NULL, ");
-            createLogsTableScript.AppendLine("[ParentId] [uniqueidentifier] NULL, ");
-            createLogsTableScript.AppendLine("CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED(Id));");
-
-            try
-            {
-                using var conn = new SqlConnection(connectionString);
-                conn.Open();
-
-                using var command = new SqlCommand(createLogsTableScript.ToString(), conn);
                 command.ExecuteNonQuery();
             }
             catch (Exception exc)

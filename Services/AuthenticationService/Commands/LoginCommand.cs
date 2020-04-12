@@ -11,6 +11,8 @@ using Kernel;
 using DTO.RestRequests;
 using DTO.BrokerRequests;
 
+using Microsoft.Extensions.Logging;
+
 namespace AuthenticationService.Commands
 {
     public class LoginCommand : ILoginCommand
