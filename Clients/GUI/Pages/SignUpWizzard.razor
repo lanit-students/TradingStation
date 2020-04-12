@@ -47,11 +47,18 @@
                     <br />
                     <InputFile OnChange="HandleSelection" />
                     <br />
-                    @if (isErrorDisplayed)
+                    @if (errorMessageFile.Length != 0)
                     {
-                        <label style="color: red;"> @serverErrorMessages </label>
+                        <label style="color: red;"> @errorMessageFile </label>
                         <br />
                     }
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="ClearFile">clear</button>
+                        <br />
+                        @if (isErrorDisplayed)
+                        {
+                            <label style="color: red;"> @serverErrorMessages </label>
+                            <br />
+                        }
                 </div>
             </div>
         </WizardStep>
@@ -63,14 +70,19 @@
     string serverErrorMessages = "";
     private SignUpViewModel userInput;
     private EditContext editContext;
+    private string errorMessageFile = "";
 
     private bool HasError()
     {
-        return editContext.Validate();
+        return editContext.Validate() & errorMessageFile == "";
     }
 
     public async Task TrySignUp()
     {
+        if (HasError())
+        {
+            return;
+        }
         try
         {
             var request = new CreateUserRequest
@@ -80,7 +92,7 @@
                 Birthday = userInput.Birthday,
                 Email = userInput.Email,
                 Password = userInput.Password,
-                AvatarExtension = userInput.TypeAvatar,
+                AvatarExtension = userInput.AvatarExtension,
                 Avatar = userInput.Avatar
             };
 
@@ -112,14 +124,28 @@
 
     async Task HandleSelection(IFileListEntry[] files)
     {
-        var file = files.FirstOrDefault();
+        errorMessageFile = "";
+        var file = files[^1];
         if (file != null)
         {
+            // 2MB =  2097152 byte 
+            if (file.Size > 2097152)
+            {
+                errorMessageFile = "File is too big. Only 2 MB";
+                return;
+            }
             var ms = new MemoryStream();
             await file.Data.CopyToAsync(ms);
-            userInput.TypeAvatar = Path.GetExtension(file.Name).TrimStart('.');
+            userInput.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
             userInput.Avatar = ms.ToArray();
         }
+    }
+
+    private void ClearFile()
+    {
+        errorMessageFile = "";
+        userInput.Avatar = null;
+        userInput.AvatarExtension = null;
     }
 
 }

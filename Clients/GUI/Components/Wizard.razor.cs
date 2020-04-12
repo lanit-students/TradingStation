@@ -55,7 +55,8 @@ namespace GUI.Components
         /// Sets the <see cref="ActiveStep"/> to the previous Index
         /// </summary>
         protected internal void GoBack()
-        {
+        {   
+            if(!HasError()) return;
             if (ActiveStepIx > 0)
                 SetActive(Steps[ActiveStepIx - 1]);
         }
@@ -76,8 +77,8 @@ namespace GUI.Components
         /// <param name="step">The WizardStep</param>
         protected internal void SetActive(WizardStep step)
         {
-            ActiveStep = step ?? throw new ArgumentNullException(nameof(step));
-
+            if(!HasError()) return;
+            ActiveStep = step;
             ActiveStepIx = StepsIndex(step);
             IsLastStep = ActiveStepIx == Steps.Count - 1;
         }
@@ -91,9 +92,6 @@ namespace GUI.Components
 
         protected int StepsIndexInternal(WizardStep step)
         {
-            if (step == null)
-                throw new ArgumentNullException(nameof(step));
-
             return Steps.IndexOf(step);
         }
 
