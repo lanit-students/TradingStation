@@ -16,6 +16,7 @@ using Kernel;
 using UserService.Validators;
 using DTO.RestRequests;
 using FluentValidation;
+using DTO.BrokerRequests;
 
 namespace UserService
 {
@@ -79,6 +80,10 @@ namespace UserService
             {
                 x.AddConsumer<LoginUserConsumer>();
                 x.AddBus(provider => CreateBus(provider));
+                x.AddRequestClient<InternalCreateUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<InternalGetUserByIdRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<InternalEditUserInfoRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<InternalDeleteUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
             });
 
             services.AddMassTransitHostedService();

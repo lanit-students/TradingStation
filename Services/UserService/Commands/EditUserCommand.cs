@@ -6,7 +6,6 @@ using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -14,18 +13,25 @@ namespace UserService.Commands
 {
     public class EditUserCommand : IEditUserCommand
     {
+        private readonly IRequestClient<InternalEditUserInfoRequest> client;
         private readonly IValidator<UserInfoRequest> userInfoValidator;
         private readonly IValidator<PasswordChangeRequest> passwordChangeValidator;
-        private readonly IBus busControl;
 
         public EditUserCommand
             ([FromServices] IValidator<UserInfoRequest> userInfoValidator,
             [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator,
-            [FromServices] IBus busControl)
+            [FromServices] IRequestClient<InternalEditUserInfoRequest> client)
         {
-            this.busControl = busControl;
+            this.client = client;
             this.userInfoValidator = userInfoValidator;
             this.passwordChangeValidator = passwordChangeValidator;
+        }
+
+        private async Task<bool> EditUser(InternalEditUserInfoRequest request)
+        {
+            var result = await client.GetResponse<OperationResult>(request);
+
+            return result.Message.IsSuccess;
         }
 
         public async Task<bool> Execute(EditUserRequest request)
@@ -68,17 +74,6 @@ namespace UserService.Commands
             }
 
             return editUserResult;
-        }
-
-        private async Task<bool> EditUser(InternalEditUserInfoRequest request)
-        {
-            var uri = new Uri("rabbitmq://localhost/DatabaseService");
-
-            var client = busControl.CreateRequestClient<InternalEditUserInfoRequest>(uri).Create(request);
-
-            var response = await client.GetResponse<OperationResult>();
-
-            return response.Message.IsSuccess;
         }
     }
 }

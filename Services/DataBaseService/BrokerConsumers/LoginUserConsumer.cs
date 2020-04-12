@@ -1,13 +1,13 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
-using DTO.RestRequests;
+using DTO.BrokerRequests;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class LoginUserConsumer : IConsumer<LoginRequest>
+    public class LoginUserConsumer : IConsumer<InternalLoginRequest>
     {
         private readonly IUserRepository _repository;
 
@@ -21,7 +21,7 @@ namespace DataBaseService.BrokerConsumers
             _repository = repository;
         }
 
-        public async Task Consume(ConsumeContext<LoginRequest> context)
+        public async Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
             await context.RespondAsync(GetUserCredential(context.Message.Email));
         }

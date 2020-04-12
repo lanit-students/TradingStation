@@ -17,6 +17,7 @@ using AuthenticationService.Interfaces;
 using AuthenticationService.Validators;
 using DTO;
 using Kernel;
+using DTO.BrokerRequests;
 using Kernel.LoggingEngine;
 using DTO.RestRequests;
 
@@ -73,8 +74,8 @@ namespace AuthenticationService
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
-
                 x.AddConsumer<TokenConsumer>();
+                x.AddRequestClient<InternalLoginRequest>(new Uri("rabbitmq://localhost/UserService"));
             });
 
             services.AddMassTransitHostedService();

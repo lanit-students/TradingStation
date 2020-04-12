@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +9,8 @@ using DTO;
 using Kernel.CustomExceptions;
 using Kernel;
 using DTO.RestRequests;
+using DTO.BrokerRequests;
+
 using Microsoft.Extensions.Logging;
 
 namespace AuthenticationService.Commands
@@ -17,18 +18,14 @@ namespace AuthenticationService.Commands
     public class LoginCommand : ILoginCommand
     {
         private readonly ITokensEngine tokensEngine;
-        private readonly IBus busControl;
+        private readonly IRequestClient<InternalLoginRequest> client;
 
         /// <summary>
         /// Get user ID from UserService.
         /// </summary>
         private async Task<UserCredential> GetUserCredential(LoginRequest request)
         {
-            var uri = new Uri("rabbitmq://localhost/UserService");
-
-            var client = busControl.CreateRequestClient<LoginRequest>(uri).Create(request);
-
-            var response = await client.GetResponse<UserCredential>();
+            var response = await client.GetResponse<UserCredential>(request);
 
             return response.Message;
         }
@@ -43,10 +40,10 @@ namespace AuthenticationService.Commands
 
         public LoginCommand(
             [FromServices] ITokensEngine tokensEngine,
-            [FromServices] IBus busControl)
+            [FromServices] IRequestClient<InternalLoginRequest> client)
         {
             this.tokensEngine = tokensEngine;
-            this.busControl = busControl;
+            this.client = client;
         }
 
         public async Task<UserToken> Execute(LoginRequest request)
