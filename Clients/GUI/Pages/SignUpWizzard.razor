@@ -45,7 +45,10 @@
                 <div class="container m-5">
                     <label>Send your avatar</label>
                     <br />
-                    <InputFile OnChange="HandleSelection" />
+                    <label for="files" class="btn btn-primary">Select Image</label>
+                    <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" OnChange="HandleSelection" />
+                    <br />
+                    <label>@fileName</label>
                     <br />
                     @if (errorMessageFile.Length != 0)
                     {
@@ -53,14 +56,20 @@
                         <br />
                     }
                     <button class="btn btn-secondary btn-sm" type="button" @onclick="ClearFile">clear</button>
+                    <br />
+                    @if (isErrorDisplayed)
+                    {
+                        <label style="color: red;"> @serverErrorMessages </label>
                         <br />
-                        @if (isErrorDisplayed)
-                        {
-                            <label style="color: red;"> @serverErrorMessages </label>
-                            <br />
-                        }
+                    }
                 </div>
             </div>
+            @if (showLoading)
+            {
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            }
         </WizardStep>
     </Wizard>
 </EditForm>
@@ -71,14 +80,17 @@
     private SignUpViewModel userInput;
     private EditContext editContext;
     private string errorMessageFile = "";
+    private string fileName = "";
+    private bool showLoading = false;
 
     private bool HasError()
     {
-        return editContext.Validate() & errorMessageFile == "";
+        return !editContext.Validate() && errorMessageFile.Length != 0;
     }
 
     public async Task TrySignUp()
     {
+        showLoading = true;
         if (HasError())
         {
             return;
@@ -114,6 +126,10 @@
             isErrorDisplayed = true;
             serverErrorMessages = e.Message;
         }
+        finally
+        {
+            showLoading = false;
+        }
     }
 
     protected override void OnInitialized()
@@ -126,6 +142,7 @@
     {
         errorMessageFile = "";
         var file = files[^1];
+        fileName = file.Name;
         if (file != null)
         {
             // 2MB =  2097152 byte 
@@ -143,6 +160,7 @@
 
     private void ClearFile()
     {
+        fileName = "";
         errorMessageFile = "";
         userInput.Avatar = null;
         userInput.AvatarExtension = null;

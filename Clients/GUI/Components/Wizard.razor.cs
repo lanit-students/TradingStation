@@ -56,7 +56,7 @@ namespace GUI.Components
         /// </summary>
         protected internal void GoBack()
         {   
-            if(!HasError()) return;
+            if(HasError()) return;
             if (ActiveStepIx > 0)
                 SetActive(Steps[ActiveStepIx - 1]);
         }
@@ -66,7 +66,7 @@ namespace GUI.Components
         /// </summary>
         protected internal void GoNext()
         {
-            if (!HasError()) return;
+            if (HasError()) return;
             if (ActiveStepIx < Steps.Count - 1)
                 SetActive(Steps[(Steps.IndexOf(ActiveStep) + 1)]);
         }
@@ -77,7 +77,7 @@ namespace GUI.Components
         /// <param name="step">The WizardStep</param>
         protected internal void SetActive(WizardStep step)
         {
-            if(!HasError()) return;
+            if(HasError()) return;
             ActiveStep = step;
             ActiveStepIx = StepsIndex(step);
             IsLastStep = ActiveStepIx == Steps.Count - 1;
