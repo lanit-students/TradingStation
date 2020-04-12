@@ -17,6 +17,9 @@ using MassTransit;
 using GreenPipes;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
+using Kernel;
+using DataBaseService.Database.Logs;
+using DataBaseService.Database.Logs.Interfaces;
 
 namespace DataBaseService
 {
@@ -56,6 +59,14 @@ namespace DataBaseService
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
                 });
+
+                cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<AddLogConsumer>(serviceProvider);
+                });
             });
         }
 
@@ -73,17 +84,23 @@ namespace DataBaseService
                 options.UseSqlServer(Configuration.GetConnectionString("TradingStationString"));
             });
 
+            services.AddDbContext<TPlatformLogDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("TradingStationLogsString"));
+            });
+
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
+            services.AddTransient<ILogMapper, LogMapper>();
 
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
-                x.AddConsumer<CreateUserConsumer>();
-                x.AddConsumer<LoginUserConsumer>();
-                x.AddConsumer<DeleteUserConsumer>();
-                x.AddConsumer<GetUserByIdConsumer>();
-                x.AddConsumer<EditUserConsumer>();
+
+                x.AddUserConsumers();
+
+                x.AddConsumer<AddLogConsumer>();
             });
 
             services.AddMassTransitHostedService();

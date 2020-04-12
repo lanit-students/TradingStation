@@ -14,24 +14,20 @@ namespace UserService.Commands
 {
     public class CreateUserCommand : ICreateUserCommand
     {
-        private readonly IBus busControl;
+        private readonly IRequestClient<InternalCreateUserRequest> client;
         private readonly IValidator<CreateUserRequest> validator;
 
-        public CreateUserCommand([FromServices] IBus busControl, [FromServices] IValidator<CreateUserRequest> validator)
+        public CreateUserCommand([FromServices] IRequestClient<InternalCreateUserRequest> client, [FromServices] IValidator<CreateUserRequest> validator)
         {
-            this.busControl = busControl;
+            this.client = client;
             this.validator = validator;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
         {
-            var uri = new Uri("rabbitmq://localhost/DatabaseService");
+            var result = await client.GetResponse<OperationResult>(request);
 
-            var client = busControl.CreateRequestClient<InternalCreateUserRequest>(uri).Create(request);
-
-            var response = await client.GetResponse<OperationResult>();
-
-            return response.Message.IsSuccess;
+            return result.Message.IsSuccess;
         }
 
         public async Task<bool> Execute(CreateUserRequest request)
