@@ -5,16 +5,16 @@ namespace Kernel.LoggingEngine
 {
     public class LoggerProvider: ILoggerProvider
     {
-        private readonly IServiceProvider _provider;
+        private readonly IServiceProvider provider;
 
         public LoggerProvider(IServiceProvider provider)
         {
-            _provider = provider;
+            this.provider = provider;
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new Logger(_provider);
+            return new Logger(provider);
         }
 
         public void Dispose() { }

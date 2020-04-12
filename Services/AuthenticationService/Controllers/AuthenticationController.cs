@@ -14,11 +14,11 @@ namespace AuthenticationService.Controllers
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly ILogger<AuthenticationController> _logger;
+        private readonly ILogger<AuthenticationController> logger;
 
         public AuthenticationController([FromServices] ILogger<AuthenticationController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace AuthenticationService.Controllers
         [HttpPost]
         public async Task<UserToken> Login([FromServices] ILoginCommand command, [FromBody] LoginRequest request)
         {
-            _logger.LogInformation("Success");
+            logger.LogInformation("Success");
 
             return await command.Execute(request);
         }
