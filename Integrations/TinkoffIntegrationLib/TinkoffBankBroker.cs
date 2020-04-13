@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTO;
@@ -13,39 +14,23 @@ namespace TinkoffIntegrationLib
         private readonly Context tinkoffContext;
         private const int CDefaultDepth = 10;
 
-        private List<IMarketInstrument> GetInstruments(Task<MarketInstrumentList> getInstrumentsTask, Context context, int depth)
-        {
-            List<IMarketInstrument> instruments = new List<IMarketInstrument>();
-
-            MarketInstrumentList instrumentsList = getInstrumentsTask.Result;
-
-            for(int i = 0; i< instrumentsList.Total; i++)
-            {
-                Orderbook orderbook = context
-                    .MarketOrderbookAsync(instrumentsList.Instruments[i].Figi
-                    , depth).Result;
-
-                instruments.Add(new TinkoffInstrumentAdapter(instrumentsList.Instruments[i],
-                    orderbook));
-            }
-
-            return instruments;
-        }
-
-
         public TinkoffBankBroker(CreateBrokerData data)
         {
-            Connection conn = ConnectionFactory.GetConnection(data.Token);
+            var conn = ConnectionFactory.GetSandboxConnection(data.Token);
             tinkoffContext = conn.Context;
+
             if (data.Depth == 0)
+            {
                 Depth = CDefaultDepth;
+            }
             else
+            {
                 Depth = data.Depth;
+            }
         }
 
-
         /*
-         * After create broker, if you want receive responce to request
+         * After creating the broker, if you want receive response to request
          * with another depth, you must change depth here and make
          * a request again
         */
@@ -53,6 +38,59 @@ namespace TinkoffIntegrationLib
         /// Depth by market glass
         /// </summary>
         public int Depth { get; set; }
+
+        public List<IMarketInstrument> GetInstruments(InstrumentType type, int depth)
+        {
+            var instruments = new List<IMarketInstrument>();
+
+            MarketInstrumentList instrumentsList = type switch
+            {
+                InstrumentType.Bond => tinkoffContext.MarketBondsAsync().Result,
+                InstrumentType.Currency => tinkoffContext.MarketCurrenciesAsync().Result,
+                InstrumentType.Stock => tinkoffContext.MarketStocksAsync().Result,
+                _ => throw new NotImplementedException()
+            };
+
+            for (int i = 0; i < instrumentsList.Total; i++)
+            {
+                // I'm not sure abpout this try/catch, but Tinkoff
+                // keeps sending weird null ref exceptions from time to time
+                try
+                {
+                    Orderbook orderbook = tinkoffContext
+                    .MarketOrderbookAsync(instrumentsList.Instruments[i].Figi
+                    , depth).Result;
+
+                    instruments.Add(new TinkoffInstrumentAdapter(type,
+                        instrumentsList.Instruments[i], orderbook));
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+
+            return instruments;
+        }
+
+        public async Task SaveInstrument(IMarketInstrument instrument)
+        {
+            var portfolio = await tinkoffContext.PortfolioAsync();
+
+            var position = new Portfolio.Position(
+                instrument.Figi,
+                instrument.Ticker,
+                instrument.Isin,
+                instrument.Type,
+                0,
+                0,
+                new MoneyAmount(instrument.Currency, 0),
+                0,
+                new MoneyAmount(instrument.Currency, 0),
+                new MoneyAmount(instrument.Currency, 0));
+
+            portfolio.Positions.Add(position);
+        }
 
         /// <summary>
         /// Method returns specific bond
@@ -62,7 +100,7 @@ namespace TinkoffIntegrationLib
         public IMarketInstrument GetBond(string idBond)
         {
             return GetAllBonds()
-                .Where(b => b.Id == idBond)
+                .Where(b => b.Figi == idBond)
                 .Single();
         }
 
@@ -72,7 +110,7 @@ namespace TinkoffIntegrationLib
         /// <returns>List with bonds</returns>
         public List<IMarketInstrument> GetAllBonds()
         {
-            return GetInstruments(tinkoffContext.MarketBondsAsync(), tinkoffContext, Depth);
+            return GetInstruments(InstrumentType.Bond, Depth);
         }
 
         /// <summary>
@@ -81,7 +119,7 @@ namespace TinkoffIntegrationLib
         /// <returns>List with currencies</returns>
         public List<IMarketInstrument> GetAllCurrencies()
         {
-            return GetInstruments(tinkoffContext.MarketCurrenciesAsync(), tinkoffContext, Depth);
+            return GetInstruments(InstrumentType.Currency, Depth);
         }
 
         /// <summary>
@@ -92,7 +130,7 @@ namespace TinkoffIntegrationLib
         public IMarketInstrument GetCurrency(string idCurrency)
         {
             return GetAllCurrencies()
-                .Where(c => c.Id == idCurrency)
+                .Where(c => c.Figi == idCurrency)
                 .Single();
         }
 
@@ -104,7 +142,7 @@ namespace TinkoffIntegrationLib
         public IMarketInstrument GetStock(string idStock)
         {
             return GetAllStocks()
-                .Where(st => st.Id == idStock)
+                .Where(st => st.Figi == idStock)
                 .Single();
         }
 
@@ -114,7 +152,7 @@ namespace TinkoffIntegrationLib
         /// <returns>List with stocks</returns>
         public List<IMarketInstrument> GetAllStocks()
         {
-            return GetInstruments(tinkoffContext.MarketStocksAsync(), tinkoffContext, Depth);
+            return GetInstruments(InstrumentType.Stock, Depth);
         }
     }
 }

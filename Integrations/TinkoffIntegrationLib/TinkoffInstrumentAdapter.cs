@@ -4,37 +4,40 @@ using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffIntegrationLib
 {
-    class TinkoffInstrumentAdapter : IMarketInstrument
+    public class TinkoffInstrumentAdapter : IMarketInstrument
     {
-        MarketInstrument tinkoffInstrument;
-        Orderbook tinkoffOrderbook;
+        private readonly MarketInstrument tinkoffInstrument;
+        private readonly Orderbook tinkoffOrderbook;
+        private readonly InstrumentType instrumentType;
 
         /*
          * If I will pass to ctor tinkoff context,
          * class obtain a lot of excess info
         */
-        public TinkoffInstrumentAdapter(MarketInstrument instrument, Orderbook orderbook)
+        public TinkoffInstrumentAdapter(InstrumentType type, MarketInstrument instrument, Orderbook orderbook)
         {
             if (instrument.Figi != orderbook.Figi)
                 throw new ArgumentException("Transfer orderbook does not match the market instrument");
 
             tinkoffInstrument = instrument;
             tinkoffOrderbook = orderbook;
+            instrumentType = type;
         }
 
-        /// <summary>
-        /// Figi e.g.
-        /// </summary>
-        public string Id => tinkoffInstrument.Figi;
+        public string Figi => tinkoffInstrument.Figi;
 
-        /// <summary>
-        /// Name market instrument
-        /// </summary>
+        public string Ticker => tinkoffInstrument.Ticker;
+
+        public string Isin => tinkoffInstrument.Isin;
+
+        public InstrumentType Type => instrumentType;
+
         public string Name => tinkoffInstrument.Name;
 
-        /// <summary>
-        /// Price by market instrument
-        /// </summary>
+        public Currency Currency => tinkoffInstrument.Currency;
+
+        public int Lot => tinkoffInstrument.Lot;
+
         public decimal Price => tinkoffOrderbook.LastPrice;
     }
 }

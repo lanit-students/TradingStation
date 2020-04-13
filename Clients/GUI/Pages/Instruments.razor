@@ -1,0 +1,120 @@
+﻿@page "/instruments"
+
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <h3>Instruments</h3>
+        </div>
+        <div class="col-md float-right">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Choose instrument</label>
+                </div>
+                <select @onchange="@UpdateInstruments" class="custom-select">
+                    @foreach (var instrument in InstrumentOptions)
+                    {
+                        <option value=@instrument>@instrument</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+       @if (AreInstrumentsLoading)
+        {
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Figi</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Lot</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   @foreach (var instrument in MarketInstruments)
+                    {
+                        <tr>
+                            <td>@instrument.Figi</td>
+                            <td>@instrument.Name</td>
+                            <td>@instrument.Currency</td>
+                            <td>@instrument.Lot</td>
+                            <td @onclick="@(() => SaveInstrument(instrument))">
+                                Add to portfolio
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+
+@code {
+    public List<IMarketInstrument> MarketInstruments { get; set; }
+    public List<string> InstrumentOptions { get; set; }
+    public string SelectedInstrument { get; set; }
+    public bool AreInstrumentsLoading { get; set; }
+
+    private TinkoffBankBroker broker;
+
+    private async Task UpdateInstruments(ChangeEventArgs e)
+    {
+        SelectedInstrument = e.Value.ToString();
+        AreInstrumentsLoading = true;
+
+        var result = await Task.Run(() =>
+            SelectedInstrument switch
+            {
+                "Bonds" => broker.GetAllBonds(),
+                "Currencies" => broker.GetAllCurrencies(),
+                "Stocks" => broker.GetAllStocks(),
+                _ => MarketInstruments
+            });
+
+        AreInstrumentsLoading = false;
+
+        MarketInstruments = result;
+    }
+
+    private void SaveInstrument(IMarketInstrument instrument)
+    {
+        //broker.SaveInstrument(instrument);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        InstrumentOptions = new List<string>()
+        {
+            "Currencies",
+            "Bonds",
+            "Stocks"
+        };
+
+        AreInstrumentsLoading = true;
+
+        var data = new CreateBrokerData()
+        {
+            Depth = 1,
+            Token = ""
+        };
+
+        broker = new TinkoffBankBroker(data);
+
+        MarketInstruments = new List<IMarketInstrument>();
+
+        var result = await Task.Run(() => broker.GetAllCurrencies());
+
+        AreInstrumentsLoading = false;
+
+        MarketInstruments = result;
+    }
+}

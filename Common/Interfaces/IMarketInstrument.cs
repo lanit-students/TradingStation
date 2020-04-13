@@ -1,24 +1,26 @@
-﻿namespace Interfaces
+﻿using Tinkoff.Trading.OpenApi.Models;
+
+namespace Interfaces
 {
     /// <summary>
-    /// Represents market instrument 
+    /// Represents market instrument
     /// </summary>
     public interface IMarketInstrument
     {
-        /// <summary>
-        /// Figi e.g.
-        /// </summary>
-        string Id { get; }
+        string Figi { get; }
 
-        /// <summary>
-        /// Name market instrument
-        /// </summary>
+        string Ticker { get; }
+
+        string Isin { get; }
+
+        InstrumentType Type { get; }
+
         string Name { get; }
 
-        /// <summary>
-        /// Price by market instrument
-        /// </summary>
-        decimal Price { get; }
+        Currency Currency { get; }
 
+        int Lot { get; }
+
+        decimal Price { get; }
     }
 }

@@ -55,7 +55,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanTests", "PostmanTest
 		PostmanTests\UserService.postman_collection.json = PostmanTests\UserService.postman_collection.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RssIntegrationLib", "Integrations\RssIntegrationLib\RssIntegrationLib.csproj", "{6C7F6642-34E4-4C39-B481-43F9840E7285}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RssIntegrationLib", "Integrations\RssIntegrationLib\RssIntegrationLib.csproj", "{6C7F6642-34E4-4C39-B481-43F9840E7285}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
