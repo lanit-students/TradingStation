@@ -9,8 +9,7 @@ namespace GUI.CustomValidationAttributes
 {
     public class BirthdayAttribute : ValidationAttribute
     {
-        public string GetErrorMessageTooYoung() =>
-            $"You are to young.";
+        public string ErrorMessageTooYoung = "You are to young.";
 
         protected override ValidationResult IsValid(object value,
             ValidationContext validationContext)
@@ -19,7 +18,7 @@ namespace GUI.CustomValidationAttributes
             
             if (birthday.AddYears(18) >= DateTime.Now)
             {
-                return new ValidationResult(GetErrorMessageTooYoung());
+                return new ValidationResult(ErrorMessageTooYoung);
             }
 
             return ValidationResult.Success;
