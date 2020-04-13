@@ -1,4 +1,5 @@
-﻿using DataBaseService.Repositories.Interfaces;
+﻿using System;
+using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
 using MassTransit;
@@ -19,6 +20,11 @@ namespace DataBaseService.BrokerConsumers
         private OperationResult CreateUser(InternalCreateUserRequest request)
         {
             userRepository.CreateUser(request.User, request.Credential.Email);
+            if (request.UserAvatar != null)
+            {
+                userRepository.CreateUserAvatar(request.UserAvatar);
+            }
+
             userRepository.CreateUserCredential(request.Credential);
 
             return new OperationResult
