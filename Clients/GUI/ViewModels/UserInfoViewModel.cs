@@ -19,5 +19,8 @@ namespace GUI.ViewModels
         public string OldPassword { get; set; }
 
         public string NewPassword { get; set; }
+
+        public byte[] Avatar { get; set; }
+        public string AvatarExtension { get; set; }
     }
 }

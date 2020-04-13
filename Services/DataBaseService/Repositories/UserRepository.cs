@@ -6,6 +6,7 @@ using Kernel.CustomExceptions;
 using DataBaseService.Database;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
+using DTO.BrokerRequests;
 
 namespace DataBaseService.Repositories
 {
@@ -50,16 +51,27 @@ namespace DataBaseService.Repositories
             return mapper.MapUserCredential(dbCredential);
         }
 
-        public User GetUserById(Guid userId)
+        public InternalGetUserByIdResponse GetUserWithAvatarById(Guid userId)
         {
-            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
+            var dbUser = dbContext.Users.FirstOrDefault(u => u.Id == userId);
             if (dbUser == null)
             {
                 throw new NotFoundException("User not found");
             }
-
             var email = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).Email;
-            return mapper.MapUser(dbUser, email);
+
+            var user = mapper.MapUser(dbUser, email);
+
+            UserAvatar userAvatar = null;
+            var dbUserAvatar = dbContext.UsersAvatars.FirstOrDefault(ua => ua.UserId == userId);
+            if (dbUserAvatar != null)
+                userAvatar = mapper.MapUserAvatar(dbUserAvatar);
+
+            return new InternalGetUserByIdResponse
+            {
+                User = user,
+                UserAvatar = userAvatar
+            };
         }
 
         public void DeleteUser(Guid userId)

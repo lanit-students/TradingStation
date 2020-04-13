@@ -16,9 +16,9 @@ namespace DataBaseService.BrokerConsumers
             this.userRepository = userRepository;
         }
 
-        private User GetUserById(InternalGetUserByIdRequest request)
+        private InternalGetUserByIdResponse GetUserById(InternalGetUserByIdRequest request)
         {
-            return userRepository.GetUserById(request.UserId);
+            return userRepository.GetUserWithAvatarById(request.UserId);
         }
 
         public async Task Consume(ConsumeContext<InternalGetUserByIdRequest> context)

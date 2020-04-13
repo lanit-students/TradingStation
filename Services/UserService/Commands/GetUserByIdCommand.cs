@@ -1,10 +1,10 @@
 ﻿using DTO.BrokerRequests;
+using DTO.RestRequests;
 using System;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using MassTransit;
-using DTO;
 
 namespace UserService.Commands
 {
@@ -17,20 +17,40 @@ namespace UserService.Commands
             this.client = client;
         }
 
-        private async Task<User> GetUserById(InternalGetUserByIdRequest request)
+        private async Task<InternalGetUserByIdResponse> GetUserById(InternalGetUserByIdRequest request)
         {
-            var result = await client.GetResponse<User>(request);
+            var result = await client.GetResponse<InternalGetUserByIdResponse>(request);
 
             return result.Message;
         }
 
-        public async Task<User> Execute(Guid request)
+        public async Task<UserInfoRequest> Execute(Guid request)
         {
             var internalRequest = new InternalGetUserByIdRequest { UserId = request };
 
-            var user = await GetUserById(internalRequest);
+            var internalResponse = await GetUserById(internalRequest);
 
-            return user;
+            byte[] avatar = null;
+            string avatarExtension = null;
+
+            var userAvatar = internalResponse.UserAvatar;
+            var user = internalResponse.User;
+            if (userAvatar != null)
+            {
+                avatar = userAvatar.Avatar;
+                avatarExtension = userAvatar.AvatarExtension;
+            }
+            var restResponse = new UserInfoRequest
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthday = user.Birthday,
+                Avatar = avatar,
+                AvatarExtension = avatarExtension,
+            };
+            return restResponse;
         }
     }
 }

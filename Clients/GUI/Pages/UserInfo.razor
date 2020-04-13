@@ -4,7 +4,7 @@
 @inject ISessionStorageService Storage
 @attribute [Authorize]
 
-<div class="col-md-auto">
+<div class =" ">
     <h3><b>User Info</b></h3>
     <hr />
     <EditForm Model="@user">
@@ -124,7 +124,10 @@
                 FirstName = requestResult.FirstName,
                 LastName = requestResult.LastName,
                 Birthday = requestResult.Birthday,
-                Email = requestResult.Email
+                Email = requestResult.Email,
+                Avatar = requestResult.Avatar,
+                AvatarExtension = requestResult.AvatarExtension
+                
             };
         }
         catch (NotFoundException)
