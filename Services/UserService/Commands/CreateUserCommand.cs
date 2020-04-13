@@ -35,7 +35,6 @@ namespace UserService.Commands
             validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
-
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -43,6 +42,17 @@ namespace UserService.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
+            UserAvatar userAvatar = null;
+            if (request.Avatar != null && request.AvatarExtension != null)
+            {
+                userAvatar = new UserAvatar
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    Avatar = request.Avatar,
+                    AvatarExtension = request.AvatarExtension
+                };
+            }
 
             var credential = new UserCredential
             {
@@ -55,9 +65,9 @@ namespace UserService.Commands
             var internalCreateUserRequest = new InternalCreateUserRequest
             {
                 User = user,
-                Credential = credential
+                Credential = credential,
+                UserAvatar = userAvatar
             };
-
             var createUserResult = await CreateUser(internalCreateUserRequest);
             if (!createUserResult)
             {
