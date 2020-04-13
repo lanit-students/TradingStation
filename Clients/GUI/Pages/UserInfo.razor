@@ -3,7 +3,9 @@
 @inject IModalService Modal
 @inject ISessionStorageService Storage
 @attribute [Authorize]
+@{ 
 
+}
     <div class="wrapper">
 
         <div align="center" class="h3" min-width:>
@@ -18,7 +20,7 @@
         <div class="row">
         <div class="col-sm-4" align =" center">
             <EditForm Model="@user">
-                <p><img src=@imgSrc style="max-width:200px; max-height:200px;" alt="Avatar"></p>
+                <p><img src=@imgSrc style="max-width:200px; max-height:200px;"  alt="Avatar"></p>
             </EditForm>
         </div>
         <div class=" = col-sm-8">
@@ -68,7 +70,7 @@
             public bool ErrorOccured { get; set; }
             private UserInfoViewModel user;
             private UserToken userToken;
-            public string imgSrc = "";
+            public string imgSrc = "~/images/withoutAvatar.png";
 
 
             private async Task EditInfoClickHandler()
@@ -136,6 +138,8 @@
             {
                 try
                 {
+                    var path = System.IO.Directory.GetCurrentDirectory();
+                    imgSrc = path + "\\wwwroot\\images\\withoutAvatar.png";
                     var requestResult = await UserGetter.GetUserById(userToken);
 
                     user = new UserInfoViewModel()
@@ -148,8 +152,11 @@
                         AvatarExtension = requestResult.AvatarExtension
 
                     };
+                    if (user.Avatar != null)
+                        imgSrc = GetSrcImage(user.Avatar, user.AvatarExtension);
+                    else
+                        imgSrc = GetDefaultImage(imgSrc);
 
-                    imgSrc = GetSrcImage(user.Avatar, user.AvatarExtension);
 
                 }
                 catch (NotFoundException)
@@ -165,9 +172,17 @@
 
             private string GetSrcImage(byte[] avatar, string extension)
             {
-                string base64 = Convert.ToBase64String(avatar);
-                var imgSrc = String.Format("data:image/{0};base64,{1}", extension, base64);
-                return imgSrc;
+                var base64 = Convert.ToBase64String(avatar);
+                return String.Format("data:image/{0};base64,{1}", extension, base64);
+
+            }
+            private string GetDefaultImage(string src)
+            {
+
+                var file = File.ReadAllBytes(src);
+                var ext = src.Substring(src.IndexOf('.') + 1, 3);
+                var base64 = Convert.ToBase64String(file);
+                return String.Format("data:image/{0};base64,{1}", ext, base64);
             }
 
             protected override void OnInitialized()
