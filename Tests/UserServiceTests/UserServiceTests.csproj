@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\Services\UserService\UserService.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
+  </ItemGroup>
+
 </Project>
