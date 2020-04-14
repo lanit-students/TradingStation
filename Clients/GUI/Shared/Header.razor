@@ -4,52 +4,20 @@
 @inject Blazored.SessionStorage.ISessionStorageService Storage
 
 <div class="header">
-    <div class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="">Trading Station</a>
-        <button class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-    <div class="header_section">
-        <div class="header_item headerLogo">
-        </div>
-        <div class="header_item headerButton">
-            <a href="#">
-                News
-            </a>
-        </div>
-    </div>
-    <div class="header_section">
-        <div class="header_item headerLogo">
-        </div>
+    <a href="#"><img src="Logo/logo.png"></a>
+    <a class="header_item" href="#">News</a>
+    <div class="header-right">
         <AuthorizeView>
-            <Authorized>
-                <div class="header_item headerButton">
-
-                    <NavLink class="nav-link" href="userinfo" Match="NavLinkMatch.All">
-                        <span class="oi oi-people" aria-hidden="true"></span> User Info
-                    </NavLink>
-                </div>
-                \
-                <div class="header_item headerButton">
-                    <NavLink class="nav-link" href="signin" @onclick="@SignOut" Match="NavLinkMatch.All">
-                        <span class="oi oi-account-logout" aria-hidden="true"></span> Sign Out
-                    </NavLink>
-                </div>
-            </Authorized>
             <NotAuthorized>
-                <div class="header_item headerButton">
-                    <NavLink class="nav-link" href="signup">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Sign Up
-                    </NavLink>
-                </div>
-                \
-                <div class="header_item headerButton">
-                    <NavLink class="nav-link" href="signin" Match="NavLinkMatch.All">
-                        <span class="oi oi-account-login" aria-hidden="true"></span> Sign In
-                    </NavLink>
-                </div>
+                <a class="header_item" href="signup">Sign up</a>
+                <a> / </a>
+                <a class="header_item" href="signin">Sign in</a>
             </NotAuthorized>
+            <Authorized>
+                <a class="header_item" href="signin" @onclick="@SignOut">  Sign Out</a>
+                <a> / </a>
+                <a class="header_item" href="userinfo">User Info</a>
+            </Authorized>
         </AuthorizeView>
     </div>
 </div>

@@ -46,57 +46,6 @@ app {
     text-overflow: ellipsis;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-}
-
-    .sidebar .top-row {
-        background-color: rgba(0,0,0,0.4);
-    }
-
-    .sidebar .navbar-brand {
-        font-size: 1.1rem;
-    }
-
-    .sidebar .oi {
-        width: 2rem;
-        font-size: 1.1rem;
-        vertical-align: text-top;
-        top: -2px;
-    }
-
-    .sidebar .nav-item {
-        font-size: 0.9rem;
-        padding-bottom: 0.5rem;
-    }
-
-        .sidebar .nav-item:first-of-type {
-            padding-top: 1rem;
-        }
-
-        .sidebar .nav-item:last-of-type {
-            padding-bottom: 1rem;
-        }
-
-        .sidebar .nav-item a {
-            color: #d7d7d7;
-            border-radius: 4px;
-            height: 3rem;
-            display: flex;
-            align-items: center;
-            line-height: 3rem;
-        }
-
-            .sidebar .nav-item a.active {
-                background-color: rgba(255,255,255,0.25);
-                color: white;
-            }
-
-            .sidebar .nav-item a:hover {
-                background-color: rgba(255,255,255,0.1);
-                color: white;
-            }
-
 .content {
     padding-top: 1.1rem;
 }
@@ -248,25 +197,32 @@ app {
         background-image: url(/images/currencies/gbp.png)
     }
 
-a {
-    color: #fff;
-    text-decoration: None;
-}
-
 .header {
-    display: flex;
-    justify-content: space-between;
+    overflow: hidden;
+    background-color: #f1f1f1;
     padding: 10px;
-    background: #698CD2;
-    color: #fff;
 }
 
-.header_section {
-    display: flex;
-    align-items: center;
-}
+    .header a {
+        float: left;
+        color: black;
+        text-align: center;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 22px;
+        line-height: 25px;
+        border-radius: 4px;
+    }
+        .header a:hover {
+            background-color: #ddd;
+            color: black;
+        }
 
-.header_item {
-    padding: 10px 15px;
-    font-size: 20px
+        .header a.active {
+            background-color: dodgerblue;
+            color: white;
+        }
+
+.header-right {
+    float: right;
 }
