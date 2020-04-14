@@ -91,7 +91,7 @@ namespace DataBaseService.Repositories
             dbContext.SaveChanges();
         }
 
-        public void EditUser(User user, PasswordHashChangeRequest password)
+        public void EditUser(User user, PasswordHashChangeRequest password, UserAvatar userAvatar)
         {
             var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == user.Id);
             if (dbUser != null)
@@ -116,6 +116,22 @@ namespace DataBaseService.Repositories
                     else
                     {
                         throw new NotFoundException("Not found User to change pasword");
+                    }
+                }
+                if (userAvatar != null)
+                {
+                    var dbUserAvatar = dbContext.UsersAvatars.FirstOrDefault(ua => ua.UserId == user.Id);
+
+                    if (dbUserAvatar == null)
+                    {
+                        userAvatar.Id = Guid.NewGuid();
+                        userAvatar.UserId = user.Id;
+                        dbContext.UsersAvatars.Add(mapper.MapToDbUserAvatar(userAvatar));
+                    }
+                    else
+                    {
+                        dbUserAvatar.AvatarExtension = userAvatar.AvatarExtension;
+                        dbUserAvatar.Avatar = userAvatar.Avatar;
                     }
                 }
 

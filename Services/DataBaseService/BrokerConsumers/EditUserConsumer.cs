@@ -18,7 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private OperationResult EditUser(InternalEditUserInfoRequest request)
         {
-            userRepository.EditUser(request.User, request.UserPasswords);
+            userRepository.EditUser(request.User, request.UserPasswords, request.UserAvatar);
 
             return new OperationResult
             {

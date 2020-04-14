@@ -18,17 +18,25 @@
             </ul>
         </nav>
         <div class="row">
-        <div class="col-sm-4" align =" center">
-            <EditForm Model="@user">
-                <p><img src=@imgSrc style="max-width:200px; max-height:200px;"  alt="Avatar"></p>
-            </EditForm>
-        </div>
+            <div class="form-group col-sm-4" align ="center">
+                <EditForm Model="@user">
+                    <p><img src=@imgSrc style="max-width:200px; max-height:200px;" alt="Avatar"></p>
+                    
+                        <br />
+                        <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary">Select Image</label>
+                        <InputFile style="display: none" id="files" disabled="@IsEditModeDisabled" accept=".jpg, .jpeg, .png" OnChange="ChangeAvatar" />
+                        <br />
+                        <button class="btn btn-secondary col-3" disabled="@IsEditModeDisabled" @onclick="DiscardAvatarChanges">Reset</button>
+                       <br />
+                    
+                </EditForm>
+            </div>
         <div class=" = col-sm-8">
-            <EditForm Model="@user" >
+            <EditForm Model="@user">
                 <DataAnnotationsValidator />
-                <div class="form-group" >
+                <div class="form-group">
                     <label for="Name">Name:</label>
-                    <InputText class="form-control col-3" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
+                    <InputText class="form-control col-3" @onchange="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
                 </div>
                 <div class="form-group">
                     <label for="Surname">Surname:</label>
@@ -51,7 +59,11 @@
                     <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass" disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
                 </div>
                 <br />
-                <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler" class="form-control col-3 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
+                <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
+                       class="form-control col-3 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
+                <br />
+                <input type="@(IsAvatarBeingChanged || IsPasswordBeingChanged || IsUserInfoBeingChanged ? "button" : "hidden")"
+                       @onclick="@DiscardAllChanges" class="form-control col-3 button btn-primary" value="Discard all changes" />
                 <br />
                 <ValidationSummary />
                 <h4 style="display:@(ErrorOccured ? "block" : "hidden"); color:red">@ErrorMessage</h4>
@@ -62,23 +74,33 @@
         </div>
 
         @code {
+
             public bool IsEditModeDisabled { get; set; }
+            public bool IsUserInfoBeingChanged { get; set; }
             public bool IsPasswordBeingChanged { get; set; }
+            public bool IsAvatarBeingChanged { get; set; }
             public bool PopupVisible { get; set; }
             public string ErrorMessage { get; set; }
             public string InputStyleClass { get; set; }
             public bool ErrorOccured { get; set; }
             private UserInfoViewModel user;
+            private UserInfoViewModel oldUser;
             private UserToken userToken;
-            public string imgSrc = "~/images/withoutAvatar.png";
+            private bool showLoading = false;
+            private string imgSrc = "";
+            private byte[] oldAvatar = null;
+            private string oldAvatarExtension = null;
+            private const int CMaxSizeOfImageInBytes = 2097152;
+            private const string CDefaultImagePath = "\\wwwroot\\images\\withoutAvatar.png";
 
 
             private async Task EditInfoClickHandler()
             {
                 if (IsEditModeDisabled)
                 {
+                    oldUser = (UserInfoViewModel)user.Clone();
                     IsEditModeDisabled = false;
-                    InputStyleClass = "form-control col-3";
+                    // InputStyleClass = "form-control col-3";
                 }
                 else
                 {
@@ -96,7 +118,8 @@
                         var request = new EditUserRequest()
                         {
                             UserInfo = userInfo,
-                            PasswordRequest = null
+                            PasswordRequest = null,
+                            AvatarRequest = null
                         };
 
                         if (IsPasswordBeingChanged)
@@ -109,6 +132,16 @@
 
                             request.PasswordRequest = passwordRequest;
                         }
+                        if (IsAvatarBeingChanged)
+                        {
+                            var avatarRequest = new AvatarChangeRequest()
+                            {
+                                Avatar = user.Avatar,
+                                AvatarExtension = user.AvatarExtension
+                            };
+                            request.AvatarRequest = avatarRequest;
+                        }
+
 
                         await UserEditor.EditUser(userToken, request);
 
@@ -134,12 +167,40 @@
                 IsPasswordBeingChanged ^= true;
             }
 
+            private void ChangeAvatarClickHandler()
+            {
+                IsAvatarBeingChanged = true;
+            }
+
+            private async Task ChangeAvatar(IFileListEntry[] files)
+            {
+                showLoading = true;
+                ErrorMessage = "";
+                var file = files[^1];
+                if (file != null)
+                {
+                    if (file.Size > CMaxSizeOfImageInBytes)
+                    {
+                        ErrorMessage = "File is too big. Max size of image is 2 MB";
+                        showLoading = false;
+                        return;
+                    }
+                    using var ms = new MemoryStream();
+                    await file.Data.CopyToAsync(ms);
+                    oldAvatar = user.Avatar;
+                    oldAvatarExtension = user.AvatarExtension;
+                    user.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
+                    user.Avatar = ms.ToArray();
+                    imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
+                    IsAvatarBeingChanged = true;
+                }
+                showLoading = false;
+            }
+
             private async Task UpdateUserModel()
             {
                 try
                 {
-                    var path = System.IO.Directory.GetCurrentDirectory();
-                    imgSrc = path + "\\wwwroot\\images\\withoutAvatar.png";
                     var requestResult = await UserGetter.GetUserById(userToken);
 
                     user = new UserInfoViewModel()
@@ -153,11 +214,9 @@
 
                     };
                     if (user.Avatar != null)
-                        imgSrc = GetSrcImage(user.Avatar, user.AvatarExtension);
+                        imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
                     else
-                        imgSrc = GetDefaultImage(imgSrc);
-
-
+                        imgSrc = GetDefaultImage();
                 }
                 catch (NotFoundException)
                 {
@@ -170,19 +229,45 @@
                 }
             }
 
-            private string GetSrcImage(byte[] avatar, string extension)
+            private string GetUserImage(byte[] avatar, string extension)
             {
                 var base64 = Convert.ToBase64String(avatar);
                 return String.Format("data:image/{0};base64,{1}", extension, base64);
-
             }
-            private string GetDefaultImage(string src)
-            {
 
-                var file = File.ReadAllBytes(src);
-                var ext = src.Substring(src.IndexOf('.') + 1, 3);
+            private string GetDefaultImage()
+            {
+                var imagePath = System.IO.Directory.GetCurrentDirectory() + CDefaultImagePath;
+                var file = File.ReadAllBytes(imagePath);
+                var ext = imagePath.Substring(imagePath.IndexOf('.') + 1);
                 var base64 = Convert.ToBase64String(file);
                 return String.Format("data:image/{0};base64,{1}", ext, base64);
+            }
+
+            private void DiscardAvatarChanges()
+            {
+                ErrorMessage = "";
+                IsAvatarBeingChanged ^= true;
+                user.Avatar = oldAvatar;
+                user.AvatarExtension = oldAvatarExtension;
+                if (user.Avatar != null)
+                    imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
+                else
+                    imgSrc = GetDefaultImage();
+            }
+
+            private void DiscardAllChanges()
+            {
+                user = (UserInfoViewModel)oldUser.Clone();
+                IsEditModeDisabled = false;
+                IsPasswordBeingChanged = false;
+                IsAvatarBeingChanged = false;
+                UpdateUserModel();
+            }
+
+            private void UserInfoChangeHandler()
+            {
+                IsUserInfoBeingChanged = true;
             }
 
             protected override void OnInitialized()
@@ -193,7 +278,9 @@
                 ErrorMessage = "";
                 PopupVisible = false;
                 IsEditModeDisabled = true;
+                IsUserInfoBeingChanged = false;
                 IsPasswordBeingChanged = false;
+                IsAvatarBeingChanged = false;
                 InputStyleClass = "input-group-text";
             }
 

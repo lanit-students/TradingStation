@@ -11,5 +11,6 @@ namespace DTO.RestRequests
         public DateTime Birthday { get; set; }
         public byte[] Avatar { get; set; }
         public string AvatarExtension { get; set; }
+
     }
 }

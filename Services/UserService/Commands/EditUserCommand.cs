@@ -38,7 +38,9 @@ namespace UserService.Commands
         {
             var passwordRequest = request.PasswordRequest;
             var userInfo = request.UserInfo;
+            var avatarRequest = request.AvatarRequest;
             PasswordHashChangeRequest passwordHashChangeRequest = null;
+            UserAvatar userAvatar = null;
 
             if (passwordRequest != null)
             {
@@ -47,6 +49,15 @@ namespace UserService.Commands
                 {
                     OldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword),
                     NewPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword)
+                };
+            }
+            if (avatarRequest != null)
+            {
+                // Avatar validation
+                userAvatar = new UserAvatar
+                {
+                    Avatar = avatarRequest.Avatar,
+                    AvatarExtension = avatarRequest.AvatarExtension
                 };
             }
 
@@ -64,7 +75,8 @@ namespace UserService.Commands
             var internalEditUserInfoRequest = new InternalEditUserInfoRequest
             {
                 User = user,
-                UserPasswords = passwordHashChangeRequest
+                UserPasswords = passwordHashChangeRequest,
+                UserAvatar = userAvatar                
             };
 
             var editUserResult = await EditUser(internalEditUserInfoRequest);
