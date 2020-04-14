@@ -80,7 +80,6 @@ namespace UserService
             {
                 x.AddConsumer<LoginUserConsumer>();
                 x.AddBus(provider => CreateBus(provider));
-                x.AddRequestClient<InternalEditUserInfoRequest>();
                 x.AddRequestClient<InternalCreateUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalGetUserByIdRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalEditUserInfoRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
