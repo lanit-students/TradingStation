@@ -1,21 +1,19 @@
 ﻿@using GUI.Modals.Currency
 @inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
-
-<div class="main">
-    <div class="content px-4">
-        @Body
+    <div class="main">
+        <div class="header">
+            <Header />
+        </div>
+        <div class="newsbar float-right">
+            <div class="newsbar-item currencies text-center">
+                <CurrencyBar Codes="codes" />
+            </div>
+        </div>
+        <div class="content px-4">
+            @Body
+        </div>
     </div>
-</div>
-
-<div class="newsbar sidebar">
-    <div class="newsbar-item currencies text-center">
-        <CurrencyBar Codes="codes" />
-    </div>
-</div>
 
 <BlazoredModal />
 

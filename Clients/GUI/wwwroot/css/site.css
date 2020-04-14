@@ -183,7 +183,7 @@ app {
 }
 
 .newsbar {
-    width: 120px;
+    width: 150px;
     height: 100vh;
     color: #d7d7d7;
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
@@ -193,6 +193,7 @@ app {
 }
 
 .newsbar-item {
+    width: 100px;
     color: black;
     font-size: 0.7rem;
     border: 1px solid #d7d7d7;
@@ -246,3 +247,26 @@ app {
     .cur-icon .gbp-icon {
         background-image: url(/images/currencies/gbp.png)
     }
+
+a {
+    color: #fff;
+    text-decoration: None;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #698CD2;
+    color: #fff;
+}
+
+.header_section {
+    display: flex;
+    align-items: center;
+}
+
+.header_item {
+    padding: 10px 15px;
+    font-size: 20px
+}
