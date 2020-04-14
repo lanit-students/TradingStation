@@ -1,7 +1,5 @@
 ﻿@page "/instruments"
 
-@using System.Threading;
-
 <div class="container">
     <div class="row">
         <div class="col-md">
@@ -129,7 +127,7 @@
 
         var data = new CreateBrokerData()
         {
-            Depth = 1,
+            Depth = 10,
             Token = ""
         };
 
@@ -137,7 +135,7 @@
 
         MarketInstruments = new List<IMarketInstrument>();
 
-        var result = await Task.Run(() => broker.GetAllBonds());
+        var result = await Task.Run(() => broker.GetAllCurrencies());
 
         MarketInstruments = result;
 

@@ -35,7 +35,7 @@ namespace TinkoffIntegrationLib
          * a request again
         */
         /// <summary>
-        /// Depth by market glass
+        /// Depth of market glass
         /// </summary>
         public int Depth { get; set; }
 
