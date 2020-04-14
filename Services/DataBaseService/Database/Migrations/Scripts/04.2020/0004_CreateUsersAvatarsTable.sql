@@ -1,0 +1,18 @@
+﻿CREATE TABLE dbo.UsersAvatars (
+	[Id] UNIQUEIDENTIFIER UNIQUE NOT NULL,
+	[Avatar] VARBINARY(MAX) NOT NULL,
+	[AvatarExtension] NVARCHAR(20) NOT NULL,
+	[UserId]        UNIQUEIDENTIFIER NOT NULL,
+	CONSTRAINT [PK_UsersAvatars] PRIMARY KEY ([Id] ASC)
+)
+GO
+ALTER TABLE dbo.UsersAvatars ADD CONSTRAINT
+	FK_UsersAvatars_Users FOREIGN KEY 
+	(
+	UserId 
+	) REFERENCES dbo.Users 
+	(
+	Id
+	) ON UPDATE NO ACTION
+	ON DELETE NO ACTION
+GO

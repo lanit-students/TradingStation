@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataBaseService.Database.Models
 {
@@ -10,7 +11,6 @@ namespace DataBaseService.Database.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
-
     }
 
     public class DbUserConfiguration : IEntityTypeConfiguration<DbUser>
@@ -36,6 +36,9 @@ namespace DataBaseService.Database.Models
                 .Property(p => p.Birthday)
                 .HasColumnName("Birthday")
                 .IsRequired();
+            builder
+                .HasIndex(p => p.Id)
+                .IsUnique();
         }
     }
 }

@@ -9,6 +9,8 @@ namespace DataBaseService.Repositories.Interfaces
 
         void CreateUserCredential(UserCredential userCredential);
 
+        void CreateUserAvatar(UserAvatar userAvatar);
+
         UserCredential GetUserCredential(string email);
 
         User GetUserById(Guid userId);

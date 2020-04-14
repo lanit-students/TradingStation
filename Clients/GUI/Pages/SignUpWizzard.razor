@@ -1,0 +1,169 @@
+﻿@page "/signup"
+@using GUI.Components
+@using GUI.Scripts
+@using GUI.ViewModels
+@inject NavigationManager NavigationManager
+<EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
+    <Wizard Id="Wizard" HasError="@HasError">
+        <WizardStep Name="First Step">
+            <DataAnnotationsValidator />
+            <div class="form-group mt-5">
+                <label for="Name">Name:</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.FirstName" placeholder="Your name" />
+            </div>
+            <div class="form-group">
+                <label for="Surname">Surname:</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.LastName" placeholder="Your surname" />
+            </div>
+            <div class="form-group">
+                <label for="Birthday">Birthday:</label>
+                <InputDate class="form-control col-3" @bind-Value="userInput.Birthday" />
+            </div>
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+            </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.Password" placeholder="*****" />
+            </div>
+
+            <div class="form-group">
+                <label for="ConfirmPassword">Confirm Password</label>
+                <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+            </div>
+            <br />
+
+            <ValidationSummary />
+            @if (errorServerMessage.Length != 0)
+            {
+                <label style=" color: red;"> @errorServerMessage </label>
+                <br />
+            }
+
+        </WizardStep>
+        <WizardStep Name="Second Step">
+            <div class="row">
+                <div class="container m-5">
+                    <label>Send your avatar</label>
+                    <br />
+                    <label for="files" class="btn btn-primary">Select Image</label>
+                    <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" OnChange="HandleSelection" />
+                    <br />
+                    <label>@fileName</label>
+                    <br />
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="ClearFile">clear</button>
+                    <br />
+                    @if (errorMessage.Length != 0)
+                    {
+                        <label style="color: red;"> @errorMessage </label>
+                        <br />
+                    }
+                    @if (errorServerMessage.Length != 0)
+                    {
+                        <label style=" color: red;"> @errorServerMessage </label>
+                        <br />
+                    }
+                </div>
+            </div>
+            @if (showLoading)
+            {
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            }
+        </WizardStep>
+    </Wizard>
+</EditForm>
+
+@code {
+    private SignUpViewModel userInput;
+    private EditContext editContext;
+    private string fileName = "";
+    private bool showLoading = false;
+    private string errorMessage = "";
+    private string errorServerMessage = "";
+
+    private bool HasError()
+    {
+        return !editContext.Validate() || errorMessage.Length != 0;
+    }
+
+    public async Task TrySignUp()
+    {
+        errorServerMessage = "";
+        showLoading = true;
+        if (HasError())
+        {
+            showLoading = false;
+            return;
+        }
+        try
+        {
+            var request = new CreateUserRequest
+            {
+                FirstName = userInput.FirstName,
+                LastName = userInput.LastName,
+                Birthday = userInput.Birthday,
+                Email = userInput.Email,
+                Password = userInput.Password,
+                AvatarExtension = userInput.AvatarExtension,
+                Avatar = userInput.Avatar
+            };
+
+            await SignUpper.SignUp(request);
+            NavigationManager.NavigateTo("/signin");
+        }
+        catch (BadRequestException)
+        {
+            errorServerMessage = "Something went wrong during registration";
+        }
+        catch (Exception e)
+        {
+            errorServerMessage = "The server cannot process your request.";
+        }
+        finally
+        {
+            showLoading = false;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        userInput = new SignUpViewModel();
+        editContext = new EditContext(userInput);
+    }
+
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        showLoading = true;
+        errorMessage = "";
+        var file = files[^1];
+        if (file != null)
+        {
+            fileName = file.Name;
+            // 2MB =  2097152 byte 
+            if (file.Size > 2097152)
+            {
+                errorMessage = "File is too big. Only 2 MB";
+                showLoading = false;
+                return;
+            }
+            using var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            userInput.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
+            userInput.Avatar = ms.ToArray();
+        }
+        showLoading = false;
+    }
+
+    private void ClearFile()
+    {
+        errorMessage = "";
+        fileName = "";
+        userInput.Avatar = null;
+        userInput.AvatarExtension = null;
+    }
+
+}
+
