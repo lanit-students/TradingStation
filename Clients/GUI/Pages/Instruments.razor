@@ -1,5 +1,7 @@
 ﻿@page "/instruments"
 
+@using System.Threading;
+
 <div class="container">
     <div class="row">
         <div class="col-md">
@@ -20,7 +22,7 @@
         </div>
     </div>
     <div class="row">
-       @if (AreInstrumentsLoading)
+        @if (AreInstrumentsLoading)
         {
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
@@ -39,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                   @foreach (var instrument in MarketInstruments)
+                    @foreach (var instrument in MarketInstruments.Skip(pageIndex * pageSize).Take(pageSize))
                     {
                         <tr>
                             <td>@instrument.Figi</td>
@@ -53,6 +55,8 @@
                     }
                 </tbody>
             </table>
+            <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage"/>
+            <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
         }
     </div>
 </div>
@@ -64,6 +68,8 @@
     public string SelectedInstrument { get; set; }
     public bool AreInstrumentsLoading { get; set; }
 
+    private int pageIndex;
+    private const int pageSize = 10;
     private TinkoffBankBroker broker;
 
     private async Task UpdateInstruments(ChangeEventArgs e)
@@ -85,13 +91,33 @@
         MarketInstruments = result;
     }
 
-    private void SaveInstrument(IMarketInstrument instrument)
+    private async Task SaveInstrument(IMarketInstrument instrument)
     {
-        //broker.SaveInstrument(instrument);
+        await broker.SaveInstrument(instrument);
     }
+
+    private void PreviousPage()
+    {
+        --pageIndex;
+        StateHasChanged();
+    }
+
+    private bool prevDisabled =>
+            pageIndex == 0;
+
+    private void NextPage()
+    {
+        ++pageIndex;
+        StateHasChanged();
+    }
+
+    private bool nextDisabled =>
+            (pageIndex + 1) * pageSize > MarketInstruments.Count;
 
     protected override async Task OnInitializedAsync()
     {
+        pageIndex = 0;
+
         InstrumentOptions = new List<string>()
         {
             "Currencies",
@@ -111,10 +137,11 @@
 
         MarketInstruments = new List<IMarketInstrument>();
 
-        var result = await Task.Run(() => broker.GetAllCurrencies());
+        var result = await Task.Run(() => broker.GetAllBonds());
+
+        MarketInstruments = result;
 
         AreInstrumentsLoading = false;
 
-        MarketInstruments = result;
     }
 }

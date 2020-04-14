@@ -39,7 +39,7 @@ namespace TinkoffIntegrationLib
         /// </summary>
         public int Depth { get; set; }
 
-        public List<IMarketInstrument> GetInstruments(InstrumentType type, int depth)
+        public List<IMarketInstrument> GetInstruments(InstrumentType type)
         {
             var instruments = new List<IMarketInstrument>();
 
@@ -51,24 +51,22 @@ namespace TinkoffIntegrationLib
                 _ => throw new NotImplementedException()
             };
 
-            for (int i = 0; i < instrumentsList.Total; i++)
-            {
-                // I'm not sure abpout this try/catch, but Tinkoff
-                // keeps sending weird null ref exceptions from time to time
-                try
+            Parallel.ForEach(instrumentsList.Instruments,
+                (instrument) =>
                 {
-                    Orderbook orderbook = tinkoffContext
-                    .MarketOrderbookAsync(instrumentsList.Instruments[i].Figi
-                    , depth).Result;
-
-                    instruments.Add(new TinkoffInstrumentAdapter(type,
-                        instrumentsList.Instruments[i], orderbook));
-                }
-                catch (Exception)
-                {
-                    continue;
-                }
-            }
+                    try
+                    {
+                        instruments.Add(
+                            new TinkoffInstrumentAdapter(
+                                type,
+                                instrument,
+                                tinkoffContext.MarketOrderbookAsync(
+                                    instrument.Figi,
+                                    Depth).Result)
+                            );
+                    }
+                    catch (Exception) { }
+                });
 
             return instruments;
         }
@@ -85,11 +83,20 @@ namespace TinkoffIntegrationLib
                 0,
                 0,
                 new MoneyAmount(instrument.Currency, 0),
-                0,
-                new MoneyAmount(instrument.Currency, 0),
-                new MoneyAmount(instrument.Currency, 0));
+                instrument.Lot,
+                new MoneyAmount(instrument.Currency, instrument.Price),
+                new MoneyAmount(instrument.Currency, instrument.Price));
 
             portfolio.Positions.Add(position);
+        }
+
+        /// <summary>
+        /// Method returns list with all bonds from bank broker
+        /// </summary>
+        /// <returns>List with bonds</returns>
+        public List<IMarketInstrument> GetAllBonds()
+        {
+            return GetInstruments(InstrumentType.Bond);
         }
 
         /// <summary>
@@ -105,21 +112,12 @@ namespace TinkoffIntegrationLib
         }
 
         /// <summary>
-        /// Method returns list with all bonds from bank broker
-        /// </summary>
-        /// <returns>List with bonds</returns>
-        public List<IMarketInstrument> GetAllBonds()
-        {
-            return GetInstruments(InstrumentType.Bond, Depth);
-        }
-
-        /// <summary>
         /// Method returns list with all curencies from bank broker
         /// </summary>
         /// <returns>List with currencies</returns>
         public List<IMarketInstrument> GetAllCurrencies()
         {
-            return GetInstruments(InstrumentType.Currency, Depth);
+            return GetInstruments(InstrumentType.Currency);
         }
 
         /// <summary>
@@ -135,6 +133,15 @@ namespace TinkoffIntegrationLib
         }
 
         /// <summary>
+        /// Method returns list with all stocks from bank broker
+        /// </summary>
+        /// <returns>List with stocks</returns>
+        public List<IMarketInstrument> GetAllStocks()
+        {
+            return GetInstruments(InstrumentType.Stock);
+        }
+
+        /// <summary>
         /// Method returns specific stock
         /// </summary>
         /// <param name="idStock">Id required stock, e.g. figi</param>
@@ -144,15 +151,6 @@ namespace TinkoffIntegrationLib
             return GetAllStocks()
                 .Where(st => st.Figi == idStock)
                 .Single();
-        }
-
-        /// <summary>
-        /// Method returns list with all stocks from bank broker
-        /// </summary>
-        /// <returns>List with stocks</returns>
-        public List<IMarketInstrument> GetAllStocks()
-        {
-            return GetInstruments(InstrumentType.Stock, Depth);
         }
     }
 }
