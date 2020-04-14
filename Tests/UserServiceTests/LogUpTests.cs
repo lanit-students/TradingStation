@@ -10,8 +10,6 @@ using DTO.BrokerRequests;
 using DTO;
 using System.Threading.Tasks;
 using FluentValidation.Results;
-using Kernel;
-using System;
 
 namespace UserServiceTests
 {
@@ -27,17 +25,11 @@ namespace UserServiceTests
         public void Initialization()
         {
             request = new CreateUserRequest();
-            request.Password = "123";
-            request.LastName = "Mjad";
-            request.FirstName = "Drad";
-            request.Email = "edfs@mail.ru";
-            request.Birthday = DateTime.Today.AddYears(-20);
 
             validatorMock = new Mock<IValidator<CreateUserRequest>>();
             validatorMock
-                .Setup(x => x.Validate(request))
+                .Setup(x => x.Validate(new ValidationContext(request)))
                 .Returns(new ValidationResult());
-                
                 
 
             responceMock = new Mock<Response<OperationResult>>();
