@@ -32,7 +32,12 @@ namespace UserService.Commands
 
         public async Task<bool> Execute(CreateUserRequest request)
         {
-            validator.ValidateAndThrow(request);
+            // validator.ValidateAndThrow(request);
+            var valid = validator.Validate(request);
+            if (!valid.IsValid)
+            {
+                throw new ValidationException("");
+            }
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
 
