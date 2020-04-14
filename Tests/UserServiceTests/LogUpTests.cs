@@ -9,36 +9,48 @@ using MassTransit;
 using DTO.BrokerRequests;
 using DTO;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 
 namespace UserServiceTests
 {
    public class LogUpTests
     {
         private ICreateUserCommand command;
-        private IValidator<CreateUserRequest> validator;
+        private Mock<IValidator<CreateUserRequest>> validatorMock;
         private Mock<IRequestClient<InternalCreateUserRequest>> clientMock;
-        private InternalCreateUserRequest request;
-        private bool response;
+        private CreateUserRequest request;
         private Mock<Response<OperationResult>> responceMock;
         
         [SetUp]
         public void Initialization()
         {
-            request = new InternalCreateUserRequest();
-            response = new bool();
-            validator = new CreateUserRequestValidator();
+            request = new CreateUserRequest();
+
+            validatorMock = new Mock<IValidator<CreateUserRequest>>();
+            validatorMock
+                .Setup(x => x.Validate(new ValidationContext(request)))
+                .Returns(new ValidationResult());
+                
 
             responceMock = new Mock<Response<OperationResult>>();
             responceMock
-                .Setup(x => x.Message.IsSuccess)
-                .Returns(response);
+                .Setup(x => x.Message)
+                .Returns(new OperationResult() { IsSuccess = true});
 
             clientMock = new Mock<IRequestClient<InternalCreateUserRequest>>();
             clientMock
-                .Setup(x => x.GetResponse<OperationResult>(request, default, default))
+                .Setup(x => x.GetResponse<OperationResult>(new InternalCreateUserRequest(), default, default))
                 .Returns(Task.FromResult(responceMock.Object));
 
-            command = new CreateUserCommand(clientMock.Object, validator);
+            command = new CreateUserCommand(clientMock.Object, validatorMock.Object);
+        }
+
+        [Test]
+        public void Correct()
+        {
+            var isUser = command.Execute(request).Result;
+
+            Assert.AreEqual(true, isUser);
         }
     }
 }
