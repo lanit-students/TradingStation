@@ -13,7 +13,7 @@
         </div>
         <nav>
             <ul class="top-menu" align =" center">
-                <li><a href="#">Personal Information</a></li>
+                <li><a href="userinfo">Personal Information</a></li>
                 <li><a href="#">Transaction History</a></li>
             </ul>
         </nav>
@@ -21,14 +21,14 @@
             <div class="form-group col-sm-4" align ="center">
                 <EditForm Model="@user">
                     <p><img src=@imgSrc style="max-width:200px; max-height:200px;" alt="Avatar"></p>
-                    
+                    <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
                         <br />
                         <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary">Select Image</label>
-                        <InputFile style="display: none" id="files" disabled="@IsEditModeDisabled" accept=".jpg, .jpeg, .png" OnChange="ChangeAvatar" />
+                        <InputFile style="display: none" id="files"  accept=".jpg, .jpeg, .png" @onclick =" ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
                         <br />
-                        <button class="btn btn-secondary col-3" disabled="@IsEditModeDisabled" @onclick="DiscardAvatarChanges">Reset</button>
-                       <br />
-                    
+                        <button class="btn btn-secondary col-3" @onclick="Reset">Reset</button>
+                        <br />
+                    </div>
                 </EditForm>
             </div>
         <div class=" = col-sm-8">
@@ -36,15 +36,15 @@
                 <DataAnnotationsValidator />
                 <div class="form-group">
                     <label for="Name">Name:</label>
-                    <InputText class="form-control col-3" @onchange="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
+                    <InputText class="form-control col-3" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
                 </div>
                 <div class="form-group">
                     <label for="Surname">Surname:</label>
-                    <InputText class="form-control col-3" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
+                    <InputText class="form-control col-3" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
                 </div>
                 <div class="form-group">
                     <label for="Birthday">Birthday:</label>
-                    <InputDate class="form-control col-3" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
+                    <InputDate class="form-control col-3" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
                 </div>
                 <div class="form-group">
                     <label for="Email">Email:</label>
@@ -52,11 +52,13 @@
                 </div>
                 <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
                     <label for="OldPassword">Enter old password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass" disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
+                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass" 
+                               disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
                 </div>
                 <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
                     <label for="NewPassword">Enter new password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass" disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
+                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass" 
+                                disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
                 </div>
                 <br />
                 <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
@@ -88,8 +90,6 @@
             private UserToken userToken;
             private bool showLoading = false;
             private string imgSrc = "";
-            private byte[] oldAvatar = null;
-            private string oldAvatarExtension = null;
             private const int CMaxSizeOfImageInBytes = 2097152;
             private const string CDefaultImagePath = "\\wwwroot\\images\\withoutAvatar.png";
 
@@ -100,7 +100,7 @@
                 {
                     oldUser = (UserInfoViewModel)user.Clone();
                     IsEditModeDisabled = false;
-                    // InputStyleClass = "form-control col-3";
+                    InputStyleClass = "form-control col-3";
                 }
                 else
                 {
@@ -159,7 +159,15 @@
                     Modal.Show<Modals.ChangesSavedModal>("Changes saved");
                     IsEditModeDisabled = true;
                     IsPasswordBeingChanged = false;
+                    IsAvatarBeingChanged = false;
+                    IsUserInfoBeingChanged = false;
                 }
+            }
+
+            
+            private void UserInfoChangeHandler()
+            {
+                IsUserInfoBeingChanged = true;
             }
 
             private void ChangePasswordClickHandler()
@@ -187,12 +195,9 @@
                     }
                     using var ms = new MemoryStream();
                     await file.Data.CopyToAsync(ms);
-                    oldAvatar = user.Avatar;
-                    oldAvatarExtension = user.AvatarExtension;
                     user.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
                     user.Avatar = ms.ToArray();
                     imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
-                    IsAvatarBeingChanged = true;
                 }
                 showLoading = false;
             }
@@ -244,31 +249,25 @@
                 return String.Format("data:image/{0};base64,{1}", ext, base64);
             }
 
-            private void DiscardAvatarChanges()
+            private void Reset()
             {
                 ErrorMessage = "";
-                IsAvatarBeingChanged ^= true;
-                user.Avatar = oldAvatar;
-                user.AvatarExtension = oldAvatarExtension;
-                if (user.Avatar != null)
-                    imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
-                else
-                    imgSrc = GetDefaultImage();
+                IsAvatarBeingChanged = true;
+                user.Avatar = null;
+                user.AvatarExtension = null;
+                imgSrc = GetDefaultImage();
             }
 
-            private void DiscardAllChanges()
+            private async Task DiscardAllChanges()
             {
                 user = (UserInfoViewModel)oldUser.Clone();
-                IsEditModeDisabled = false;
+                await UpdateUserModel();
+                IsEditModeDisabled = true;       
                 IsPasswordBeingChanged = false;
                 IsAvatarBeingChanged = false;
-                UpdateUserModel();
+                IsUserInfoBeingChanged = false;
             }
 
-            private void UserInfoChangeHandler()
-            {
-                IsUserInfoBeingChanged = true;
-            }
 
             protected override void OnInitialized()
             {

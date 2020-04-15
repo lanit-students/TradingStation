@@ -1,7 +1,7 @@
 ﻿CREATE TABLE dbo.UsersAvatars (
 	[Id] UNIQUEIDENTIFIER UNIQUE NOT NULL,
-	[Avatar] VARBINARY(MAX) NOT NULL,
-	[AvatarExtension] NVARCHAR(20) NOT NULL,
+	[Avatar] VARBINARY(MAX),
+	[AvatarExtension] NVARCHAR(20),
 	[UserId]        UNIQUEIDENTIFIER NOT NULL,
 	CONSTRAINT [PK_UsersAvatars] PRIMARY KEY ([Id] ASC)
 )

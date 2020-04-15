@@ -64,7 +64,7 @@ namespace DataBaseService.Repositories
 
             UserAvatar userAvatar = null;
             var dbUserAvatar = dbContext.UsersAvatars.FirstOrDefault(ua => ua.UserId == userId);
-            if (dbUserAvatar != null)
+            if (dbUserAvatar != null && dbUserAvatar.Avatar != null)
                 userAvatar = mapper.MapUserAvatar(dbUserAvatar);
 
             return new InternalGetUserByIdResponse
