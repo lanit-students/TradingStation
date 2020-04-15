@@ -5,21 +5,28 @@ using System.Threading.Tasks;
 using UserService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.Commands
 {
     public class GetUserByIdCommand : IGetUserByIdCommand
     {
         private readonly IRequestClient<InternalGetUserByIdRequest> client;
+        private readonly ILogger<GetUserByIdCommand> logger;
 
-        public GetUserByIdCommand([FromServices]IRequestClient<InternalGetUserByIdRequest> client)
+        public GetUserByIdCommand
+            ([FromServices]IRequestClient<InternalGetUserByIdRequest> client,
+            [FromServices] ILogger<GetUserByIdCommand> logger)
         {
             this.client = client;
+            this.logger = logger;
         }
 
         private async Task<InternalGetUserByIdResponse> GetUserById(InternalGetUserByIdRequest request)
         {
             var result = await client.GetResponse<InternalGetUserByIdResponse>(request);
+
+            logger.LogInformation("Response from Database Service GetUserById method received");
 
             return result.Message;
         }

@@ -6,6 +6,7 @@ using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -16,21 +17,28 @@ namespace UserService.Commands
         private readonly IRequestClient<InternalEditUserInfoRequest> client;
         private readonly IValidator<UserInfoRequest> userInfoValidator;
         private readonly IValidator<PasswordChangeRequest> passwordChangeValidator;
+        private readonly ILogger<EditUserCommand> logger;
 
         public EditUserCommand
             ([FromServices] IValidator<UserInfoRequest> userInfoValidator,
             [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator,
-            [FromServices] IRequestClient<InternalEditUserInfoRequest> client)
+            [FromServices] IRequestClient<InternalEditUserInfoRequest> client,
+            [FromServices] ILogger<EditUserCommand> logger)
         {
             this.client = client;
             this.userInfoValidator = userInfoValidator;
             this.passwordChangeValidator = passwordChangeValidator;
+            this.logger = logger;
         }
 
         private async Task<bool> EditUser(InternalEditUserInfoRequest request)
         {
             var result = await client.GetResponse<OperationResult>(request);
 
+            if (result.Message.IsSuccess)
+                logger.LogInformation("User was edited successfully");
+            else
+                logger.LogWarning("Error in user edition");
             return result.Message.IsSuccess;
         }
 
@@ -82,7 +90,9 @@ namespace UserService.Commands
             var editUserResult = await EditUser(internalEditUserInfoRequest);
             if (!editUserResult)
             {
-                throw new BadRequestException("Unable to edit");
+                var exception = new BadRequestException("Unable to edit");
+                logger.LogWarning(exception, "Bad request exception was catched on edit user command");
+                throw exception;
             }
 
             return editUserResult;

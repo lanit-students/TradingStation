@@ -77,14 +77,14 @@
 
         @code {
 
-            public bool IsEditModeDisabled { get; set; }
-            public bool IsUserInfoBeingChanged { get; set; }
-            public bool IsPasswordBeingChanged { get; set; }
-            public bool IsAvatarBeingChanged { get; set; }
-            public bool PopupVisible { get; set; }
-            public string ErrorMessage { get; set; }
-            public string InputStyleClass { get; set; }
-            public bool ErrorOccured { get; set; }
+            private bool IsEditModeDisabled { get; set; }
+            private bool IsUserInfoBeingChanged { get; set; }
+            private bool IsPasswordBeingChanged { get; set; }
+            private bool IsAvatarBeingChanged { get; set; }
+            private bool PopupVisible { get; set; }
+            private string ErrorMessage { get; set; }
+            private string InputStyleClass { get; set; }
+            private bool ErrorOccured { get; set; }
             private UserInfoViewModel user;
             private UserInfoViewModel oldUser;
             private UserToken userToken;
