@@ -13,8 +13,8 @@ using Kernel.CustomExceptions;
 
 namespace UserServiceTests
 {
-   public class CreateUserCommandTests
-    {
+     public class CreateUserCommandTests
+     {
         private ICreateUserCommand command;
         private Mock<IValidator<CreateUserRequest>> validatorMock;
         private Mock<IRequestClient<InternalCreateUserRequest>> clientMock;
@@ -76,5 +76,5 @@ namespace UserServiceTests
         {
             Assert.IsTrue(command.Execute(request).Result);
         }
-    }
+     }
 }
