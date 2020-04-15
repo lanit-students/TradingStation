@@ -52,7 +52,7 @@ namespace UserServiceTests
         }
 
         [Test]
-        public void CreateUserCommand_ValidationException_IncorrectUserData()
+        public void CreateUserCommandValidationExceptionIncorrectUserData()
         {
             validatorResultMock
                 .Setup(x => x.IsValid)
@@ -62,7 +62,7 @@ namespace UserServiceTests
         }
 
         [Test]
-        public void CreateUserCommand_BadRequestException_UnableToCreateUser()
+        public void CreateUserCommandBadRequestExceptionUnableToCreateUser()
         {
             responseMock
                 .Setup(x => x.Message)
@@ -72,7 +72,7 @@ namespace UserServiceTests
         }
 
         [Test]
-        public void CreateUserCommand_True_SuccessfulUserCreation()
+        public void CreateUserCommandTrueSuccessfulUserCreation()
         {
             Assert.IsTrue(command.Execute(request).Result);
         }
