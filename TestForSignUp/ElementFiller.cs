@@ -4,20 +4,20 @@ using System.Collections.ObjectModel;
 
 namespace TestForSignUp
 {
-    internal class ElementFiller
+    public class ElementFiller
     {
         private ReadOnlyCollection<IWebElement> inputs;
         private ReadOnlyCollection<IWebElement> inputsWithoutDate;
         private ReadOnlyCollection<IWebElement> emailInputs;
         
-        internal ElementFiller(ChromeDriver browser)
+        public ElementFiller(ChromeDriver browser)
         {
             inputs = browser.FindElementsByXPath("//input");
             inputsWithoutDate = browser.FindElementsByCssSelector("[placeholder]");
             emailInputs = browser.FindElementsByCssSelector("[placeholder*=\"@\"]");
         }
 
-        internal void Fill(string common, string email, string date)
+        public void Fill(string common, string email, string date)
         {
             foreach (var inputField in inputs)
             {
