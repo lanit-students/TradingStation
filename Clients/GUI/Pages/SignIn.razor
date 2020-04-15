@@ -51,11 +51,6 @@
             AuthenticationProvider.MarkSignedIn();
             NavigationManager.NavigateTo("/userinfo");
         }
-        catch(NotFoundException)
-        {
-            userInput.Password = "";
-            isHidden = false;
-        }
         catch (ForbiddenException)
         {
             userInput.Password = "";

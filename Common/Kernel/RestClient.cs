@@ -10,6 +10,7 @@ using System.Web;
 using DTO;
 using Kernel.CustomExceptions;
 using Kernel.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Kernel
 {
@@ -32,20 +33,27 @@ namespace Kernel
 
         private async Task<TOut> GetResponse()
         {
-            var response = (HttpWebResponse)await _request.GetResponseAsync();
+            try
+            {
+                var response = (HttpWebResponse)await _request.GetResponseAsync();
 
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw GetCustomException(response.StatusCode);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw GetCustomException(response.StatusCode);
 
-            using var responseStream = response.GetResponseStream();
-            using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
+                using var responseStream = response.GetResponseStream();
+                using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
 
-            return JsonSerializer.Deserialize<TOut>(
-                streamReader.ReadToEnd(),
-                new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
+                return JsonSerializer.Deserialize<TOut>(
+                    streamReader.ReadToEnd(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    });
+            }
+            catch (WebException e)
+            {
+                throw GetCustomException(((HttpWebResponse)e.Response).StatusCode);
+            }
         }
 
         private void WriteRequestBody(TIn bodyObject)

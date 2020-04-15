@@ -116,11 +116,7 @@
         }
         catch (BadRequestException)
         {
-            errorServerMessage = "Something went wrong during registration";
-        }
-        catch (Exception e)
-        {
-            errorServerMessage = "The server cannot process your request.";
+            errorServerMessage = "Can't create a user";
         }
         finally
         {
@@ -142,7 +138,7 @@
         if (file != null)
         {
             fileName = file.Name;
-            // 2MB =  2097152 byte 
+            // 2MB =  2097152 byte
             if (file.Size > 2097152)
             {
                 errorMessage = "File is too big. Only 2 MB";

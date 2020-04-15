@@ -4,23 +4,29 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
+
+@using System
+@using System.IO
+@using System.Net
+@using System.ComponentModel.DataAnnotations
+
 @using GUI
 @using GUI.Shared
+@using Scripts
+@using Authentication
+@using ViewModels
+
 @using Blazored
+@using Blazored.SessionStorage
 @using Blazored.Modal
 @using Blazored.Modal.Services
-@using System
-@using ViewModels
-@using System.ComponentModel.DataAnnotations
+@using BlazorInputFile
+
 @using DTO
 @using DTO.NewsRequests
 @using DTO.NewsRequests.Currency
 @using DTO.RestRequests
-@using Blazored.SessionStorage
-@using Scripts
-@using Authentication
+
 @using Kernel
 @using Kernel.Enums
 @using Kernel.CustomExceptions
-@using System.IO
-@using BlazorInputFile
