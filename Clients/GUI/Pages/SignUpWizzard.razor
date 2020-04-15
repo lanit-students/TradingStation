@@ -1,8 +1,6 @@
 ﻿@page "/signup"
-@using GUI.Components
-@using GUI.Scripts
-@using GUI.ViewModels
 @inject NavigationManager NavigationManager
+
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
     <Wizard Id="Wizard" HasError="@HasError">
         <WizardStep Name="First Step">
