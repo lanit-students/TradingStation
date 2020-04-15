@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using DTO;
 using Kernel.CustomExceptions;
 using DataBaseService.Database;
@@ -8,6 +7,7 @@ using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
 using DTO.BrokerRequests;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DataBaseService.Repositories
 {
@@ -17,8 +17,7 @@ namespace DataBaseService.Repositories
         private readonly TPlatformDbContext dbContext;
         private readonly ILogger<UserRepository> logger;
 
-        public UserRepository
-            (IUserMapper mapper, TPlatformDbContext dbContext, ILogger<UserRepository> logger)
+        public UserRepository (IUserMapper mapper, TPlatformDbContext dbContext, [FromServices] ILogger<UserRepository> logger)
         {
             this.mapper = mapper;
             this.dbContext = dbContext;
