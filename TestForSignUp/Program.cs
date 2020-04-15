@@ -1,16 +1,11 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using OpenQA.Selenium.Chrome;
 using System.Threading;
 
 namespace TestForSignUp
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
              var browser = new ChromeDriver();
              browser.Navigate().GoToUrl("https://localhost:44335/signup");

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TestForSignUp
 {
-    class InputGenerator
+    internal class InputGenerator
     {
         internal string emailString;
         internal string dateString;
