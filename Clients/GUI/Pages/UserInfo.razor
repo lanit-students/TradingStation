@@ -122,7 +122,7 @@
                             AvatarRequest = null
                         };
 
-                        if (IsPasswordBeingChanged)
+                        if (IsPasswordBeingChanged && user.OldPassword != null && user.NewPassword != null)
                         {
                             var passwordRequest = new PasswordChangeRequest()
                             {
@@ -156,7 +156,7 @@
                         ErrorOccured = true;
                     }
 
-                    Modal.Show<Modals.ChangesSavedModal>("Changes saved");
+                    Modal.Show<Modals.EmptyModal>("Changes saved");
                     IsEditModeDisabled = true;
                     IsPasswordBeingChanged = false;
                     IsAvatarBeingChanged = false;
@@ -266,6 +266,7 @@
                 IsPasswordBeingChanged = false;
                 IsAvatarBeingChanged = false;
                 IsUserInfoBeingChanged = false;
+                Modal.Show<Modals.EmptyModal>("Changes discarded");
             }
 
 
