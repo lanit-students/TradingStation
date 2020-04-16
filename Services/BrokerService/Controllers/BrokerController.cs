@@ -3,6 +3,7 @@ using BrokerServices;
 using BrokerServices.Utils;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BrokerService.Controllers
 {
@@ -10,6 +11,13 @@ namespace BrokerService.Controllers
     [ApiController]
     public class BrokerController : ControllerBase
     {
+        private readonly ILogger<BrokerController> logger;
+
+        public BrokerController([FromServices] ILogger<BrokerController> logger)
+        {
+            this.logger = logger;
+        }
+
         [Route("getAllCurrencies")]
         [HttpGet]
         public List<IMarketInstrument> GetAllCurrencies([FromBody] BankType bankType)

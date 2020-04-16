@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace BrokerServices
 {
@@ -19,6 +20,16 @@ namespace BrokerServices
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddLogging(log =>
+            {
+                log.ClearProviders();
+            });
+            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+             {
+                 return new LoggerProvider(provider);
+ 
+             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
