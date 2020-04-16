@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Kernel.LoggingEngine;
 
 namespace BrokerServices
 {
@@ -24,7 +25,7 @@ namespace BrokerServices
             {
                 log.ClearProviders();
             });
-            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            services.AddTransient<ILoggerProvider,LoggerProvider>(provider =>
              {
                  return new LoggerProvider(provider);
  
