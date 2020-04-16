@@ -17,17 +17,20 @@ namespace UserService.Commands
         private readonly IRequestClient<InternalEditUserInfoRequest> client;
         private readonly IValidator<UserInfoRequest> userInfoValidator;
         private readonly IValidator<PasswordChangeRequest> passwordChangeValidator;
+        private readonly IValidator<AvatarChangeRequest> avatarValidator;
         private readonly ILogger<EditUserCommand> logger;
 
         public EditUserCommand
             ([FromServices] IValidator<UserInfoRequest> userInfoValidator,
             [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator,
+            [FromServices] IValidator<AvatarChangeRequest> avatarValidator,
             [FromServices] IRequestClient<InternalEditUserInfoRequest> client,
             [FromServices] ILogger<EditUserCommand> logger)
         {
             this.client = client;
             this.userInfoValidator = userInfoValidator;
             this.passwordChangeValidator = passwordChangeValidator;
+            this.avatarValidator = avatarValidator;
             this.logger = logger;
         }
 
@@ -61,7 +64,7 @@ namespace UserService.Commands
             }
             if (avatarRequest != null)
             {
-                // Avatar validation
+                avatarValidator.ValidateAndThrow(avatarRequest);
                 userAvatar = new UserAvatar
                 {
                     Avatar = avatarRequest.Avatar,
