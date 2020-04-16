@@ -28,7 +28,6 @@ namespace BrokerServices
             services.AddTransient<ILoggerProvider,LoggerProvider>(provider =>
              {
                  return new LoggerProvider(provider);
- 
              });
             
         }
