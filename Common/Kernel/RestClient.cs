@@ -52,6 +52,11 @@ namespace Kernel
             }
             catch (WebException e)
             {
+                if (e.Response == null)
+                {
+                    throw new InternalServerException();
+                }
+
                 throw GetCustomException(((HttpWebResponse)e.Response).StatusCode);
             }
         }

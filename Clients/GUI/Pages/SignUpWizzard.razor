@@ -112,7 +112,9 @@
             await SignUpper.SignUp(request);
             NavigationManager.NavigateTo("/signin");
         }
-        catch (BadRequestException)
+        catch (Exception e) when (
+                e is BadRequestException
+                || e is InternalServerException)
         {
             errorServerMessage = "Can't create a user";
         }
