@@ -10,6 +10,7 @@ namespace DataBaseService.Database
     {
         public DbSet<DbUser> Users { get; set; }
         public DbSet<DbUserCredential> UsersCredentials { get; set; }
+        public DbSet<DbUsersAvatars> UsersAvatars { get; set; }
 
         public TPlatformDbContext(DbContextOptions<TPlatformDbContext> options) : base(options) { }
 

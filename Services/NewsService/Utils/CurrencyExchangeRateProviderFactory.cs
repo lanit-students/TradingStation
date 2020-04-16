@@ -2,7 +2,6 @@
 using DTO.NewsRequests;
 using Interfaces;
 using Kernel.CustomExceptions;
-using System;
 
 namespace NewsService.Utils
 {

@@ -1,5 +1,5 @@
 ﻿using DTO;
-using DTO.RestRequests;
+using DTO.BrokerRequests;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UserService.BrokerConsumers
 {
-    public class LoginUserConsumer : IConsumer<LoginRequest>
+    public class LoginUserConsumer : IConsumer<InternalLoginRequest>
     {
         private readonly IBus bus;
 
@@ -16,11 +16,11 @@ namespace UserService.BrokerConsumers
             this.bus = bus;
         }
 
-        public async Task Consume(ConsumeContext<LoginRequest> context)
+        public async Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
             var uri = new Uri("rabbitmq://localhost/DatabaseService");
 
-            var client = bus.CreateRequestClient<LoginRequest>(uri).Create(context.Message);
+            var client = bus.CreateRequestClient<InternalLoginRequest>(uri).Create(context.Message);
 
             var response = await client.GetResponse<UserCredential>();
 

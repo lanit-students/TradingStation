@@ -14,24 +14,20 @@ namespace UserService.Commands
 {
     public class CreateUserCommand : ICreateUserCommand
     {
-        private readonly IBus busControl;
+        private readonly IRequestClient<InternalCreateUserRequest> client;
         private readonly IValidator<CreateUserRequest> validator;
 
-        public CreateUserCommand([FromServices] IBus busControl, [FromServices] IValidator<CreateUserRequest> validator)
+        public CreateUserCommand([FromServices] IRequestClient<InternalCreateUserRequest> client, [FromServices] IValidator<CreateUserRequest> validator)
         {
-            this.busControl = busControl;
+            this.client = client;
             this.validator = validator;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
         {
-            var uri = new Uri("rabbitmq://localhost/DatabaseService");
+            var result = await client.GetResponse<OperationResult>(request);
 
-            var client = busControl.CreateRequestClient<InternalCreateUserRequest>(uri).Create(request);
-
-            var response = await client.GetResponse<OperationResult>();
-
-            return response.Message.IsSuccess;
+            return result.Message.IsSuccess;
         }
 
         public async Task<bool> Execute(CreateUserRequest request)
@@ -39,7 +35,6 @@ namespace UserService.Commands
             validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
-
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -47,6 +42,17 @@ namespace UserService.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
+            UserAvatar userAvatar = null;
+            if (request.Avatar != null && request.AvatarExtension != null)
+            {
+                userAvatar = new UserAvatar
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    Avatar = request.Avatar,
+                    AvatarExtension = request.AvatarExtension
+                };
+            }
 
             var credential = new UserCredential
             {
@@ -59,9 +65,9 @@ namespace UserService.Commands
             var internalCreateUserRequest = new InternalCreateUserRequest
             {
                 User = user,
-                Credential = credential
+                Credential = credential,
+                UserAvatar = userAvatar
             };
-
             var createUserResult = await CreateUser(internalCreateUserRequest);
             if (!createUserResult)
             {

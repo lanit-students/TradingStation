@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
@@ -10,16 +9,23 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UserService.Commands
- {
-     public class DeleteUserCommand : IDeleteUserCommand
+{
+    public class DeleteUserCommand : IDeleteUserCommand
      {
-        private readonly IBus busControl;
+        private readonly IRequestClient<InternalDeleteUserRequest> client;
         private readonly IValidator<DeleteUserRequest> validator;
 
-        public DeleteUserCommand([FromServices]IBus busControl, [FromServices] IValidator<DeleteUserRequest> validator)
+        public DeleteUserCommand([FromServices]IRequestClient<InternalDeleteUserRequest> client, [FromServices] IValidator<DeleteUserRequest> validator)
         {
-            this.busControl = busControl;
+            this.client = client;
             this.validator = validator;
+        }
+
+        private async Task<bool> DeleteUser(InternalDeleteUserRequest request)
+        {
+            var result = await client.GetResponse<OperationResult>(request);
+
+            return result.Message.IsSuccess;
         }
 
         public async Task<bool> Execute(DeleteUserRequest request)
@@ -35,17 +41,5 @@ namespace UserService.Commands
             }
             return deleteUserResult;
         }
-
-
-         private async Task<bool> DeleteUser(InternalDeleteUserRequest request)
-         {
-            var uri = new Uri("rabbitmq://localhost/DatabaseService");
-
-            var client = busControl.CreateRequestClient<InternalDeleteUserRequest>(uri).Create(request);
-
-            var response = await client.GetResponse<OperationResult>();
-
-            return response.Message.IsSuccess;
-         }
      }
  }
