@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
 using DTO.RestRequests;
@@ -20,10 +21,8 @@ namespace UserServiceTests.Commands
             UserId = Guid.NewGuid()
         };
 
-        private IDeleteUserCommand command;
-
         private Mock<IRequestClient<InternalDeleteUserRequest>> requestClientMock;
-        private Mock<Response<OperationResult>> resultMock;
+        private Mock<Response<OperationResult<bool>>> resultMock;
         private Mock<IValidator<DeleteUserRequest>> validatorMock;
 
         [SetUp]
@@ -31,18 +30,15 @@ namespace UserServiceTests.Commands
         {
             validatorMock = new Mock<IValidator<DeleteUserRequest>>();
             validatorMock
-                .Setup(x =>
-                    x.Validate(It.IsAny<ValidationContext>()))
+                .Setup(x => x.Validate(It.IsAny<ValidationContext>()))
                 .Returns(new ValidationResult());
 
-            resultMock = new Mock<Response<OperationResult>>();
+            resultMock = new Mock<Response<OperationResult<bool>>>();
 
             requestClientMock = new Mock<IRequestClient<InternalDeleteUserRequest>>();
             requestClientMock
-                .Setup(x =>
-                    x.GetResponse<OperationResult>(
-                        It.IsAny<InternalDeleteUserRequest>(), default, default))
-                .ReturnsAsync(resultMock.Object);
+                .Setup(x => x.GetResponse<OperationResult<bool>>(It.IsAny<InternalDeleteUserRequest>(), default, default))
+                .Returns(Task.FromResult(resultMock.Object));
         }
 
         [Test]
@@ -51,7 +47,7 @@ namespace UserServiceTests.Commands
             var request = new DeleteUserRequest();
             resultMock
                 .Setup(x => x.Message)
-                .Returns(new OperationResult {IsSuccess = true});
+                .Returns(new OperationResult<bool> { Data = true });
 
             validatorMock
                 .Setup(x =>
@@ -92,7 +88,7 @@ namespace UserServiceTests.Commands
         {
             resultMock
                 .Setup(x => x.Message)
-                .Returns(new OperationResult {IsSuccess = false});
+                .Returns(new OperationResult<bool> { StatusCode = 400 });
 
             var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object);
 
@@ -104,7 +100,7 @@ namespace UserServiceTests.Commands
         {
             resultMock
                 .Setup(x => x.Message)
-                .Returns(new OperationResult {IsSuccess = true});
+                .Returns(new OperationResult<bool> { Data = true });
 
             var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object);
 
