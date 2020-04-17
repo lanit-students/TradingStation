@@ -8,7 +8,7 @@
         /// <summary>
         /// Authorization token
         /// </summary>
-        public string Token { get; set; } = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
+        public string Token { get; set; } = "";
 
         /// <summary>
         /// Depth by market glass
