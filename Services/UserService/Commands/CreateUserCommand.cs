@@ -23,11 +23,11 @@ namespace UserService.Commands
             this.validator = validator;
         }
 
-        private async Task<OperationResult> CreateUser(InternalCreateUserRequest request)
+        private async Task<bool> CreateUser(InternalCreateUserRequest request)
         {
-            var response = await client.GetResponse<BrokerResponse<OperationResult>>(request);
+            var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            return BrokerResponseHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(CreateUserRequest request)
@@ -74,12 +74,12 @@ namespace UserService.Commands
 
             var createUserResult = await CreateUser(internalCreateUserRequest);
 
-            if (!createUserResult.IsSuccess)
+            if (!createUserResult)
             {
                 throw new BadRequestException("Unable to create user");
             }
 
-            return createUserResult.IsSuccess;
+            return createUserResult;
         }
     }
 }

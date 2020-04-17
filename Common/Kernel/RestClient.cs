@@ -10,7 +10,6 @@ using System.Web;
 using DTO;
 using Kernel.CustomExceptions;
 using Kernel.Enums;
-using Microsoft.AspNetCore.Http;
 
 namespace Kernel
 {

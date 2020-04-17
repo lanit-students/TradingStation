@@ -26,7 +26,7 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
-            var response = BrokerResponseWrapper.CreateResponse(GetUserCredential, context.Message.Email);
+            var response = OperationResultWrapper.CreateResponse(GetUserCredential, context.Message.Email);
 
             await context.RespondAsync(response);
         }

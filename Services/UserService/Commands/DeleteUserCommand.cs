@@ -22,11 +22,11 @@ namespace UserService.Commands
             this.validator = validator;
         }
 
-        private async Task<OperationResult> DeleteUser(InternalDeleteUserRequest request)
+        private async Task<bool> DeleteUser(InternalDeleteUserRequest request)
         {
-            var response = await client.GetResponse<BrokerResponse<OperationResult>>(request);
+            var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            return BrokerResponseHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(DeleteUserRequest request)
@@ -37,11 +37,12 @@ namespace UserService.Commands
 
             var deleteUserResult = await DeleteUser(user);
 
-            if (!deleteUserResult.IsSuccess)
+            if (!deleteUserResult)
             {
                 throw new BadRequestException("Unable to delete user.");
             }
-            return deleteUserResult.IsSuccess;
+
+            return deleteUserResult;
         }
      }
  }

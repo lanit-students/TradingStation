@@ -27,11 +27,11 @@ namespace UserService.Commands
             this.passwordChangeValidator = passwordChangeValidator;
         }
 
-        private async Task<OperationResult> EditUser(InternalEditUserInfoRequest request)
+        private async Task<bool> EditUser(InternalEditUserInfoRequest request)
         {
-            var response = await client.GetResponse<BrokerResponse<OperationResult>>(request);
+            var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            return BrokerResponseHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(EditUserRequest request)
@@ -69,12 +69,7 @@ namespace UserService.Commands
 
             var editUserResult = await EditUser(internalEditUserInfoRequest);
 
-            if (!editUserResult.IsSuccess)
-            {
-                throw new BadRequestException("Unable to edit");
-            }
-
-            return editUserResult.IsSuccess;
+            return true;
         }
     }
 }

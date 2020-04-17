@@ -8,12 +8,12 @@ using System.Text.Json;
 
 namespace Kernel
 {
-    public static class BrokerResponseHandler
+    public static class OperationResultHandler
     {
-        public static T HandleResponse<T>(BrokerResponse<T> response)
+        public static T HandleResponse<T>(OperationResult<T> response)
         {
             var statusCode = response.StatusCode;
-            var message = response.Message;
+            var message = response.ErrorMessage;
 
             if (statusCode != 200)
             {
@@ -30,7 +30,7 @@ namespace Kernel
                 }
             }
 
-            return response.Response;
+            return response.Data;
         }
     }
 }

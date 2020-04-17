@@ -20,9 +20,9 @@ namespace UserService.Commands
 
         private async Task<User> GetUserById(InternalGetUserByIdRequest request)
         {
-            var response = await client.GetResponse<BrokerResponse<User>>(request);
+            var response = await client.GetResponse<OperationResult<User>>(request);
 
-            return BrokerResponseHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<User> Execute(Guid request)

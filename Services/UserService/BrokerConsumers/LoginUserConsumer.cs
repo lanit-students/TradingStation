@@ -18,7 +18,7 @@ namespace UserService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
-            var response = await client.GetResponse<BrokerResponse<UserCredential>>(context.Message);
+            var response = await client.GetResponse<OperationResult<UserCredential>>(context.Message);
 
             await context.RespondAsync(response.Message);
         }

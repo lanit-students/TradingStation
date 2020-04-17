@@ -11,8 +11,6 @@ using Kernel;
 using DTO.RestRequests;
 using DTO.BrokerRequests;
 
-using Microsoft.Extensions.Logging;
-
 namespace AuthenticationService.Commands
 {
     public class LoginCommand : ILoginCommand
@@ -25,9 +23,9 @@ namespace AuthenticationService.Commands
         /// </summary>
         private async Task<UserCredential> GetUserCredential(InternalLoginRequest request)
         {
-            var response = await client.GetResponse<BrokerResponse<UserCredential>>(request);
+            var response = await client.GetResponse<OperationResult<UserCredential>>(request);
 
-            return BrokerResponseHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         private bool CheckUserCredentials(UserCredential credential, LoginRequest request)

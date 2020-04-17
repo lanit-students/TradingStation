@@ -17,19 +17,16 @@ namespace DataBaseService.BrokerConsumers
             this.userRepository = userRepository;
         }
 
-        private OperationResult EditUser(InternalEditUserInfoRequest request)
+        private bool EditUser(InternalEditUserInfoRequest request)
         {
             userRepository.EditUser(request.User, request.UserPasswords);
 
-            return new OperationResult
-            {
-                IsSuccess = true
-            };
+            return true;
         }
 
         public async Task Consume(ConsumeContext<InternalEditUserInfoRequest> context)
         {
-            var response = BrokerResponseWrapper.CreateResponse(EditUser, context.Message);
+            var response = OperationResultWrapper.CreateResponse(EditUser, context.Message);
 
             await context.RespondAsync(response);
         }
