@@ -29,9 +29,9 @@ namespace UserService.Commands
 
         private async Task<bool> EditUser(InternalEditUserInfoRequest request)
         {
-            var result = await client.GetResponse<OperationResult>(request);
+            var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            return result.Message.IsSuccess;
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(EditUserRequest request)
@@ -68,12 +68,8 @@ namespace UserService.Commands
             };
 
             var editUserResult = await EditUser(internalEditUserInfoRequest);
-            if (!editUserResult)
-            {
-                throw new BadRequestException("Unable to edit");
-            }
 
-            return editUserResult;
+            return true;
         }
     }
 }
