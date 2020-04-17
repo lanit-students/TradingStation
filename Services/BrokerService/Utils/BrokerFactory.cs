@@ -10,17 +10,17 @@ namespace BrokerServices.Utils
 {
     internal static class BrokerFactory
     {
-        internal static IBroker Create(BankType bankType,ILogger<BrokerController> logger)
+        internal static IBroker Create(BankType bankType, ILogger<BrokerController> logger)
         {
             var brokerData = new CreateBrokerData();
 
             switch (bankType)
             {
                 case BankType.TinkoffBank:
-                    logger.LogInformation("Successful broker creation.");
+                    logger.LogInformation("Broker successfully created.");
                     return new TinkoffBankBroker(brokerData);
                 default:
-                    logger.LogInformation("Error creating broker.");
+                    logger.LogInformation("Broker not created.");
                     throw new BadRequestException("We can't do it with this bank.");
             }   
         }
