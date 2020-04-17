@@ -1,0 +1,661 @@
+{
+	"id": "4e55c147-fc23-4002-9f73-c9d4f3978e63",
+	"name": "BrokerService",
+	"description": "",
+	"auth": null,
+	"events": null,
+	"variables": [],
+	"order": [],
+	"folders_order": [
+		"6272e10e-016a-49c8-b804-362d8dab57a3",
+		"f9662bd9-699e-41dc-abaf-fc4c486eb4a7",
+		"63f60280-4642-46c7-8abf-4368b5904101",
+		"9940b71f-b030-4f57-9c16-e62c7fa3318e",
+		"15d22273-95e4-4698-8650-8d779ea2745b",
+		"1518b92d-8c39-4c41-a8e5-6848f989248b"
+	],
+	"protocolProfileBehavior": {},
+	"folders": [
+		{
+			"id": "9940b71f-b030-4f57-9c16-e62c7fa3318e",
+			"name": "GetAllBonds",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "4e55c147-fc23-4002-9f73-c9d4f3978e63",
+			"folder": null,
+			"order": [
+				"d4056568-9293-4b2d-8ab2-957096a4a0f8",
+				"dddcd217-1226-4b90-9e7d-bbe9f1c1e7b4"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"id": "1518b92d-8c39-4c41-a8e5-6848f989248b",
+			"name": "GetAllStocks",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "4e55c147-fc23-4002-9f73-c9d4f3978e63",
+			"folder": null,
+			"order": [
+				"c6a0436d-32f1-4276-b5c3-7b66c19df945",
+				"b55c7ffb-fcfc-4ebf-8be4-2b2ae28e9d18"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"id": "f9662bd9-699e-41dc-abaf-fc4c486eb4a7",
+			"name": "GetAllcurrencies",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "4e55c147-fc23-4002-9f73-c9d4f3978e63",
+			"folder": null,
+			"order": [
+				"6794746b-1521-4b91-8e5e-1b7baf833f76",
+				"34371a60-a43b-4311-82b9-3d04ef39c81c"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"id": "63f60280-4642-46c7-8abf-4368b5904101",
+			"name": "GetBond",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "4e55c147-fc23-4002-9f73-c9d4f3978e63",
+			"folder": null,
+			"order": [
+				"f08ee551-7b61-4f5f-825c-4a0d73bf0227",
+				"953ff818-c154-4504-a5eb-c344b05b825b",
+				"1a5b4c70-7be4-4d7d-80a9-2eca42e8a83e"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"id": "6272e10e-016a-49c8-b804-362d8dab57a3",
+			"name": "GetCurrency",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "4e55c147-fc23-4002-9f73-c9d4f3978e63",
+			"folder": null,
+			"order": [
+				"79e15c17-daba-4b67-833e-e1912a6961b7",
+				"376d6b1d-a989-4d4b-af4a-3252425764dd",
+				"8b12914d-ed00-4b57-93a4-8571743be5a3"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"id": "15d22273-95e4-4698-8650-8d779ea2745b",
+			"name": "GetStock",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "4e55c147-fc23-4002-9f73-c9d4f3978e63",
+			"folder": null,
+			"order": [
+				"01bd8c82-e304-444a-adba-03e356b622dd",
+				"2b89b3f7-b25e-4e24-8a83-69de722e45ea",
+				"e13e21f7-c34f-41b6-964e-46d4d09e16e7"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"requests": [
+		{
+			"id": "01bd8c82-e304-444a-adba-03e356b622dd",
+			"name": "GetStockWithCorrectData",
+			"url": "https://localhost:5003/broker/getStock",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b5bc6643-83cf-4a36-a334-54f0a83bcd6d",
+						"exec": [
+							"pm.test(\"Status is ok, response is json\", function () {",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "15d22273-95e4-4698-8650-8d779ea2745b",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idStock\" : \"\"\r\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "1a5b4c70-7be4-4d7d-80a9-2eca42e8a83e",
+			"name": "GetBondWithIncorrectId",
+			"url": "https://localhost:5003/broker/getBond",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "164c44aa-2d26-4981-970a-b934a7f02859",
+						"exec": [
+							"pm.test(\"Status is Bad Request\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "63f60280-4642-46c7-8abf-4368b5904101",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idBond\" : \"incorrectBond\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "2b89b3f7-b25e-4e24-8a83-69de722e45ea",
+			"name": "GetStockWithincorrectId",
+			"url": "https://localhost:5003/broker/getStock",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45d9ef9d-1e44-413b-9be5-6a8b726645df",
+						"exec": [
+							"pm.test(\"Status is Bad Request\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "15d22273-95e4-4698-8650-8d779ea2745b",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idStock\" : \"incorrectId\"\r\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "34371a60-a43b-4311-82b9-3d04ef39c81c",
+			"name": "GetCurrenciesWithIncorrectData",
+			"url": "https://localhost:5003/broker/getAllCurrencies",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "861de9cd-4dbd-4c0c-aa65-77c18ee4632f",
+						"exec": [
+							"pm.test(\"Status is Exception\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "f9662bd9-699e-41dc-abaf-fc4c486eb4a7",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n    \"incorrectField\" : \" \"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "376d6b1d-a989-4d4b-af4a-3252425764dd",
+			"name": "GetCurrencyWithIncorrectData",
+			"url": "https://localhost:5003/broker/getCurrency",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c337846b-a301-4433-a84d-98d3d20fe609",
+						"exec": [
+							"pm.test(\"Status is Exception\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "6272e10e-016a-49c8-b804-362d8dab57a3",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idCurrency\" : \"incorrectId\",\r\n\t\"incorrectField\" : \" \"\r\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "6794746b-1521-4b91-8e5e-1b7baf833f76",
+			"name": "GetCurrenciesWithCorrectData",
+			"url": "https://localhost:5003/broker/getAllCurrencies",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "326c810e-f12b-4aa2-a1b2-13b149bac428",
+						"exec": [
+							"pm.test(\"Status is ok, response is json\", function () {",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "f9662bd9-699e-41dc-abaf-fc4c486eb4a7",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\"\r\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "79e15c17-daba-4b67-833e-e1912a6961b7",
+			"name": "GetCurrencyWithCorrectData",
+			"url": "https://localhost:5003/broker/getCurrency",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "721da9dd-e135-48ee-a117-869f827eba2b",
+						"exec": [
+							"pm.test(\"Status is ok, response is json\", function () {",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "6272e10e-016a-49c8-b804-362d8dab57a3",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idCurrency\" : \"\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "8b12914d-ed00-4b57-93a4-8571743be5a3",
+			"name": "GetCurrencyWithIncorrectId",
+			"url": "https://localhost:5003/broker/getCurrency",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c82ddf6c-9699-49b0-b777-13fa0c020086",
+						"exec": [
+							"pm.test(\"Status is Bad Request\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "6272e10e-016a-49c8-b804-362d8dab57a3",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idCurrency\" : \"incorrectId\"\r\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "953ff818-c154-4504-a5eb-c344b05b825b",
+			"name": "GetBondWithIncorrectData",
+			"url": "https://localhost:5003/broker/getBond",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "13dcdd3a-3a63-4434-8398-cf4d1654d3be",
+						"exec": [
+							"pm.test(\"Status is Exception\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "63f60280-4642-46c7-8abf-4368b5904101",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idBond\" : \"\",\n\t\"incorrectField\" : \" \"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "b55c7ffb-fcfc-4ebf-8be4-2b2ae28e9d18",
+			"name": "GetStocksWithincorrectData",
+			"url": "https://localhost:5003/broker/getAllStocks",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "14be38fa-5287-4772-9b1a-1095787342b9",
+						"exec": [
+							"pm.test(\"Status is Exception\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "1518b92d-8c39-4c41-a8e5-6848f989248b",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"incorrectField\" : \" \"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "c6a0436d-32f1-4276-b5c3-7b66c19df945",
+			"name": "GetStocksWithCorrectData",
+			"url": "https://localhost:5003/broker/getAllStocks",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "38803638-7437-4893-a065-ce60b104f9bc",
+						"exec": [
+							"pm.test(\"Status is ok, response is json\", function () {",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "1518b92d-8c39-4c41-a8e5-6848f989248b",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "d4056568-9293-4b2d-8ab2-957096a4a0f8",
+			"name": "GetBondsWithCorrectData",
+			"url": "https://localhost:5003/broker/getAllBonds",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "be398d7d-4456-4f5a-94d7-af00346edbd2",
+						"exec": [
+							"pm.test(\"Status is ok, response is json\", function () {",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "9940b71f-b030-4f57-9c16-e62c7fa3318e",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "dddcd217-1226-4b90-9e7d-bbe9f1c1e7b4",
+			"name": "GetBondsWithIncorrectData",
+			"url": "https://localhost:5003/broker/getAllBonds",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "12536be8-b7df-4751-a2cf-c5eae570fbcd",
+						"exec": [
+							"pm.test(\"Status is Exception\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "9940b71f-b030-4f57-9c16-e62c7fa3318e",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"incorrectField\" : \" \" \n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "e13e21f7-c34f-41b6-964e-46d4d09e16e7",
+			"name": "GetStocksWithIncorrectData",
+			"url": "https://localhost:5003/broker/getStock",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9bdfa042-b83c-4ec7-9323-765952c3d9ed",
+						"exec": [
+							"pm.test(\"Status is Exception\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "15d22273-95e4-4698-8650-8d779ea2745b",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"incorrectField\" : \" \"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "f08ee551-7b61-4f5f-825c-4a0d73bf0227",
+			"name": "GetBondWithCorrectData",
+			"url": "https://localhost:5003/broker/getBond",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e3ed3212-1fe7-458e-b6ec-c02bced102b4",
+						"exec": [
+							"pm.test(\"Status is ok, response is json\", function () {",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "63f60280-4642-46c7-8abf-4368b5904101",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idBond\" : \"\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		}
+	]
+}
