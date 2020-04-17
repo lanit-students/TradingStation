@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading;
 
@@ -8,7 +9,7 @@ namespace TestForSignUp
 {
     internal static class Registrator
     {
-        internal static bool registrateWithCorrectData(InputGenerator input)
+        internal static bool RegistrateWithCorrectData(InputGenerator input)
         {
             try
             {
@@ -33,7 +34,7 @@ namespace TestForSignUp
             return true;
         }
 
-        internal static bool registrateWithIncorrectData()
+        internal static bool RegistrateWithIncorrectData()
         {
             var browser = new ChromeDriver();
             browser.Navigate().GoToUrl("https://localhost:44335/signup");

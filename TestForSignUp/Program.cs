@@ -11,19 +11,19 @@ namespace TestForSignUp
         public static void Main()
         {
             var input = new InputGenerator();
-            if (!Registrator.registrateWithCorrectData(input))
+            if (!Registrator.RegistrateWithCorrectData(input))
             {
                 Console.WriteLine("Can't registrate (Exception)");
                 return;
             }
             Thread.Sleep(5000);
-            if (Registrator.registrateWithCorrectData(input))
+            if (Registrator.RegistrateWithCorrectData(input))
             {
                 Console.WriteLine("Can register with an existing email (Exception)");
                 return;
             }
             Thread.Sleep(5000);
-            if (!Registrator.registrateWithIncorrectData())
+            if (!Registrator.RegistrateWithIncorrectData())
             {
                 Console.WriteLine("Can register with incorrect data (Exception)");
                 return;
