@@ -19,42 +19,42 @@ namespace BrokerService.Controllers
         }
 
         [Route("getAllCurrencies")]
-        [HttpGet]
+        [HttpPost]
         public List<IMarketInstrument> GetAllCurrencies([FromBody] BankType bankType)
         {
             return BrokerFactory.Create(bankType,logger).GetAllCurrencies();
         }
 
         [Route("getCurrency")]
-        [HttpGet]
+        [HttpPost]
         public IMarketInstrument GetCurrency([FromBody] BankType bankType, string idCurrency)
         {
             return BrokerFactory.Create(bankType,logger).GetCurrency(idCurrency);
         }
 
         [Route("getAllStocks")]
-        [HttpGet]
+        [HttpPost]
         public List<IMarketInstrument> GetAllStocks([FromBody] BankType bankType)
         {
             return BrokerFactory.Create(bankType,logger).GetAllStocks();
         }
 
         [Route("getStock")]
-        [HttpGet]
+        [HttpPost]
         public IMarketInstrument GetStock([FromBody] BankType bankType, string idStock)
         {
             return BrokerFactory.Create(bankType,logger).GetStock(idStock);
         }
 
         [Route("getAllBonds")]
-        [HttpGet]
+        [HttpPost]
         public List<IMarketInstrument> GetAllBonds([FromBody] BankType bankType)
         {
             return BrokerFactory.Create(bankType,logger).GetAllBonds();
         }
 
         [Route("getBond")]
-        [HttpGet]
+        [HttpPost]
         public IMarketInstrument GetBond([FromBody] BankType bankType, string idBond)
         {
             return BrokerFactory.Create(bankType,logger).GetBond(idBond);
