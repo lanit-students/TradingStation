@@ -16,6 +16,11 @@ namespace UserService.Controllers
         [HttpPost]
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
         {
+            // EmailService emailService = new EmailService();
+            //  await emailService.SendEmailAsync(model.Email, "Confirm your account",
+            //    $"ѕодтвердите регистрацию, перейд€ по ссылке: <a href='{callbackUrl}'>link</a>");
+
+           
             return await command.Execute(request);
         }
 

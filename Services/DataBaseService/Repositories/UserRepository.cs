@@ -115,5 +115,21 @@ namespace DataBaseService.Repositories
             }
 
         }
+        public void ConfirmUser(Guid userId)
+        {
+            var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
+
+            if (dbUserCredential is null)
+            {
+                throw new NotFoundException("Not found User for confirm");
+            }
+
+            if (dbUserCredential.IsActive)
+            {
+                throw new BadRequestException("User was confirmed early");
+            }
+            dbUserCredential.IsActive = true;
+            dbContext.SaveChanges();
+        }
     }
 }
