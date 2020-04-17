@@ -42,7 +42,8 @@ namespace TestForSignUp
             var filler = new ElementFiller(browser);
             filler.Fill("A", "A", "1");
             var buttons = browser.FindElementsByCssSelector("[type=\"button\"]");
-            buttons[1].Click();
+            var nextButton = buttons[1];
+            nextButton.Click();
             Thread.Sleep(5000);
             var errors = browser.FindElementsByCssSelector("[class=\"validation-message\"]");
             if (errors.Count == 3) return true;
