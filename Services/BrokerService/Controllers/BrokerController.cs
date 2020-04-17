@@ -27,7 +27,7 @@ namespace BrokerService.Controllers
 
         [Route("getCurrency")]
         [HttpPost]
-        public IMarketInstrument GetCurrency([FromBody] BankType bankType, string idCurrency)
+        public IMarketInstrument GetCurrency([FromBody] BankType bankType, [FromBody] string idCurrency)
         {
             return BrokerFactory.Create(bankType,logger).GetCurrency(idCurrency);
         }
@@ -41,7 +41,7 @@ namespace BrokerService.Controllers
 
         [Route("getStock")]
         [HttpPost]
-        public IMarketInstrument GetStock([FromBody] BankType bankType, string idStock)
+        public IMarketInstrument GetStock([FromBody] BankType bankType, [FromBody] string idStock)
         {
             return BrokerFactory.Create(bankType,logger).GetStock(idStock);
         }
@@ -55,7 +55,7 @@ namespace BrokerService.Controllers
 
         [Route("getBond")]
         [HttpPost]
-        public IMarketInstrument GetBond([FromBody] BankType bankType, string idBond)
+        public IMarketInstrument GetBond([FromBody] BankType bankType, [FromBody] string idBond)
         {
             return BrokerFactory.Create(bankType,logger).GetBond(idBond);
         }
