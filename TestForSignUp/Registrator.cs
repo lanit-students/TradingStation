@@ -8,7 +8,6 @@ namespace TestForSignUp
 {
     internal static class Registrator
     {
-        //static InputGenerator input = new InputGenerator();
         internal static bool registrateWithCorrectData(InputGenerator input)
         {
             try
@@ -33,6 +32,7 @@ namespace TestForSignUp
             }
             return true;
         }
+
         internal static bool registrateWithIncorrectData()
         {
             var browser = new ChromeDriver();
