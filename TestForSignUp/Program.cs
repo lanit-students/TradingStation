@@ -1,30 +1,32 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 
 namespace TestForSignUp
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            try
+            var input = new InputGenerator();
+            if (!Registrator.registrateWithCorrectData(input))
             {
-                var browser = new ChromeDriver();
-                browser.Navigate().GoToUrl("https://localhost:44335/signup");
-                Thread.Sleep(5000);
-                var input = new InputGenerator();
-                var filler = new ElementFiller(browser);
-                filler.Fill(input.commonString, input.emailString, input.dateString);
-                var buttons = browser.FindElementsByCssSelector("[type=\"button\"]");
-                buttons[1].Click();
-                Thread.Sleep(5000);
-                var submitButton = browser.FindElementByCssSelector("[type=\"Submit\"]");
-                submitButton.Click();
+                Console.WriteLine("Can't registrate (Exception)");
+                return;
             }
-            catch(Exception)
+            Thread.Sleep(5000);
+            if (Registrator.registrateWithCorrectData(input))
             {
-                Console.WriteLine("Exception was detected");
+                Console.WriteLine("Can register with an existing email (Exception)");
+                return;
+            }
+            Thread.Sleep(5000);
+            if (!Registrator.registrateWithIncorrectData())
+            {
+                Console.WriteLine("Can register with incorrect data (Exception)");
+                return;
             }
             Console.WriteLine("Successful");
         }
