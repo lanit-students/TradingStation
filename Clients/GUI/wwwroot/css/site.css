@@ -247,24 +247,3 @@ app {
         background-image: url(/images/currencies/gbp.png)
     }
 
-#container {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.leftimage {
-    width: 50%;
-    display: inline-block;
-    float: left;
-}
-
-.righttext {
-    height: auto;
-    width: 50%;
-    display: inline-block;
-}
