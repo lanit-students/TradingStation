@@ -22,11 +22,9 @@ namespace DataBaseService.BrokerConsumers
 
         private bool EditUser(InternalEditUserInfoRequest request)
         {
-<<<<<<< HEAD
             logger.LogInformation("EditUser request received from UserService");
             userRepository.EditUser(request.User, request.UserPasswords, request.UserAvatar);
             return true;
->>>>>>> develop
         }
 
         public async Task Consume(ConsumeContext<InternalEditUserInfoRequest> context)

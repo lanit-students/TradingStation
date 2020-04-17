@@ -26,11 +26,8 @@ namespace UserService.Commands
 
         private async Task<InternalGetUserByIdResponse> GetUserById(InternalGetUserByIdRequest request)
         {
-<<<<<<< HEAD
             logger.LogInformation("Response from Database Service GetUserById method received");
             var response = await client.GetResponse<OperationResult<InternalGetUserByIdResponse>>(request);
->>>>>>> develop
-
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
