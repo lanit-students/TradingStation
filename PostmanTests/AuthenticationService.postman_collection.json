@@ -21,7 +21,8 @@
 			"collection": "91cc98df-8048-475f-99a8-7d079f83c81d",
 			"folder": null,
 			"order": [
-				"e6653924-96de-4275-b7c9-c25a6d596f41"
+				"e6653924-96de-4275-b7c9-c25a6d596f41",
+				"f3f61c44-fcbe-4577-b510-c1485ca8d92d"
 			],
 			"folders_order": [],
 			"protocolProfileBehavior": {}
@@ -157,6 +158,29 @@
 			],
 			"folder": "921cad20-ff1a-4712-9736-893cc0a4cc2e",
 			"rawModeData": "{\n\t\"Email\" : \"example123@gmail.com\",\n\t\"Password\" : \"123\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "f3f61c44-fcbe-4577-b510-c1485ca8d92d",
+			"name": "CreateUser",
+			"url": "https://localhost:5011/users/create",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "921cad20-ff1a-4712-9736-893cc0a4cc2e",
+			"rawModeData": "{\n\t\"Email\" : \"example123@gmail.com\",\n\t\"Password\" : \"123\",\n\t\"FirstName\" : \"Example\",\n\t\"LastName\" : \"Example\",\n\t\"Birthday\" : \"2000-04-05\"\n}",
 			"headers": "",
 			"pathVariables": {}
 		}
