@@ -3,7 +3,7 @@
     /// <summary>
     /// Required for create any bank broker
     /// </summary>
-    public class CreateBrokerData
+    public class BrokerData
     {
         /// <summary>
         /// Authorization token

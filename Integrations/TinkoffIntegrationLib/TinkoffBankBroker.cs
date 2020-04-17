@@ -33,7 +33,7 @@ namespace TinkoffIntegrationLib
         }
 
 
-        public TinkoffBankBroker(CreateBrokerData data)
+        public TinkoffBankBroker(BrokerData data)
         {
             Connection conn = ConnectionFactory.GetConnection(data.Token);
             tinkoffContext = conn.Context;

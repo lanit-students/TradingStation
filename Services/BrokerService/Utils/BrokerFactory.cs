@@ -11,7 +11,7 @@ namespace BrokerServices.Utils
     {
         public static IBroker Create(BankType bankType, ILogger<BrokerController> logger)
         {
-            var brokerData = new CreateBrokerData();
+            var brokerData = new BrokerData();
 
             switch (bankType)
             {
