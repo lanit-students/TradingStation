@@ -5,6 +5,7 @@ using UserService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using MassTransit;
 using DTO;
+using Kernel;
 
 namespace UserService.Commands
 {
@@ -19,9 +20,9 @@ namespace UserService.Commands
 
         private async Task<User> GetUserById(InternalGetUserByIdRequest request)
         {
-            var result = await client.GetResponse<User>(request);
+            var response = await client.GetResponse<OperationResult<User>>(request);
 
-            return result.Message;
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<User> Execute(Guid request)

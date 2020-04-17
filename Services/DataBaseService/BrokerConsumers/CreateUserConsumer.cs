@@ -4,6 +4,7 @@ using DTO.BrokerRequests;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Kernel;
 
 namespace DataBaseService.BrokerConsumers
 {
@@ -16,7 +17,7 @@ namespace DataBaseService.BrokerConsumers
             this.userRepository = userRepository;
         }
 
-        private OperationResult CreateUser(InternalCreateUserRequest request)
+        private bool CreateUser(InternalCreateUserRequest request)
         {
             userRepository.CreateUser(request.User, request.Credential.Email);
             if (request.UserAvatar != null)
@@ -26,17 +27,14 @@ namespace DataBaseService.BrokerConsumers
 
             userRepository.CreateUserCredential(request.Credential);
 
-            return new OperationResult
-            {
-                IsSuccess = true
-            };
+            return true;
         }
 
         public async Task Consume(ConsumeContext<InternalCreateUserRequest> context)
         {
-            var creationResult = CreateUser(context.Message);
+            var response = OperationResultWrapper.CreateResponse(CreateUser, context.Message);
 
-            await context.RespondAsync(creationResult);
+            await context.RespondAsync(response);
         }
     }
 }
