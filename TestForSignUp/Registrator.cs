@@ -6,10 +6,10 @@ using System.Threading;
 
 namespace TestForSignUp
 {
-    static class Registrator
+    internal static class Registrator
     {
         //static InputGenerator input = new InputGenerator();
-        public static bool registrateWithCorrectData(InputGenerator input)
+        internal static bool registrateWithCorrectData(InputGenerator input)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace TestForSignUp
             }
             return true;
         }
-        public static bool registrateWithIncorrectData()
+        internal static bool registrateWithIncorrectData()
         {
             var browser = new ChromeDriver();
             browser.Navigate().GoToUrl("https://localhost:44335/signup");
