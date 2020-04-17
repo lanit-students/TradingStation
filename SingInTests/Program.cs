@@ -20,6 +20,7 @@ namespace SingInTests
             Email = "testUser@mail.ru",
             Password = "password"
         };
+
         private static void Main(string[] args)
         {
             var test = new SignInTest();
