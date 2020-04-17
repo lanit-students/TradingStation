@@ -57,9 +57,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanTests", "PostmanTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RssIntegrationLib", "Integrations\RssIntegrationLib\RssIntegrationLib.csproj", "{6C7F6642-34E4-4C39-B481-43F9840E7285}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{5C6CD84A-3B28-4CA1-B91C-F5D75349B36D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebTests", "WebTests", "{5C6CD84A-3B28-4CA1-B91C-F5D75349B36D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingInTests", "SingInTests\SingInTests.csproj", "{0862441C-0457-47D2-9803-AC66C169C824}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingInTests", "SingInTests\SingInTests.csproj", "{0862441C-0457-47D2-9803-AC66C169C824}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

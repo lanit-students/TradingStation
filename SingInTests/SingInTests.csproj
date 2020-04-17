@@ -7,6 +7,13 @@
 
   <ItemGroup>
     <PackageReference Include="Selenium.WebDriver" Version="3.0.0" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="81.0.4044.6900" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\DTO\DTO.csproj" />
+    <ProjectReference Include="..\Common\Kernel\Kernel.csproj" />
   </ItemGroup>
 
 </Project>
