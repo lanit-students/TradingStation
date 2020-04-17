@@ -26,7 +26,7 @@
                 <span class="sr-only">Loading...</span>
             </div>
         }
-        else
+        else if (!ErrorOccured)
         {
             <table class="table table-bordered">
                 <thead class="thead-light">
@@ -56,15 +56,20 @@
             <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage"/>
             <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
         }
+        else
+        {
+            <h3 class="m-lg-5 badge-info">Can't load instruments, try again later</h3>
+        }
     </div>
 </div>
 
 
 @code {
-    public List<IMarketInstrument> MarketInstruments { get; set; }
+    public IEnumerable<IMarketInstrument> MarketInstruments { get; set; }
     public List<string> InstrumentOptions { get; set; }
     public string SelectedInstrument { get; set; }
     public bool AreInstrumentsLoading { get; set; }
+    public bool ErrorOccured { get; set; }
 
     private int pageIndex;
     private const int pageSize = 10;
@@ -78,9 +83,9 @@
         var result = await Task.Run(() =>
             SelectedInstrument switch
             {
-                "Bonds" => broker.GetAllBonds(),
-                "Currencies" => broker.GetAllCurrencies(),
-                "Stocks" => broker.GetAllStocks(),
+                "Bonds" => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond),
+                "Currencies" => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency),
+                "Stocks" => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock),
                 _ => MarketInstruments
             });
 
@@ -89,9 +94,9 @@
         MarketInstruments = result;
     }
 
-    private async Task SaveInstrument(IMarketInstrument instrument)
+    private void SaveInstrument(IMarketInstrument instrument)
     {
-        await broker.SaveInstrument(instrument);
+
     }
 
     private void PreviousPage()
@@ -110,10 +115,11 @@
     }
 
     private bool nextDisabled =>
-            (pageIndex + 1) * pageSize > MarketInstruments.Count;
+            (pageIndex + 1) * pageSize > MarketInstruments.Count();
 
     protected override async Task OnInitializedAsync()
     {
+        ErrorOccured = false;
         pageIndex = 0;
 
         InstrumentOptions = new List<string>()
@@ -125,21 +131,21 @@
 
         AreInstrumentsLoading = true;
 
-        var data = new CreateBrokerData()
+        try
         {
-            Depth = 10,
-            Token = ""
-        };
+            broker = new TinkoffBankBroker("");
 
-        broker = new TinkoffBankBroker(data);
+            MarketInstruments = new List<IMarketInstrument>();
 
-        MarketInstruments = new List<IMarketInstrument>();
+            var result = await Task.Run(() => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond));
 
-        var result = await Task.Run(() => broker.GetAllCurrencies());
+            MarketInstruments = result;
 
-        MarketInstruments = result;
-
-        AreInstrumentsLoading = false;
-
+            AreInstrumentsLoading = false;
+        }
+        catch (Exception)
+        {
+            ErrorOccured = true;
+        }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DTO;
 using Interfaces;
+using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
 
@@ -11,21 +10,20 @@ namespace TinkoffIntegrationLib
 {
     public class TinkoffBankBroker : IBroker
     {
-        private readonly Context tinkoffContext;
-        private const int CDefaultDepth = 10;
+        private readonly Context context;
 
-        public TinkoffBankBroker(CreateBrokerData data)
+        public TinkoffBankBroker(string token, int depth = 10)
         {
-            var conn = ConnectionFactory.GetSandboxConnection(data.Token);
-            tinkoffContext = conn.Context;
+            try
+            {
+                var conn = ConnectionFactory.GetSandboxConnection(token);
+                context = conn.Context;
 
-            if (data.Depth == 0)
-            {
-                Depth = CDefaultDepth;
+                Depth = depth;
             }
-            else
+            catch (Exception)
             {
-                Depth = data.Depth;
+                throw new BadRequestException();
             }
         }
 
@@ -39,15 +37,15 @@ namespace TinkoffIntegrationLib
         /// </summary>
         public int Depth { get; set; }
 
-        public List<IMarketInstrument> GetInstruments(InstrumentType type)
+        public IEnumerable<IMarketInstrument> GetInstruments(InstrumentType type)
         {
             var instruments = new List<IMarketInstrument>();
 
             MarketInstrumentList instrumentsList = type switch
             {
-                InstrumentType.Bond => tinkoffContext.MarketBondsAsync().Result,
-                InstrumentType.Currency => tinkoffContext.MarketCurrenciesAsync().Result,
-                InstrumentType.Stock => tinkoffContext.MarketStocksAsync().Result,
+                InstrumentType.Bond => context.MarketBondsAsync().Result,
+                InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
+                InstrumentType.Stock => context.MarketStocksAsync().Result,
                 _ => throw new NotImplementedException()
             };
 
@@ -60,7 +58,7 @@ namespace TinkoffIntegrationLib
                             new TinkoffInstrumentAdapter(
                                 type,
                                 instrument,
-                                tinkoffContext.MarketOrderbookAsync(
+                                context.MarketOrderbookAsync(
                                     instrument.Figi,
                                     Depth).Result)
                             );
@@ -69,88 +67,6 @@ namespace TinkoffIntegrationLib
                 });
 
             return instruments;
-        }
-
-        public async Task SaveInstrument(IMarketInstrument instrument)
-        {
-            var portfolio = await tinkoffContext.PortfolioAsync();
-
-            var position = new Portfolio.Position(
-                instrument.Figi,
-                instrument.Ticker,
-                instrument.Isin,
-                instrument.Type,
-                0,
-                0,
-                new MoneyAmount(instrument.Currency, 0),
-                instrument.Lot,
-                new MoneyAmount(instrument.Currency, instrument.Price),
-                new MoneyAmount(instrument.Currency, instrument.Price));
-
-            portfolio.Positions.Add(position);
-        }
-
-        /// <summary>
-        /// Method returns list with all bonds from bank broker
-        /// </summary>
-        /// <returns>List with bonds</returns>
-        public List<IMarketInstrument> GetAllBonds()
-        {
-            return GetInstruments(InstrumentType.Bond);
-        }
-
-        /// <summary>
-        /// Method returns specific bond
-        /// </summary>
-        /// <param name="idBond">Id required bond, e.g. figi</param>
-        /// <returns>Required bond</returns>
-        public IMarketInstrument GetBond(string idBond)
-        {
-            return GetAllBonds()
-                .Where(b => b.Figi == idBond)
-                .Single();
-        }
-
-        /// <summary>
-        /// Method returns list with all curencies from bank broker
-        /// </summary>
-        /// <returns>List with currencies</returns>
-        public List<IMarketInstrument> GetAllCurrencies()
-        {
-            return GetInstruments(InstrumentType.Currency);
-        }
-
-        /// <summary>
-        /// Method returns specific currency
-        /// </summary>
-        /// <param name="idCurrency">Id required currency, e.g. figi</param>
-        /// <returns>Required currency</returns>
-        public IMarketInstrument GetCurrency(string idCurrency)
-        {
-            return GetAllCurrencies()
-                .Where(c => c.Figi == idCurrency)
-                .Single();
-        }
-
-        /// <summary>
-        /// Method returns list with all stocks from bank broker
-        /// </summary>
-        /// <returns>List with stocks</returns>
-        public List<IMarketInstrument> GetAllStocks()
-        {
-            return GetInstruments(InstrumentType.Stock);
-        }
-
-        /// <summary>
-        /// Method returns specific stock
-        /// </summary>
-        /// <param name="idStock">Id required stock, e.g. figi</param>
-        /// <returns>Required stock</returns>
-        public IMarketInstrument GetStock(string idStock)
-        {
-            return GetAllStocks()
-                .Where(st => st.Figi == idStock)
-                .Single();
         }
     }
 }

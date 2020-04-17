@@ -1,7 +1,6 @@
 ﻿@page "/signup"
 @using GUI.Components
-@using GUI.Scripts
-@using GUI.ViewModels
+
 @inject NavigationManager NavigationManager
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
     <Wizard Id="Wizard" HasError="@HasError">
@@ -118,7 +117,7 @@
         {
             errorServerMessage = "Something went wrong during registration";
         }
-        catch (Exception e)
+        catch (Exception)
         {
             errorServerMessage = "The server cannot process your request.";
         }
@@ -142,7 +141,7 @@
         if (file != null)
         {
             fileName = file.Name;
-            // 2MB =  2097152 byte 
+            // 2MB =  2097152 byte
             if (file.Size > 2097152)
             {
                 errorMessage = "File is too big. Only 2 MB";

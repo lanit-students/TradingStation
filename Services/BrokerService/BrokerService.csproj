@@ -7,14 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\**" />
-    <Content Remove="Controllers\**" />
-    <EmbeddedResource Remove="Controllers\**" />
-    <None Remove="Controllers\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Common\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\Integrations\TinkoffIntegrationLib\TinkoffIntegrationLib.csproj" />
   </ItemGroup>
 
 

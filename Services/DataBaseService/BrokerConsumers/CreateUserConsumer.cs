@@ -1,5 +1,4 @@
-﻿using System;
-using DataBaseService.Repositories.Interfaces;
+﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
 using MassTransit;

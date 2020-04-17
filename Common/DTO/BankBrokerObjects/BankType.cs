@@ -1,4 +1,4 @@
-﻿namespace BrokerServices
+﻿namespace DTO
 {
     public enum BankType
     {
