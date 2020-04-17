@@ -1,5 +1,4 @@
-﻿using BrokerService;
-using DTO;
+﻿using DTO;
 using Interfaces;
 using Kernel.CustomExceptions;
 using TinkoffIntegrationLib;
@@ -8,9 +7,9 @@ using BrokerService.Controllers;
 
 namespace BrokerServices.Utils
 {
-    internal static class BrokerFactory
+    public static class BrokerFactory
     {
-        internal static IBroker Create(BankType bankType, ILogger<BrokerController> logger)
+        public static IBroker Create(BankType bankType, ILogger<BrokerController> logger)
         {
             var brokerData = new CreateBrokerData();
 
