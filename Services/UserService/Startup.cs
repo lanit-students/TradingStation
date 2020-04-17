@@ -80,6 +80,7 @@ namespace UserService
             {
                 x.AddConsumer<LoginUserConsumer>();
                 x.AddBus(provider => CreateBus(provider));
+                x.AddRequestClient<InternalLoginRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalCreateUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalGetUserByIdRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalEditUserInfoRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
@@ -92,11 +93,6 @@ namespace UserService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseExceptionHandler(errorApp =>
             {
                 errorApp.Run(CustomExceptionHandler.HandleCustomException);

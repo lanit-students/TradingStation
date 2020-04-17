@@ -47,6 +47,11 @@ namespace DataBaseService.Repositories
         {
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);
 
+            if (dbCredential == null)
+            {
+                throw new NotFoundException("User with given email not found");
+            }
+
             return mapper.MapUserCredential(dbCredential);
         }
 
@@ -55,7 +60,7 @@ namespace DataBaseService.Repositories
             var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
             if (dbUser == null)
             {
-                throw new NotFoundException("User not found");
+                throw new NotFoundException("User with given id not found");
             }
 
             var email = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).Email;
@@ -113,7 +118,6 @@ namespace DataBaseService.Repositories
             {
                 throw new NotFoundException("Not found User to change");
             }
-
         }
     }
 }

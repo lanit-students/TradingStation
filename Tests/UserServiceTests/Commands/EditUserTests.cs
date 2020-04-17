@@ -14,26 +14,26 @@ using UserService.Interfaces;
 
 namespace UserServiceTests
 {
-    class EditUserTests
+    public class EditUserTests
     {
         private Mock<IValidator<UserInfoRequest>> userValidatorMock;
         private Mock<IValidator<PasswordChangeRequest>> passwordValidatorMock;
         private Mock<IRequestClient<InternalEditUserInfoRequest>> requestClientMock;
-        private Mock<Response<OperationResult>> resultMock;
+        private Mock<Response<OperationResult<bool>>> resultMock;
         private IEditUserCommand command;
         private UserInfoRequest infoRequest;
 
         [SetUp]
         public void Init()
         {
-            resultMock = new Mock<Response<OperationResult>>();
+            resultMock = new Mock<Response<OperationResult<bool>>>();
             resultMock
                 .Setup(x => x.Message)
-                .Returns(new OperationResult() {IsSuccess = true});
+                .Returns(new OperationResult<bool>() {Data = true});
 
             requestClientMock = new Mock<IRequestClient<InternalEditUserInfoRequest>>();
             requestClientMock
-                .Setup(x => x.GetResponse<OperationResult>(It.IsAny<InternalEditUserInfoRequest>(), default, default))
+                .Setup(x => x.GetResponse<OperationResult<bool>>(It.IsAny<InternalEditUserInfoRequest>(), default, default))
                 .Returns(Task.FromResult(resultMock.Object));
 
             userValidatorMock = new Mock<IValidator<UserInfoRequest>>();
@@ -60,7 +60,7 @@ namespace UserServiceTests
 
         [Test]
         public void TestWithAllOptions()
-        { 
+        {
             var passwordRequest = new PasswordChangeRequest
             {
                 OldPassword = "oldPassword",
