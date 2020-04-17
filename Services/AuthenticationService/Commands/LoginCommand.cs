@@ -23,11 +23,11 @@ namespace AuthenticationService.Commands
         /// <summary>
         /// Get user ID from UserService.
         /// </summary>
-        private async Task<UserCredential> GetUserCredential(LoginRequest request)
+        private async Task<UserCredential> GetUserCredential(InternalLoginRequest request)
         {
-            var response = await client.GetResponse<UserCredential>(request);
+            var response = await client.GetResponse<BrokerResponse<UserCredential>>(request);
 
-            return response.Message;
+            return BrokerResponseHandler.HandleResponse(response.Message);
         }
 
         private bool CheckUserCredentials(UserCredential credential, LoginRequest request)
@@ -48,7 +48,13 @@ namespace AuthenticationService.Commands
 
         public async Task<UserToken> Execute(LoginRequest request)
         {
-            UserCredential credential = await GetUserCredential(request);
+            var internalRequest = new InternalLoginRequest()
+            {
+                Email = request.Email,
+                Password = request.Password
+            };
+
+            var credential = await GetUserCredential(internalRequest);
 
             if (!CheckUserCredentials(credential, request))
             {

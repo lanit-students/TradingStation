@@ -1,6 +1,7 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -28,9 +29,9 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalDeleteUserRequest> context)
         {
-            var deleteResult = DeleteUser(context.Message);
+            var response = BrokerResponseWrapper.CreateResponse(DeleteUser, context.Message);
 
-            await context.RespondAsync(deleteResult);
+            await context.RespondAsync(response);
         }
     }
 }

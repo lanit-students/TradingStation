@@ -9,20 +9,16 @@ namespace UserService.BrokerConsumers
 {
     public class LoginUserConsumer : IConsumer<InternalLoginRequest>
     {
-        private readonly IBus bus;
+        private readonly IRequestClient<InternalLoginRequest> client;
 
-        public LoginUserConsumer([FromServices] IBus bus)
+        public LoginUserConsumer([FromServices] IRequestClient<InternalLoginRequest> client)
         {
-            this.bus = bus;
+            this.client = client;
         }
 
         public async Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
-            var uri = new Uri("rabbitmq://localhost/DatabaseService");
-
-            var client = bus.CreateRequestClient<InternalLoginRequest>(uri).Create(context.Message);
-
-            var response = await client.GetResponse<UserCredential>();
+            var response = await client.GetResponse<BrokerResponse<UserCredential>>(context.Message);
 
             await context.RespondAsync(response.Message);
         }

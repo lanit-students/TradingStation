@@ -1,8 +1,11 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
+using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
@@ -23,7 +26,9 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalLoginRequest> context)
         {
-            await context.RespondAsync(GetUserCredential(context.Message.Email));
+            var response = BrokerResponseWrapper.CreateResponse(GetUserCredential, context.Message.Email);
+
+            await context.RespondAsync(response);
         }
     }
 }

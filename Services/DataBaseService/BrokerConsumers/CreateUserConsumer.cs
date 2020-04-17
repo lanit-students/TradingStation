@@ -5,6 +5,7 @@ using DTO.BrokerRequests;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Kernel;
 
 namespace DataBaseService.BrokerConsumers
 {
@@ -35,9 +36,9 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalCreateUserRequest> context)
         {
-            var creationResult = CreateUser(context.Message);
+            var response = BrokerResponseWrapper.CreateResponse(CreateUser, context.Message);
 
-            await context.RespondAsync(creationResult);
+            await context.RespondAsync(response);
         }
     }
 }

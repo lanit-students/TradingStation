@@ -4,6 +4,7 @@ using DTO.BrokerRequests;
 using DTO.RestRequests;
 using FluentValidation;
 using IDeleteUserUserService.Interfaces;
+using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,11 @@ namespace UserService.Commands
             this.validator = validator;
         }
 
-        private async Task<bool> DeleteUser(InternalDeleteUserRequest request)
+        private async Task<OperationResult> DeleteUser(InternalDeleteUserRequest request)
         {
-            var result = await client.GetResponse<OperationResult>(request);
+            var response = await client.GetResponse<BrokerResponse<OperationResult>>(request);
 
-            return result.Message.IsSuccess;
+            return BrokerResponseHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(DeleteUserRequest request)
@@ -35,11 +36,12 @@ namespace UserService.Commands
             var user = new InternalDeleteUserRequest { UserId = request.UserId };
 
             var deleteUserResult = await DeleteUser(user);
-            if (!deleteUserResult)
+
+            if (!deleteUserResult.IsSuccess)
             {
                 throw new BadRequestException("Unable to delete user.");
             }
-            return deleteUserResult;
+            return deleteUserResult.IsSuccess;
         }
      }
  }

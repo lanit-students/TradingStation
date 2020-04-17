@@ -23,11 +23,11 @@ namespace UserService.Commands
             this.validator = validator;
         }
 
-        private async Task<bool> CreateUser(InternalCreateUserRequest request)
+        private async Task<OperationResult> CreateUser(InternalCreateUserRequest request)
         {
-            var result = await client.GetResponse<OperationResult>(request);
+            var response = await client.GetResponse<BrokerResponse<OperationResult>>(request);
 
-            return result.Message.IsSuccess;
+            return BrokerResponseHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(CreateUserRequest request)
@@ -35,6 +35,7 @@ namespace UserService.Commands
             validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
+
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -42,7 +43,9 @@ namespace UserService.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
+
             UserAvatar userAvatar = null;
+
             if (request.Avatar != null && request.AvatarExtension != null)
             {
                 userAvatar = new UserAvatar
@@ -68,13 +71,15 @@ namespace UserService.Commands
                 Credential = credential,
                 UserAvatar = userAvatar
             };
+
             var createUserResult = await CreateUser(internalCreateUserRequest);
-            if (!createUserResult)
+
+            if (!createUserResult.IsSuccess)
             {
                 throw new BadRequestException("Unable to create user");
             }
 
-            return createUserResult;
+            return createUserResult.IsSuccess;
         }
     }
 }

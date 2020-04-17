@@ -1,6 +1,7 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -28,9 +29,9 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalEditUserInfoRequest> context)
         {
-            var editResult = EditUser(context.Message);
+            var response = BrokerResponseWrapper.CreateResponse(EditUser, context.Message);
 
-            await context.RespondAsync(editResult);
+            await context.RespondAsync(response);
         }
     }
 }
