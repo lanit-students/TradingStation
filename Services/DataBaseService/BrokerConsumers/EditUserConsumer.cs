@@ -1,6 +1,7 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,22 +20,20 @@ namespace DataBaseService.BrokerConsumers
             this.logger = logger;
         }
 
-        private OperationResult EditUser(InternalEditUserInfoRequest request)
+        private bool EditUser(InternalEditUserInfoRequest request)
         {
+<<<<<<< HEAD
             logger.LogInformation("EditUser request received from UserService");
             userRepository.EditUser(request.User, request.UserPasswords, request.UserAvatar);
-            
-            return new OperationResult
-            {
-                IsSuccess = true
-            };
+            return true;
+>>>>>>> develop
         }
 
         public async Task Consume(ConsumeContext<InternalEditUserInfoRequest> context)
         {
-            var editResult = EditUser(context.Message);
+            var response = OperationResultWrapper.CreateResponse(EditUser, context.Message);
 
-            await context.RespondAsync(editResult);
+            await context.RespondAsync(response);
         }
     }
 }

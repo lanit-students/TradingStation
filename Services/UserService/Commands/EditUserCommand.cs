@@ -36,13 +36,13 @@ namespace UserService.Commands
 
         private async Task<bool> EditUser(InternalEditUserInfoRequest request)
         {
-            var result = await client.GetResponse<OperationResult>(request);
-
-            if (result.Message.IsSuccess)
+            var response = await client.GetResponse<OperationResult<bool>>(request);
+            if (response.Message.IsSuccess)
                 logger.LogInformation("User was edited successfully");
             else
                 logger.LogWarning("Error in user edition");
-            return result.Message.IsSuccess;
+
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(EditUserRequest request)
@@ -98,7 +98,7 @@ namespace UserService.Commands
                 throw exception;
             }
 
-            return editUserResult;
+            return true;
         }
     }
 }

@@ -6,6 +6,8 @@ using UserService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using DTO;
+using Kernel;
 
 namespace UserService.Commands
 {
@@ -24,11 +26,12 @@ namespace UserService.Commands
 
         private async Task<InternalGetUserByIdResponse> GetUserById(InternalGetUserByIdRequest request)
         {
-            var result = await client.GetResponse<InternalGetUserByIdResponse>(request);
-
+<<<<<<< HEAD
             logger.LogInformation("Response from Database Service GetUserById method received");
+            var response = await client.GetResponse<OperationResult<InternalGetUserByIdResponse>>(request);
+>>>>>>> develop
 
-            return result.Message;
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<UserInfoRequest> Execute(Guid request)

@@ -51,6 +51,11 @@ namespace DataBaseService.Repositories
         {
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);
 
+            if (dbCredential == null)
+            {
+                throw new NotFoundException("User with given email not found");
+            }
+
             return mapper.MapUserCredential(dbCredential);
         }
 
@@ -154,7 +159,6 @@ namespace DataBaseService.Repositories
                 logger.LogWarning(exception, "EditUser: User with id {1} wasn't found in Users table", user.Id);
                 throw exception;
             }
-
         }
     }
 }

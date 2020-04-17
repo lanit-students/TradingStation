@@ -1,6 +1,7 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,9 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<InternalGetUserByIdRequest> context)
         {
-            await context.RespondAsync(GetUserById(context.Message));
+            var response = OperationResultWrapper.CreateResponse(GetUserById, context.Message);
+
+            await context.RespondAsync(response);
         }
     }
 }
