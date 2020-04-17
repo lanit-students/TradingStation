@@ -11,19 +11,19 @@
         <div align="center" class="h3" min-width:>
             <h3><b>User Info</b></h3>
         </div>
-        <nav>
-            <ul class="top-menu" align =" center">
-                <li><a href="userinfo">Personal Information</a></li>
-                <li><a href="#">Transaction History</a></li>
+        <nav class="navbar navbar-expand-sm" align ="center">
+            <ul class="navbar-nav m-auto text-lg-center" >
+                <li class="nav-item"><a class="nav-link" href="userinfo">Personal Information</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Transaction History</a></li>
             </ul>
         </nav>
         <div class="row">
-            <div class="form-group col-sm-4" align ="center">
+            <div class="form-group col-sm-5" align ="center">
                 <EditForm Model="@user">
                     <p><img src=@imgSrc style="max-width:200px; max-height:200px;" alt="Avatar"></p>
                     <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
                         <br />
-                        <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary">Select Image</label>
+                        <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary col-3">Select Image</label>
                         <InputFile style="display: none" id="files"  accept=".jpg, .jpeg, .png" @onclick =" ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
                         <br />
                         <button class="btn btn-secondary col-3" @onclick="Reset">Reset</button>
@@ -31,7 +31,7 @@
                     </div>
                 </EditForm>
             </div>
-        <div class=" = col-sm-8">
+        <div class=" = col-sm-7">
             <EditForm Model="@user">
                 <DataAnnotationsValidator />
                 <div class="form-group">
