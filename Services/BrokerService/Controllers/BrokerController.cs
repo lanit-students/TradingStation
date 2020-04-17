@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace BrokerService.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
+    [Controller]
     public class BrokerController : ControllerBase
     {
         private readonly ILogger<BrokerController> logger;
