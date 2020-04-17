@@ -1,6 +1,7 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,21 +17,18 @@ namespace DataBaseService.BrokerConsumers
             this.userRepository = userRepository;
         }
 
-        private OperationResult DeleteUser(InternalDeleteUserRequest request)
+        private bool DeleteUser(InternalDeleteUserRequest request)
         {
             userRepository.DeleteUser(request.UserId);
 
-            return new OperationResult
-            {
-                IsSuccess = true
-            };
+            return true;
         }
 
         public async Task Consume(ConsumeContext<InternalDeleteUserRequest> context)
         {
-            var deleteResult = DeleteUser(context.Message);
+            var response = OperationResultWrapper.CreateResponse(DeleteUser, context.Message);
 
-            await context.RespondAsync(deleteResult);
+            await context.RespondAsync(response);
         }
     }
 }

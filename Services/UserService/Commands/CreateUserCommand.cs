@@ -25,9 +25,9 @@ namespace UserService.Commands
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
         {
-            var result = await client.GetResponse<OperationResult>(request);
+            var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            return result.Message.IsSuccess;
+            return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(CreateUserRequest request)
@@ -35,6 +35,7 @@ namespace UserService.Commands
             validator.ValidateAndThrow(request);
 
             string passwordHash = ShaHash.GetPasswordHash(request.Password);
+
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -42,7 +43,9 @@ namespace UserService.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
+
             UserAvatar userAvatar = null;
+
             if (request.Avatar != null && request.AvatarExtension != null)
             {
                 userAvatar = new UserAvatar
@@ -68,7 +71,9 @@ namespace UserService.Commands
                 Credential = credential,
                 UserAvatar = userAvatar
             };
+
             var createUserResult = await CreateUser(internalCreateUserRequest);
+
             if (!createUserResult)
             {
                 throw new BadRequestException("Unable to create user");

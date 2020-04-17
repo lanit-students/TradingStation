@@ -1,8 +1,6 @@
 ﻿@page "/signup"
-@using GUI.Components
-@using GUI.Scripts
-@using GUI.ViewModels
 @inject NavigationManager NavigationManager
+
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
     <Wizard Id="Wizard" HasError="@HasError">
         <WizardStep Name="First Step">
@@ -114,13 +112,11 @@
             await SignUpper.SignUp(request);
             NavigationManager.NavigateTo("/signin");
         }
-        catch (BadRequestException)
+        catch (Exception e) when (
+                e is BadRequestException
+                || e is InternalServerException)
         {
-            errorServerMessage = "Something went wrong during registration";
-        }
-        catch (Exception e)
-        {
-            errorServerMessage = "The server cannot process your request.";
+            errorServerMessage = "Can't create a user";
         }
         finally
         {
@@ -142,7 +138,7 @@
         if (file != null)
         {
             fileName = file.Name;
-            // 2MB =  2097152 byte 
+            // 2MB =  2097152 byte
             if (file.Size > 2097152)
             {
                 errorMessage = "File is too big. Only 2 MB";

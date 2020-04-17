@@ -17,7 +17,6 @@ using MassTransit;
 using GreenPipes;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
-using Kernel;
 using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
 
@@ -108,11 +107,6 @@ namespace DataBaseService
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

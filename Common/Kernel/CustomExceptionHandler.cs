@@ -14,7 +14,7 @@ namespace Kernel
         {
             var handler = context.Features.Get<IExceptionHandlerPathFeature>();
 
-            var response = new ErrorResponse
+            var errorResponse = new ErrorResponse
             {
                 UtcTime = DateTime.UtcNow
             };
@@ -25,17 +25,17 @@ namespace Kernel
 
                 context.Response.StatusCode = exception.StatusCode;
 
-                response.Header = exception.Header;
-                response.Message = exception.Message;
+                errorResponse.Header = exception.Header;
+                errorResponse.Message = exception.Message;
             }
             else
             {
                 context.Response.StatusCode = 500;
 
-                response.Message = "Internal server error";
+                errorResponse.Message = "Internal server error";
             }
 
-            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
         }
     }
 }

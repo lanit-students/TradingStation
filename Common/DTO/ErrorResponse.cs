@@ -2,7 +2,7 @@
 
 namespace DTO
 {
-    public class ErrorResponse
+    public class ErrorResponse : OperationResult
     {
         public DateTime UtcTime { get; set; }
         public string Header { get; set; }
