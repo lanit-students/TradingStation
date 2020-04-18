@@ -17,7 +17,7 @@ namespace TestForSignUp
                 browser.Navigate().GoToUrl("https://localhost:44335/signup");
                 Thread.Sleep(5000);
                 var filler = new ElementFiller(browser);
-                filler.Fill(input.commonString, input.emailString, input.dateString);
+                filler.Fill(input.nameAndLastName, input.email, input.date, input.password);
                 var buttons = browser.FindElementsByCssSelector("[type=\"button\"]");
                 var nextButton = buttons[1];
                 nextButton.Click();
@@ -26,29 +26,27 @@ namespace TestForSignUp
                 submitButton.Click();
                 Thread.Sleep(5000);
                 var errors = browser.FindElementsByCssSelector("[style=\" color: red;\"]");
-                if (errors.Count == 1) return false;
+                return errors.Count != 1;
             }
             catch (Exception)
             {
                 return false;
             }
-            return true;
         }
 
-        internal static bool RegistrateWithIncorrectData()
+        internal static bool RegistrateWithIncorrectData(InputGenerator input)
         {
             var browser = new ChromeDriver();
             browser.Navigate().GoToUrl("https://localhost:44335/signup");
             Thread.Sleep(5000);
             var filler = new ElementFiller(browser);
-            filler.Fill("IncorrectString", "IncorrectString", "02022020");
+            filler.Fill(input.nameAndLastName, input.email, input.date, input.password);
             var buttons = browser.FindElementsByCssSelector("[type=\"button\"]");
             var nextButton = buttons[1];
             nextButton.Click();
             Thread.Sleep(5000);
             var errors = browser.FindElementsByCssSelector("[class=\"validation-message\"]");
-            if (errors.Count == 4) return true;
-            return false;
+            return errors.Count == 4;
         }
     }
 }

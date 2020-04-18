@@ -9,15 +9,17 @@ namespace TestForSignUp
         private ReadOnlyCollection<IWebElement> inputs;
         private ReadOnlyCollection<IWebElement> inputsWithoutDate;
         private ReadOnlyCollection<IWebElement> emailInputs;
-        
+        private ReadOnlyCollection<IWebElement> passwordInputs;
+
         public ElementFiller(ChromeDriver browser)
         {
             inputs = browser.FindElementsByXPath("//input");
             inputsWithoutDate = browser.FindElementsByCssSelector("[placeholder]");
             emailInputs = browser.FindElementsByCssSelector("[placeholder*=\"@\"]");
+            passwordInputs = browser.FindElementsByCssSelector("[type=\"password\"]");
         }
 
-        public void Fill(string common, string email, string date)
+        public void Fill(string nameAndLastName, string email, string date, string password)
         {
             foreach (var inputField in inputs)
             {
@@ -26,12 +28,17 @@ namespace TestForSignUp
                     inputField.SendKeys(email + Keys.Enter);
                     continue;
                 }
+                if (passwordInputs.Contains(inputField))
+                {
+                    inputField.SendKeys(password + Keys.Enter);
+                    continue;
+                }
                 if (!(inputsWithoutDate.Contains(inputField)))
                 {
                     inputField.SendKeys(date + Keys.Enter);
                     continue;
                 }
-                inputField.SendKeys(common + Keys.Enter);
+                inputField.SendKeys(nameAndLastName + Keys.Enter);
             }
         }       
     }
