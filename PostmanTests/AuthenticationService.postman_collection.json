@@ -1,0 +1,188 @@
+{
+	"id": "91cc98df-8048-475f-99a8-7d079f83c81d",
+	"name": "AuthenticationService",
+	"description": "",
+	"auth": null,
+	"events": null,
+	"variables": [],
+	"order": [],
+	"folders_order": [
+		"921cad20-ff1a-4712-9736-893cc0a4cc2e",
+		"8d15ae70-4041-428c-bac9-e32f19a8c583"
+	],
+	"protocolProfileBehavior": {},
+	"folders": [
+		{
+			"id": "921cad20-ff1a-4712-9736-893cc0a4cc2e",
+			"name": "SignIn",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "91cc98df-8048-475f-99a8-7d079f83c81d",
+			"folder": null,
+			"order": [
+				"e6653924-96de-4275-b7c9-c25a6d596f41",
+				"f3f61c44-fcbe-4577-b510-c1485ca8d92d"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"id": "8d15ae70-4041-428c-bac9-e32f19a8c583",
+			"name": "SignOut",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "91cc98df-8048-475f-99a8-7d079f83c81d",
+			"folder": null,
+			"order": [
+				"017618ec-bf2f-4cbf-9e16-31c96ff02362",
+				"c1767df1-c54a-44f9-8240-efa597547de9"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"requests": [
+		{
+			"id": "017618ec-bf2f-4cbf-9e16-31c96ff02362",
+			"name": "SignOutWithCorrectGuid",
+			"url": "https://localhost:5001/authentication/logout",
+			"description": "",
+			"data": null,
+			"dataOptions": null,
+			"dataMode": null,
+			"headerData": [
+				{
+					"key": "userId",
+					"value": "{{userId}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "DELETE",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8d5d7be-2aae-47e9-bdab-c7e346575078",
+						"exec": [
+							"pm.test(\"Status is ok\", function () {\r",
+							"    pm.response.to.be.ok;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "8d15ae70-4041-428c-bac9-e32f19a8c583",
+			"headers": "userId: {{userId}}\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "c1767df1-c54a-44f9-8240-efa597547de9",
+			"name": "SignOutWithInCorrectGuid",
+			"url": "https://localhost:5001/authentication/logout",
+			"description": "",
+			"data": null,
+			"dataOptions": null,
+			"dataMode": null,
+			"headerData": [
+				{
+					"key": "userId",
+					"value": "incorrecttoken",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "DELETE",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dd386dec-4320-4647-8ff2-68320e42982b",
+						"exec": [
+							"pm.test(\"Status is Bad Request\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "8d15ae70-4041-428c-bac9-e32f19a8c583",
+			"headers": "userId: incorrecttoken\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "e6653924-96de-4275-b7c9-c25a6d596f41",
+			"name": "AuthenticationController_SignInWithCorrectData",
+			"url": "https://localhost:5001/authentication/login",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "38e95612-287d-47c7-a458-e36689e61aa5",
+						"exec": [
+							"pm.test(\"Status is ok, response is json\", function () {\r",
+							"    pm.response.to.be.ok;\r",
+							"    pm.response.to.be.json;\r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    postman.setEnvironmentVariable(\"userId\", jsonData.userId);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"folder": "921cad20-ff1a-4712-9736-893cc0a4cc2e",
+			"rawModeData": "{\n\t\"Email\" : \"example123@gmail.com\",\n\t\"Password\" : \"123\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "f3f61c44-fcbe-4577-b510-c1485ca8d92d",
+			"name": "CreateUser",
+			"url": "https://localhost:5011/users/create",
+			"description": "",
+			"data": [],
+			"dataOptions": {
+				"raw": {
+					"language": "json"
+				}
+			},
+			"dataMode": "raw",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "921cad20-ff1a-4712-9736-893cc0a4cc2e",
+			"rawModeData": "{\n\t\"Email\" : \"example123@gmail.com\",\n\t\"Password\" : \"123\",\n\t\"FirstName\" : \"Example\",\n\t\"LastName\" : \"Example\",\n\t\"Birthday\" : \"2000-04-05\"\n}",
+			"headers": "",
+			"pathVariables": {}
+		}
+	]
+}
