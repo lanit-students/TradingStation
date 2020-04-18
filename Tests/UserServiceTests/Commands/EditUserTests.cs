@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Kernel.CustomExceptions;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -16,8 +17,10 @@ namespace UserServiceTests
 {
     public class EditUserTests
     {
+        private Mock<ILogger<EditUserCommand>> loggerMock;
         private Mock<IValidator<UserInfoRequest>> userValidatorMock;
         private Mock<IValidator<PasswordChangeRequest>> passwordValidatorMock;
+        private Mock<IValidator<AvatarChangeRequest>> avatarValidatorMock;
         private Mock<IRequestClient<InternalEditUserInfoRequest>> requestClientMock;
         private Mock<Response<OperationResult<bool>>> resultMock;
         private IEditUserCommand command;
@@ -46,7 +49,16 @@ namespace UserServiceTests
                 .Setup(x => x.Validate(It.IsAny<ValidationContext>()))
                 .Returns(new ValidationResult());
 
-            command = new EditUserCommand(userValidatorMock.Object, passwordValidatorMock.Object, requestClientMock.Object);
+            avatarValidatorMock = new Mock<IValidator<AvatarChangeRequest>>();
+            avatarValidatorMock
+                .Setup(x => x.Validate(It.IsAny<ValidationContext>()))
+                .Returns(new ValidationResult());
+
+            loggerMock = new Mock<ILogger<EditUserCommand>>();
+            command = new EditUserCommand
+                (userValidatorMock.Object, passwordValidatorMock.Object, 
+                avatarValidatorMock.Object, requestClientMock.Object,
+                loggerMock.Object);
 
             infoRequest = new UserInfoRequest
             {
