@@ -42,8 +42,6 @@ namespace TinkoffIntegrationLib
         {
             var instruments = new List<Instrument>();
 
-            var x = context.MarketBondsAsync().Result;
-
             var tinkoffInstrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), type);
 
             MarketInstrumentList instrumentsList = tinkoffInstrumentType switch
