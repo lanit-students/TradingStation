@@ -1,4 +1,3 @@
-using DTO;
 using DTO.RestRequests;
 using IDeleteUserUserService.Interfaces;
 using Microsoft.AspNetCore.Mvc;

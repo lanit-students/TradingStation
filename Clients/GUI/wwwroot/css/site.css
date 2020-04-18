@@ -134,32 +134,3 @@ app {
 .n-active {
     display: none;
 }
-
-.cur-icon {
-    background-size: 75px 75px;
-}
-
-    .cur-icon .rub-icon {
-        background-image: url(/images/currencies/rub.png)
-    }
-
-    .cur-icon .usd-icon {
-        background-image: url(/images/currencies/usd.png)
-    }
-
-    .cur-icon .eur-icon {
-        background-image: url(/images/currencies/eur.png)
-    }
-
-    .cur-icon .cny-icon {
-        background-image: url(/images/currencies/cny.png)
-    }
-
-    .cur-icon .jpy-icon {
-        background-image: url(/images/currencies/jpy.png)
-    }
-
-    .cur-icon .gbp-icon {
-        background-image: url(/images/currencies/gbp.png)
-    }
-

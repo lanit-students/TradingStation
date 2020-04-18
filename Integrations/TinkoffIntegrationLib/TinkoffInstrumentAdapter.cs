@@ -1,5 +1,6 @@
 ﻿using DTO;
 using Kernel.CustomExceptions;
+using System;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffIntegrationLib
@@ -20,7 +21,7 @@ namespace TinkoffIntegrationLib
 
             tinkoffInstrument = instrument;
             tinkoffOrderbook = orderbook;
-            Type = type.ToString();
+            Type = (DTO.MarketBrokerObjects.InstrumentType)Enum.Parse(typeof(DTO.MarketBrokerObjects.InstrumentType), type.ToString());
         }
 
         public override string Figi => tinkoffInstrument.Figi;
@@ -29,7 +30,7 @@ namespace TinkoffIntegrationLib
 
         public override string Isin => tinkoffInstrument.Isin;
 
-        public override string Type { get; set; }
+        public override DTO.MarketBrokerObjects.InstrumentType Type { get; set; }
 
         public override string Name => tinkoffInstrument.Name;
 

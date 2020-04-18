@@ -1,5 +1,3 @@
-using BrokerService.Commands;
-using BrokerService.Interfaces;
 using Kernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Kernel.LoggingEngine;
 using MassTransit;
 using System;
+using GreenPipes;
+using BrokerService.BrokerConsumers;
 
 namespace BrokerService
 {
@@ -37,6 +37,14 @@ namespace BrokerService
                     hst.Username($"{serviceName}_{serviceId}");
                     hst.Password($"{serviceId}");
                 });
+
+                cfg.ReceiveEndpoint($"{serviceName}", ep =>
+                {
+                    ep.PrefetchCount = 16;
+                    ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<GetInstrumentsConsumer>(serviceProvider);
+                });
             });
         }
 
@@ -48,6 +56,7 @@ namespace BrokerService
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
+                x.AddConsumer<GetInstrumentsConsumer>();
             });
 
             services.AddMassTransitHostedService();
@@ -61,8 +70,6 @@ namespace BrokerService
             {
                 return new LoggerProvider(provider);
             });
-
-            services.AddTransient<IGetInstrumentsCommand, GetInstrumentsCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

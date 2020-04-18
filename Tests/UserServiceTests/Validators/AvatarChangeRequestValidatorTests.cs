@@ -1,7 +1,6 @@
 ﻿using DTO.RestRequests;
 using FluentValidation;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Linq;
 using UserService.Validators;
 

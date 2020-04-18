@@ -38,11 +38,11 @@ namespace TinkoffIntegrationLib
         /// </summary>
         public int Depth { get; set; }
 
-        public IEnumerable<Instrument> GetInstruments(string type)
+        public IEnumerable<Instrument> GetInstruments(DTO.MarketBrokerObjects.InstrumentType type)
         {
             var instruments = new List<Instrument>();
 
-            var tinkoffInstrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), type);
+            var tinkoffInstrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), type.ToString());
 
             MarketInstrumentList instrumentsList = tinkoffInstrumentType switch
             {

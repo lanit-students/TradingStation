@@ -1,4 +1,6 @@
-﻿namespace DTO
+﻿using DTO.MarketBrokerObjects;
+
+namespace DTO
 {
     /// <summary>
     /// Represents market instrument
@@ -11,7 +13,7 @@
 
         public virtual string Isin { get; set; }
 
-        public virtual string Type { get; set; }
+        public virtual InstrumentType Type { get; set; }
 
         public virtual string Name { get; set; }
 

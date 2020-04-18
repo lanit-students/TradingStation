@@ -1,7 +1,4 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Threading;
 
 namespace TestForSignUp

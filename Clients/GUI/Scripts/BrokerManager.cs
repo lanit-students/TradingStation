@@ -1,4 +1,5 @@
 ﻿using DTO;
+using DTO.MarketBrokerObjects;
 using Kernel;
 using Kernel.Enums;
 using System.Collections.Generic;
@@ -9,19 +10,19 @@ namespace GUI.Scripts
     public static class BrokerManager
     {
         public static async Task<IEnumerable<Instrument>> GetInstruments(
-                BankType bank,
+                BrokerType broker,
                 string token,
-                string instrument,
+                InstrumentType instrument,
                 int depth = 10)
         {
-            const string url = "https://localhost:5003/brokers/instruments/get";
+            const string url = "https://localhost:5009/operations/instruments/get";
 
             var queryParams = new Dictionary<string, string>
             {
-                { "bank", bank.ToString() },
+                { "bank", broker.ToString() },
                 { "token", token },
                 { "depth", depth.ToString() },
-                { "instrument", instrument }
+                { "instrument", instrument.ToString() }
             };
 
             var client = new RestClient<object, IEnumerable<Instrument>>(url, RestRequestType.GET, queryParams: queryParams);

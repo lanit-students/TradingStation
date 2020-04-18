@@ -1,4 +1,4 @@
-﻿using DTO;
+﻿using DTO.MarketBrokerObjects;
 using Interfaces;
 using Kernel.CustomExceptions;
 using TinkoffIntegrationLib;
@@ -7,14 +7,14 @@ namespace BrokerService.Utils
 {
     public static class BrokerFactory
     {
-        public static IBroker Create(BankType bankType, string token, int depth = 10)
+        public static IBroker Create(BrokerType broker, string token, int depth = 10)
         {
-            return bankType switch
+            return broker switch
             {
-                BankType.TinkoffBank =>
+                BrokerType.TinkoffBroker =>
                     new TinkoffBankBroker(token, depth),
                 _ =>
-                    throw new BadRequestException("Invalid bank type")
+                    throw new BadRequestException("Invalid broker type")
             };
         }
     }

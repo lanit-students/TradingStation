@@ -83,7 +83,9 @@
             SelectedInstrument = e.Value.ToString();
             AreInstrumentsLoading = true;
 
-            var result = await BrokerManager.GetInstruments(BankType.TinkoffBank, token, SelectedInstrument);
+            var instrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), SelectedInstrument);
+
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, instrumentType);
 
             AreInstrumentsLoading = false;
 
@@ -137,7 +139,7 @@
 
         try
         {
-            var result = await BrokerManager.GetInstruments(BankType.TinkoffBank, token, "Currency");
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);
 
             MarketInstruments = result;
 

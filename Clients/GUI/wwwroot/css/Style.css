@@ -30,8 +30,7 @@
     width: 150px;
     height: 100vh;
     color: #fff;
-    background: #1b6ec2;
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, dodgerblue 70%);
+    background: #f2f2f2;
     padding: 1px;
     align-items: center;
     transition: 0.5s width;
@@ -55,3 +54,31 @@
 .col-12 {
     width: 850px;
 }
+
+.cur-icon {
+    background-size: 75px 75px;
+}
+
+    .cur-icon .rub-icon {
+        background-image: url(/images/currencies/rub.png)
+    }
+
+    .cur-icon .usd-icon {
+        background-image: url(/images/currencies/usd.png)
+    }
+
+    .cur-icon .eur-icon {
+        background-image: url(/images/currencies/eur.png)
+    }
+
+    .cur-icon .cny-icon {
+        background-image: url(/images/currencies/cny.png)
+    }
+
+    .cur-icon .jpy-icon {
+        background-image: url(/images/currencies/jpy.png)
+    }
+
+    .cur-icon .gbp-icon {
+        background-image: url(/images/currencies/gbp.png)
+    }
