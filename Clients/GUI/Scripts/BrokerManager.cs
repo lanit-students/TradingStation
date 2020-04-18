@@ -8,7 +8,11 @@ namespace GUI.Scripts
 {
     public static class BrokerManager
     {
-        public static async Task<IEnumerable<Instrument>> GetInstruments(BankType bank, string token, string instrument, int depth = 10)
+        public static async Task<IEnumerable<Instrument>> GetInstruments(
+                BankType bank,
+                string token,
+                string instrument,
+                int depth = 10)
         {
             const string url = "https://localhost:5003/brokers/instruments/get";
 
