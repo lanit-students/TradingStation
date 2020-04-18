@@ -17,6 +17,8 @@ using UserService.Validators;
 using DTO.RestRequests;
 using FluentValidation;
 using DTO.BrokerRequests;
+using DTO;
+using Microsoft.AspNetCore.Identity;
 
 namespace UserService
 {
@@ -63,13 +65,17 @@ namespace UserService
 
             services.AddControllers();
 
+            services.AddIdentity<UserConfirmation, IdentityRole>()
+                .AddDefaultTokenProviders();
+            //services.AddControllersWithViews();
+
             services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
 
             services.AddTransient<IGetUserByIdCommand, GetUserByIdCommand>();
 
-            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
+            services.AddTransient<ICreateUserCommand, CreateUserCommand>();
             services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
 
             services.AddTransient<IEditUserCommand, EditUserCommand>();
