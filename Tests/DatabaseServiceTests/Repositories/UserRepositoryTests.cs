@@ -11,6 +11,8 @@ using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories;
 using DataBaseService.Repositories.Interfaces;
 using DatabaseServiceTests.Comparators;
+using Moq;
+using Microsoft.Extensions.Logging;
 
 namespace DatabaseServiceTests.Repositories
 {
@@ -52,6 +54,7 @@ namespace DatabaseServiceTests.Repositories
         #region Delete user tests
 
         private DbUserCredential dbUserCredential;
+        private Mock<ILogger<UserRepository>> logger;
 
         #endregion
 
@@ -61,6 +64,7 @@ namespace DatabaseServiceTests.Repositories
             #region Common
 
             mapper = new UserMapper();
+            logger = new Mock<ILogger<UserRepository>>();
 
             #endregion
 
@@ -149,7 +153,7 @@ namespace DatabaseServiceTests.Repositories
         public void CreateUserTest()
         {
             using var dbContext = new TPlatformDbContext(dbOptionsCreateUser);
-            repository = new UserRepository(mapper, dbContext);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
             repository.CreateUser(user, email);
 
             DbUserComparer comparer = new DbUserComparer();
@@ -166,7 +170,7 @@ namespace DatabaseServiceTests.Repositories
         public void CreateUserCredential()
         {
             using var dbContext = new TPlatformDbContext(dbOptionsCreateCredential);
-            repository = new UserRepository(mapper, dbContext);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
             repository.CreateUserCredential(credential);
 
             DbUserCredentialsComparer comparer = new DbUserCredentialsComparer();
@@ -184,7 +188,7 @@ namespace DatabaseServiceTests.Repositories
         public void CreateUserAvatar()
         {
             using var dbContext = new TPlatformDbContext(dbOptionsCreateAvatar);
-            repository = new UserRepository(mapper, dbContext);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
             repository.CreateUser(user,email);
             repository.CreateUserAvatar(userAvatar);
             DbUserAvatarComparer comparer = new DbUserAvatarComparer();
@@ -209,7 +213,7 @@ namespace DatabaseServiceTests.Repositories
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
-            repository = new UserRepository(mapper, dbContext);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
 
             dbContext.UsersCredentials.Add(dbUserCredential);
             dbContext.SaveChanges();
@@ -228,7 +232,7 @@ namespace DatabaseServiceTests.Repositories
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
-            repository = new UserRepository(mapper, dbContext);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
 
             dbContext.UsersCredentials.Add(dbUserCredential);
             dbContext.SaveChanges();
@@ -250,7 +254,7 @@ namespace DatabaseServiceTests.Repositories
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
-            repository = new UserRepository(mapper, dbContext);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
 
             dbContext.UsersCredentials.Add(dbUserCredential);
             dbContext.SaveChanges();

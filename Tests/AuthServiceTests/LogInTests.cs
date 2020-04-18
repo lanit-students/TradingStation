@@ -17,7 +17,7 @@ namespace AuthenticationServiceTests
     public class LoginTests
     {
         private Mock<IRequestClient<InternalLoginRequest>> clientMock;
-        private Mock<Response<UserCredential>> responseMock;
+        private Mock<Response<OperationResult<UserCredential>>> responseMock;
         private ITokensEngine tokensEngine;
         private ILoginCommand command;
         private LoginRequest request;
@@ -30,14 +30,14 @@ namespace AuthenticationServiceTests
             request = new LoginRequest();
             response = new UserCredential();
 
-            responseMock = new Mock<Response<UserCredential>>();
+            responseMock = new Mock<Response<OperationResult<UserCredential>>>();
             responseMock
                 .Setup(x => x.Message)
-                .Returns(response);
+                .Returns(new OperationResult<UserCredential>() { Data = response });
 
             clientMock = new Mock<IRequestClient<InternalLoginRequest>>();
             clientMock
-                .Setup(x => x.GetResponse<UserCredential>(request, default, default))
+                .Setup(x => x.GetResponse<OperationResult<UserCredential>>(It.IsAny<InternalLoginRequest>(), default, default))
                 .Returns(Task.FromResult(responseMock.Object));
 
             command = new LoginCommand(tokensEngine, clientMock.Object);

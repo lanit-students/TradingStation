@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
-
 using DTO;
 using Kernel.CustomExceptions;
 using DataBaseService.Database;
 using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
+using DTO.BrokerRequests;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DataBaseService.Repositories
 {
@@ -13,11 +15,13 @@ namespace DataBaseService.Repositories
     {
         private readonly IUserMapper mapper;
         private readonly TPlatformDbContext dbContext;
+        private readonly ILogger<UserRepository> logger;
 
-        public UserRepository(IUserMapper mapper, TPlatformDbContext dbContext)
+        public UserRepository(IUserMapper mapper, TPlatformDbContext dbContext, [FromServices] ILogger<UserRepository> logger)
         {
             this.mapper = mapper;
             this.dbContext = dbContext;
+            this.logger = logger;
         }
 
         public void CreateUser(User user, string email)
@@ -47,19 +51,38 @@ namespace DataBaseService.Repositories
         {
             var dbCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email);
 
+            if (dbCredential == null)
+            {
+                throw new NotFoundException("User with given email not found");
+            }
+
             return mapper.MapUserCredential(dbCredential);
         }
 
-        public User GetUserById(Guid userId)
+        public InternalGetUserByIdResponse GetUserWithAvatarById(Guid userId)
         {
-            var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == userId);
+            var dbUser = dbContext.Users.FirstOrDefault(u => u.Id == userId);
             if (dbUser == null)
             {
-                throw new NotFoundException("User not found");
+                var exception = new NotFoundException("User not found");
+                logger.LogWarning(exception, "GetUserWithAvatarById: User with id {1} wasn't found ", userId);
+                throw exception;
             }
-
             var email = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId).Email;
-            return mapper.MapUser(dbUser, email);
+
+            var user = mapper.MapUser(dbUser, email);
+
+            UserAvatar userAvatar = null;
+            var dbUserAvatar = dbContext.UsersAvatars.FirstOrDefault(ua => ua.UserId == userId);
+            if (dbUserAvatar != null && dbUserAvatar.Avatar != null)
+                userAvatar = mapper.MapUserAvatar(dbUserAvatar);
+
+            logger.LogInformation("GetUserWithAvatarById: User with id {1} was found and send to UserService", userId);
+            return new InternalGetUserByIdResponse
+            {
+                User = user,
+                UserAvatar = userAvatar
+            };
         }
 
         public void DeleteUser(Guid userId)
@@ -79,7 +102,7 @@ namespace DataBaseService.Repositories
             dbContext.SaveChanges();
         }
 
-        public void EditUser(User user, PasswordHashChangeRequest password)
+        public void EditUser(User user, PasswordHashChangeRequest password, UserAvatar userAvatar)
         {
             var dbUser = dbContext.Users.FirstOrDefault(uc => uc.Id == user.Id);
             if (dbUser != null)
@@ -96,24 +119,46 @@ namespace DataBaseService.Repositories
                     {
                         if (dbUserCredential.PasswordHash != password.OldPasswordHash)
                         {
-                            throw new ForbiddenException("Can't change password, old password is wrong");
+                            var exception = new ForbiddenException("Can't change password, old password is wrong");
+                            logger.LogWarning(exception, 
+                                "Edit User with id {1} operation was stopped: old password is wrong ", user.Id);
+                            throw exception;
                         }
 
                         dbUserCredential.PasswordHash = password.NewPasswordHash;
                     }
                     else
                     {
-                        throw new NotFoundException("Not found User to change pasword");
+                        var exception = new NotFoundException("Not found user to change password");
+                        logger.LogWarning(exception, "EditUser: User with id {1} wasn't found in UserCredentials table", user.Id);
+                        throw exception;
                     }
                 }
+                if (userAvatar != null)
+                {
+                    var dbUserAvatar = dbContext.UsersAvatars.FirstOrDefault(ua => ua.UserId == user.Id);
 
+                    if (dbUserAvatar == null)
+                    {
+                        userAvatar.Id = Guid.NewGuid();
+                        userAvatar.UserId = user.Id;
+                        dbContext.UsersAvatars.Add(mapper.MapToDbUserAvatar(userAvatar));
+                    }
+                    else
+                    {
+                        dbUserAvatar.AvatarExtension = userAvatar.AvatarExtension;
+                        dbUserAvatar.Avatar = userAvatar.Avatar;
+                    }
+                }
                 dbContext.SaveChanges();
+                logger.LogInformation("EditUser: Information about user with id {1} was changed ", user.Id);
             }
             else
             {
-                throw new NotFoundException("Not found User to change");
+                var exception = new NotFoundException("User to change information not found in Users table");
+                logger.LogWarning(exception, "EditUser: User with id {1} wasn't found in Users table", user.Id);
+                throw exception;
             }
-
         }
     }
 }

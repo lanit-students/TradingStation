@@ -1,8 +1,10 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
@@ -10,20 +12,27 @@ namespace DataBaseService.BrokerConsumers
     public class GetUserByIdConsumer : IConsumer<InternalGetUserByIdRequest>
     {
         private readonly IUserRepository userRepository;
+        private readonly ILogger<GetUserByIdConsumer> logger;
 
-        public GetUserByIdConsumer([FromServices] IUserRepository userRepository)
+        public GetUserByIdConsumer
+            ([FromServices] IUserRepository userRepository,
+            [FromServices] ILogger<GetUserByIdConsumer> logger)
         {
             this.userRepository = userRepository;
+            this.logger = logger;
         }
 
-        private User GetUserById(InternalGetUserByIdRequest request)
+        private InternalGetUserByIdResponse GetUserById(InternalGetUserByIdRequest request)
         {
-            return userRepository.GetUserById(request.UserId);
+            logger.LogInformation("GetUserById request received from UserService");
+            return userRepository.GetUserWithAvatarById(request.UserId);
         }
 
         public async Task Consume(ConsumeContext<InternalGetUserByIdRequest> context)
         {
-            await context.RespondAsync(GetUserById(context.Message));
+            var response = OperationResultWrapper.CreateResponse(GetUserById, context.Message);
+
+            await context.RespondAsync(response);
         }
     }
 }

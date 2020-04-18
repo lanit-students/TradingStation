@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AvatarExtensionNotCorrect" xml:space="preserve">
+    <value>Avatar extension has not correct value</value>
+  </data>
+  <data name="AvatarExtensionNullAvatarNotNull" xml:space="preserve">
+    <value>Avatar extension  is null but avatar isn't null</value>
+  </data>
+  <data name="AvatarNullAvatarExtensionNotNull" xml:space="preserve">
+    <value>Avatar is null but avatar extension isn't null</value>
+  </data>
+  <data name="AvatarTooBig" xml:space="preserve">
+    <value>Image size is more than 2 mb</value>
+  </data>
   <data name="BirthdayEmpty" xml:space="preserve">
     <value>Birthday must not be empty.</value>
   </data>

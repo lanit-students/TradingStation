@@ -17,6 +17,8 @@ using UserService.Validators;
 using DTO.RestRequests;
 using FluentValidation;
 using DTO.BrokerRequests;
+using Microsoft.Extensions.Logging;
+using Kernel.LoggingEngine;
 
 namespace UserService
 {
@@ -75,11 +77,13 @@ namespace UserService
             services.AddTransient<IEditUserCommand, EditUserCommand>();
             services.AddTransient<IValidator<UserInfoRequest>, UserInfoRequestValidator>();
             services.AddTransient<IValidator<PasswordChangeRequest>, PasswordChangeRequestValidator>();
+            services.AddTransient<IValidator<AvatarChangeRequest>, AvatarChangeRequestValidator>();
 
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<LoginUserConsumer>();
                 x.AddBus(provider => CreateBus(provider));
+                x.AddRequestClient<InternalLoginRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalCreateUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalGetUserByIdRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalEditUserInfoRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
@@ -87,16 +91,21 @@ namespace UserService
             });
 
             services.AddMassTransitHostedService();
+
+            services.AddLogging(log =>
+            {
+                log.ClearProviders();
+            });
+
+            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            {
+                return new LoggerProvider(provider);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseExceptionHandler(errorApp =>
             {
                 errorApp.Run(CustomExceptionHandler.HandleCustomException);
