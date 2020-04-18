@@ -11,7 +11,7 @@ namespace GUI.Scripts
         public static async Task<IEnumerable<Instrument>> GetInstruments(BankType bank, string token, string instrument, int depth = 10)
         {
             const string url = "https://localhost:5003/brokers/instruments/get";
-            //[FromQuery] BankType bank, [FromQuery] string token, [FromQuery] int depth, [FromQuery] InstrumentType instrument
+
             var queryParams = new Dictionary<string, string>
             {
                 { "bank", bank.ToString() },
