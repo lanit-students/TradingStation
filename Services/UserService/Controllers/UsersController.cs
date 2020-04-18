@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using UserService.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.Controllers
 {
@@ -12,10 +13,18 @@ namespace UserService.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
+        private readonly ILogger<UsersController> logger;
+
+        public UsersController([FromServices] ILogger<UsersController> logger)
+        {
+            this.logger = logger;
+        }
+
         [Route("create")]
         [HttpPost]
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
         {
+            logger.LogInformation("Create user request received from GUI to UserService");
             return await command.Execute(request);
         }
 
@@ -23,6 +32,7 @@ namespace UserService.Controllers
         [HttpPut]
         public async Task<bool> EditUser([FromServices] IEditUserCommand command, [FromBody] EditUserRequest request)
         {
+            logger.LogInformation("Edit user request received from GUI to UserService");
             return await command.Execute(request);
         }
 
@@ -30,13 +40,15 @@ namespace UserService.Controllers
         [HttpDelete]
         public async Task<bool> DeleteUser([FromServices] IDeleteUserCommand command, [FromBody] DeleteUserRequest request)
         {
+            logger.LogInformation("Delete user request received from GUI to UserService");
             return await command.Execute(request);
         }
 
         [Route("get")]
         [HttpGet]
-        public async Task<User> GetUser([FromServices] IGetUserByIdCommand command, [FromHeader] Guid userId)
+        public async Task<UserInfoRequest> GetUser([FromServices] IGetUserByIdCommand command, [FromHeader] Guid userId)
         {
+            logger.LogInformation("Get user request received from GUI to UserService");
             return await command.Execute(userId);
         }
     }

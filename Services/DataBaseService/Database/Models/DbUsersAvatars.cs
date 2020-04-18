@@ -32,12 +32,10 @@ namespace DataBaseService.Database.Models
                 .IsUnique();
             builder
                 .Property(p => p.Avatar)
-                .HasColumnName("Avatar")
-                .IsRequired();
+                .HasColumnName("Avatar");
             builder
                 .Property(p => p.AvatarExtension)
-                .HasColumnName("AvatarExtension")
-                .IsRequired();
+                .HasColumnName("AvatarExtension");
             builder
                 .Property(p => p.UserId)
                 .HasColumnName("UserId")

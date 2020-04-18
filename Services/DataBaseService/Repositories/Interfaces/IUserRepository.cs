@@ -1,5 +1,6 @@
 ﻿using DTO;
 using System;
+using DTO.BrokerRequests;
 
 namespace DataBaseService.Repositories.Interfaces
 {
@@ -13,10 +14,10 @@ namespace DataBaseService.Repositories.Interfaces
 
         UserCredential GetUserCredential(string email);
 
-        User GetUserById(Guid userId);
+        InternalGetUserByIdResponse GetUserWithAvatarById(Guid userId);
 
         void DeleteUser(Guid userIdCredential);
 
-        void EditUser(User user, PasswordHashChangeRequest password);
+        void EditUser(User user, PasswordHashChangeRequest password, UserAvatar userAvatar);
     }
 }

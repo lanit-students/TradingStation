@@ -17,6 +17,8 @@ using UserService.Validators;
 using DTO.RestRequests;
 using FluentValidation;
 using DTO.BrokerRequests;
+using Microsoft.Extensions.Logging;
+using Kernel.LoggingEngine;
 
 namespace UserService
 {
@@ -75,6 +77,7 @@ namespace UserService
             services.AddTransient<IEditUserCommand, EditUserCommand>();
             services.AddTransient<IValidator<UserInfoRequest>, UserInfoRequestValidator>();
             services.AddTransient<IValidator<PasswordChangeRequest>, PasswordChangeRequestValidator>();
+            services.AddTransient<IValidator<AvatarChangeRequest>, AvatarChangeRequestValidator>();
 
             services.AddMassTransit(x =>
             {
@@ -88,6 +91,16 @@ namespace UserService
             });
 
             services.AddMassTransitHostedService();
+
+            services.AddLogging(log =>
+            {
+                log.ClearProviders();
+            });
+
+            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            {
+                return new LoggerProvider(provider);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
