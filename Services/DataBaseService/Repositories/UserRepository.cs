@@ -17,7 +17,7 @@ namespace DataBaseService.Repositories
         private readonly TPlatformDbContext dbContext;
         private readonly ILogger<UserRepository> logger;
 
-        public UserRepository (IUserMapper mapper, TPlatformDbContext dbContext, [FromServices] ILogger<UserRepository> logger)
+        public UserRepository(IUserMapper mapper, TPlatformDbContext dbContext, [FromServices] ILogger<UserRepository> logger)
         {
             this.mapper = mapper;
             this.dbContext = dbContext;
