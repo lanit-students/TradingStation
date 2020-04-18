@@ -38,9 +38,9 @@ namespace UserService.Commands
         {
             var response = await client.GetResponse<OperationResult<bool>>(request);
             if (response.Message.IsSuccess)
-                logger.LogInformation("User was edited successfully");
+                logger.LogInformation("Success result from database service received");
             else
-                logger.LogWarning("Error in user edition");
+                logger.LogWarning("Error from database service received");
 
             return OperationResultHandler.HandleResponse(response.Message);
         }
