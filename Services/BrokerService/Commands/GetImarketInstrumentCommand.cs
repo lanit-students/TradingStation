@@ -1,10 +1,5 @@
 ﻿using System.Collections.Generic;
-using BrokerService.Controllers;
-using BrokerServices;
-using BrokerServices.Utils;
-using DTO;
 using Interfaces;
-using Microsoft.Extensions.Logging;
 using Kernel.CustomExceptions;
 using BrokerService.Interfaces;
 
@@ -12,30 +7,30 @@ namespace BrokerService.Commands
 {
     public class GetImarketInstrumentCommand : IGetImarketInstrumentCommand
     {
-        public List<IMarketInstrument> Execute(CommandsType commandType,BankType bankType,ILogger<BrokerController> logger,BrokerData brokerData)
+        public List<IMarketInstrument> Execute(CommandsType commandType,IBroker broker)
         {
             switch (commandType)
             {
                 case CommandsType.GetAllCurrencies:
-                    return BrokerFactory.Create(bankType, logger, brokerData).GetAllCurrencies();
+                    return broker.GetAllCurrencies();
                 case CommandsType.GetAllStocks:
-                    return BrokerFactory.Create(bankType, logger, brokerData).GetAllStocks();
+                    return broker.GetAllStocks();
                 case CommandsType.GetAllBonds:
-                    return BrokerFactory.Create(bankType, logger, brokerData).GetAllBonds();
+                    return broker.GetAllBonds();
                 default:
                     throw new BadRequestException("We cannot execute this command.");
             }
         }
-        public IMarketInstrument Execute(CommandsType commandsType,BankType bankType,ILogger<BrokerController> logger,BrokerData brokerData,string Id)
+        public IMarketInstrument Execute(CommandsType commandsType,IBroker broker,string Id)
         {
             switch (commandsType)
             {
                 case CommandsType.GetCurrency:
-                    return BrokerFactory.Create(bankType, logger, brokerData).GetCurrency(Id);
+                    return broker.GetCurrency(Id);
                 case CommandsType.GetStock:
-                    return BrokerFactory.Create(bankType, logger, brokerData).GetStock(Id);
+                    return broker.GetStock(Id);
                 case CommandsType.GetBond:
-                    return BrokerFactory.Create(bankType, logger, brokerData).GetBond(Id);
+                    return broker.GetBond(Id);
                 default:
                     throw new BadRequestException("We cannot execute this command.");
             }
