@@ -3,6 +3,7 @@ using DTO.BrokerRequests;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
@@ -10,16 +11,18 @@ namespace DataBaseService.BrokerConsumers
     public class EditUserConsumer : IConsumer<InternalEditUserInfoRequest>
     {
         private readonly IUserRepository userRepository;
+        private readonly ILogger<EditUserConsumer> logger;
 
-        public EditUserConsumer([FromServices] IUserRepository userRepository)
+        public EditUserConsumer([FromServices] IUserRepository userRepository, [FromServices]ILogger<EditUserConsumer> logger)
         {
             this.userRepository = userRepository;
+            this.logger = logger;
         }
 
         private bool EditUser(InternalEditUserInfoRequest request)
         {
-            userRepository.EditUser(request.User, request.UserPasswords);
-
+            logger.LogInformation("EditUser request received from UserService");
+            userRepository.EditUser(request.User, request.UserPasswords, request.UserAvatar);
             return true;
         }
 

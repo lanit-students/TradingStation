@@ -5,6 +5,7 @@ using FluentValidation;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -15,20 +16,30 @@ namespace UserService.Commands
         private readonly IRequestClient<InternalEditUserInfoRequest> client;
         private readonly IValidator<UserInfoRequest> userInfoValidator;
         private readonly IValidator<PasswordChangeRequest> passwordChangeValidator;
+        private readonly IValidator<AvatarChangeRequest> avatarValidator;
+        private readonly ILogger<EditUserCommand> logger;
 
         public EditUserCommand
             ([FromServices] IValidator<UserInfoRequest> userInfoValidator,
             [FromServices] IValidator<PasswordChangeRequest> passwordChangeValidator,
-            [FromServices] IRequestClient<InternalEditUserInfoRequest> client)
+            [FromServices] IValidator<AvatarChangeRequest> avatarValidator,
+            [FromServices] IRequestClient<InternalEditUserInfoRequest> client,
+            [FromServices] ILogger<EditUserCommand> logger)
         {
             this.client = client;
             this.userInfoValidator = userInfoValidator;
             this.passwordChangeValidator = passwordChangeValidator;
+            this.avatarValidator = avatarValidator;
+            this.logger = logger;
         }
 
         private async Task<bool> EditUser(InternalEditUserInfoRequest request)
         {
             var response = await client.GetResponse<OperationResult<bool>>(request);
+            if (response.Message.IsSuccess)
+                logger.LogInformation("Success result from database service received");
+            else
+                logger.LogWarning("Error from database service received");
 
             return OperationResultHandler.HandleResponse(response.Message);
         }
@@ -37,7 +48,9 @@ namespace UserService.Commands
         {
             var passwordRequest = request.PasswordRequest;
             var userInfo = request.UserInfo;
+            var avatarRequest = request.AvatarRequest;
             PasswordHashChangeRequest passwordHashChangeRequest = null;
+            UserAvatar userAvatar = null;
 
             if (passwordRequest != null)
             {
@@ -46,6 +59,15 @@ namespace UserService.Commands
                 {
                     OldPasswordHash = ShaHash.GetPasswordHash(passwordRequest.OldPassword),
                     NewPasswordHash = ShaHash.GetPasswordHash(passwordRequest.NewPassword)
+                };
+            }
+            if (avatarRequest != null)
+            {
+                avatarValidator.ValidateAndThrow(avatarRequest);
+                userAvatar = new UserAvatar
+                {
+                    Avatar = avatarRequest.Avatar,
+                    AvatarExtension = avatarRequest.AvatarExtension
                 };
             }
 
@@ -63,10 +85,17 @@ namespace UserService.Commands
             var internalEditUserInfoRequest = new InternalEditUserInfoRequest
             {
                 User = user,
-                UserPasswords = passwordHashChangeRequest
+                UserPasswords = passwordHashChangeRequest,
+                UserAvatar = userAvatar                
             };
 
             var editUserResult = await EditUser(internalEditUserInfoRequest);
+            if (!editUserResult)
+            {
+                var exception = new BadRequestException("Unable to edit");
+                logger.LogWarning(exception, "Bad request exception was catched on edit user command");
+                throw exception;
+            }
 
             return true;
         }
