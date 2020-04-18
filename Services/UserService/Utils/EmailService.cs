@@ -3,7 +3,7 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using System.Threading.Tasks;
 
-namespace DTO
+namespace UserService.Utils
 {
     public class EmailService
     {
