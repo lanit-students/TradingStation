@@ -1,77 +1,18 @@
 ﻿@page "/signin"
-@inject AuthStateProvider AuthenticationProvider
-@inject NavigationManager NavigationManager
-@inject ISessionStorageService Storage
 
-<h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password</h3>
-<div class="col-12">
-    <h3><b>Sign In</b></h3>
-    <hr />
-    <EditForm Model="@userInput" OnValidSubmit="@TrySignIn">
-        <DataAnnotationsValidator />
-        <div class="form-group">
-            <label for="Email">Email</label>
-            <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
-            <ValidationMessage For="() => userInput.Email" />
-        </div>
-        <br />
-        <div class="form-group">
-            <label for="Password">Password</label>
-            <InputText class="form-control col-3" type="Password" @bind-Value="userInput.Password" placeholder="*****" />
-            <ValidationMessage For="() => userInput.Password" />
-        </div>
-        <input type="submit" class="form-control col-1 button btn-primary" value="Sign in" />
-    </EditForm>
+<a href="#openModal">Открыть модальное окно</a>
+<div id="openModal" class="modalDialog">
+
+    <div>
+
+        <a href="#close" title="Закрыть" class="close">X</a>
+
+        <h2>Модальное окно</h2>
+
+        <p>Пример простого модального окна, которое может быть создано с использованием CSS3.</p>
+
+        <p>Его можно использовать в широком диапазоне, начиная от вывода сообщений и заканчивая формой регистрации.</p>
+
+    </div>
+
 </div>
-
-
-@code {
-    [CascadingParameter]
-    private Task<AuthenticationState> authState { get; set; }
-    private SignInViewModel userInput;
-    bool isHidden = true;
-
-    private async Task TrySignIn()
-    {
-        var request = new LoginRequest
-        {
-            Email = userInput.Email,
-            Password = userInput.Password
-        };
-
-        try
-        {
-            await Storage.ClearAsync();
-
-            var userToken = await SignInner.SignIn(request);
-
-            Storage.SetItemAsync("id" ,userToken.UserId);
-            Storage.SetItemAsync("token", userToken.Body);
-
-            AuthenticationProvider.MarkSignedIn();
-            NavigationManager.NavigateTo("/userinfo");
-        }
-        catch(NotFoundException)
-        {
-            userInput.Password = "";
-            isHidden = false;
-        }
-        catch (ForbiddenException)
-        {
-            userInput.Password = "";
-            isHidden = false;
-        }
-    }
-
-    protected async override Task OnInitializedAsync()
-    {
-        userInput = new SignInViewModel();
-
-        var claims = (await authState).User;
-
-        if (claims.Identity.IsAuthenticated)
-        {
-            NavigationManager.NavigateTo("/userinfo");
-        }
-    }
-}

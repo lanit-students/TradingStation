@@ -3,14 +3,14 @@
 @inject Blazored.SessionStorage.ISessionStorageService Storage
 
 <div class="header">
-    <a href="#"><img src="Logo/logo.png"></a>
+    <a href="#"><img src="Picture/Logo.png"></a>
     <a class="header_item" href="#">News</a>
     <div class="header-right">
         <AuthorizeView>
             <NotAuthorized>
                 <a class="header_item" href="signup">Sign up</a>
                 <a> / </a>
-                <a class="header_item" href="signin">Sign in</a>
+                <a class="header_item" href="signin" id="myBtn">Sign in</a>
             </NotAuthorized>
             <Authorized>
                 <a class="header_item" href="signin" @onclick="@SignOut">  Sign Out</a>
@@ -18,6 +18,7 @@
                 <a class="header_item" href="userinfo">User Info</a>
             </Authorized>
         </AuthorizeView>
+        <a href="#"><img src="Picture/Avatar.png"></a>
     </div>
 </div>
 
