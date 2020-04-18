@@ -1,0 +1,10 @@
+﻿@page "/modal"
+
+@inject IModalService modal
+<body>
+<batton @onclick="@(() => modal.Show<SignIn>())" class="btn btn-primary">View</batton>
+    </body>
+
+@code {
+
+}

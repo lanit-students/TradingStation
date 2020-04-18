@@ -2,6 +2,7 @@
 @using GUI.Components
 @using GUI.Scripts
 @using GUI.ViewModels
+@inject IModalService modal
 @inject NavigationManager NavigationManager
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
     <Wizard Id="Wizard" HasError="@HasError">
@@ -112,7 +113,7 @@
             };
 
             await SignUpper.SignUp(request);
-            NavigationManager.NavigateTo("/signin");
+            modal.Show<GUI.Pages.SignIn>();
         }
         catch (BadRequestException)
         {
@@ -142,7 +143,7 @@
         if (file != null)
         {
             fileName = file.Name;
-            // 2MB =  2097152 byte 
+            // 2MB =  2097152 byte
             if (file.Size > 2097152)
             {
                 errorMessage = "File is too big. Only 2 MB";
