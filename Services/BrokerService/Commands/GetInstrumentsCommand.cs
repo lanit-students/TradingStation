@@ -1,10 +1,7 @@
-﻿using Interfaces;
-using BrokerService.Interfaces;
+﻿using BrokerService.Interfaces;
 using System.Collections.Generic;
-using Tinkoff.Trading.OpenApi.Models;
 using System;
 using BrokerService.Utils;
-using BrokerService;
 using Kernel.CustomExceptions;
 using DTO;
 
@@ -12,7 +9,7 @@ namespace BrokerService.Commands
 {
     public class GetInstrumentsCommand : IGetInstrumentsCommand
     {
-        public IEnumerable<IMarketInstrument> Execute(BankType bank, string token, int depth, InstrumentType instrument)
+        public IEnumerable<Instrument> Execute(BankType bank, string token, int depth, string instrument)
         {
             try
             {

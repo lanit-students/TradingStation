@@ -1,18 +1,28 @@
 ﻿using DTO;
-using Interfaces;
-using System;
+using Kernel;
+using Kernel.Enums;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Tinkoff.Trading.OpenApi.Models;
 
 namespace GUI.Scripts
 {
     public static class BrokerManager
     {
-        public static async Task GetInstruments(BankType bank, string token, int depth,  InstrumentType type)
+        public static async Task<IEnumerable<Instrument>> GetInstruments(BankType bank, string token, string instrument, int depth = 10)
         {
+            const string url = "https://localhost:5003/brokers/instruments/get";
+            //[FromQuery] BankType bank, [FromQuery] string token, [FromQuery] int depth, [FromQuery] InstrumentType instrument
+            var queryParams = new Dictionary<string, string>
+            {
+                { "bank", bank.ToString() },
+                { "token", token },
+                { "depth", depth.ToString() },
+                { "instrument", instrument }
+            };
 
+            var client = new RestClient<object, IEnumerable<Instrument>>(url, RestRequestType.GET, queryParams: queryParams);
+
+            return await client.Execute();
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using Tinkoff.Trading.OpenApi.Models;
+﻿using DTO;
+using System.Collections.Generic;
 
 namespace Interfaces
 {
     public interface IBroker
     {
-        IEnumerable<IMarketInstrument> GetInstruments(InstrumentType type);
+        IEnumerable<Instrument> GetInstruments(string type);
 
         /// <summary>
         /// Depth of market glass

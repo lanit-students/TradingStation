@@ -1,14 +1,13 @@
-﻿using Interfaces;
-using System;
+﻿using DTO;
+using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffIntegrationLib
 {
-    public class TinkoffInstrumentAdapter : IMarketInstrument
+    public class TinkoffInstrumentAdapter : Instrument
     {
         private readonly MarketInstrument tinkoffInstrument;
         private readonly Orderbook tinkoffOrderbook;
-        private readonly InstrumentType instrumentType;
 
         /*
          * If I will pass to ctor tinkoff context,
@@ -17,27 +16,27 @@ namespace TinkoffIntegrationLib
         public TinkoffInstrumentAdapter(InstrumentType type, MarketInstrument instrument, Orderbook orderbook)
         {
             if (instrument.Figi != orderbook.Figi)
-                throw new ArgumentException("Transfer orderbook does not match the market instrument");
+                throw new BadRequestException("Transfer orderbook does not match the market instrument");
 
             tinkoffInstrument = instrument;
             tinkoffOrderbook = orderbook;
-            instrumentType = type;
+            Type = type.ToString();
         }
 
-        public string Figi => tinkoffInstrument.Figi;
+        public override string Figi => tinkoffInstrument.Figi;
 
-        public string Ticker => tinkoffInstrument.Ticker;
+        public override string Ticker => tinkoffInstrument.Ticker;
 
-        public string Isin => tinkoffInstrument.Isin;
+        public override string Isin => tinkoffInstrument.Isin;
 
-        public InstrumentType Type => instrumentType;
+        public override string Type { get; set; }
 
-        public string Name => tinkoffInstrument.Name;
+        public override string Name => tinkoffInstrument.Name;
 
-        public Currency Currency => tinkoffInstrument.Currency;
+        public override string Currency => tinkoffInstrument.Currency.ToString();
 
-        public int Lot => tinkoffInstrument.Lot;
+        public override int Lot => tinkoffInstrument.Lot;
 
-        public decimal Price => tinkoffOrderbook.LastPrice;
+        public override decimal Price => tinkoffOrderbook.LastPrice;
     }
 }

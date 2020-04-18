@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BrokerService.Interfaces;
-using Tinkoff.Trading.OpenApi.Models;
 using DTO;
 
 namespace BrokerService.Controllers
@@ -13,7 +11,7 @@ namespace BrokerService.Controllers
     {
         [Route("instruments/get")]
         [HttpGet]
-        public IEnumerable<IMarketInstrument> GetInstruments([FromServices] IGetInstrumentsCommand command, [FromHeader] BankType bank, [FromHeader] string token, [FromHeader] int depth, [FromHeader] InstrumentType instrument)
+        public IEnumerable<Instrument> GetInstruments([FromServices] IGetInstrumentsCommand command, [FromQuery] BankType bank, [FromQuery] string token, [FromQuery] int depth, [FromQuery] string instrument)
         {
             return command.Execute(bank, token, depth, instrument);
         }

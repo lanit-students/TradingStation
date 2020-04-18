@@ -5,7 +5,6 @@ using DTO.BrokerRequests;
 using DTO.RestRequests;
 using FluentValidation;
 using FluentValidation.Results;
-using IDeleteUserUserService.Interfaces;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Moq;

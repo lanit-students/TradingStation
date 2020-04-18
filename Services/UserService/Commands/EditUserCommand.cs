@@ -3,7 +3,6 @@ using DTO.BrokerRequests;
 using DTO.RestRequests;
 using FluentValidation;
 using Kernel;
-using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

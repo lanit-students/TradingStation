@@ -65,7 +65,7 @@
 
 
 @code {
-    public IEnumerable<IMarketInstrument> MarketInstruments { get; set; }
+    public IEnumerable<Instrument> MarketInstruments { get; set; }
     public List<string> InstrumentOptions { get; set; }
     public string SelectedInstrument { get; set; }
     public bool AreInstrumentsLoading { get; set; }
@@ -73,28 +73,21 @@
 
     private int pageIndex;
     private const int pageSize = 10;
-    private TinkoffBankBroker broker;
+    private string token = "";
 
     private async Task UpdateInstruments(ChangeEventArgs e)
     {
         SelectedInstrument = e.Value.ToString();
         AreInstrumentsLoading = true;
 
-        var result = await Task.Run(() =>
-            SelectedInstrument switch
-            {
-                "Bonds" => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond),
-                "Currencies" => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency),
-                "Stocks" => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock),
-                _ => MarketInstruments
-            });
+        var result = await BrokerManager.GetInstruments(BankType.TinkoffBank, token, SelectedInstrument);
 
         AreInstrumentsLoading = false;
 
         MarketInstruments = result;
     }
 
-    private void SaveInstrument(IMarketInstrument instrument)
+    private void SaveInstrument(Instrument instrument)
     {
 
     }
@@ -121,23 +114,20 @@
     {
         ErrorOccured = false;
         pageIndex = 0;
+        MarketInstruments = new List<Instrument>();
 
         InstrumentOptions = new List<string>()
         {
-            "Currencies",
-            "Bonds",
-            "Stocks"
+            "Currency",
+            "Bond",
+            "Stock"
         };
 
         AreInstrumentsLoading = true;
 
         try
         {
-            broker = new TinkoffBankBroker("");
-
-            MarketInstruments = new List<IMarketInstrument>();
-
-            var result = await Task.Run(() => broker.GetInstruments(Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond));
+            var result = await BrokerManager.GetInstruments(BankType.TinkoffBank, token, "Currency");
 
             MarketInstruments = result;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DTO;
 using Interfaces;
 using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
@@ -37,16 +38,20 @@ namespace TinkoffIntegrationLib
         /// </summary>
         public int Depth { get; set; }
 
-        public IEnumerable<IMarketInstrument> GetInstruments(InstrumentType type)
+        public IEnumerable<Instrument> GetInstruments(string type)
         {
-            var instruments = new List<IMarketInstrument>();
+            var instruments = new List<Instrument>();
 
-            MarketInstrumentList instrumentsList = type switch
+            var x = context.MarketBondsAsync().Result;
+
+            var tinkoffInstrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), type);
+
+            MarketInstrumentList instrumentsList = tinkoffInstrumentType switch
             {
                 InstrumentType.Bond => context.MarketBondsAsync().Result,
                 InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
                 InstrumentType.Stock => context.MarketStocksAsync().Result,
-                _ => throw new NotImplementedException()
+                _ => throw new BadRequestException()
             };
 
             Parallel.ForEach(instrumentsList.Instruments,
@@ -56,7 +61,7 @@ namespace TinkoffIntegrationLib
                     {
                         instruments.Add(
                             new TinkoffInstrumentAdapter(
-                                type,
+                                tinkoffInstrumentType,
                                 instrument,
                                 context.MarketOrderbookAsync(
                                     instrument.Figi,
