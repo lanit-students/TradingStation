@@ -19,7 +19,8 @@ namespace TestForSignUp
                 var filler = new ElementFiller(browser);
                 filler.Fill(input.commonString, input.emailString, input.dateString);
                 var buttons = browser.FindElementsByCssSelector("[type=\"button\"]");
-                buttons[1].Click();
+                var nextButton = buttons[1];
+                nextButton.Click();
                 Thread.Sleep(5000);
                 var submitButton = browser.FindElementByCssSelector("[type=\"Submit\"]");
                 submitButton.Click();
@@ -40,13 +41,13 @@ namespace TestForSignUp
             browser.Navigate().GoToUrl("https://localhost:44335/signup");
             Thread.Sleep(5000);
             var filler = new ElementFiller(browser);
-            filler.Fill("A", "A", "1");
+            filler.Fill("IncorrectString", "IncorrectString", "02022020");
             var buttons = browser.FindElementsByCssSelector("[type=\"button\"]");
             var nextButton = buttons[1];
             nextButton.Click();
             Thread.Sleep(5000);
             var errors = browser.FindElementsByCssSelector("[class=\"validation-message\"]");
-            if (errors.Count == 3) return true;
+            if (errors.Count == 4) return true;
             return false;
         }
     }
