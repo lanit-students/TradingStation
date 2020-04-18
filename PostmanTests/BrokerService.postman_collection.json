@@ -144,7 +144,7 @@
 				}
 			],
 			"folder": "15d22273-95e4-4698-8650-8d779ea2745b",
-			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idStock\" : \"\"\r\n}",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idStock\" : \"\",\r\n\t\"brokerData\" : {\r\n\t\t\"Token\" : \"\",\r\n\t\t\"Depth\" : \"5\"\r\n\t}\r\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -180,7 +180,7 @@
 				}
 			],
 			"folder": "63f60280-4642-46c7-8abf-4368b5904101",
-			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idBond\" : \"incorrectBond\"\n}",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idBond\" : \"incorrectBond\",\n\t\"brokerData\" : {\n\t\t\"Token\" : \"\",\n\t\t\"Depth\" : \"5\"\n\t}\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -216,7 +216,7 @@
 				}
 			],
 			"folder": "15d22273-95e4-4698-8650-8d779ea2745b",
-			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idStock\" : \"incorrectId\"\r\n}",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idStock\" : \"incorrectId\",\r\n\t\"brokerData\" : {\r\n\t\t\"Token\" : \"\",\r\n\t\t\"Depth\" : \"5\"\r\n\t}\r\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -325,7 +325,7 @@
 				}
 			],
 			"folder": "f9662bd9-699e-41dc-abaf-fc4c486eb4a7",
-			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\"\r\n}",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"brokerData\" : {\r\n\t\t\"Token\" : \"\",\r\n\t\t\"Depth\" : \"5\"\r\n\t}\r\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -362,7 +362,7 @@
 				}
 			],
 			"folder": "6272e10e-016a-49c8-b804-362d8dab57a3",
-			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idCurrency\" : \"\"\n}",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idCurrency\" : \"\",\n\t\"brokerData\" : {\n\t\t\"Token\" : \"\",\n\t\t\"Depth\" : \"5\"\n\t}\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -398,7 +398,7 @@
 				}
 			],
 			"folder": "6272e10e-016a-49c8-b804-362d8dab57a3",
-			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idCurrency\" : \"incorrectId\"\r\n}",
+			"rawModeData": "{\r\n\t\"bankType\" : \"TinkoffBank\",\r\n\t\"idCurrency\" : \"incorrectId\",\r\n\t\"brokerData\" : {\r\n\t\t\"Token\" : \"\",\r\n\t\t\"Depth\" : \"5\"\r\n\t}\r\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -507,7 +507,7 @@
 				}
 			],
 			"folder": "1518b92d-8c39-4c41-a8e5-6848f989248b",
-			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\"\n}",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"brokerData\" : {\n\t\t\"Token\" : \"\",\n\t\t\"Depth\" : \"5\"\n\t}\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -544,7 +544,7 @@
 				}
 			],
 			"folder": "9940b71f-b030-4f57-9c16-e62c7fa3318e",
-			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\"\n}",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"brokerData\" : {\n\t\t\"Token\" : \"\",\n\t\t\"Depth\" : \"5\"\n\t}\n}",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -653,7 +653,7 @@
 				}
 			],
 			"folder": "63f60280-4642-46c7-8abf-4368b5904101",
-			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idBond\" : \"\"\n}",
+			"rawModeData": "{\n\t\"bankType\" : \"TinkoffBank\",\n\t\"idBond\" : \"\",\n\t\"brokerData\" : {\n\t\t\"Token\" : \"\",\n\t\t\"Depth\" : \"5\"\n\t}\n}",
 			"headers": "",
 			"pathVariables": {}
 		}
