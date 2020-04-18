@@ -1,0 +1,45 @@
+﻿@inject AuthStateProvider AuthenticationProvider
+@inject Blazored.SessionStorage.ISessionStorageService Storage
+@inject IModalService modal
+    <style>
+        .header_item {
+            cursor: default;
+        }
+    </style>
+<div class="header">
+    <a href="#"><img src="Picture/Logo.png"></a>
+    <a class="header_item" href="#">News</a>
+    <div class="header-right">
+        <AuthorizeView>
+            <NotAuthorized>
+                <a class="header_item" href="signup">Sign up</a>
+                <a> / </a>
+                <a class="header_item" @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
+            </NotAuthorized>
+            <Authorized>
+                <a class="header_item" href="#" @onclick="@SignOut">Sign Out</a>
+                <a> / </a>
+                <a class="header_item" href="userinfo">User Info</a>
+            </Authorized>
+        </AuthorizeView>
+        <a href="#"><img src="Picture/Avatar.png"></a>
+    </div>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void SignOut()
+    {
+        Storage.ClearAsync();
+        AuthenticationProvider.MarkSignedOut();
+    }
+}
+
