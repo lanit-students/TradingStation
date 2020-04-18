@@ -9,10 +9,8 @@ namespace BrokerServices.Utils
 {
     public static class BrokerFactory
     {
-        public static IBroker Create(BankType bankType, ILogger<BrokerController> logger)
+        public static IBroker Create(BankType bankType, ILogger<BrokerController> logger, BrokerData brokerData)
         {
-            var brokerData = new BrokerData();
-
             switch (bankType)
             {
                 case BankType.TinkoffBank:
