@@ -52,10 +52,13 @@
         }
     */
   "MultiProjectConfigurations": {
-    "Auth + DB": {
+    "Full stack": {
       "Projects": {
         "AuthenticationService": {},
-        "DataBaseService": {}
+        "DataBaseService": {},
+        "GUI": {},
+        "UserService": {},
+        "NewsService": {}
       }
     }
   }
