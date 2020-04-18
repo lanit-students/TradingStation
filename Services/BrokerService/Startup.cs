@@ -8,22 +8,59 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Kernel.LoggingEngine;
+using MassTransit;
+using System;
 
 namespace BrokerService
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IBusControl CreateBus(IServiceProvider serviceProvider)
+        {
+            const string serviceSection = "ServiceInfo";
+
+            string serviceId = Configuration.GetSection(serviceSection)["ID"] ?? Guid.NewGuid().ToString();
+
+            string serviceName = Configuration.GetSection(serviceSection)["Name"] ?? "AuthService";
+
+            return Bus.Factory.CreateUsingRabbitMq(cfg =>
+            {
+                cfg.Host("localhost", "/", hst =>
+                {
+                    hst.Username($"{serviceName}_{serviceId}");
+                    hst.Password($"{serviceId}");
+                });
+            });
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddMassTransit(x =>
+            {
+                x.AddBus(provider => CreateBus(provider));
+            });
+
+            services.AddMassTransitHostedService();
+
+            services.AddLogging(log =>
+            {
+                log.ClearProviders();
+            });
+
+            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            {
+                return new LoggerProvider(provider);
+            });
 
             services.AddTransient<IGetInstrumentsCommand, GetInstrumentsCommand>();
         }
