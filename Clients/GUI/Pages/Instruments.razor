@@ -58,7 +58,7 @@
         }
         else
         {
-            <h3 class="m-lg-5 badge-info">Can't load instruments, try again later</h3>
+            <h3 class="m-lg-5">Can't load instruments, try again later</h3>
         }
     </div>
 </div>
@@ -78,14 +78,23 @@
 
     private async Task UpdateInstruments(ChangeEventArgs e)
     {
-        SelectedInstrument = e.Value.ToString();
-        AreInstrumentsLoading = true;
+        try
+        {
+            SelectedInstrument = e.Value.ToString();
+            AreInstrumentsLoading = true;
 
-        var result = await BrokerManager.GetInstruments(BankType.TinkoffBank, token, SelectedInstrument);
+            var result = await BrokerManager.GetInstruments(BankType.TinkoffBank, token, SelectedInstrument);
 
-        AreInstrumentsLoading = false;
+            AreInstrumentsLoading = false;
 
-        MarketInstruments = result;
+            MarketInstruments = result;
+        }
+        catch (Exception)
+        {
+            AreInstrumentsLoading = false;
+
+            ErrorOccured = true;
+        }
     }
 
     private void SaveInstrument(Instrument instrument)
@@ -136,6 +145,8 @@
         }
         catch (Exception)
         {
+            AreInstrumentsLoading = false;
+
             ErrorOccured = true;
         }
     }
