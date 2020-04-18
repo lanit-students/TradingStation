@@ -3,6 +3,7 @@ using DTO.BrokerRequests;
 using DTO.RestRequests;
 using FluentValidation;
 using Kernel;
+using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -86,7 +87,7 @@ namespace UserService.Commands
             {
                 User = user,
                 UserPasswords = passwordHashChangeRequest,
-                UserAvatar = userAvatar                
+                UserAvatar = userAvatar
             };
 
             var editUserResult = await EditUser(internalEditUserInfoRequest);
