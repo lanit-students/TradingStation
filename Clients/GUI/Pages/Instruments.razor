@@ -11,7 +11,7 @@
                     <label class="input-group-text" for="inputGroupSelect01">Choose instrument</label>
                 </div>
                 <select @onchange="@UpdateInstruments" class="custom-select">
-                    @foreach (var instrument in InstrumentOptions)
+                    @foreach (var instrument in instrumentOptions)
                     {
                         <option value=@instrument>@instrument</option>
                     }
@@ -20,13 +20,13 @@
         </div>
     </div>
     <div class="row">
-        @if (AreInstrumentsLoading)
+        @if (areInstrumentsLoading)
         {
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
         }
-        else if (!ErrorOccured)
+        else if (!errorOccured)
         {
             <table class="table table-bordered">
                 <thead class="thead-light">
@@ -39,7 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var instrument in MarketInstruments.Skip(pageIndex * pageSize).Take(pageSize))
+                    @foreach (var instrument in marketInstruments.Skip(pageIndex * pageSize).Take(pageSize))
                     {
                         <tr>
                             <td>@instrument.Figi</td>
@@ -65,11 +65,11 @@
 
 
 @code {
-    public IEnumerable<Instrument> MarketInstruments { get; set; }
-    public List<string> InstrumentOptions { get; set; }
-    public string SelectedInstrument { get; set; }
-    public bool AreInstrumentsLoading { get; set; }
-    public bool ErrorOccured { get; set; }
+    private IEnumerable<Instrument> marketInstruments;
+    private List<string> instrumentOptions;
+    private string selectedInstrument;
+    private bool areInstrumentsLoading;
+    private bool errorOccured;
 
     private int pageIndex;
     private const int pageSize = 10;
@@ -80,22 +80,22 @@
     {
         try
         {
-            SelectedInstrument = e.Value.ToString();
-            AreInstrumentsLoading = true;
+            selectedInstrument = e.Value.ToString();
+            areInstrumentsLoading = true;
 
-            var instrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), SelectedInstrument);
+            var instrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), selectedInstrument);
 
             var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, instrumentType);
 
-            AreInstrumentsLoading = false;
+            areInstrumentsLoading = false;
 
-            MarketInstruments = result;
+            marketInstruments = result;
         }
         catch (Exception)
         {
-            AreInstrumentsLoading = false;
+            areInstrumentsLoading = false;
 
-            ErrorOccured = true;
+            errorOccured = true;
         }
     }
 
@@ -120,36 +120,36 @@
     }
 
     private bool nextDisabled =>
-            (pageIndex + 1) * pageSize > MarketInstruments.Count();
+            (pageIndex + 1) * pageSize > marketInstruments.Count();
 
     protected override async Task OnInitializedAsync()
     {
-        ErrorOccured = false;
+        errorOccured = false;
         pageIndex = 0;
-        MarketInstruments = new List<Instrument>();
+        marketInstruments = new List<Instrument>();
 
-        InstrumentOptions = new List<string>()
+        instrumentOptions = new List<string>()
         {
             "Currency",
             "Bond",
             "Stock"
         };
 
-        AreInstrumentsLoading = true;
+        areInstrumentsLoading = true;
 
         try
         {
             var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);
 
-            MarketInstruments = result;
+            marketInstruments = result;
 
-            AreInstrumentsLoading = false;
+            areInstrumentsLoading = false;
         }
         catch (Exception)
         {
-            AreInstrumentsLoading = false;
+            areInstrumentsLoading = false;
 
-            ErrorOccured = true;
+            errorOccured = true;
         }
     }
 }
