@@ -2,15 +2,14 @@
 using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
-using DTO.MarketBrokerObjects;
+using Interfaces;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using OperationService.Interfaces;
 
 namespace OperationService.Commands
 {
-    public class GetInstrumentsCommand : IGetInstrumentsCommand
+    public class GetInstrumentsCommand : ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>
     {
         private readonly IRequestClient<GetInstrumentsRequest> client;
 
@@ -26,16 +25,8 @@ namespace OperationService.Commands
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        public async Task<IEnumerable<Instrument>> Execute(BrokerType broker, string token, int depth, InstrumentType instrument)
+        public async Task<IEnumerable<Instrument>> Execute(GetInstrumentsRequest request)
         {
-            var request = new GetInstrumentsRequest()
-            {
-                Broker = broker,
-                Token = token,
-                Type = instrument,
-                Depth = depth
-            };
-
             return await GetInstruments(request);
         }
     }

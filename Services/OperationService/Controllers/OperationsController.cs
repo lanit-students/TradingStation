@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using OperationService.Interfaces;
 using DTO;
 using DTO.MarketBrokerObjects;
 using System.Threading.Tasks;
+using Interfaces;
+using DTO.BrokerRequests;
 
 namespace OperationService.Controllers
 {
@@ -14,13 +15,20 @@ namespace OperationService.Controllers
         [Route("instruments/get")]
         [HttpGet]
         public async Task<IEnumerable<Instrument>> GetInstruments(
-                [FromServices] IGetInstrumentsCommand command,
+                [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> command,
                 [FromQuery] BrokerType broker,
                 [FromQuery] string token,
                 [FromQuery] InstrumentType instrument,
                 [FromQuery] int depth)
         {
-            return await command.Execute(broker, token, depth, instrument);
+            return await command.Execute(
+                new GetInstrumentsRequest()
+                {
+                    Broker = broker,
+                    Token = token,
+                    Depth = depth,
+                    Type = instrument
+                });
         }
     }
 }

@@ -1,5 +1,7 @@
+using DTO;
 using DTO.BrokerRequests;
 using GreenPipes;
+using Interfaces;
 using Kernel;
 using Kernel.LoggingEngine;
 using MassTransit;
@@ -10,8 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OperationService.Commands;
-using OperationService.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace OperationService
 {
@@ -62,7 +64,7 @@ namespace OperationService
 
             services.AddMassTransitHostedService();
 
-            services.AddTransient<IGetInstrumentsCommand, GetInstrumentsCommand>();
+            services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
 
             services.AddLogging(log =>
             {
