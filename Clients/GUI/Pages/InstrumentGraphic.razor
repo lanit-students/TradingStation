@@ -1,8 +1,25 @@
 ﻿@page "/instrument/{Figi}"
+@inject IJSRuntime JSRuntime
 
-<h3>InstrumentGraphic Figi = @Figi</h3>
+
+<h3>InstrumentGraphic Figi=@Figi</h3>
+<canvas id="myChart" width="400" height="400"></canvas>
 
 @code {
+
     [Parameter]
     public string Figi { get; set; }
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        DrawChart();
+    }
+
+    private async void DrawChart()
+    {
+        await JSRuntime.InvokeVoidAsync("drawChart","myChart");
+    }
+
+
 }
