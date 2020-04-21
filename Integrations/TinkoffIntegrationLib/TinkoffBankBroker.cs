@@ -60,10 +60,7 @@ namespace TinkoffIntegrationLib
                         instruments.Add(
                             new TinkoffInstrumentAdapter(
                                 tinkoffInstrumentType,
-                                instrument,
-                                context.MarketOrderbookAsync(
-                                    instrument.Figi,
-                                    Depth).Result)
+                                instrument)
                             );
                     }
                     catch (Exception) { }
