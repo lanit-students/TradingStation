@@ -1,4 +1,7 @@
 ﻿@page "/instruments"
+@inject IModalService Modal
+@inject ISessionStorageService Storage
+@attribute [Authorize]
 
 <div class="container">
     <div class="row">
@@ -8,13 +11,22 @@
         <div class="col-md float-right">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Choose instrument</label>
+                    <label class="input-group-text">Instrument</label>
                 </div>
                 <select @onchange="@UpdateInstruments" class="custom-select">
                     @foreach (var instrument in instrumentOptions)
                     {
                         <option value=@instrument>@instrument</option>
                     }
+                </select>
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Page size</label>
+                </div>
+                <select @onchange="@UpdatePageSize"class="custom-select">
+                    <option value=10>10</option>
+                    <option value=20>20</option>
+                    <option value=50>50</option>
+                    <option value=100>100</option>
                 </select>
             </div>
         </div>
@@ -53,12 +65,12 @@
                     }
                 </tbody>
             </table>
-            <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage"/>
+            <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
             <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
         }
         else
         {
-            <h3 class="m-lg-5">Can't load instruments, try again later</h3>
+            <h3 class="m-lg-5">@errorMessage</h3>
         }
     </div>
 </div>
@@ -70,11 +82,22 @@
     private string selectedInstrument;
     private bool areInstrumentsLoading;
     private bool errorOccured;
+    private string errorMessage;
 
     private int pageIndex;
-    private const int pageSize = 10;
-    // To test GUI, put token here
-    private string token = "";
+    private int pageSize = 10;
+    private string token;
+
+    private void UpdatePageSize(ChangeEventArgs e)
+    {
+        var oldSize = pageSize;
+
+        pageSize = int.Parse(e.Value.ToString());
+
+        pageIndex = oldSize * pageIndex / pageSize;
+
+        StateHasChanged();
+    }
 
     private async Task UpdateInstruments(ChangeEventArgs e)
     {
@@ -97,12 +120,23 @@
             areInstrumentsLoading = false;
 
             errorOccured = true;
+
+            errorMessage = "Can't load instruments, try again later";
         }
     }
 
     private void SaveInstrument(Instrument instrument)
     {
 
+    }
+
+    private async Task SetToken()
+    {
+        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
+        var modalResult = await formModal.Result;
+        token = (string)modalResult.Data;
+
+        Storage.SetItemAsync("tinkoffToken", token);
     }
 
     private void PreviousPage()
@@ -130,7 +164,7 @@
         marketInstruments = new List<Instrument>();
 
         instrumentOptions = new List<string>()
-        {
+{
             "Currency",
             "Bond",
             "Stock"
@@ -140,6 +174,13 @@
 
         try
         {
+            token = await Storage.GetItemAsync<string>("tinkoffToken");
+
+            if (token == null)
+            {
+                await SetToken();
+            }
+
             var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);
 
             marketInstruments = result;
@@ -150,6 +191,7 @@
         {
             areInstrumentsLoading = false;
 
+            errorMessage = "Can't load instruments, try again later";
             errorOccured = true;
         }
     }

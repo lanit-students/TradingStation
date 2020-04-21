@@ -8,6 +8,7 @@ using CentralBankIntegrationLib.XmlSerializationObjects;
 
 using DTO.NewsRequests.Currency;
 using Interfaces;
+using System.Globalization;
 
 namespace CBIntegration
 {
@@ -33,7 +34,7 @@ namespace CBIntegration
             var rates = new List<ExchangeRate>();
             for (int i = 0; i < data.Currencies.Count; i++)
             {
-                rates.Add(new ExchangeRate { Code = data[i].CharCode, Value = data[i].ValueInDigits });
+                rates.Add(new ExchangeRate { Code = data[i].CharCode, Value = decimal.Parse(data[i].ValueInString.Replace(',', '.')) });
             }
             return rates;
         }
