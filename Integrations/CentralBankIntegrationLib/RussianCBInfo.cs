@@ -8,6 +8,7 @@ using CentralBankIntegrationLib.XmlSerializationObjects;
 
 using DTO.NewsRequests.Currency;
 using Interfaces;
+using System.Globalization;
 
 namespace CBIntegration
 {

@@ -3,7 +3,7 @@
 @inject IModalService Modal
 @inject ISessionStorageService Storage
 @attribute [Authorize]
-@{ 
+@{
 
 }
     <div class="wrapper">
@@ -52,12 +52,12 @@
                 </div>
                 <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
                     <label for="OldPassword">Enter old password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass" 
+                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
                                disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
                 </div>
                 <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
                     <label for="NewPassword">Enter new password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass" 
+                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
                                 disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
                 </div>
                 <br />
@@ -75,223 +75,224 @@
     </div>
         </div>
 
-        @code {
-
-            private bool IsEditModeDisabled { get; set; }
-            private bool IsUserInfoBeingChanged { get; set; }
-            private bool IsPasswordBeingChanged { get; set; }
-            private bool IsAvatarBeingChanged { get; set; }
-            private bool PopupVisible { get; set; }
-            private string ErrorMessage { get; set; }
-            private string InputStyleClass { get; set; }
-            private bool ErrorOccured { get; set; }
-            private UserInfoViewModel user;
-            private UserInfoViewModel oldUser;
-            private UserToken userToken;
-            private bool showLoading = false;
-            private string imgSrc = "";
-            private const int CMaxSizeOfImageInBytes = 2097152;
-            private const string CDefaultImagePath = "\\wwwroot\\images\\withoutAvatar.png";
-
-            private async Task EditInfoClickHandler()
-            {
-                if (IsEditModeDisabled)
-                {
-                    oldUser = (UserInfoViewModel)user.Clone();
-                    IsEditModeDisabled = false;
-                    InputStyleClass = "form-control col-4";
-                }
-                else
-                {
-                    try
-                    {
-                        var userInfo = new UserInfoRequest()
-                        {
-                            UserId = userToken.UserId,
-                            Email = user.Email,
-                            FirstName = user.FirstName,
-                            LastName = user.LastName,
-                            Birthday = user.Birthday
-                        };
-
-                        var request = new EditUserRequest()
-                        {
-                            UserInfo = userInfo,
-                            PasswordRequest = null,
-                            AvatarRequest = null
-                        };
-
-                        if (IsPasswordBeingChanged && user.OldPassword != null && user.NewPassword != null)
-                        {
-                            var passwordRequest = new PasswordChangeRequest()
-                            {
-                                OldPassword = user.OldPassword,
-                                NewPassword = user.NewPassword
-                            };
-
-                            request.PasswordRequest = passwordRequest;
-                        }
-                        if (IsAvatarBeingChanged)
-                        {
-                            var avatarRequest = new AvatarChangeRequest()
-                            {
-                                Avatar = user.Avatar,
-                                AvatarExtension = user.AvatarExtension
-                            };
-                            request.AvatarRequest = avatarRequest;
-                        }
+@code {
 
 
-                        await UserEditor.EditUser(userToken, request);
+    private bool IsEditModeDisabled { get; set; }
+    private bool IsUserInfoBeingChanged { get; set; }
+    private bool IsPasswordBeingChanged { get; set; }
+    private bool IsAvatarBeingChanged { get; set; }
+    private bool PopupVisible { get; set; }
+    private string ErrorMessage { get; set; }
+    private string InputStyleClass { get; set; }
+    private bool ErrorOccured { get; set; }
+    private UserInfoViewModel user;
+    private UserInfoViewModel oldUser;
+    private UserToken userToken;
+    private bool showLoading = false;
+    private string imgSrc = "";
+    private const int CMaxSizeOfImageInBytes = 2097152;
+    private const string CDefaultImagePath = "\\wwwroot\\images\\withoutAvatar.png";
 
-                        await UpdateUserModel();
-                    }
-                    catch (Exception e) when (
-                        e is ForbiddenException ||
-                        e is NotFoundException ||
-                        e is ValidationException)
-                    {
-                        ErrorMessage = e.Message;
-                        ErrorOccured = true;
-                    }
-
-                    Modal.Show<Modals.EmptyModal>("Changes saved");
-                    IsEditModeDisabled = true;
-                    IsPasswordBeingChanged = false;
-                    IsAvatarBeingChanged = false;
-                    IsUserInfoBeingChanged = false;
-                }
-            }
-
-            
-            private void UserInfoChangeHandler()
-            {
-                IsUserInfoBeingChanged = true;
-            }
-
-            private void ChangePasswordClickHandler()
-            {
-                IsPasswordBeingChanged ^= true;
-            }
-
-            private void ChangeAvatarClickHandler()
-            {
-                IsAvatarBeingChanged = true;
-            }
-
-            private async Task ChangeAvatar(IFileListEntry[] files)
-            {
-                showLoading = true;
-                ErrorMessage = "";
-                var file = files[^1];
-                if (file != null)
-                {
-                    if (file.Size > CMaxSizeOfImageInBytes)
-                    {
-                        ErrorMessage = "File is too big. Max size of image is 2 MB";
-                        showLoading = false;
-                        return;
-                    }
-                    using var ms = new MemoryStream();
-                    await file.Data.CopyToAsync(ms);
-                    user.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
-                    user.Avatar = ms.ToArray();
-                    imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
-                }
-                showLoading = false;
-            }
-
-            private async Task UpdateUserModel()
-            {
-                try
-                {
-                    var requestResult = await UserGetter.GetUserById(userToken);
-
-                    user = new UserInfoViewModel()
-                    {
-                        FirstName = requestResult.FirstName,
-                        LastName = requestResult.LastName,
-                        Birthday = requestResult.Birthday,
-                        Email = requestResult.Email,
-                        Avatar = requestResult.Avatar,
-                        AvatarExtension = requestResult.AvatarExtension
-
-                    };
-                    if (user.Avatar != null)
-                        imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
-                    else
-                        imgSrc = GetDefaultImage();
-                }
-                catch (NotFoundException)
-                {
-                    ErrorMessage = "Unable to get user information";
-                }
-                catch (Exception)
-                {
-                    ErrorMessage = "Error occured";
-                    ErrorOccured = true;
-                }
-            }
-
-            private string GetUserImage(byte[] avatar, string extension)
-            {
-                var base64 = Convert.ToBase64String(avatar);
-                return String.Format("data:image/{0};base64,{1}", extension, base64);
-            }
-
-            private string GetDefaultImage()
-            {
-                var imagePath = System.IO.Directory.GetCurrentDirectory() + CDefaultImagePath;
-                var file = File.ReadAllBytes(imagePath);
-                var ext = imagePath.Substring(imagePath.IndexOf('.') + 1);
-                var base64 = Convert.ToBase64String(file);
-                return String.Format("data:image/{0};base64,{1}", ext, base64);
-            }
-
-            private void Reset()
-            {
-                ErrorMessage = "";
-                IsAvatarBeingChanged = true;
-                user.Avatar = null;
-                user.AvatarExtension = null;
-                imgSrc = GetDefaultImage();
-            }
-
-            private async Task DiscardAllChanges()
-            {
-                user = (UserInfoViewModel)oldUser.Clone();
-                await UpdateUserModel();
-                IsEditModeDisabled = true;       
-                IsPasswordBeingChanged = false;
-                IsAvatarBeingChanged = false;
-                IsUserInfoBeingChanged = false;
-                Modal.Show<Modals.EmptyModal>("Changes discarded");
-            }
-
-
-            protected override void OnInitialized()
-            {
-                userToken = new UserToken();
-                user = new UserInfoViewModel();
-                ErrorOccured = false;
-                ErrorMessage = "";
-                PopupVisible = false;
-                IsEditModeDisabled = true;
-                IsUserInfoBeingChanged = false;
-                IsPasswordBeingChanged = false;
-                IsAvatarBeingChanged = false;
-                InputStyleClass = "input-group-text";
-            }
-
-            protected override async Task OnAfterRenderAsync(bool firstRender)
-            {
-                userToken.UserId = await Storage.GetItemAsync<Guid>("id");
-                userToken.Body = await Storage.GetItemAsync<string>("token");
-
-                if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
-                {
-                    await UpdateUserModel();
-                    StateHasChanged();
-                }
-            }
+    private async Task EditInfoClickHandler()
+    {
+        if (IsEditModeDisabled)
+        {
+            oldUser = (UserInfoViewModel)user.Clone();
+            IsEditModeDisabled = false;
+            InputStyleClass = "form-control col-4";
         }
+        else
+        {
+            try
+            {
+                var userInfo = new UserInfoRequest()
+                {
+                    UserId = userToken.UserId,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Birthday = user.Birthday
+                };
+
+                var request = new EditUserRequest()
+                {
+                    UserInfo = userInfo,
+                    PasswordRequest = null,
+                    AvatarRequest = null
+                };
+
+                if (IsPasswordBeingChanged && user.OldPassword != null && user.NewPassword != null)
+                {
+                    var passwordRequest = new PasswordChangeRequest()
+                    {
+                        OldPassword = user.OldPassword,
+                        NewPassword = user.NewPassword
+                    };
+
+                    request.PasswordRequest = passwordRequest;
+                }
+                if (IsAvatarBeingChanged)
+                {
+                    var avatarRequest = new AvatarChangeRequest()
+                    {
+                        Avatar = user.Avatar,
+                        AvatarExtension = user.AvatarExtension
+                    };
+                    request.AvatarRequest = avatarRequest;
+                }
+
+
+                await UserEditor.EditUser(userToken, request);
+
+                await UpdateUserModel();
+            }
+            catch (Exception e) when (
+                e is ForbiddenException ||
+                e is NotFoundException ||
+                e is ValidationException)
+            {
+                ErrorMessage = e.Message;
+                ErrorOccured = true;
+            }
+
+            Modal.Show<Modals.EmptyModal>("Changes saved");
+            IsEditModeDisabled = true;
+            IsPasswordBeingChanged = false;
+            IsAvatarBeingChanged = false;
+            IsUserInfoBeingChanged = false;
+        }
+    }
+
+
+    private void UserInfoChangeHandler()
+    {
+        IsUserInfoBeingChanged = true;
+    }
+
+    private void ChangePasswordClickHandler()
+    {
+        IsPasswordBeingChanged ^= true;
+    }
+
+    private void ChangeAvatarClickHandler()
+    {
+        IsAvatarBeingChanged = true;
+    }
+
+    private async Task ChangeAvatar(IFileListEntry[] files)
+    {
+        showLoading = true;
+        ErrorMessage = "";
+        var file = files[^1];
+        if (file != null)
+        {
+            if (file.Size > CMaxSizeOfImageInBytes)
+            {
+                ErrorMessage = "File is too big. Max size of image is 2 MB";
+                showLoading = false;
+                return;
+            }
+            using var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            user.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
+            user.Avatar = ms.ToArray();
+            imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
+        }
+        showLoading = false;
+    }
+
+    private async Task UpdateUserModel()
+    {
+        try
+        {
+            var requestResult = await UserGetter.GetUserById(userToken);
+
+            user = new UserInfoViewModel()
+            {
+                FirstName = requestResult.FirstName,
+                LastName = requestResult.LastName,
+                Birthday = requestResult.Birthday,
+                Email = requestResult.Email,
+                Avatar = requestResult.Avatar,
+                AvatarExtension = requestResult.AvatarExtension
+
+            };
+            if (user.Avatar != null)
+                imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
+            else
+                imgSrc = GetDefaultImage();
+        }
+        catch (NotFoundException)
+        {
+            ErrorMessage = "Unable to get user information";
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "Error occured";
+            ErrorOccured = true;
+        }
+    }
+
+    private string GetUserImage(byte[] avatar, string extension)
+    {
+        var base64 = Convert.ToBase64String(avatar);
+        return String.Format("data:image/{0};base64,{1}", extension, base64);
+    }
+
+    private string GetDefaultImage()
+    {
+        var imagePath = System.IO.Directory.GetCurrentDirectory() + CDefaultImagePath;
+        var file = File.ReadAllBytes(imagePath);
+        var ext = imagePath.Substring(imagePath.IndexOf('.') + 1);
+        var base64 = Convert.ToBase64String(file);
+        return String.Format("data:image/{0};base64,{1}", ext, base64);
+    }
+
+    private void Reset()
+    {
+        ErrorMessage = "";
+        IsAvatarBeingChanged = true;
+        user.Avatar = null;
+        user.AvatarExtension = null;
+        imgSrc = GetDefaultImage();
+    }
+
+    private async Task DiscardAllChanges()
+    {
+        user = (UserInfoViewModel)oldUser.Clone();
+        await UpdateUserModel();
+        IsEditModeDisabled = true;
+        IsPasswordBeingChanged = false;
+        IsAvatarBeingChanged = false;
+        IsUserInfoBeingChanged = false;
+        Modal.Show<Modals.EmptyModal>("Changes discarded");
+    }
+
+
+    protected override void OnInitialized()
+    {
+        userToken = new UserToken();
+        user = new UserInfoViewModel();
+        ErrorOccured = false;
+        ErrorMessage = "";
+        PopupVisible = false;
+        IsEditModeDisabled = true;
+        IsUserInfoBeingChanged = false;
+        IsPasswordBeingChanged = false;
+        IsAvatarBeingChanged = false;
+        InputStyleClass = "input-group-text";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+        userToken.Body = await Storage.GetItemAsync<string>("token");
+
+        if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
+        {
+            await UpdateUserModel();
+            StateHasChanged();
+        }
+    }
+}

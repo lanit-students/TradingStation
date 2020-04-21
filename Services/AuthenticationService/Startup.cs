@@ -19,7 +19,6 @@ using DTO;
 using Kernel;
 using DTO.BrokerRequests;
 using Kernel.LoggingEngine;
-using DTO.RestRequests;
 
 namespace AuthenticationService
 {

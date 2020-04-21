@@ -5,22 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commands\**" />
-    <Compile Remove="Controllers\**" />
-    <Compile Remove="Interfaces\**" />
     <Compile Remove="Utils\**" />
-    <Content Remove="Commands\**" />
-    <Content Remove="Controllers\**" />
-    <Content Remove="Interfaces\**" />
     <Content Remove="Utils\**" />
-    <EmbeddedResource Remove="Commands\**" />
-    <EmbeddedResource Remove="Controllers\**" />
-    <EmbeddedResource Remove="Interfaces\**" />
     <EmbeddedResource Remove="Utils\**" />
-    <None Remove="Commands\**" />
-    <None Remove="Controllers\**" />
-    <None Remove="Interfaces\**" />
     <None Remove="Utils\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="6.2.5-develop.2570" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="6.2.5-develop.2570" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="6.2.5-develop.2570" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="6.2.5-develop.2570" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
+    <ProjectReference Include="..\..\Integrations\TinkoffIntegrationLib\TinkoffIntegrationLib.csproj" />
   </ItemGroup>
 
 </Project>

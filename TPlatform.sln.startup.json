@@ -55,10 +55,12 @@
     "Full stack": {
       "Projects": {
         "AuthenticationService": {},
+        "BrokerService": {},
         "DataBaseService": {},
         "GUI": {},
-        "UserService": {},
-        "NewsService": {}
+        "NewsService": {},
+        "OperationService": {},
+        "UserService": {}
       }
     }
   }
