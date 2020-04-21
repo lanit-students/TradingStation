@@ -1,13 +1,21 @@
-﻿using System;
+﻿using DTO.MarketBrokerObjects;
 using Interfaces;
+using Kernel.CustomExceptions;
+using TinkoffIntegrationLib;
 
-namespace BrokerServices.Utils
+namespace BrokerService.Utils
 {
     public static class BrokerFactory
     {
-        public static IBroker Create(BankType bankType)
+        public static IBroker Create(BrokerType broker, string token, int depth = 10)
         {
-            throw new NotImplementedException();
+            return broker switch
+            {
+                BrokerType.TinkoffBroker =>
+                    new TinkoffBankBroker(token, depth),
+                _ =>
+                    throw new BadRequestException("Invalid broker type")
+            };
         }
     }
 }

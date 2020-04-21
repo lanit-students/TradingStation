@@ -1,9 +1,8 @@
 ﻿@page "/signup"
 @using GUI.Components
-@using GUI.Scripts
-@using GUI.ViewModels
 @inject IModalService modal
 @inject NavigationManager NavigationManager
+
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
     <Wizard Id="Wizard" HasError="@HasError">
         <WizardStep Name="First Step">
@@ -120,7 +119,7 @@
         {
             errorServerMessage = "Something went wrong during registration";
         }
-        catch (Exception e)
+        catch (Exception)
         {
             errorServerMessage = "The server cannot process your request.";
         }

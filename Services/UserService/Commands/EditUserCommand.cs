@@ -87,7 +87,7 @@ namespace UserService.Commands
             {
                 User = user,
                 UserPasswords = passwordHashChangeRequest,
-                UserAvatar = userAvatar                
+                UserAvatar = userAvatar
             };
 
             var editUserResult = await EditUser(internalEditUserInfoRequest);

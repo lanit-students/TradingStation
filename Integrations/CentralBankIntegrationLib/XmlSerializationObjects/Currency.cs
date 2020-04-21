@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace CentralBankIntegrationLib.XmlSerializationObjects
 {
@@ -29,7 +30,7 @@ namespace CentralBankIntegrationLib.XmlSerializationObjects
             {
                 decimal val;
                 //TODO: Add log
-                Decimal.TryParse(ValueInString, out val);
+                decimal.TryParse(ValueInString.Replace(',', '.'), NumberStyles.Currency, CultureInfo.InvariantCulture, out val);
 
                 if (FaceValue > 1)
                     return val / FaceValue;

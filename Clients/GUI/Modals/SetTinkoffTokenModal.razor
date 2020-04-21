@@ -1,0 +1,24 @@
+﻿<EditForm EditContext="@editContext" OnValidSubmit="@SaveDataClickHandler">
+    <div class="form-group">
+        <InputText class="input-group-text" @bind-Value="token" placeholder="Your Tinkoff token" />
+    </div>
+    <input type="submit" class="form-control button btn-primary" value="Save" />
+</EditForm>
+
+@code {
+    [CascadingParameter]
+    public BlazoredModalInstance BlazoredModal { get; set; }
+    private string token;
+    private EditContext editContext;
+
+    private void SaveDataClickHandler()
+    {
+        BlazoredModal.Close(ModalResult.Ok(token));
+    }
+
+    protected override void OnInitialized()
+    {
+        token = "";
+        editContext = new EditContext(token);
+    }
+}

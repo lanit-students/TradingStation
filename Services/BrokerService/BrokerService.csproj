@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,14 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\**" />
-    <Content Remove="Controllers\**" />
-    <EmbeddedResource Remove="Controllers\**" />
-    <None Remove="Controllers\**" />
+    <PackageReference Include="MassTransit" Version="6.2.5-develop.2570" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="6.2.5-develop.2570" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="6.2.5-develop.2570" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="6.2.5-develop.2570" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\Integrations\TinkoffIntegrationLib\TinkoffIntegrationLib.csproj" />
   </ItemGroup>
 
 
