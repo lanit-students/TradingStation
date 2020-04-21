@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium.Chrome;
 using System;
+using System.IO;
 using System.Threading;
 
 namespace TestForSignUp
@@ -18,6 +19,9 @@ namespace TestForSignUp
                 var buttons = browser.FindElementsByCssSelector("[type=\"button\"]");
                 var nextButton = buttons[1];
                 nextButton.Click();
+                Thread.Sleep(5000);
+                var path = Path.GetFullPath(@"..\..\..\testPhoto.jpg").ToString();
+                ImageAdd(browser, path);
                 Thread.Sleep(5000);
                 var submitButton = browser.FindElementByCssSelector("[type=\"Submit\"]");
                 submitButton.Click();
@@ -44,6 +48,12 @@ namespace TestForSignUp
             Thread.Sleep(5000);
             var errors = browser.FindElementsByCssSelector("[class=\"validation-message\"]");
             return errors.Count == 4;
+        }
+
+        private static void ImageAdd(ChromeDriver browser, string path)
+        {
+            var imageButton = browser.FindElementByCssSelector("[type=\"file\"]");
+            imageButton.SendKeys(path);
         }
     }
 }
