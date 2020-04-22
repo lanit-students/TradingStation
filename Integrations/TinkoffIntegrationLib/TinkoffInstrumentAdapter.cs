@@ -1,40 +1,35 @@
-﻿using Interfaces;
+﻿using DTO;
 using System;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffIntegrationLib
 {
-    class TinkoffInstrumentAdapter : IMarketInstrument
+    public class TinkoffInstrumentAdapter : Instrument
     {
-        MarketInstrument tinkoffInstrument;
-        Orderbook tinkoffOrderbook;
+        private readonly MarketInstrument tinkoffInstrument;
 
         /*
          * If I will pass to ctor tinkoff context,
          * class obtain a lot of excess info
         */
-        public TinkoffInstrumentAdapter(MarketInstrument instrument, Orderbook orderbook)
+        public TinkoffInstrumentAdapter(InstrumentType type, MarketInstrument instrument)
         {
-            if (instrument.Figi != orderbook.Figi)
-                throw new ArgumentException("Transfer orderbook does not match the market instrument");
-
             tinkoffInstrument = instrument;
-            tinkoffOrderbook = orderbook;
+            Type = (DTO.MarketBrokerObjects.InstrumentType)Enum.Parse(typeof(DTO.MarketBrokerObjects.InstrumentType), type.ToString());
         }
 
-        /// <summary>
-        /// Figi e.g.
-        /// </summary>
-        public string Id => tinkoffInstrument.Figi;
+        public override string Figi => tinkoffInstrument.Figi;
 
-        /// <summary>
-        /// Name market instrument
-        /// </summary>
-        public string Name => tinkoffInstrument.Name;
+        public override string Ticker => tinkoffInstrument.Ticker;
 
-        /// <summary>
-        /// Price by market instrument
-        /// </summary>
-        public decimal Price => tinkoffOrderbook.LastPrice;
+        public override string Isin => tinkoffInstrument.Isin;
+
+        public override DTO.MarketBrokerObjects.InstrumentType Type { get; set; }
+
+        public override string Name => tinkoffInstrument.Name;
+
+        public override string Currency => tinkoffInstrument.Currency.ToString();
+
+        public override int Lot => tinkoffInstrument.Lot;
     }
 }

@@ -2,10 +2,8 @@
 using DTO;
 using DTO.BrokerRequests;
 using Kernel;
-using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
