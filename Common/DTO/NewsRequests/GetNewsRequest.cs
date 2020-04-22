@@ -6,6 +6,6 @@ namespace DTO.RestRequests
 {
     public class GetNewsRequest
     {
-        public string UrlString { get; set; }
+        public string FeedUrl { get; set; }
     }
 }
