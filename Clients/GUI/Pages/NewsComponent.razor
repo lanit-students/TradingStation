@@ -1,0 +1,69 @@
+﻿@page  "/NewsComponent"
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            @foreach (NewsItem newsItem in news)
+            {
+                <div class="wp-block property list">
+                    <div class="wp-block-body">
+                        <div class="wp-block-content">
+                            <small>
+                                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate
+                            </small>
+                            <h4 class="content-title">@newsItem.Title</h4>
+                            <p class="description">@newsItem.Description</p>
+                            <span class="pull-right">
+                                <span class="capacity">
+                                    <i class="fa fa-user"></i>@newsItem.Author
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="wp-block-footer">
+                        <ul class="aux-info">
+                            <li><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> 365</li>
+                            <li><span class=" glyphicon glyphicon-comment" aria-hidden="true"></span> 5</li>
+                            <li><span class="glyphicon glyphicon-star" aria-hidden="true"></span> 2</li>
+                            <li><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> +5 <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span></li>
+                            <li><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Тег 1, Тег 2, Тег 3</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<NewsItem> news;
+    private string url;
+    private string errorMessage = "";
+
+    public async Task GetNews()
+    {
+        try
+        {
+            var request = new GetNewsRequest
+            {
+                FeedUrl = url
+            };
+
+            news = NewsGetter.GetNews(request).Result;
+        }
+        catch(BadRequestException)
+        {
+            errorMessage = "Something went wrong";
+        }
+        catch(NotFoundException)
+        {
+            errorMessage = "Can`t fing this news";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        GetNews();
+    }
+
+}
