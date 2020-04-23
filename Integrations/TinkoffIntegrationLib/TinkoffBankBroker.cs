@@ -13,14 +13,12 @@ namespace TinkoffIntegrationLib
     {
         private readonly Context context;
 
-        public TinkoffBankBroker(string token, int depth = 10)
+        public TinkoffBankBroker(string token)
         {
             try
             {
                 var conn = ConnectionFactory.GetSandboxConnection(token);
                 context = conn.Context;
-
-                Depth = depth;
             }
             catch (Exception)
             {
