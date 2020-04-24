@@ -3,7 +3,6 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +18,8 @@ using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
+using Kernel.LoggingEngine;
+using Microsoft.Extensions.Logging;
 
 namespace DataBaseService
 {
@@ -104,6 +105,16 @@ namespace DataBaseService
             });
 
             services.AddMassTransitHostedService();
+
+            services.AddLogging(log =>
+            {
+                log.ClearProviders();
+            });
+
+            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            {
+                return new LoggerProvider(provider);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

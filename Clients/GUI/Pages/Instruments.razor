@@ -1,0 +1,198 @@
+﻿@page "/instruments"
+@inject IModalService Modal
+@inject ISessionStorageService Storage
+@attribute [Authorize]
+
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <h3>Instruments</h3>
+        </div>
+        <div class="col-md float-right">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Instrument</label>
+                </div>
+                <select @onchange="@UpdateInstruments" class="custom-select">
+                    @foreach (var instrument in instrumentOptions)
+                    {
+                        <option value=@instrument>@instrument</option>
+                    }
+                </select>
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Page size</label>
+                </div>
+                <select @onchange="@UpdatePageSize"class="custom-select">
+                    <option value=10>10</option>
+                    <option value=20>20</option>
+                    <option value=50>50</option>
+                    <option value=100>100</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (areInstrumentsLoading)
+        {
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        }
+        else if (!errorOccured)
+        {
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Figi</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Lot</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var instrument in marketInstruments.Skip(pageIndex * pageSize).Take(pageSize))
+                    {
+                        <tr>
+                            <td>@instrument.Figi</td>
+                            <td>@instrument.Name</td>
+                            <td>@instrument.Currency</td>
+                            <td>@instrument.Lot</td>
+                            <td @onclick="@(() => SaveInstrument(instrument))">
+                                Add to portfolio
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
+            <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
+        }
+        else
+        {
+            <h3 class="m-lg-5">@errorMessage</h3>
+        }
+    </div>
+</div>
+
+
+@code {
+    private IEnumerable<Instrument> marketInstruments;
+    private List<string> instrumentOptions;
+    private string selectedInstrument;
+    private bool areInstrumentsLoading;
+    private bool errorOccured;
+    private string errorMessage;
+
+    private int pageIndex;
+    private int pageSize = 10;
+    private string token;
+
+    private void UpdatePageSize(ChangeEventArgs e)
+    {
+        var oldSize = pageSize;
+
+        pageSize = int.Parse(e.Value.ToString());
+
+        pageIndex = oldSize * pageIndex / pageSize;
+
+        StateHasChanged();
+    }
+
+    private async Task UpdateInstruments(ChangeEventArgs e)
+    {
+        try
+        {
+            pageIndex = 0;
+            selectedInstrument = e.Value.ToString();
+            areInstrumentsLoading = true;
+
+            var instrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), selectedInstrument);
+
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, instrumentType);
+
+            areInstrumentsLoading = false;
+
+            marketInstruments = result;
+        }
+        catch (Exception)
+        {
+            areInstrumentsLoading = false;
+
+            errorOccured = true;
+
+            errorMessage = "Can't load instruments, try again later";
+        }
+    }
+
+    private void SaveInstrument(Instrument instrument)
+    {
+
+    }
+
+    private async Task SetToken()
+    {
+        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
+        var modalResult = await formModal.Result;
+        token = (string)modalResult.Data;
+
+        Storage.SetItemAsync("tinkoffToken", token);
+    }
+
+    private void PreviousPage()
+    {
+        --pageIndex;
+        StateHasChanged();
+    }
+
+    private bool prevDisabled =>
+            pageIndex == 0;
+
+    private void NextPage()
+    {
+        ++pageIndex;
+        StateHasChanged();
+    }
+
+    private bool nextDisabled =>
+            (pageIndex + 1) * pageSize > marketInstruments.Count();
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorOccured = false;
+        pageIndex = 0;
+        marketInstruments = new List<Instrument>();
+
+        instrumentOptions = new List<string>()
+{
+            "Currency",
+            "Bond",
+            "Stock"
+        };
+
+        areInstrumentsLoading = true;
+
+        try
+        {
+            token = await Storage.GetItemAsync<string>("tinkoffToken");
+
+            if (token == null)
+            {
+                await SetToken();
+            }
+
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);
+
+            marketInstruments = result;
+
+            areInstrumentsLoading = false;
+        }
+        catch (Exception)
+        {
+            areInstrumentsLoading = false;
+
+            errorMessage = "Can't load instruments, try again later";
+            errorOccured = true;
+        }
+    }
+}

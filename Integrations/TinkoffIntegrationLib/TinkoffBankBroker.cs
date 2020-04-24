@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTO;
 using Interfaces;
+using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
 
@@ -10,111 +11,62 @@ namespace TinkoffIntegrationLib
 {
     public class TinkoffBankBroker : IBroker
     {
-        private readonly Context tinkoffContext;
-        private const int CDefaultDepth = 10;
+        private readonly Context context;
 
-        private List<IMarketInstrument> GetInstruments(Task<MarketInstrumentList> getInstrumentsTask, Context context, int depth)
+        public TinkoffBankBroker(string token, int depth = 10)
         {
-            List<IMarketInstrument> instruments = new List<IMarketInstrument>();
-
-            MarketInstrumentList instrumentsList = getInstrumentsTask.Result;
-
-            for(int i = 0; i< instrumentsList.Total; i++)
+            try
             {
-                Orderbook orderbook = context
-                    .MarketOrderbookAsync(instrumentsList.Instruments[i].Figi
-                    , depth).Result;
+                var conn = ConnectionFactory.GetSandboxConnection(token);
+                context = conn.Context;
 
-                instruments.Add(new TinkoffInstrumentAdapter(instrumentsList.Instruments[i],
-                    orderbook));
+                Depth = depth;
             }
-
-            return instruments;
+            catch (Exception)
+            {
+                throw new BadRequestException();
+            }
         }
-
-
-        public TinkoffBankBroker(CreateBrokerData data)
-        {
-            Connection conn = ConnectionFactory.GetConnection(data.Token);
-            tinkoffContext = conn.Context;
-            if (data.Depth == 0)
-                Depth = CDefaultDepth;
-            else
-                Depth = data.Depth;
-        }
-
 
         /*
-         * After create broker, if you want receive responce to request
+         * After creating the broker, if you want receive response to request
          * with another depth, you must change depth here and make
          * a request again
         */
         /// <summary>
-        /// Depth by market glass
+        /// Depth of market glass
         /// </summary>
         public int Depth { get; set; }
 
-        /// <summary>
-        /// Method returns specific bond
-        /// </summary>
-        /// <param name="idBond">Id required bond, e.g. figi</param>
-        /// <returns>Required bond</returns>
-        public IMarketInstrument GetBond(string idBond)
+        public IEnumerable<Instrument> GetInstruments(DTO.MarketBrokerObjects.InstrumentType type)
         {
-            return GetAllBonds()
-                .Where(b => b.Id == idBond)
-                .Single();
-        }
+            var instruments = new List<Instrument>();
 
-        /// <summary>
-        /// Method returns list with all bonds from bank broker
-        /// </summary>
-        /// <returns>List with bonds</returns>
-        public List<IMarketInstrument> GetAllBonds()
-        {
-            return GetInstruments(tinkoffContext.MarketBondsAsync(), tinkoffContext, Depth);
-        }
+            var tinkoffInstrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), type.ToString());
 
-        /// <summary>
-        /// Method returns list with all curencies from bank broker
-        /// </summary>
-        /// <returns>List with currencies</returns>
-        public List<IMarketInstrument> GetAllCurrencies()
-        {
-            return GetInstruments(tinkoffContext.MarketCurrenciesAsync(), tinkoffContext, Depth);
-        }
+            MarketInstrumentList instrumentsList = tinkoffInstrumentType switch
+            {
+                InstrumentType.Bond => context.MarketBondsAsync().Result,
+                InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
+                InstrumentType.Stock => context.MarketStocksAsync().Result,
+                _ => throw new BadRequestException()
+            };
 
-        /// <summary>
-        /// Method returns specific currency
-        /// </summary>
-        /// <param name="idCurrency">Id required currency, e.g. figi</param>
-        /// <returns>Required currency</returns>
-        public IMarketInstrument GetCurrency(string idCurrency)
-        {
-            return GetAllCurrencies()
-                .Where(c => c.Id == idCurrency)
-                .Single();
-        }
+            Parallel.ForEach(instrumentsList.Instruments,
+                (instrument) =>
+                {
+                    try
+                    {
+                        instruments.Add(
+                            new TinkoffInstrumentAdapter(
+                                tinkoffInstrumentType,
+                                instrument)
+                            );
+                    }
+                    catch (Exception) { }
+                });
 
-        /// <summary>
-        /// Method returns specific stock
-        /// </summary>
-        /// <param name="idStock">Id required stock, e.g. figi</param>
-        /// <returns>Required stock</returns>
-        public IMarketInstrument GetStock(string idStock)
-        {
-            return GetAllStocks()
-                .Where(st => st.Id == idStock)
-                .Single();
-        }
-
-        /// <summary>
-        /// Method returns list with all stocks from bank broker
-        /// </summary>
-        /// <returns>List with stocks</returns>
-        public List<IMarketInstrument> GetAllStocks()
-        {
-            return GetInstruments(tinkoffContext.MarketStocksAsync(), tinkoffContext, Depth);
+            return instruments;
         }
     }
 }

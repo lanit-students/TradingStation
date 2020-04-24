@@ -1,9 +1,6 @@
 ﻿using DTO;
 using Kernel.CustomExceptions;
-using MassTransit.NewIdProviders;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Kernel
 {

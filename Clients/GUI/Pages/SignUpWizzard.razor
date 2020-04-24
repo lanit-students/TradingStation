@@ -1,4 +1,6 @@
 ﻿@page "/signup"
+@using GUI.Components
+@inject IModalService modal
 @inject NavigationManager NavigationManager
 
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
@@ -110,13 +112,16 @@
             };
 
             await SignUpper.SignUp(request);
-            NavigationManager.NavigateTo("/signin");
+            modal.Show<GUI.Pages.SignIn>();
+
         }
-        catch (Exception e) when (
-                e is BadRequestException
-                || e is InternalServerException)
+        catch (BadRequestException)
         {
-            errorServerMessage = "Can't create a user";
+            errorServerMessage = "Something went wrong during registration";
+        }
+        catch (Exception)
+        {
+            errorServerMessage = "The server cannot process your request.";
         }
         finally
         {

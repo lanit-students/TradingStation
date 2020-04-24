@@ -13,7 +13,8 @@ namespace NewsService.Utils
 
         public static INewsPublisher Create(NewsPublisherTypes newsPublisherType)
         {
-            return newsPublisherType switch {
+            return newsPublisherType switch
+            {
                 NewsPublisherTypes.Rambler =>
                     new RamblerRssReader(),
                 _ =>

@@ -1,0 +1,38 @@
+﻿@inject AuthStateProvider AuthenticationProvider
+@inject Blazored.SessionStorage.ISessionStorageService Storage
+@inject IModalService modal
+
+
+<div class="header">
+    <a href="#"><img src="Picture/Logo.png"></a>
+    <a href="#">News</a>
+    <AuthorizeView>
+        <Authorized>
+            <a href="instruments">Instruments</a>
+        </Authorized>
+    </AuthorizeView>
+    <div class="header-right">
+        <AuthorizeView>
+            <NotAuthorized>
+                <a class="header_item" href="signup">Sign up</a>
+                <a> / </a>
+                <a class="header_item" @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
+            </NotAuthorized>
+            <Authorized>
+                <a class="header_item" href="#" @onclick="@SignOut">Sign Out</a>
+                <a> / </a>
+                <a class="header_item" href="userinfo">User Info</a>
+            </Authorized>
+        </AuthorizeView>
+        <a href="#"><img src="Picture/Avatar.png"></a>
+    </div>
+</div>
+
+@code {
+    private void SignOut()
+    {
+        Storage.ClearAsync();
+        AuthenticationProvider.MarkSignedOut();
+    }
+}
+

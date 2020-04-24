@@ -1,0 +1,84 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+.header {
+    overflow: hidden;
+    background-color: #f2f2f2;
+    padding: 10px;
+    height: 80px;
+}
+
+.header a {
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 17px;
+    line-height: 21px;
+}
+
+.header a.active {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.header-right {
+    float: right;
+}
+
+.currencies {
+    width: 150px;
+    min-height: 100vh;
+    color: #fff;
+    background: #f2f2f2;
+    padding: 1px;
+    align-items: center;
+    transition: 0.5s width;
+}
+
+.сurrencyBar {
+    width: 100px;
+    height: 100px;
+    color: black;
+    background: #0366d6;
+    font-size: 0.7rem;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    padding: 3px;
+    margin: 5px;
+    background-color: #fff;
+    display: block;
+}
+
+
+.col-12 {
+    width: 850px;
+}
+
+.cur-icon {
+    background-size: 75px 75px;
+}
+
+    .cur-icon .rub-icon {
+        background-image: url(/images/currencies/rub.png)
+    }
+
+    .cur-icon .usd-icon {
+        background-image: url(/images/currencies/usd.png)
+    }
+
+    .cur-icon .eur-icon {
+        background-image: url(/images/currencies/eur.png)
+    }
+
+    .cur-icon .cny-icon {
+        background-image: url(/images/currencies/cny.png)
+    }
+
+    .cur-icon .jpy-icon {
+        background-image: url(/images/currencies/jpy.png)
+    }
+
+    .cur-icon .gbp-icon {
+        background-image: url(/images/currencies/gbp.png)
+    }

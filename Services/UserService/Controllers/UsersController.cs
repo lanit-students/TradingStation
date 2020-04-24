@@ -1,4 +1,3 @@
-using DTO;
 using DTO.RestRequests;
 using IDeleteUserUserService.Interfaces;
 using Kernel.CustomExceptions;
@@ -8,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 using UserService.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.Controllers
 {
@@ -20,6 +20,13 @@ namespace UserService.Controllers
         {
             this.userManager = userManager;
         }
+        private readonly ILogger<UsersController> logger;
+
+        public UsersController([FromServices] ILogger<UsersController> logger)
+        {
+            this.logger = logger;
+        }
+
         [Route("create")]
         [HttpPost]
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
@@ -45,12 +52,15 @@ namespace UserService.Controllers
 
             return true;
             //return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+            logger.LogInformation("Create user request received from GUI to UserService");
+            return await command.Execute(request);
         }
 
         [Route("edit")]
         [HttpPut]
         public async Task<bool> EditUser([FromServices] IEditUserCommand command, [FromBody] EditUserRequest request)
         {
+            logger.LogInformation("Edit user request received from GUI to UserService");
             return await command.Execute(request);
         }
 
@@ -58,13 +68,15 @@ namespace UserService.Controllers
         [HttpDelete]
         public async Task<bool> DeleteUser([FromServices] IDeleteUserCommand command, [FromBody] DeleteUserRequest request)
         {
+            logger.LogInformation("Delete user request received from GUI to UserService");
             return await command.Execute(request);
         }
 
         [Route("get")]
         [HttpGet]
-        public async Task<User> GetUser([FromServices] IGetUserByIdCommand command, [FromHeader] Guid userId)
+        public async Task<UserInfoRequest> GetUser([FromServices] IGetUserByIdCommand command, [FromHeader] Guid userId)
         {
+            logger.LogInformation("Get user request received from GUI to UserService");
             return await command.Execute(userId);
         }
     }
