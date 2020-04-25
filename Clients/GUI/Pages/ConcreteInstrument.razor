@@ -1,0 +1,108 @@
+﻿@page "/instrument"
+@inject NavigationManager NavManager
+@inject IModalService Modal
+@inject ISessionStorageService Storage
+
+<h3>@instrument.Name</h3>
+
+<div class="container">
+    @if (isInstrumentLoading)
+    {
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    }
+    else if (!errorOccured)
+    {
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Figi</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Currency</th>
+                    <th scope="col">Lot</th>
+                    <th scope="col">Started Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@instrument.Figi</td>
+                    <td>@instrument.Name</td>
+                    <td>@instrument.Type</td>
+                    <td>@instrument.Currency</td>
+                    <td>@instrument.Lot</td>
+                    <td>@instrument.Price</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="countInPortfolio">Count in portfolio</label>
+                <input type="number" class="form-control" id="countInPortfolio" value=@countInPortfolio>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="countToTrade">Count to trade</label>
+                <input type="number" class="form-control" id="countToTrade" value=@countToTrade>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="limitPrice">Limit price</label>
+                <input type="number" class="form-control" id="limitPrice" value=@limitPrice>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="sellButton">Limit price</label>
+                <input class="btn btn-primary" id="sellButton" value="Sell" @onclick="@Sell" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="buyButton">Limit price</label>
+                <input class="btn btn-primary" id="buyButton" value="Buy" @onclick="@Buy" />
+            </div>
+        </div>
+            }
+            else
+            {
+            <h3 class="m-lg-5">@errorMessage</h3>
+            }
+
+        </div>
+
+        @code {
+        private string token = "";
+        private int countInPortfolio = 1;
+        private int countToTrade = 1;
+        private decimal limitPrice = 100;
+        private bool errorOccured = false;
+        private bool isInstrumentLoading = false;
+        private Instrument instrument;
+        private decimal startedPrice = 0;
+        private string errorMessage = "";
+
+        private void Sell()
+        {
+
+        }
+
+        private void Buy()
+        {
+
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            errorOccured = false;
+            isInstrumentLoading = false;
+            instrument = new Instrument()
+            {
+                Figi = "121212",
+                Lot = 100,
+                Name = "Valute",
+                Currency = Currency.RUB.ToString(),
+                Price = 1212,
+                Type = InstrumentType.Currency
+
+            };
+
+        }
+
+        }
