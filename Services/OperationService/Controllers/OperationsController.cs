@@ -18,15 +18,14 @@ namespace OperationService.Controllers
                 [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> command,
                 [FromQuery] BrokerType broker,
                 [FromQuery] string token,
-                [FromQuery] InstrumentType instrument,
-                [FromQuery] int depth)
+                [FromQuery] InstrumentType instrument
+            )
         {
             return await command.Execute(
                 new GetInstrumentsRequest()
                 {
                     Broker = broker,
                     Token = token,
-                    Depth = depth,
                     Type = instrument
                 });
         }
