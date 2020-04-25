@@ -11,9 +11,9 @@ namespace GUI.Scripts
     {
         public static async Task<IEnumerable<NewsItem>> GetNews(GetNewsRequest newsRequest)
         {
-            const string url = "https://localhost:5007/getnews";
+            const string url = "https://localhost:5007/news/getnews";
 
-            var client = new RestClient<GetNewsRequest, IEnumerable<NewsItem>>(url, RestRequestType.GET);
+            var client = new RestClient<GetNewsRequest, IEnumerable<NewsItem>>(url, RestRequestType.POST);
 
             return await client.Execute(newsRequest);
         }
