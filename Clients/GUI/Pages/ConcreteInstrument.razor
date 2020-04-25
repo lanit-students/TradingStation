@@ -1,4 +1,4 @@
-﻿@page "/instrument"
+﻿@page "/instrument/{Figi}"
 @inject NavigationManager NavManager
 @inject IModalService Modal
 @inject ISessionStorageService Storage
@@ -68,41 +68,45 @@
         </div>
 
         @code {
-        private string token = "";
-        private int countInPortfolio = 1;
-        private int countToTrade = 1;
-        private decimal limitPrice = 100;
-        private bool errorOccured = false;
-        private bool isInstrumentLoading = false;
-        private Instrument instrument;
-        private decimal startedPrice = 0;
-        private string errorMessage = "";
+            [Parameter]
+            public string Figi { get; set; }
 
-        private void Sell()
-        {
+            private string token = "";
+            private int countInPortfolio = 1;
+            private int countToTrade = 1;
+            private decimal limitPrice = 100;
+            private bool errorOccured = false;
+            private bool isInstrumentLoading = false;
+            private Instrument instrument;
+            private decimal startedPrice = 0;
+            private string errorMessage = "";
+        
 
-        }
-
-        private void Buy()
-        {
-
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            errorOccured = false;
-            isInstrumentLoading = false;
-            instrument = new Instrument()
+            private void Sell()
             {
-                Figi = "121212",
-                Lot = 100,
-                Name = "Valute",
-                Currency = Currency.RUB.ToString(),
-                Price = 1212,
-                Type = InstrumentType.Currency
 
-            };
+            }
 
-        }
+            private void Buy()
+            {
+
+            }
+
+            protected override async Task OnInitializedAsync()
+            {
+                errorOccured = false;
+                isInstrumentLoading = false;
+                instrument = new Instrument()
+                {
+                    Figi = Figi,
+                    Lot = 100,
+                    Name = "Valute",
+                    Currency = Currency.RUB.ToString(),
+                    Price = 1212,
+                    Type = InstrumentType.Currency
+
+                };
+
+            }
 
         }

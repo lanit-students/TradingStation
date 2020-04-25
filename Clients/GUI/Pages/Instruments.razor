@@ -1,6 +1,7 @@
 ﻿@page "/instruments"
 @inject IModalService Modal
 @inject ISessionStorageService Storage
+@inject NavigationManager NavigationManager
 @attribute [Authorize]
 
 <div class="container">
@@ -22,7 +23,7 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text">Page size</label>
                 </div>
-                <select @onchange="@UpdatePageSize"class="custom-select">
+                <select @onchange="@UpdatePageSize" class="custom-select">
                     <option value=10>10</option>
                     <option value=20>20</option>
                     <option value=50>50</option>
@@ -58,8 +59,8 @@
                             <td>@instrument.Name</td>
                             <td>@instrument.Currency</td>
                             <td>@instrument.Lot</td>
-                            <td @onclick="@(() => SaveInstrument(instrument))">
-                                Add to portfolio
+                            <td @onclick="@(() => GoToInstrumentPage(instrument))">
+                                Go to instrument page
                             </td>
                         </tr>
                     }
@@ -125,9 +126,10 @@
         }
     }
 
-    private void SaveInstrument(Instrument instrument)
+    private void GoToInstrumentPage(Instrument instrument)
     {
-
+        var path = $"/instrument/{instrument.Figi}";
+        NavigationManager.NavigateTo(path);
     }
 
     private async Task SetToken()
