@@ -1,19 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using AuthenticationService.Interfaces;
 using DTO;
 using Kernel.CustomExceptions;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AuthenticationService
 {
     /// <inheritdoc />
     public class TokensEngine : ITokensEngine
     {
-        /// <summary>
-        /// Tokens storage.
-        /// </summary>
-        private Dictionary<Guid, string> tokens = new Dictionary<Guid, string>();
+        private SecurityKey key;
+
+        public TokensEngine()
+        {
+            var hmac = new HMACSHA256();
+            key = new SymmetricSecurityKey(hmac.Key);
+        }
 
         /// <inheritdoc />
         public UserToken GetToken(Guid userId)
@@ -21,9 +26,19 @@ namespace AuthenticationService
             if (userId == Guid.Empty)
                 throw new BadRequestException();
 
-            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, userId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
+            };
 
-            tokens[userId] = token;
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(securityToken);
 
             return new UserToken
             {
@@ -35,27 +50,23 @@ namespace AuthenticationService
         /// <inheritdoc />
         public OperationResult CheckToken(UserToken token)
         {
-            var result = new OperationResult
+            try
             {
-                IsSuccess = tokens.TryGetValue(token.UserId, out string tokenFromStorage) && tokenFromStorage == token.Body
-            };
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public OperationResult DeleteToken(Guid userId)
-        {
-            var result = new OperationResult();
-
-            if (tokens.ContainsKey(userId))
+                var tokenHandler = new JwtSecurityTokenHandler();
+                tokenHandler.ValidateToken(token.Body, new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key
+                }, out var validatedToken);
+            }
+            catch
             {
-                tokens.Remove(userId);
-
-                result.IsSuccess = true;
+                return new OperationResult() { IsSuccess = false };
             }
 
-            return result;
+            return new OperationResult() { IsSuccess = true };
         }
     }
 }
