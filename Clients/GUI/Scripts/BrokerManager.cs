@@ -29,5 +29,21 @@ namespace GUI.Scripts
 
             return await client.Execute();
         }
+
+        public static async Task<Instrument> GetInstrument(BrokerType broker, string token, string figi)
+        {
+            const string url = "https://localhost:5009/operations/instruments/getInstrument";
+
+            var queryParams = new Dictionary<string, string>
+            {
+                { "broker", broker.ToString() },
+                { "figi", figi},
+                { "token", token },
+            };
+
+            var client = new RestClient<object, Instrument>(url, RestRequestType.GET, queryParams: queryParams);
+
+            return await client.Execute();
+        }
     }
 }

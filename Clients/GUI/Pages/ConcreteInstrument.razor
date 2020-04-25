@@ -1,9 +1,10 @@
-﻿@page "/instrument/{Figi}"
+﻿@page "/instrument"
 @inject NavigationManager NavManager
 @inject IModalService Modal
 @inject ISessionStorageService Storage
+@attribute [Authorize]
 
-<h3>@instrument.Name</h3>
+<h3 align ="center">@instrument.Name</h3>
 
 <div class="container">
     @if (isInstrumentLoading)
@@ -51,62 +52,90 @@
                 <input type="number" class="form-control" id="limitPrice" value=@limitPrice>
             </div>
             <div class="form-group col-md-3">
-                <label for="sellButton">Limit price</label>
+                <label for="sellButton"> Sell instrument </label>
                 <input class="btn btn-primary" id="sellButton" value="Sell" @onclick="@Sell" />
             </div>
             <div class="form-group col-md-3">
-                <label for="buyButton">Limit price</label>
+                <label for="buyButton"> Buy instrument </label>
                 <input class="btn btn-primary" id="buyButton" value="Buy" @onclick="@Buy" />
             </div>
         </div>
-            }
-            else
+    }
+    else
+    {
+        <h3 class="m-lg-5">@errorMessage</h3>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public string Figi { get; set; }
+
+    private string token = "";
+    private int countInPortfolio = 1;
+    private int countToTrade = 1;
+    private decimal limitPrice = 100;
+    private bool errorOccured = false;
+    private bool isInstrumentLoading = false;
+    private Instrument instrument;
+    private decimal startedPrice = 0;
+    private string errorMessage = "";
+
+
+    private void Sell()
+    {
+
+    }
+
+    private void Buy()
+    {
+
+    }
+
+    private async Task SetToken()
+    {
+        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
+        var modalResult = await formModal.Result;
+        token = (string)modalResult.Data;
+
+        Storage.SetItemAsync("tinkoffToken", token);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorOccured = false;
+        isInstrumentLoading = true;
+        instrument = new Instrument()
+        {
+            Figi = "default",
+            Currency = "default",
+            Name = "default",
+            Lot = 0,
+            Price = 0,
+            Type = InstrumentType.Currency
+
+        };
+
+        try
+        {
+            token = await Storage.GetItemAsync<string>("tinkoffToken");
+
+            if (token == null)
             {
-            <h3 class="m-lg-5">@errorMessage</h3>
+                await SetToken();
             }
 
-        </div>
-
-        @code {
-            [Parameter]
-            public string Figi { get; set; }
-
-            private string token = "";
-            private int countInPortfolio = 1;
-            private int countToTrade = 1;
-            private decimal limitPrice = 100;
-            private bool errorOccured = false;
-            private bool isInstrumentLoading = false;
-            private Instrument instrument;
-            private decimal startedPrice = 0;
-            private string errorMessage = "";
-        
-
-            private void Sell()
-            {
-
-            }
-
-            private void Buy()
-            {
-
-            }
-
-            protected override async Task OnInitializedAsync()
-            {
-                errorOccured = false;
-                isInstrumentLoading = false;
-                instrument = new Instrument()
-                {
-                    Figi = Figi,
-                    Lot = 100,
-                    Name = "Valute",
-                    Currency = Currency.RUB.ToString(),
-                    Price = 1212,
-                    Type = InstrumentType.Currency
-
-                };
-
-            }
-
+            instrument = await Storage.GetItemAsync<Instrument>("instrument");
+            isInstrumentLoading = false;
         }
+        catch (Exception)
+        {
+            isInstrumentLoading = false;
+
+            errorMessage = "Can't load instruments, try again later";
+            errorOccured = true;
+        }
+    }
+
+}
