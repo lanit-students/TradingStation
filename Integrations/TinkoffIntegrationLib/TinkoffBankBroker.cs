@@ -6,12 +6,15 @@ using Interfaces;
 using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
+using TinkoffIntegrationLib.Adapters;
+using InstrumentType = DTO.MarketBrokerObjects.InstrumentType;
 
 namespace TinkoffIntegrationLib
 {
     public class TinkoffBankBroker : IBroker
     {
         private readonly Context context;
+        private Action<Candle> sendCandle;
 
         public TinkoffBankBroker(string token, int depth = 10)
         {
@@ -34,26 +37,28 @@ namespace TinkoffIntegrationLib
          * a request again
         */
         /// <summary>
-        /// Depth of market glass
+        ///     Depth of market glass
         /// </summary>
         public int Depth { get; set; }
 
-        public IEnumerable<Instrument> GetInstruments(DTO.MarketBrokerObjects.InstrumentType type)
+        public IEnumerable<Instrument> GetInstruments(InstrumentType type)
         {
             var instruments = new List<Instrument>();
 
-            var tinkoffInstrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), type.ToString());
+            var tinkoffInstrumentType =
+                (Tinkoff.Trading.OpenApi.Models.InstrumentType) Enum.Parse(
+                    typeof(Tinkoff.Trading.OpenApi.Models.InstrumentType), type.ToString());
 
-            MarketInstrumentList instrumentsList = tinkoffInstrumentType switch
+            var instrumentsList = tinkoffInstrumentType switch
             {
-                InstrumentType.Bond => context.MarketBondsAsync().Result,
-                InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
-                InstrumentType.Stock => context.MarketStocksAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond => context.MarketBondsAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock => context.MarketStocksAsync().Result,
                 _ => throw new BadRequestException()
             };
 
             Parallel.ForEach(instrumentsList.Instruments,
-                (instrument) =>
+                instrument =>
                 {
                     try
                     {
@@ -61,12 +66,37 @@ namespace TinkoffIntegrationLib
                             new TinkoffInstrumentAdapter(
                                 tinkoffInstrumentType,
                                 instrument)
-                            );
+                        );
                     }
-                    catch (Exception) { }
+                    catch (Exception)
+                    {
+                    }
                 });
 
             return instruments;
+        }
+
+
+        public void SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
+        {
+            this.sendCandle = SendCandle;
+            context.StreamingEventReceived += onStreamingEventReceived;
+            context.SendStreamingRequestAsync(new StreamingRequest.CandleSubscribeRequest(Figi, CandleInterval.Minute));
+        }
+
+
+        private void onStreamingEventReceived(object sender, StreamingEventReceivedEventArgs args)
+        {
+            if (args.Response.Event.Equals("Error"))
+            {
+                sendCandle(new CandleAdapter{isValid = false});
+            }
+            else
+            {
+                var response = (CandleResponse) args.Response;
+
+                sendCandle(new CandleAdapter(response.Payload));
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ using MassTransit;
 using System;
 using GreenPipes;
 using BrokerService.BrokerConsumers;
+using DTO;
 
 namespace BrokerService
 {
@@ -44,7 +45,9 @@ namespace BrokerService
                     ep.UseMessageRetry(r => r.Interval(2, 100));
 
                     ep.ConfigureConsumer<GetInstrumentsConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<SubscribeOnCandleConsumer>(serviceProvider);
                 });
+                
             });
         }
 
@@ -57,6 +60,7 @@ namespace BrokerService
             {
                 x.AddBus(provider => CreateBus(provider));
                 x.AddConsumer<GetInstrumentsConsumer>();
+                x.AddConsumer<SubscribeOnCandleConsumer>();
             });
 
             services.AddMassTransitHostedService();

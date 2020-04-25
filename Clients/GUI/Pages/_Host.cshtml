@@ -8,32 +8,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>GUI</title>
-    <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet" />
-    <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
+    <base href="~/"/>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
+    <link href="css/site.css" rel="stylesheet"/>
+    <link href="css/style.css" rel="stylesheet"/>
+    <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet"/>
 </head>
 <body>
-    <app>
-        <component type="typeof(App)" render-mode="Server" />
-    </app>
+<app>
+    <component type="typeof(App)" render-mode="Server"/>
+</app>
 
-    <div id="blazor-error-ui">
-        <environment include="Staging,Production">
-            An error has occurred. This application may no longer respond until reloaded.
-        </environment>
-        <environment include="Development">
-            An unhandled exception has occurred. See browser dev tools for details.
-        </environment>
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
+<div id="blazor-error-ui">
+    <environment include="Staging,Production">
+        An error has occurred. This application may no longer respond until reloaded.
+    </environment>
+    <environment include="Development">
+        An unhandled exception has occurred. See browser dev tools for details.
+    </environment>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
 
-    <script src="_framework/blazor.server.js"></script>
-    <script src="_content/BlazorInputFile/inputfile.js"></script>
+<script src="_framework/blazor.server.js"></script>
+<script src="_content/BlazorInputFile/inputfile.js"></script>
+
+
+<script src="js/CandleChart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 </body>
-</html>
+</html >
