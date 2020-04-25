@@ -36,10 +36,10 @@ namespace NewsService.Controllers
         }
 
         [Route("getnews")]
-        [HttpPost]
-        public IEnumerable<NewsItem> GetNews([FromServices] IGetNewsCommand command, [FromBody] GetNewsRequest request)
+        [HttpGet]
+        public IEnumerable<NewsItem> GetNews([FromServices] IGetNewsCommand command, [FromQuery] string feedUrl)
         {
-            return command.Execute(request.FeedUrl);
+            return command.Execute(feedUrl);
         }
     }
 }

@@ -9,13 +9,18 @@ namespace GUI.Scripts
 {
     public static class NewsGetter
     {
-        public static async Task<IEnumerable<NewsItem>> GetNews(GetNewsRequest newsRequest)
+        public static async Task<IEnumerable<NewsItem>> GetNews(string feedUrl)
         {
             const string url = "https://localhost:5007/news/getnews";
 
-            var client = new RestClient<GetNewsRequest, IEnumerable<NewsItem>>(url, RestRequestType.POST);
+            var queryParams = new Dictionary<string, string>
+            {
+                { "feedUrl", feedUrl }
+            };
 
-            return await client.Execute(newsRequest);
+            var client = new RestClient<string, IEnumerable<NewsItem>>(url, RestRequestType.GET, queryParams: queryParams);
+
+            return await client.Execute();
         }
     }
 }

@@ -75,7 +75,7 @@
                 FeedUrl = url
             };
 
-            news = NewsGetter.GetNews(request).Result;
+            news = NewsGetter.GetNews(url).Result;
             foreach(NewsItem nws in news)
             {
                 Console.WriteLine(nws.Description);
