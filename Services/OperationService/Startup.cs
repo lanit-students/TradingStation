@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OperationService.Commands;
 using System;
 using System.Collections.Generic;
+using OperationService.Hubs;
 
 namespace OperationService
 {
@@ -60,11 +60,14 @@ namespace OperationService
             {
                 x.AddBus(provider => CreateBus(provider));
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
+                x.AddRequestClient<SubscribeOnCandleRequest>(new Uri("rabbitmq://localhost/BrokerService"));
             });
 
             services.AddMassTransitHostedService();
 
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
+
+            services.AddTransient<ICommand<SubscribeOnCandleRequest, OperationResult>, SubscribeOnCandleCommand>();
 
             services.AddLogging(log =>
             {
@@ -75,6 +78,8 @@ namespace OperationService
             {
                 return new LoggerProvider(provider);
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,6 +100,7 @@ namespace OperationService
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<CandleHub>("/CandleHub");
                 endpoints.MapControllers();
             });
         }

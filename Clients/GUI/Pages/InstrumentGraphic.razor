@@ -1,14 +1,17 @@
 ﻿@page "/instrument/{Figi}"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
 
 
-    <div class="container ml-0 align-items-center w-75" id="myChart"></div>
+<div class="container ml-0 align-items-center w-75" id="myChart"></div>
 @code {
 
     [Parameter]
     public string Figi { get; set; }
-
+    public HubConnection hubConnection;
+    private string message;
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -17,7 +20,24 @@
 
     private async void DrawChart()
     {
-        await JSRuntime.InvokeVoidAsync("drawChart","myChart");
+        await JSRuntime.InvokeVoidAsync("drawChart", "myChart");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/CandleHub"))
+            .Build();
+
+        hubConnection.On<String>("ReceiveMessage", message =>
+        {
+            Console.WriteLine(message);
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        await hubConnection.SendAsync("Subscribe", Figi);
     }
 
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using DTO;
 using DTO.MarketBrokerObjects;
@@ -28,6 +29,23 @@ namespace OperationService.Controllers
                     Token = token,
                     Depth = depth,
                     Type = instrument
+                });
+        }
+
+        [Route("instrument/get")]
+        [HttpGet]
+        public async void SubscribeOnCandle(
+            [FromServices] ICommand<SubscribeOnCandleRequest, OperationResult> command,
+            [FromQuery] BrokerType broker,
+            [FromQuery] string token,
+            [FromQuery] string Figi)
+        {
+            await command.Execute(
+                new SubscribeOnCandleRequest()
+                {
+                    Broker = broker,
+                    Token = token,
+                    Figi = Figi
                 });
         }
     }
