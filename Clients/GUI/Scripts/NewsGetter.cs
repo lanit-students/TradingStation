@@ -15,7 +15,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<GetNewsRequest, IEnumerable<NewsItem>>(url, RestRequestType.GET);
 
-            return await client.Execute();
+            return await client.Execute(newsRequest);
         }
     }
 }

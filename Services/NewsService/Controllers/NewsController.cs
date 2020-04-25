@@ -5,6 +5,7 @@ using FluentValidation;
 using DTO.NewsRequests.Currency;
 using DTO;
 using NewsService.Interfaces;
+using DTO.RestRequests;
 
 namespace NewsService.Controllers
 {
@@ -36,9 +37,9 @@ namespace NewsService.Controllers
 
         [Route("getnews")]
         [HttpGet]
-        public IEnumerable<NewsItem> GetNews([FromServices] IGetNewsCommand command, [FromHeader] string feedUrl)
+        public IEnumerable<NewsItem> GetNews([FromServices] IGetNewsCommand command, [FromBody] GetNewsRequest request)
         {
-            return command.Execute(feedUrl);
+            return command.Execute(request.FeedUrl);
         }
     }
 }

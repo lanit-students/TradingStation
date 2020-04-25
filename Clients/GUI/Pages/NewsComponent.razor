@@ -1,6 +1,6 @@
 ﻿@page  "/NewsComponent"
 
-<div class="container">
+@*<div class="container">
     <div class="row">
         <div class="col-md-8">
             @foreach (NewsItem newsItem in news)
@@ -33,11 +33,37 @@
             }
         </div>
     </div>
-</div>
+</div>*@
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="wp-block property list">
+                    <div class="wp-block-body">
+                        <div class="wp-block-content">
+                            <small>
+                                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 11.01.2015
+                            </small>
+                            <h4 class="content-title">Lorem ipsum</h4>
+                            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisg elitm Ut tincidunt purus iaculis ipsum dctum non dtum quam.</p>
+                            <span class="pull-left">
+                                <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>   Bootstrap 3
+                            </span>
+                            <span class="pull-right">
+                                <span class="capacity">
+                                    <i class="fa fa-user"></i> Имя Фамилия
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @code {
     private IEnumerable<NewsItem> news;
-    private string url;
+    private string url = "https://finance.rambler.ru/rss/business/";
     private string errorMessage = "";
 
     public async Task GetNews()
@@ -50,6 +76,10 @@
             };
 
             news = NewsGetter.GetNews(request).Result;
+            foreach(NewsItem nws in news)
+            {
+                Console.WriteLine(nws.Description);
+            }
         }
         catch(BadRequestException)
         {
