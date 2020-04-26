@@ -23,7 +23,6 @@
                     <th scope="col">Type</th>
                     <th scope="col">Currency</th>
                     <th scope="col">Lot</th>
-                    <th scope="col">Started Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,23 +32,22 @@
                     <td>@instrument.Type</td>
                     <td>@instrument.Currency</td>
                     <td>@instrument.Lot</td>
-                    <td>@instrument.Price</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="form-row">
             <div class="form-group col-md-2">
-                <label for="countInPortfolio">Count in portfolio</label>
-                <input type="number" class="form-control" id="countInPortfolio" value=@countInPortfolio>
+                <label for="lotsInPortfolio">Lots in portfolio</label>
+                <input type="number" class="form-control" id="lotsInPortfolio" value=@lotsInPortfolio>
             </div>
             <div class="form-group col-md-2">
-                <label for="countToTrade">Count to trade</label>
-                <input type="number" class="form-control" id="countToTrade" value=@countToTrade>
+                <label for="lotsToTrade">Lots to trade</label>
+                <input type="number" class="form-control" id="lotsToTrade" value=@lotsToTrade>
             </div>
             <div class="form-group col-md-2">
-                <label for="limitPrice">Limit price</label>
-                <input type="number" class="form-control" id="limitPrice" value=@limitPrice>
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" value=@price>
             </div>
             <div class="form-group col-md-3">
                 <label for="sellButton"> Sell instrument </label>
@@ -73,13 +71,12 @@
     public string Figi { get; set; }
 
     private string token = "";
-    private int countInPortfolio = 1;
-    private int countToTrade = 1;
-    private decimal limitPrice = 100;
+    private int lotsInPortfolio = 1;
+    private int lotsToTrade = 1;
+    private decimal price = 100;
     private bool errorOccured = false;
     private bool isInstrumentLoading = false;
     private Instrument instrument;
-    private decimal startedPrice = 0;
     private string errorMessage = "";
 
 
@@ -91,6 +88,22 @@
     private void Buy()
     {
 
+    }
+
+    private void SendTradeRequest(OperationType operation)
+    {
+        var request = new TradeRequest()
+        {
+            Broker = BrokerType.TinkoffBroker,
+            Token = token,
+            Operation = operation,
+            Figi = instrument.Figi,
+            Lots = lotsToTrade,
+            Price = price
+        };
+
+        BrokerManager.Trade(request);
+        
     }
 
     private async Task SetToken()

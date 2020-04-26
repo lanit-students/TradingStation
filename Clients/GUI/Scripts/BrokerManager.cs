@@ -1,5 +1,6 @@
 ﻿using DTO;
 using DTO.MarketBrokerObjects;
+using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
 using System.Collections.Generic;
@@ -27,6 +28,15 @@ namespace GUI.Scripts
             var client = new RestClient<object, IEnumerable<Instrument>>(url, RestRequestType.GET, queryParams: queryParams);
 
             return await client.Execute();
+        }
+
+        public static async Task<bool> Trade (TradeRequest request)
+        {
+            const string url = "https://localhost:5009/operations/trade";
+
+            var client = new RestClient<object, bool>(url, RestRequestType.POST);
+
+            return await client.Execute(request);
         }
     }
 }

@@ -5,6 +5,7 @@ using DTO.MarketBrokerObjects;
 using System.Threading.Tasks;
 using Interfaces;
 using DTO.BrokerRequests;
+using DTO.RestRequests;
 
 namespace OperationService.Controllers
 {
@@ -28,6 +29,15 @@ namespace OperationService.Controllers
                     Token = token,
                     Type = instrument
                 });
+        }
+
+        [Route("trade")]
+        [HttpPost]
+        public async Task <bool> Trade (
+            [FromServices] ICommand<TradeRequest, bool> command,
+            [FromBody] TradeRequest request)
+        {
+            return await command.Execute(request);
         }
     }
 }

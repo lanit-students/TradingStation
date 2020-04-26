@@ -1,5 +1,6 @@
 using DTO;
 using DTO.BrokerRequests;
+using DTO.RestRequests;
 using GreenPipes;
 using Interfaces;
 using Kernel;
@@ -65,6 +66,7 @@ namespace OperationService
             services.AddMassTransitHostedService();
 
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
+            services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
 
             services.AddLogging(log =>
             {
