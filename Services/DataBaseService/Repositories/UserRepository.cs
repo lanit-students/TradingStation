@@ -160,9 +160,9 @@ namespace DataBaseService.Repositories
                 throw exception;
             }
         }
-        public void ConfirmUser(Guid userId)
+        public void ConfirmUser(string Email)
         {
-            var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.UserId == userId);
+            var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == Email);
 
             if (dbUserCredential is null)
             {

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using UserService.Interfaces;
 using UserService.Utils;
 using Microsoft.Extensions.Logging;
+using System.Net.Mail;
+using System.Net;
 
 namespace UserService.Controllers
 {
@@ -15,11 +17,6 @@ namespace UserService.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UserManager<UserConfirmation> userManager;
-        public UsersController(UserManager<UserConfirmation> userManager)
-        {
-            this.userManager = userManager;
-        }
         private readonly ILogger<UsersController> logger;
 
         public UsersController([FromServices] ILogger<UsersController> logger)
@@ -31,29 +28,40 @@ namespace UserService.Controllers
         [HttpPost]
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
         {
+            logger.LogInformation("Create user request received from GUI to UserService");
             var result = await command.Execute(request);
 
-            var userConfirm = new UserConfirmation
+            if (result)
             {
-                Id = result.Id.ToString(),
-                Email = result.Email
-            };
-
-            // генераци€ токена дл€ пользовател€
-            var code = await userManager.GenerateEmailConfirmationTokenAsync(userConfirm);
-            var callbackUrl = Url.Action(
-                "ConfirmEmail",
-                "Account",
-                new { userId = userConfirm.Id, code = code },
-                protocol: HttpContext.Request.Scheme);
-            var emailSender = new EmailSender();
-            await emailSender.SendEmailAsync(userConfirm.Email, "Confirm your account",
-                $"ѕодтвердите регистрацию, перейд€ по ссылке: <a href='{callbackUrl}'>link</a>");
-
+                var email = request.Email;
+                // отправитель - устанавливаем адрес и отображаемое в письме им€
+                MailAddress from = new MailAddress("traidplatform@mail.ru", "Trading Station");
+                // кому отправл€ем
+                MailAddress to = new MailAddress(request.Email);
+                // создаем объект сообщени€
+                MailMessage m = new MailMessage(from, to);
+                // тема письма
+                m.Subject = "Registration confirmation";
+                // текст письма
+                m.Body = $"Please, click this link https://localhost:5011/users/confirm?secretToken={email}";
+                // письмо представл€ет код html
+                m.IsBodyHtml = false;
+                // адрес smtp-сервера и порт, с которого будем отправл€ть письмо
+                SmtpClient smtp = new SmtpClient("smtp.mail.ru", 25);
+                // логин и пароль
+                smtp.Credentials = new NetworkCredential("traidplatform@mail.ru", "t123plat");
+                smtp.EnableSsl = true;
+                smtp.Send(m);
+            }
             return true;
-            //return Content("ƒл€ завершени€ регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
-            logger.LogInformation("Create user request received from GUI to UserService");
-            return await command.Execute(request);
+        }
+
+        [Route("confirm")]
+        [HttpGet]
+        public async Task<bool> ConfirmUser([FromServices] IConfirmUserCommand command, [FromQuery] string secretToken)
+        {
+            logger.LogInformation("Confirm user request received from Email to UserService");
+            return await command.Execute(secretToken);
         }
 
         [Route("edit")]

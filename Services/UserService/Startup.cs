@@ -66,13 +66,11 @@ namespace UserService
 
             services.AddControllers();
 
-            services.AddIdentity<UserConfirmation, IdentityRole>()
-                .AddDefaultTokenProviders();
-            //services.AddControllersWithViews();
-
             services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
+
+            services.AddTransient<IConfirmUserCommand, ConfirmUserCommand>();
 
             services.AddTransient<IGetUserByIdCommand, GetUserByIdCommand>();
 
@@ -92,15 +90,16 @@ namespace UserService
                 x.AddRequestClient<InternalCreateUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalGetUserByIdRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalEditUserInfoRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<InternalConfirmUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalDeleteUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
             });
 
             services.AddMassTransitHostedService();
 
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
+            //services.AddLogging(log =>
+            //{
+            //    log.ClearProviders();
+            //});
 
             services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
             {

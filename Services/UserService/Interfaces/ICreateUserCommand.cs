@@ -6,6 +6,6 @@ namespace UserService.Interfaces
 {
     public interface ICreateUserCommand
     {
-        Task<User> Execute(CreateUserRequest request);
+        Task<bool> Execute(CreateUserRequest request);
     }
 }

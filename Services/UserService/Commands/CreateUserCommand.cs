@@ -30,7 +30,7 @@ namespace UserService.Commands
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        public async Task<User> Execute(CreateUserRequest request)
+        public async Task<bool> Execute(CreateUserRequest request)
         {
             validator.ValidateAndThrow(request);
 
@@ -79,7 +79,7 @@ namespace UserService.Commands
                 throw new BadRequestException("Unable to create user");
             }
 
-            return user;
+            return createUserResult;
         }
     }
 }

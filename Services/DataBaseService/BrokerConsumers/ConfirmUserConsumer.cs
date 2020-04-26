@@ -18,7 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private OperationResult ConfirmUser(InternalConfirmUserRequest request)
         {
-            userRepository.ConfirmUser(request.UserId);
+            userRepository.ConfirmUser(request.UserEmail);
 
             return new OperationResult
             {
