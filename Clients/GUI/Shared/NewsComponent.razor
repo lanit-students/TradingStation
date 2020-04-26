@@ -1,0 +1,107 @@
+﻿@page  "/NewsComponent"
+
+    <div class="container">
+
+        <h1>@newsEconomics[0].Category</h1>
+        <div class="row row-margin-bottom">
+            @for (int i = 0; i < 2; ++i)
+            {
+                var newsItem = newsEconomics[i];
+                <div class="col-md-6">
+                    <div class="lib-panel">
+                        <div class="row box-shadow">
+                            <div class="lib-row lib-header">
+                                <a href="@newsItem.Link">@newsItem.Title</a>
+                                <div class="lib-header-seperator"></div>
+                            </div>
+                            <div class="lib-row lib-desc">
+                                <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
+                                <p>@newsItem.Description</p>
+                                <p>@newsItem.Author</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <h1>@newsMarkets[0].Category</h1>
+        <div class="row row-margin-bottom">
+            @for (int i = 0; i < 2; ++i)
+            {
+                var newsItem = newsMarkets[i];
+                <div class="col-md-6">
+                    <div class="lib-panel">
+                        <div class="row box-shadow">
+                            <div class="lib-row lib-header">
+                                <a href="@newsItem.Link">@newsItem.Title</a>
+                                <div class="lib-header-seperator"></div>
+                            </div>
+                            <div class="lib-row lib-desc">
+                                <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
+                                <p>@newsItem.Description</p>
+                                <p>@newsItem.Author</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <h1>@newsBusiness[0].Category</h1>
+        <div class="row row-margin-bottom">
+            @for (int i = 0; i < 2; ++i)
+            {
+                var newsItem = newsBusiness[i];
+                <div class="col-md-6">
+                    <div class="lib-panel">
+                        <div class="row box-shadow">
+                            <div class="lib-row lib-header">
+                                <a href="@newsItem.Link">@newsItem.Title</a>
+                                <div class="lib-header-seperator"></div>
+                            </div>
+                            <div class="lib-row lib-desc">
+                                <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
+                                <p>@newsItem.Description</p>
+                                <p>@newsItem.Author</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+@code {
+    private List<NewsItem> newsBusiness;
+    private List<NewsItem> newsEconomics;
+    private List<NewsItem> newsMarkets;
+    private string urlBusiness = "https://finance.rambler.ru/rss/business/";
+    private string urlEconomics = "https://finance.rambler.ru/rss/economics/";
+    private string urlMarkets = "https://finance.rambler.ru/rss/markets/";
+    private string errorMessage = "";
+
+    public async Task GetNews()
+    {
+        try
+        {
+            newsBusiness = NewsGetter.GetNews(urlBusiness).ToList();
+            newsEconomics = NewsGetter.GetNews(urlEconomics).ToList();
+            newsMarkets = NewsGetter.GetNews(urlMarkets).ToList();
+        }
+        catch(BadRequestException)
+        {
+            errorMessage = "Something went wrong";
+        }
+        catch(NotFoundException)
+        {
+            errorMessage = "Can`t fing this news";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        GetNews();
+    }
+
+}
