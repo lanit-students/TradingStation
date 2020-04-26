@@ -9,7 +9,7 @@ namespace GUI.Scripts
 {
     public static class NewsGetter
     {
-        public static async Task<IEnumerable<NewsItem>> GetNews(string feedUrl)
+        public static IEnumerable<NewsItem> GetNews(string feedUrl)
         {
             const string url = "https://localhost:5007/news/getnews";
 
@@ -20,7 +20,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<string, IEnumerable<NewsItem>>(url, RestRequestType.GET, queryParams: queryParams);
 
-            return await client.Execute();
+            return client.Execute();
         }
     }
 }
