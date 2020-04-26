@@ -1,75 +1,81 @@
 ﻿@page  "/NewsComponent"
 
     <div class="container">
-
-        <h1>@newsEconomics[0].Category</h1>
-        <div class="row row-margin-bottom">
-            @for (int i = 0; i < 2; ++i)
-            {
-                var newsItem = newsEconomics[i];
-                <div class="col-md-6">
-                    <div class="lib-panel">
-                        <div class="row box-shadow">
-                            <div class="lib-row lib-header">
-                                <a href="@newsItem.Link">@newsItem.Title</a>
-                                <div class="lib-header-seperator"></div>
-                            </div>
-                            <div class="lib-row lib-desc">
-                                <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
-                                <p>@newsItem.Description</p>
-                                <p>@newsItem.Author</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-
-        <h1>@newsMarkets[0].Category</h1>
-        <div class="row row-margin-bottom">
-            @for (int i = 0; i < 2; ++i)
-            {
-                var newsItem = newsMarkets[i];
-                <div class="col-md-6">
-                    <div class="lib-panel">
-                        <div class="row box-shadow">
-                            <div class="lib-row lib-header">
-                                <a href="@newsItem.Link">@newsItem.Title</a>
-                                <div class="lib-header-seperator"></div>
-                            </div>
-                            <div class="lib-row lib-desc">
-                                <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
-                                <p>@newsItem.Description</p>
-                                <p>@newsItem.Author</p>
+        @if (errorMessage == "")
+        {
+            <h1>@newsEconomics[0].Category</h1>
+            <div class="row row-margin-bottom">
+                @for (int i = 0; i < 2; ++i)
+                {
+                    var newsItem = newsEconomics[i];
+                    <div class="col-md-6">
+                        <div class="lib-panel">
+                            <div class="row box-shadow">
+                                <div class="lib-row lib-header">
+                                    <a href="@newsItem.Link">@newsItem.Title</a>
+                                    <div class="lib-header-seperator"></div>
+                                </div>
+                                <div class="lib-row lib-desc">
+                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
+                                    <p>@newsItem.Description</p>
+                                    <p>@newsItem.Author</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
 
-        <h1>@newsBusiness[0].Category</h1>
-        <div class="row row-margin-bottom">
-            @for (int i = 0; i < 2; ++i)
-            {
-                var newsItem = newsBusiness[i];
-                <div class="col-md-6">
-                    <div class="lib-panel">
-                        <div class="row box-shadow">
-                            <div class="lib-row lib-header">
-                                <a href="@newsItem.Link">@newsItem.Title</a>
-                                <div class="lib-header-seperator"></div>
-                            </div>
-                            <div class="lib-row lib-desc">
-                                <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
-                                <p>@newsItem.Description</p>
-                                <p>@newsItem.Author</p>
+            <h1>@newsMarkets[2].Category</h1>
+            <div class="row row-margin-bottom">
+                @for (int i = 1; i < 3; ++i)
+                {
+                    var newsItem = newsMarkets[i];
+                    <div class="col-md-6">
+                        <div class="lib-panel">
+                            <div class="row box-shadow">
+                                <div class="lib-row lib-header">
+                                    <a href="@newsItem.Link">@newsItem.Title</a>
+                                    <div class="lib-header-seperator"></div>
+                                </div>
+                                <div class="lib-row lib-desc">
+                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
+                                    <p>@newsItem.Description</p>
+                                    <p>@newsItem.Author</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+
+            <h1>@newsBusiness[0].Category</h1>
+            <div class="row row-margin-bottom">
+                @for (int i = 0; i < 2; ++i)
+                {
+                    var newsItem = newsBusiness[i];
+                    <div class="col-md-6">
+                        <div class="lib-panel">
+                            <div class="row box-shadow">
+                                <div class="lib-row lib-header">
+                                    <a href="@newsItem.Link">@newsItem.Title</a>
+                                    <div class="lib-header-seperator"></div>
+                                </div>
+                                <div class="lib-row lib-desc">
+                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
+                                    <p>@newsItem.Description</p>
+                                    <p>@newsItem.Author</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>@errorMessage</p>
+        }
     </div>
 
 @code {
@@ -91,11 +97,7 @@
         }
         catch(BadRequestException)
         {
-            errorMessage = "Something went wrong";
-        }
-        catch(NotFoundException)
-        {
-            errorMessage = "Can`t fing this news";
+            errorMessage = "Unfortunately, the news is currently unavailable. Please try again later";
         }
     }
 
