@@ -14,11 +14,9 @@ namespace TinkoffIntegrationLib.Adapters
             {
                 candlePayload = ((CandleResponse) candleResponse).Payload;
             }
-            //TODO add logger
             catch (Exception e)
             {
                 candlePayload = new CandlePayload(0, 0, 0, 0, 0, DateTime.Now, CandleInterval.Minute, "0");
-                Console.WriteLine(e);
             }
         }
 
