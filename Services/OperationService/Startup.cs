@@ -62,6 +62,7 @@ namespace OperationService
                 x.AddBus(provider => CreateBus(provider));
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
                 x.AddRequestClient<InternalTradeRequest>(new Uri("rabbitmq://localhost/BrokerService"));
+                x.AddRequestClient<InternaTransactionRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
             });
 
             services.AddMassTransitHostedService();

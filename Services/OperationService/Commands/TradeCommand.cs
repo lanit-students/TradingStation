@@ -31,22 +31,38 @@ namespace OperationService.Commands
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
+        private async Task<bool> SaveTransaction(InternaTransactionRequest request)
+        {
+            var response = await client.GetResponse<OperationResult<bool>>(request);
+
+            return OperationResultHandler.HandleResponse(response.Message);
+        }
+
         public async Task<bool> Execute(TradeRequest request)
         {
-            var internalRequest = new InternalTradeRequest()
+            var tradeRequest = new InternalTradeRequest()
             {
-                Id = Guid.NewGuid(),
                 UserId = request.UserId,             
                 Broker = request.Broker,
                 Token = request.Token,
                 Operation = request.Operation,
                 Figi = request.Figi,
                 Lots = request.Lots,
-                Price = request.Price,
-                
-                
+                Price = request.Price
             };
-            return await Trade(internalRequest);
+            var tradeResult = await Trade(tradeRequest);
+            bool saveTransactionResult = false;
+            if (tradeResult == true)
+            {
+                var transactionRequest = new InternaTransactionRequest()
+                {
+                    Id = Guid.NewGuid(),
+                    Trade = tradeRequest
+                };
+                saveTransactionResult = await SaveTransaction(transactionRequest);
+            }
+                
+            return saveTransactionResult;
         }
     }
 }

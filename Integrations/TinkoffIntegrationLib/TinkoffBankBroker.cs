@@ -20,6 +20,9 @@ namespace TinkoffIntegrationLib
             {
                 var conn = ConnectionFactory.GetSandboxConnection(token);
                 context = conn.Context;
+                context.SetCurrencyBalanceAsync(Currency.Rub, 100000000);
+                context.SetCurrencyBalanceAsync(Currency.Usd, 100000000);
+                context.SetCurrencyBalanceAsync(Currency.Eur, 100000000);
             }
             catch (Exception)
             {
@@ -27,14 +30,6 @@ namespace TinkoffIntegrationLib
             }
         }
 
-        /*
-         * After creating the broker, if you want receive response to request
-         * with another depth, you must change depth here and make
-         * a request again
-        */
-        /// <summary>
-        /// Depth of market glass
-        /// </summary>
         public int Depth { get; set; }
 
         public IEnumerable<Instrument> GetInstruments(DTO.MarketBrokerObjects.InstrumentType type)
@@ -70,16 +65,21 @@ namespace TinkoffIntegrationLib
 
         public bool Trade(InternalTradeRequest request)
         {
-            context.SetCurrencyBalanceAsync(Currency.Rub, 100000000);
-            context.SetCurrencyBalanceAsync(Currency.Usd, 100000000);
-            context.SetCurrencyBalanceAsync(Currency.Eur, 100000000);
-
-            var operation = request.Operation == DTO.MarketBrokerObjects.OperationType.Buy ? OperationType.Buy : OperationType.Sell;
-            var order = new LimitOrder(request.Figi, request.Lots, operation, request.Price);
-            var result = context.PlaceLimitOrderAsync(order).Result;
-            if (result.Status == OrderStatus.Fill)
+            try
+            {
+                var operation = request.Operation == DTO.MarketBrokerObjects.OperationType.Buy ? OperationType.Buy : OperationType.Sell;
+                var order = new LimitOrder(request.Figi, request.Lots, operation, request.Price);
+                var result = context.PlaceLimitOrderAsync(order).Result;
+                request.DateTime = DateTime.Now;
+                request.IsSuccess = result.Status == OrderStatus.Fill ? true : false;
                 return true;
-            return false;
+            }
+            catch
+            {
+                throw new BadRequestException();
+            }
+
+            
         }
     }
 }
