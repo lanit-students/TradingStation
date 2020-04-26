@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTO;
+using DTO.BrokerRequests;
 using Interfaces;
 using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
@@ -11,7 +12,7 @@ namespace TinkoffIntegrationLib
 {
     public class TinkoffBankBroker : IBroker
     {
-        private readonly Context context;
+        private readonly SandboxContext context;
 
         public TinkoffBankBroker(string token)
         {
@@ -65,6 +66,20 @@ namespace TinkoffIntegrationLib
                 });
 
             return instruments;
+        }
+
+        public bool Trade(InternalTradeRequest request)
+        {
+            context.SetCurrencyBalanceAsync(Currency.Rub, 100000000);
+            context.SetCurrencyBalanceAsync(Currency.Usd, 100000000);
+            context.SetCurrencyBalanceAsync(Currency.Eur, 100000000);
+
+            var operation = request.Operation == DTO.MarketBrokerObjects.OperationType.Buy ? OperationType.Buy : OperationType.Sell;
+            var order = new LimitOrder(request.Figi, request.Lots, operation, request.Price);
+            var result = context.PlaceLimitOrderAsync(order).Result;
+            if (result.Status == OrderStatus.Fill)
+                return true;
+            return false;
         }
     }
 }

@@ -35,7 +35,8 @@ namespace OperationService.Controllers
         [HttpPost]
         public async Task <bool> Trade (
             [FromServices] ICommand<TradeRequest, bool> command,
-            [FromBody] TradeRequest request)
+            [FromBody] TradeRequest request
+            )
         {
             return await command.Execute(request);
         }
