@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
 using DTO;
+using DTO.BrokerRequests;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
@@ -7,9 +10,17 @@ namespace OperationService.Hubs
 {
     public class CandleHub : Hub
     {
-        public async Task Subscribe(string Figi)
+        private readonly IRequestClient<SubscribeOnCandleRequest> client;
+
+        public CandleHub([FromServices] IRequestClient<SubscribeOnCandleRequest> client)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, Figi);
+            this.client = client;
+        }
+        public async Task Subscribe(SubscribeOnCandleRequest request)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId,request.Figi);
+            await client.GetResponse<OperationResult>(request);
+
         }
 
         public async Task SendMessage(string Figi, Candle candle)

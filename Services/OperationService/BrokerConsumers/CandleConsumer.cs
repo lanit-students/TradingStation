@@ -2,22 +2,23 @@
 using DTO;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using OperationService.Hubs;
 
 namespace OperationService.BrokerConsumers
 {
     public class CandleConsumer : IConsumer<Candle>
     {
-        private readonly CandleHub candleHub;
+        private readonly IHubContext<CandleHub> hubContext;
 
-        public CandleConsumer([FromServices] CandleHub candleHub)
+        public CandleConsumer([FromServices] IHubContext<CandleHub> hubContext)
         {
-            this.candleHub = candleHub;
+            this.hubContext = hubContext;
         }
 
-        public Task Consume(ConsumeContext<Candle> context)
+        public async Task Consume(ConsumeContext<Candle> context)
         {
-            return candleHub.SendMessage(context.Message.Figi, context.Message);
+            await hubContext.Clients.Group(context.Message.Figi).SendCoreAsync("ReceiveMessage", new[] {context.Message});
         }
     }
 }

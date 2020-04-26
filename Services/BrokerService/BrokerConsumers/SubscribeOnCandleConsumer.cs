@@ -14,11 +14,10 @@ namespace BrokerService.BrokerConsumers
     public class SubscribeOnCandleConsumer : IConsumer<SubscribeOnCandleRequest>
     {
         private readonly ISendEndpoint endpoint;
-
         public SubscribeOnCandleConsumer([FromServices] IBus bus)
         {
-            var uri = new Uri("rabbitmq://localhost/DatabaseService_Logs");
-            var endpont = bus.GetSendEndpoint(uri);
+            var uri = new Uri("rabbitmq://localhost/OperationService");
+            this.endpoint = bus.GetSendEndpoint(uri).Result;
         }
 
         public OperationResult SubscribeOnCandle(SubscribeOnCandleRequest request)

@@ -1,6 +1,7 @@
 ﻿@page "/instruments"
 @inject IModalService Modal
 @inject ISessionStorageService Storage
+@inject NavigationManager Navigation
 @attribute [Authorize]
 
 <div class="container">
@@ -54,10 +55,10 @@
                     @foreach (var instrument in marketInstruments.Skip(pageIndex * pageSize).Take(pageSize))
                     {
                         <tr>
-                            <td>@instrument.Figi</td>
-                            <td>@instrument.Name</td>
-                            <td>@instrument.Currency</td>
-                            <td>@instrument.Lot</td>
+                            <td @onclick="@(() => Navigation.NavigateTo($"/instrument/{instrument.Figi}"))">@instrument.Figi</td>
+                            <td @onclick="@(() => Navigation.NavigateTo($"/instrument/{instrument.Figi}"))">@instrument.Name</td>
+                            <td @onclick="@(() => Navigation.NavigateTo($"/instrument/{instrument.Figi}"))">@instrument.Currency</td>
+                            <td @onclick="@(() => Navigation.NavigateTo($"/instrument/{instrument.Figi}"))">@instrument.Lot</td>
                             <td @onclick="@(() => SaveInstrument(instrument))">
                                 Add to portfolio
                             </td>

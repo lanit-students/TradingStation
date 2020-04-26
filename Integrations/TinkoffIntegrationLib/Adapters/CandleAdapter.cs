@@ -1,34 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using DTO;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffIntegrationLib.Adapters
 {
-    class CandleAdapter : Candle
+    internal class CandleAdapter : Candle
     {
-        private readonly CandlePayload candleResponse;
+        private readonly CandlePayload candlePayload;
 
-        public CandleAdapter(CandlePayload candleResponse)
+        public CandleAdapter(StreamingResponse candleResponse)
         {
-            this.candleResponse = candleResponse;
+            try
+            {
+                candlePayload = ((CandleResponse) candleResponse).Payload;
+            }
+            //TODO add logger
+            catch (Exception e)
+            {
+                candlePayload = new CandlePayload(0, 0, 0, 0, 0, DateTime.Now, CandleInterval.Minute, "0");
+                Console.WriteLine(e);
+            }
         }
 
-        public CandleAdapter() { }
+        public override decimal Open => candlePayload.Open;
 
-        public decimal Open => candleResponse.Open;
+        public override decimal Close => candlePayload.Close;
 
-        public decimal Close => candleResponse.Close;
+        public override decimal High => candlePayload.High;
 
-        public decimal High => candleResponse.High;
+        public override decimal Low => candlePayload.Low;
 
-        public decimal Low => candleResponse.Low;
+        public override decimal Volume => candlePayload.Volume;
 
-        public decimal Volume => candleResponse.Volume;
+        public override DateTime Time => candlePayload.Time;
 
-        public DateTime Time => candleResponse.Time;
-
-        public string Figi => candleResponse.Figi;
+        public override string Figi => candlePayload.Figi;
     }
 }

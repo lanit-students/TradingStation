@@ -1,15 +1,14 @@
-﻿function drawChart(e, data) {
+﻿var chart;
+function drawChart(e, name) {
     var options = {
-        series: [{
-            data: data
-        }],
         chart: {
             type: 'candlestick',
             height: 350
         },
+        series: [],
         title: {
-            text: 'CandleStick Chart',
-            align: 'left'
+            text: name,
+            align: 'center'
         },
         xaxis: {
             type: 'datetime'
@@ -18,10 +17,37 @@
             tooltip: {
                 enabled: true
             }
+        },
+        noData: {
+            text: 'Loading...'
+        },
+        legend: {
+            show: false
         }
     };
 
-    var chart = new ApexCharts(document.querySelector("#myChart"), options);
+    chart = new ApexCharts(document.querySelector("#myChart"), options);
     chart.width = 700;
     chart.render();
 };
+
+function updateChart(data) {
+    console.log(data);
+    chart.appendSeries({
+        data: [
+            {
+                name: 'data',
+                x: data.time,
+                y: [data.open, data.high, data.low, data.close]
+            }
+        ]
+    });
+}
+
+function updateOptions(data) {
+    chart.updateOptions({
+        noData: {
+            text: data
+        }
+    });
+}

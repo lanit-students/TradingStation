@@ -59,6 +59,7 @@ namespace BrokerService
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
+             
                 x.AddConsumer<GetInstrumentsConsumer>();
                 x.AddConsumer<SubscribeOnCandleConsumer>();
             });

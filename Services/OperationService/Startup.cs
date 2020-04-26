@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using OperationService.Commands;
 using System;
 using System.Collections.Generic;
+using OperationService.BrokerConsumers;
 using OperationService.Hubs;
 
 namespace OperationService
@@ -46,6 +47,8 @@ namespace OperationService
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<CandleConsumer>(serviceProvider);
                 });
             });
         }
@@ -59,6 +62,9 @@ namespace OperationService
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
+
+                x.AddConsumer<CandleConsumer>();
+
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
                 x.AddRequestClient<SubscribeOnCandleRequest>(new Uri("rabbitmq://localhost/BrokerService"));
             });

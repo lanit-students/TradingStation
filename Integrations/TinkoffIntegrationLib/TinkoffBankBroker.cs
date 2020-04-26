@@ -87,16 +87,7 @@ namespace TinkoffIntegrationLib
 
         private void onStreamingEventReceived(object sender, StreamingEventReceivedEventArgs args)
         {
-            if (args.Response.Event.Equals("Error"))
-            {
-                sendCandle(new CandleAdapter{isValid = false});
-            }
-            else
-            {
-                var response = (CandleResponse) args.Response;
-
-                sendCandle(new CandleAdapter(response.Payload));
-            }
+            sendCandle(new CandleAdapter(args.Response));
         }
     }
 }
