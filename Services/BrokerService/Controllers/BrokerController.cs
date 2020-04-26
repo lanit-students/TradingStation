@@ -2,45 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BrokerService.Interfaces;
+using DTO;
+using DTO.MarketBrokerObjects;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BrokerService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class BrokerController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<controller>
+        [Route("getcurrency")]
         [HttpPost]
-        public void Post([FromBody]string value)
+        public Instrument GetCurrency(
+            [FromServices] IGetCurrencyCommand command,
+            [FromBody] int depth,
+            [FromBody] BrokerType broker,
+            [FromBody] string token,
+            [FromBody] string currency)
         {
+            return command.Execute(broker, token, depth, currency);
         }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [Route("getallcurrencies")]
+        [HttpPost]
+        public IEnumerable<Instrument> GetAllCurrencies(
+            [FromServices] IGetAllCurrenciesCommand command, 
+            [FromBody] int depth,
+            [FromBody] BrokerType broker,
+            [FromBody] string token)
         {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return command.Execute(broker, token, depth);       
         }
     }
 }
