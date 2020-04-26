@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DTO;
+using DTO.MarketBrokerObjects;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace BrokerService.Interfaces
 {
-    public class IGetAllCurrenciesCommand
+    public interface IGetAllCurrenciesCommand
     {
+        IEnumerable<Instrument> Execute(BrokerType broker, string token, int depth);
     }
 }
