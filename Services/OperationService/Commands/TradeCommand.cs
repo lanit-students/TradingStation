@@ -14,52 +14,56 @@ namespace OperationService.Commands
 {
     public class TradeCommand : ICommand<TradeRequest, bool>
     {
-        private readonly IRequestClient<InternalTradeRequest> client;
+        private readonly IRequestClient<InternalTradeRequest> tradeClient;
+        private readonly IRequestClient<Transaction> saveTransactionClient;
         //private readonly ILogger<TradeCommand> logger;
 
         public TradeCommand(
-            [FromServices] IRequestClient<InternalTradeRequest> client)
+            [FromServices] IRequestClient<InternalTradeRequest> tradeClient,
+            [FromServices] IRequestClient<Transaction> saveTransactionClient
+            )
         {
-            this.client = client;
+            this.tradeClient = tradeClient;
+            this.saveTransactionClient = saveTransactionClient;
             //this.logger = logger;
         }
 
         private async Task<bool> Trade(InternalTradeRequest request)
         {
-            var response = await client.GetResponse<OperationResult<bool>>(request);
+            var response = await tradeClient.GetResponse<OperationResult<bool>>(request);
 
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        private async Task<bool> SaveTransaction(InternaTransactionRequest request)
+        private async Task<bool> SaveTransaction(Transaction transaction)
         {
-            var response = await client.GetResponse<OperationResult<bool>>(request);
+            var response = await saveTransactionClient.GetResponse<OperationResult<bool>>(transaction);
 
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
         public async Task<bool> Execute(TradeRequest request)
         {
-            var tradeRequest = new InternalTradeRequest()
+            var transaction = new Transaction()
             {
-                UserId = request.UserId,             
+                Id = Guid.NewGuid(),
                 Broker = request.Broker,
-                Token = request.Token,
+                UserId = request.UserId,
                 Operation = request.Operation,
                 Figi = request.Figi,
                 Lots = request.Lots,
                 Price = request.Price
             };
+            var tradeRequest = new InternalTradeRequest()
+            {
+                Token = request.Token,
+                Transaction = transaction
+            };
             var tradeResult = await Trade(tradeRequest);
             bool saveTransactionResult = false;
             if (tradeResult == true)
             {
-                var transactionRequest = new InternaTransactionRequest()
-                {
-                    Id = Guid.NewGuid(),
-                    Trade = tradeRequest
-                };
-                saveTransactionResult = await SaveTransaction(transactionRequest);
+                saveTransactionResult = await SaveTransaction(transaction);
             }
                 
             return saveTransactionResult;

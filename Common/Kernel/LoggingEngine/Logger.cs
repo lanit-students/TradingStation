@@ -17,13 +17,26 @@ namespace Kernel.LoggingEngine
 
         private async void AddLog(LogMessage log)
         {
+            var variable = false;
+            if (log.ServiceName == "Database_Service" || log.ServiceName == "Operation_Service"
+                || log.ServiceName == "Broker_Service")
+                variable = true;
             var bus = provider.GetRequiredService<IBus>();
 
             var uri = new Uri("rabbitmq://localhost/DatabaseService_Logs");
 
-            var endpont = await bus.GetSendEndpoint(uri);
+            var endpont =  await bus.GetSendEndpoint(uri);
             await endpont.Send(log);
         }
+        //private async void AddLog(LogMessage log)
+        //{
+        //    var bus = provider.GetRequiredService<IBus>();
+
+        //    var uri = new Uri("rabbitmq://localhost/DatabaseService_Logs");
+
+        //    var endpont = await bus.GetSendEndpoint(uri);
+        //    await endpont.Send(log);
+        //}
 
         public IDisposable BeginScope<TState>(TState state)
         {
@@ -49,7 +62,10 @@ namespace Kernel.LoggingEngine
                 ServiceName = Assembly.GetEntryAssembly().GetName().Name,
                 Time = DateTime.UtcNow
             };
-
+            var variable = false;
+            if (message.ServiceName == "Database_Service" || message.ServiceName == "Operation_Service" 
+                || message.ServiceName == "Broker_Service")
+                variable = true;
             AddLog(message);
         }
     }

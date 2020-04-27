@@ -62,7 +62,7 @@ namespace OperationService
                 x.AddBus(provider => CreateBus(provider));
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
                 x.AddRequestClient<InternalTradeRequest>(new Uri("rabbitmq://localhost/BrokerService"));
-                x.AddRequestClient<InternaTransactionRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
+                x.AddRequestClient<Transaction>(new Uri("rabbitmq://localhost/DatabaseService"));
             });
 
             services.AddMassTransitHostedService();
@@ -70,15 +70,15 @@ namespace OperationService
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
             services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
 
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
+            //services.AddLogging(log =>
+            //{
+            //    log.ClearProviders();
+            //});
 
-            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
-            {
-                return new LoggerProvider(provider);
-            });
+            //services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            //{
+            //    return new LoggerProvider(provider);
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,7 +10,7 @@ namespace BrokerService.BrokerConsumers
     {
         public bool Trade(InternalTradeRequest request)
         {
-            return BrokerFactory.Create(request.Broker, request.Token).Trade(request);
+            return BrokerFactory.Create(request.Transaction.Broker, request.Token).Trade(request);
         }
 
         public async Task Consume(ConsumeContext<InternalTradeRequest> context)

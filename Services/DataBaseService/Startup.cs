@@ -58,6 +58,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<TransactionConsumer>(serviceProvider);
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -90,8 +91,10 @@ namespace DataBaseService
             });
 
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ITradeRepository, TradeRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
+            services.AddTransient<ITradeMapper, TradeMapper>();
             services.AddTransient<ILogMapper, LogMapper>();
 
             services.AddMassTransit(x =>
@@ -99,6 +102,7 @@ namespace DataBaseService
                 x.AddBus(provider => CreateBus(provider));
 
                 x.AddUserConsumers();
+                x.AddConsumer<TransactionConsumer>();
 
                 x.AddConsumer<AddLogConsumer>();
             });

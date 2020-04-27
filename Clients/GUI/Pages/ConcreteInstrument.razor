@@ -85,9 +85,11 @@
         SendTradeRequest(OperationType.Sell);
     }
 
-    private void Buy()
+    private async Task Buy()
     {
-        SendTradeRequest(OperationType.Buy);
+        var result = await SendTradeRequest(OperationType.Buy);
+        if (result == true)
+            instrument.Name = "Шалость удалась";
     }
 
     private async Task<bool> SendTradeRequest(OperationType operation)

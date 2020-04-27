@@ -20,6 +20,7 @@ namespace TinkoffIntegrationLib
             {
                 var conn = ConnectionFactory.GetSandboxConnection(token);
                 context = conn.Context;
+                context.RegisterAsync();
                 context.SetCurrencyBalanceAsync(Currency.Rub, 100000000);
                 context.SetCurrencyBalanceAsync(Currency.Usd, 100000000);
                 context.SetCurrencyBalanceAsync(Currency.Eur, 100000000);
@@ -67,11 +68,16 @@ namespace TinkoffIntegrationLib
         {
             try
             {
-                var operation = request.Operation == DTO.MarketBrokerObjects.OperationType.Buy ? OperationType.Buy : OperationType.Sell;
-                var order = new LimitOrder(request.Figi, request.Lots, operation, request.Price);
+                // var portfolio = context.PortfolioAsync().Result.Positions;
+                var transaction = request.Transaction;
+                var operation = transaction.Operation == DTO.MarketBrokerObjects.OperationType.Buy ? OperationType.Buy : OperationType.Sell;
+                var order = new LimitOrder(transaction.Figi, transaction.Lots, operation, transaction.Price);
                 var result = context.PlaceLimitOrderAsync(order).Result;
-                request.DateTime = DateTime.Now;
-                request.IsSuccess = result.Status == OrderStatus.Fill ? true : false;
+                transaction.DateTime = DateTime.Now;
+                transaction.IsSuccess = result.Status == OrderStatus.Fill ? true : false;
+
+                //portfolio = context.PortfolioAsync().Result.Positions;
+                //var orders = context.MarketOrderbookAsync(transaction.Figi, 10).Result;
                 return true;
             }
             catch
