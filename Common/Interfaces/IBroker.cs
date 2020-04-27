@@ -8,7 +8,7 @@ namespace Interfaces
     public interface IBroker
     {
         IEnumerable<Instrument> GetInstruments(InstrumentType type);
-        bool Trade(InternalTradeRequest request);
+        Transaction Trade(InternalTradeRequest request);
         int Depth { get; set; }
     }
 }

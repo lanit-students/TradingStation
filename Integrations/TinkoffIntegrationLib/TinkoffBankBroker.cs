@@ -64,7 +64,7 @@ namespace TinkoffIntegrationLib
             return instruments;
         }
 
-        public bool Trade(InternalTradeRequest request)
+        public Transaction Trade(InternalTradeRequest request)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace TinkoffIntegrationLib
 
                 //portfolio = context.PortfolioAsync().Result.Positions;
                 //var orders = context.MarketOrderbookAsync(transaction.Figi, 10).Result;
-                return true;
+                return transaction;
             }
             catch
             {

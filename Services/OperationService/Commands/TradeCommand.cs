@@ -28,9 +28,9 @@ namespace OperationService.Commands
             //this.logger = logger;
         }
 
-        private async Task<bool> Trade(InternalTradeRequest request)
+        private async Task<Transaction> Trade(InternalTradeRequest request)
         {
-            var response = await tradeClient.GetResponse<OperationResult<bool>>(request);
+            var response = await tradeClient.GetResponse<OperationResult<Transaction>>(request);
 
             return OperationResultHandler.HandleResponse(response.Message);
         }
@@ -59,9 +59,9 @@ namespace OperationService.Commands
                 Token = request.Token,
                 Transaction = transaction
             };
-            var tradeResult = await Trade(tradeRequest);
-            bool saveTransactionResult = false;
-            if (tradeResult == true)
+            var saveTransactionResult = false;
+            transaction = await Trade(tradeRequest);
+            if (transaction.IsSuccess == true)
             {
                 saveTransactionResult = await SaveTransaction(transaction);
             }

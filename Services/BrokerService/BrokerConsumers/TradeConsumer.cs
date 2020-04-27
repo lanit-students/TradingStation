@@ -1,4 +1,5 @@
 ﻿using BrokerService.Utils;
+using DTO;
 using DTO.BrokerRequests;
 using Kernel;
 using MassTransit;
@@ -8,7 +9,7 @@ namespace BrokerService.BrokerConsumers
 {
     public class TradeConsumer:IConsumer<InternalTradeRequest>
     {
-        public bool Trade(InternalTradeRequest request)
+        public Transaction Trade(InternalTradeRequest request)
         {
             return BrokerFactory.Create(request.Transaction.Broker, request.Token).Trade(request);
         }

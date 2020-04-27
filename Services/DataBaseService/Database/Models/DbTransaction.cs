@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataBaseService.Database.Models
@@ -19,5 +21,54 @@ namespace DataBaseService.Database.Models
 
         [DataType(DataType.Time)]
         public DateTime TransactionTime { get; set; }
+    }
+
+    public class DbTransactionConfiguration : IEntityTypeConfiguration<DbTransaction>
+    {
+        public void Configure(EntityTypeBuilder<DbTransaction> builder)
+        {
+            builder
+                .ToTable("Transactions")
+                .HasKey(p => p.Id);
+            builder
+                .Property(p => p.Id)
+                .HasColumnName("Id")
+                .IsRequired();
+            builder
+                .Property(p => p.UserId)
+                .HasColumnName("UserId")
+                .IsRequired();
+            builder
+                .Property(p => p.Operation)
+                .HasColumnName("Operation")
+                .IsRequired();
+            builder
+                .Property(p => p.Price)
+                .HasColumnName("Price")
+                .IsRequired();
+            builder
+                .Property(p => p.Figi)
+                .HasColumnName("Figi")
+                .IsRequired();
+            builder
+                .Property(p => p.Count)
+                .HasColumnName("Count")
+                .IsRequired();
+            builder
+                .Property(p => p.Broker)
+                .HasColumnName("Broker")
+                .IsRequired();
+            builder
+                .Property(p => p.TransactionDate)
+                .HasColumnName("TransactionDate")
+                .IsRequired();
+            builder
+                .Property(p => p.TransactionTime)
+                .HasColumnName("TransactionTime")
+                .IsRequired();
+            builder
+                .HasIndex(p => p.Id)
+                .IsUnique();
+        }
     }
 }
