@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using UserService.Interfaces;
-using UserService.Utils;
 using Microsoft.Extensions.Logging;
 using System.Net.Mail;
 using System.Net;
@@ -29,31 +28,7 @@ namespace UserService.Controllers
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
         {
             logger.LogInformation("Create user request received from GUI to UserService");
-            var result = await command.Execute(request);
-
-            if (result)
-            {
-                var email = request.Email;
-                // отправитель - устанавливаем адрес и отображаемое в письме имя
-                MailAddress from = new MailAddress("traidplatform@mail.ru", "Trading Station");
-                // кому отправляем
-                MailAddress to = new MailAddress(request.Email);
-                // создаем объект сообщения
-                MailMessage m = new MailMessage(from, to);
-                // тема письма
-                m.Subject = "Registration confirmation";
-                // текст письма
-                m.Body = $"Please, click this link https://localhost:5011/users/confirm?secretToken={email}";
-                // письмо представляет код html
-                m.IsBodyHtml = false;
-                // адрес smtp-сервера и порт, с которого будем отправлять письмо
-                SmtpClient smtp = new SmtpClient("smtp.mail.ru", 25);
-                // логин и пароль
-                smtp.Credentials = new NetworkCredential("traidplatform@mail.ru", "t123plat");
-                smtp.EnableSsl = true;
-                smtp.Send(m);
-            }
-            return true;
+            return await command.Execute(request); ;
         }
 
         [Route("confirm")]

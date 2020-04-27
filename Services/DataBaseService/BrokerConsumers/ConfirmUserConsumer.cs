@@ -1,6 +1,7 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,19 +17,16 @@ namespace DataBaseService.BrokerConsumers
             this.userRepository = userRepository;
         }
 
-        private OperationResult ConfirmUser(InternalConfirmUserRequest request)
+        private bool ConfirmUser(InternalConfirmUserRequest request)
         {
             userRepository.ConfirmUser(request.UserEmail);
 
-            return new OperationResult
-            {
-                IsSuccess = true
-            };
+            return true;
         }
 
         public async Task Consume(ConsumeContext<InternalConfirmUserRequest> context)
         {
-            var confirmResult = ConfirmUser(context.Message);
+            var confirmResult = OperationResultWrapper.CreateResponse(ConfirmUser,context.Message);
 
             await context.RespondAsync(confirmResult);
         }

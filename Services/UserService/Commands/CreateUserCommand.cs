@@ -9,6 +9,7 @@ using System;
 using FluentValidation;
 using System.Threading.Tasks;
 using UserService.Interfaces;
+using UserService.Utils;
 
 namespace UserService.Commands
 {
@@ -78,6 +79,8 @@ namespace UserService.Commands
             {
                 throw new BadRequestException("Unable to create user");
             }
+ 
+            EmailSender.SendEmail(request.Email);
 
             return createUserResult;
         }
