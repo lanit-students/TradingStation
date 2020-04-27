@@ -18,7 +18,9 @@ namespace OperationService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<Candle> context)
         {
-            await hubContext.Clients.Group(context.Message.Figi).SendCoreAsync("ReceiveMessage", new[] {context.Message});
+            await hubContext
+                .Clients.Group(context.Message.Figi)
+                .SendCoreAsync("ReceiveMessage", new[] {context.Message});
         }
     }
 }
