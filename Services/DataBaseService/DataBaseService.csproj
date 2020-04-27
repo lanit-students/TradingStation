@@ -11,12 +11,12 @@
     <None Remove="Database\Migrations\Scripts\04.2020\0004_CreateUsersAvatarsTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0007_CreateTransactionsTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0008_AlterTableTransaction.sql" />
-    <None Remove="Database\Migrations\Scripts\04.2020\0009_CreatePortfolioTable.sql" />
+    <None Remove="Database\Migrations\Scripts\04.2020\0009_CreatePortfolioInstrumentsTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0010_CreateTinkoffUsersTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0009_CreatePortfolioTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0009_CreatePortfolioInstrumentsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>

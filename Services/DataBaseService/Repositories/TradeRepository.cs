@@ -1,9 +1,14 @@
 ﻿using DataBaseService.Database;
+using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
+using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace DataBaseService.Repositories
 {
@@ -13,7 +18,10 @@ namespace DataBaseService.Repositories
         private readonly TPlatformDbContext dbContext;
         private readonly ILogger<TradeRepository> logger;
 
-        public TradeRepository(ITradeMapper mapper, TPlatformDbContext dbContext, [FromServices] ILogger<TradeRepository> logger)
+        public TradeRepository(
+            ITradeMapper mapper, TPlatformDbContext dbContext, 
+            [FromServices] ILogger<TradeRepository> logger
+            )
         {
             this.mapper = mapper;
             this.dbContext = dbContext;
@@ -23,6 +31,35 @@ namespace DataBaseService.Repositories
         public void SaveTransaction(Transaction transaction)
         {
             dbContext.Transactions.Add(mapper.MapToDbTransaction(transaction));
+            dbContext.SaveChanges();
+        }
+
+        public Instrument GetInstrumentFromPortfolio(GetInstrumentFromPortfolioRequest request)
+        {
+            var instrument = dbContext.PortfolioInstruments.FirstOrDefault(
+                instrument => instrument.UserId == request.UserId && instrument.Figi == request.Figi);
+            if (instrument == null)
+                return new Instrument();
+            return new Instrument()
+            {
+                Figi = request.Figi,
+                Lot = instrument.Lots,
+                Type = (InstrumentType)Enum.Parse(typeof(InstrumentType), instrument.InstrumentType)
+            };
+        }
+        
+        private void RegisterTinkoffUser(Guid userId)
+        {
+            var tinkoffUser = new DbTinkoffUser()
+            {
+                UserId = userId,
+                BalanceInRub = 0,
+                BalanceInUsd = 0,
+                BalanceInEur = 0,
+                PortfolioId = Guid.NewGuid(),
+                Id = Guid.NewGuid()
+            };
+            dbContext.TinkoffUsers.Add(tinkoffUser);
             dbContext.SaveChanges();
         }
 

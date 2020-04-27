@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Interfaces;
 using DTO.BrokerRequests;
 using DTO.RestRequests;
+using System;
 
 namespace OperationService.Controllers
 {
@@ -40,5 +41,22 @@ namespace OperationService.Controllers
         {
             return await command.Execute(request);
         }
+
+        [Route("instruments/getFromPortfolio")]
+        [HttpGet]
+        public async Task<Instrument> GetInstrumentFromPortfolio(
+            [FromServices] ICommand<GetInstrumentFromPortfolioRequest, Instrument> command,
+            [FromQuery] string userId,
+            [FromQuery] string figi
+            )
+        {
+            return await command.Execute(
+               new GetInstrumentFromPortfolioRequest()
+               {
+                   UserId = Guid.Parse(userId),
+                   Figi = figi
+               });
+        }
+        
     }
 }

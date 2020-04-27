@@ -88,8 +88,6 @@
 </div>
 
 @code {
-    [Parameter]
-    public string Figi { get; set; }
 
     private string tinkoffToken = "";
     private int lotsInPortfolio = 1;
@@ -113,12 +111,12 @@
     {
         var currencyString = e.Value.ToString();
         currency = currencyString switch
-            {
-                "RUB" => currency = Currency.RUB,
-                "USD" => currency = Currency.USD,
-                "EUR" => currency = Currency.EUR,
-                _ => throw new BadRequestException()
-            };
+        {
+            "RUB" => currency = Currency.RUB,
+            "USD" => currency = Currency.USD,
+            "EUR" => currency = Currency.EUR,
+            _ => throw new BadRequestException()
+        };
     }
 
     private void UpdateBalance()
@@ -126,6 +124,17 @@
         balance[currency] += cash;
     }
 
+    private void UpdateLotsInPortfolio()
+    {
+        
+    }
+
+    private async Task GetLotsInPortfolio()
+    {
+        Guid userId = await Storage.GetItemAsync<Guid>("userId");
+        var instrumentInfo = BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
+        lotsInPortfolio =  instrumentInfo.Result.Lot;
+    }
     private async Task Sell()
     {
         var result = await SendTradeRequest(OperationType.Sell);
@@ -152,7 +161,6 @@
         return await BrokerManager.Trade(request);
 
     }
-
 
     private async Task SetToken()
     {

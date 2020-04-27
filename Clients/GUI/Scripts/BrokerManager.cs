@@ -3,6 +3,7 @@ using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -37,6 +38,21 @@ namespace GUI.Scripts
             var client = new RestClient<object, bool>(url, RestRequestType.POST);
 
             return await client.Execute(request);
+        }
+
+        public static async Task<Instrument> GetInstrumentFromPortfolio(Guid userId, string figi)
+        {
+            const string url = "https://localhost:5009/operations/instruments/getFromPortfolio";
+
+            var queryParams = new Dictionary<string, string>
+            {
+                { "userId",userId.ToString() },
+                { "figi", figi },
+            };
+
+            var client = new RestClient<object, Instrument>(url, RestRequestType.GET, queryParams: queryParams);
+
+            return await client.Execute();
         }
     }
 }
