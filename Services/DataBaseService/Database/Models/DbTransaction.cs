@@ -12,15 +12,15 @@ namespace DataBaseService.Database.Models
         public string Broker { get; set; }
         public string Operation { get; set; }
         public string Figi { get; set; }
-        public int Count { get; set; }
+        public int Lots { get; set; }
         public decimal Price { get; set; }
-        //public bool IsSuccess { get; set; }
+        public bool IsSuccess { get; set; }
         
         [DataType(DataType.Date)]
-        public DateTime TransactionDate { get; set; }
+        public DateTime Date { get; set; }
 
         [DataType(DataType.Time)]
-        public DateTime TransactionTime { get; set; }
+        public DateTime Time { get; set; }
     }
 
     public class DbTransactionConfiguration : IEntityTypeConfiguration<DbTransaction>
@@ -51,7 +51,7 @@ namespace DataBaseService.Database.Models
                 .HasColumnName("Figi")
                 .IsRequired();
             builder
-                .Property(p => p.Count)
+                .Property(p => p.Lots)
                 .HasColumnName("Count")
                 .IsRequired();
             builder
@@ -59,13 +59,17 @@ namespace DataBaseService.Database.Models
                 .HasColumnName("Broker")
                 .IsRequired();
             builder
-                .Property(p => p.TransactionDate)
+                .Property(p => p.Date)
                 .HasColumnName("TransactionDate")
                 .IsRequired();
             builder
-                .Property(p => p.TransactionTime)
+                .Property(p => p.Time)
                 .HasColumnName("TransactionTime")
                 .IsRequired();
+            builder
+               .Property(p => p.IsSuccess)
+               .HasColumnName("IsSuccess")
+               .IsRequired();
             builder
                 .HasIndex(p => p.Id)
                 .IsUnique();

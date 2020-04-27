@@ -23,23 +23,23 @@ namespace DataBaseService.Mappers
                 Broker = transaction.Broker.ToString(),
                 Figi = transaction.Figi,
                 Operation = transaction.Operation.ToString(),
-                Count = transaction.Lots,
+                Lots = transaction.Lots,
                 Price = transaction.Price,
-                TransactionDate = date,
-                TransactionTime = transaction.DateTime, 
-                //IsSuccess = transaction.IsSuccess
+                Date = date,
+                Time = transaction.DateTime, 
+                IsSuccess = transaction.IsSuccess
             };
         }
 
         public Transaction MapToTransaction(DbTransaction dbTransaction)
         {
             var dateTime = new DateTime(
-                dbTransaction.TransactionDate.Year,
-                dbTransaction.TransactionDate.Month,
-                dbTransaction.TransactionDate.Day,
-                dbTransaction.TransactionTime.Hour,
-                dbTransaction.TransactionTime.Minute,
-                dbTransaction.TransactionTime.Second
+                dbTransaction.Date.Year,
+                dbTransaction.Date.Month,
+                dbTransaction.Date.Day,
+                dbTransaction.Time.Hour,
+                dbTransaction.Time.Minute,
+                dbTransaction.Time.Second
                 );
             return new Transaction
             {
@@ -48,9 +48,9 @@ namespace DataBaseService.Mappers
                 Broker = dbTransaction.Broker == "TinkoffBroker" ? BrokerType.TinkoffBroker : throw new BadRequestException(),
                 Figi = dbTransaction.Figi,
                 Operation = dbTransaction.Operation == "Sell" ? OperationType.Sell : OperationType.Buy,
-                Lots = dbTransaction.Count,
+                Lots = dbTransaction.Lots,
                 Price = dbTransaction.Price,
-                //IsSuccess = dbTransaction.IsSuccess,
+                IsSuccess = dbTransaction.IsSuccess,
                 DateTime = dateTime
             };
         }

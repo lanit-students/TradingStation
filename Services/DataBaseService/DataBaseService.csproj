@@ -10,6 +10,7 @@
     <None Remove="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0004_CreateUsersAvatarsTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0007_CreateTransactionsTable.sql" />
+    <None Remove="Database\Migrations\Scripts\04.2020\0008_AlterTableTransaction.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +19,7 @@
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0004_CreateUsersAvatarsTable.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0007_CreateTransactionsTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0008_AlterTableTransaction.sql" />
   </ItemGroup>
 
   <ItemGroup>
