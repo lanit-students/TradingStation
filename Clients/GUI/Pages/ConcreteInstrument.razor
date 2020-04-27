@@ -15,6 +15,29 @@
     }
     else if (!errorOccured)
     {
+        <div class="float-right">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Balance</label>
+                </div>
+                <select @onchange="@UpdateCurrency" class="custom-select">
+                    @foreach (var cur in @currencies)
+                    {
+                        <option value=@cur>@cur</option>
+                    }
+                </select>
+                <div class="input-group-text" value=@balance[@currency]>@balance[@currency]</div>
+            </div>
+        </div>
+        <div class="float-right">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Update balance</label>
+                </div>
+                <div type="number" class="input-group-text" value=@cash>@cash]</div>
+                <button class="btn btn-primary" value="Update" @onclick="@UpdateBalance"></button>
+            </div>
+        </div>
         <table class="table table-bordered">
             <thead class="thead-light">
                 <tr>
@@ -78,18 +101,34 @@
     private bool isInstrumentLoading = false;
     private Instrument instrument;
     private string errorMessage = "";
-
-
-    private void Sell()
+    private decimal cash = 100;
+    private Currency currency = Currency.RUB;
+    private List<Currency> currencies = new List<Currency>() { Currency.RUB, Currency.USD, Currency.EUR };
+    private Dictionary<Currency, decimal> balance = new Dictionary<Currency, decimal>()
     {
-        SendTradeRequest(OperationType.Sell);
+        { Currency.RUB, 1000000 },
+        { Currency.USD, 900000 },
+        { Currency.EUR, 800000 }
+    };
+
+    private void UpdateCurrency(ChangeEventArgs e)
+    {
+        currency = (Currency)e.Value;
+    }
+
+    private void UpdateBalance()
+    {
+        balance[currency] += cash;
+    }
+
+    private async Task Sell()
+    {
+        var result = await SendTradeRequest(OperationType.Sell);
     }
 
     private async Task Buy()
     {
         var result = await SendTradeRequest(OperationType.Buy);
-        if (result == true)
-            instrument.Name = "Шалость удалась";
     }
 
     private async Task<bool> SendTradeRequest(OperationType operation)
