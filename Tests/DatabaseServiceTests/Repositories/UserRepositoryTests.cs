@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DatabaseServiceTests.Repositories
 {
-    public class UserRepositoryDeleteTests
+    public class UserRepositoryTests
     {
         #region Common
 
@@ -145,6 +145,7 @@ namespace DatabaseServiceTests.Repositories
             };
 
             #endregion
+
         }
 
         #region Create user tests
@@ -189,7 +190,7 @@ namespace DatabaseServiceTests.Repositories
         {
             using var dbContext = new TPlatformDbContext(dbOptionsCreateAvatar);
             repository = new UserRepository(mapper, dbContext, logger.Object);
-            repository.CreateUser(user,email);
+            repository.CreateUser(user, email);
             repository.CreateUserAvatar(userAvatar);
             DbUserAvatarComparer comparer = new DbUserAvatarComparer();
             Assert.AreEqual(1, dbContext.UsersAvatars.CountAsync().Result);
@@ -223,6 +224,7 @@ namespace DatabaseServiceTests.Repositories
 
             Assert.IsFalse(expectedField);
         }
+
 
         [Test]
         public void DeleteUserIsActiveFalse()
@@ -269,6 +271,50 @@ namespace DatabaseServiceTests.Repositories
             userId = temp;
         }
 
+        #endregion
+
+        #region ConfirmTest
+
+        [Test]
+        public void ConfirmUserOk()
+        {
+            var options = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "ConfirmUserOkey")
+                .Options;
+
+            using var dbContext = new TPlatformDbContext(options);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
+
+            dbContext.UsersCredentials.Add(dbUserCredential);
+            dbContext.SaveChanges();
+
+            dbUserCredential.IsActive = false;
+
+            repository.ConfirmUser(dbUserCredential.Email);
+
+            var expectedField = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email).IsActive;
+
+            Assert.IsTrue(expectedField);
+        }
+
+        public void ConfirmUserTrue()
+        {
+            var options = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "ConfirmUserOkey")
+                .Options;
+
+            using var dbContext = new TPlatformDbContext(options);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
+
+            dbContext.UsersCredentials.Add(dbUserCredential);
+            dbContext.SaveChanges();
+
+
+            repository.ConfirmUser(dbUserCredential.Email);
+            var expectedField = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email).IsActive;
+
+            Assert.IsFalse(expectedField);
+        }
         #endregion
     }
 }

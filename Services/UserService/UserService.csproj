@@ -50,6 +50,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
     <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
+    <ProjectReference Include="..\AuthenticationService\AuthenticationService.csproj" />
   </ItemGroup>
 
 </Project>

@@ -17,11 +17,13 @@ namespace UserService.Commands
     {
         private readonly IRequestClient<InternalCreateUserRequest> client;
         private readonly IValidator<CreateUserRequest> validator;
+        private readonly ISecretTokenEngine secretTokenEngine;
 
-        public CreateUserCommand([FromServices] IRequestClient<InternalCreateUserRequest> client, [FromServices] IValidator<CreateUserRequest> validator)
+        public CreateUserCommand([FromServices] IRequestClient<InternalCreateUserRequest> client, [FromServices] IValidator<CreateUserRequest> validator,[FromServices] ISecretTokenEngine secretTokenEngine)
         {
             this.client = client;
             this.validator = validator;
+            this.secretTokenEngine = secretTokenEngine;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
@@ -80,7 +82,7 @@ namespace UserService.Commands
                 throw new BadRequestException("Unable to create user");
             }
  
-            EmailSender.SendEmail(request.Email);
+            EmailSender.SendEmail(request.Email,secretTokenEngine);
 
             return createUserResult;
         }

@@ -20,6 +20,8 @@ using DTO.BrokerRequests;
 using DTO;
 using Microsoft.Extensions.Logging;
 using Kernel.LoggingEngine;
+using UserService.Utils;
+using AuthenticationService.Interfaces;
 
 namespace UserService
 {
@@ -65,6 +67,8 @@ namespace UserService
             services.AddHealthChecks();
 
             services.AddControllers();
+
+            services.AddSingleton<ISecretTokenEngine, SecretTokenEngine>();
 
             services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
 

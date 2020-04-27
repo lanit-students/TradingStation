@@ -6,6 +6,7 @@ using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -14,10 +15,12 @@ namespace UserService.Commands
     public class ConfirmUserCommand : IConfirmUserCommand
     {
         private readonly IRequestClient<InternalConfirmUserRequest> client;
+        private readonly ISecretTokenEngine secretTokenEngine;
 
-        public ConfirmUserCommand([FromServices]IRequestClient<InternalConfirmUserRequest> client)
+        public ConfirmUserCommand([FromServices]IRequestClient<InternalConfirmUserRequest> client, [FromServices] ISecretTokenEngine secretTokenEngine)
         {
             this.client = client;
+            this.secretTokenEngine = secretTokenEngine;
         }
 
         private async Task<bool> UserConfirmation(InternalConfirmUserRequest request)
@@ -27,9 +30,11 @@ namespace UserService.Commands
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        public async Task<bool> Execute(string secretToken)
+        public async Task<bool> Execute(Guid secretToken)
         {
-            var request = new InternalConfirmUserRequest { UserEmail=secretToken };
+
+
+            var request = new InternalConfirmUserRequest { UserEmail=secretTokenEngine.GetEmail(secretToken) };
 
             var confirmUserResult = await UserConfirmation(request);
 
