@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BrokerService.Interfaces;
+using BrokerService.Utils;
 using DTO;
 using DTO.MarketBrokerObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -23,26 +24,23 @@ namespace BrokerService.Controllers
         [HttpPost]
         public Instrument GetCurrency(
             [FromServices] IGetCurrencyCommand command,
-            [FromBody] int depth,
-            [FromBody] BrokerType broker,
-            [FromBody] string token,
-            [FromBody] string currency)
+            [FromBody] RequestInfo request,
+            [FromHeader] string currency
+            )
         {
             logger.LogInformation("Success");
 
-            return command.Execute(broker, token, depth, currency);
+            return command.Execute(request.broker, request.token, request.depth, currency);
         }
         [Route("getallcurrencies")]
         [HttpPost]
         public IEnumerable<Instrument> GetAllCurrencies(
-            [FromServices] IGetAllCurrenciesCommand command, 
-            [FromBody] int depth,
-            [FromBody] BrokerType broker,
-            [FromBody] string token)
+            [FromServices] IGetAllCurrenciesCommand command,
+            [FromBody] RequestInfo request)
         {
             logger.LogInformation("Success");
 
-            return command.Execute(broker, token, depth);       
+            return command.Execute(request.broker, request.token, request.depth);       
         }
     }
 }
