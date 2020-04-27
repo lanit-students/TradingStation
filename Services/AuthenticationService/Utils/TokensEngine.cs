@@ -5,6 +5,8 @@ using System.Security.Cryptography;
 using AuthenticationService.Interfaces;
 using DTO;
 using Kernel.CustomExceptions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AuthenticationService
@@ -13,9 +15,11 @@ namespace AuthenticationService
     public class TokensEngine : ITokensEngine
     {
         private SecurityKey key;
+        private ILogger<TokensEngine> logger;
 
-        public TokensEngine()
+        public TokensEngine([FromServices] ILogger<TokensEngine> logger)
         {
+            this.logger = logger;
             var hmac = new HMACSHA256();
             key = new SymmetricSecurityKey(hmac.Key);
         }
@@ -24,7 +28,10 @@ namespace AuthenticationService
         public UserToken GetToken(Guid userId)
         {
             if (userId == Guid.Empty)
+            {
+                logger.LogWarning(new BadRequestException(), "Attempt to get token by empty id.");
                 throw new BadRequestException();
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -40,6 +47,8 @@ namespace AuthenticationService
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var token = tokenHandler.WriteToken(securityToken);
 
+            logger.LogInformation($"User {userId} got a token.");
+
             return new UserToken
             {
                 UserId = userId,
@@ -52,6 +61,8 @@ namespace AuthenticationService
         {
             try
             {
+                logger.LogInformation($"Checking {token.Body} token for user {token.UserId}.");
+
                 var tokenHandler = new JwtSecurityTokenHandler();
                 tokenHandler.ValidateToken(token.Body, new TokenValidationParameters
                 {
@@ -63,9 +74,11 @@ namespace AuthenticationService
             }
             catch
             {
+                logger.LogWarning($"{token.Body} is not a valid token for user {token.UserId}.");
                 return new OperationResult() { IsSuccess = false };
             }
 
+            logger.LogInformation($"User {token.UserId} with token {token.Body} approved.");
             return new OperationResult() { IsSuccess = true };
         }
     }
