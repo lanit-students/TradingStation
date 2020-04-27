@@ -32,16 +32,14 @@ function drawChart(e, name) {
 };
 
 function updateChart(data) {
-    console.log(data);
     chart.appendSeries({
         data: [
             {
-                name: 'data',
                 x: data.time,
                 y: [data.open, data.high, data.low, data.close]
             }
         ]
-    });
+    }, false);
 }
 
 function updateOptions(data) {
