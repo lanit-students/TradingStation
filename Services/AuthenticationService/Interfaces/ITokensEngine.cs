@@ -9,17 +9,12 @@ namespace AuthenticationService.Interfaces
     public interface ITokensEngine
     {
         /// <summary>
-        /// Generate token for user and put it in storage.
+        /// Generate token for user.
         /// </summary>
         UserToken GetToken(Guid userId);
 
         /// <summary>
-        /// Delete token from storage.
-        /// </summary>
-        OperationResult DeleteToken(Guid userId);
-
-        /// <summary>
-        /// Check token is in storage.
+        /// Check token is valid.
         /// </summary>
         OperationResult CheckToken(UserToken token);
     }
