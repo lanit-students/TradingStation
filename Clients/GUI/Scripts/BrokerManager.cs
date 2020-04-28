@@ -42,7 +42,7 @@ namespace GUI.Scripts
 
         public static async Task<Instrument> GetInstrumentFromPortfolio(Guid userId, string figi)
         {
-            const string url = "https://localhost:5009/operations/instruments/getFromPortfolio";
+            const string url = "https://localhost:5009/operations/instrument/getFromPortfolio";
 
             var queryParams = new Dictionary<string, string>
             {
@@ -57,7 +57,7 @@ namespace GUI.Scripts
 
         public static async Task<BrokerUser> GetBrokerUser(Guid userId, BrokerType broker)
         {
-            const string url = "https://localhost:5009/operations/getBrokerUser";
+            const string url = "https://localhost:5009/operations/brokerUser/get";
 
             var queryParams = new Dictionary<string, string>
             {
@@ -68,6 +68,15 @@ namespace GUI.Scripts
             var client = new RestClient<object, BrokerUser>(url, RestRequestType.GET, queryParams: queryParams);
 
             return await client.Execute();
+        }
+
+        public static async Task <bool> UpdateBrokerUser(UpdateBrokerUserRequest request)
+        {
+            const string url = "https://localhost:5009/operations/brokerUser/update";
+
+            var client = new RestClient<object, bool>(url, RestRequestType.PUT);
+
+            return await client.Execute(request);
         }
     }
 }

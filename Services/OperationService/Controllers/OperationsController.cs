@@ -42,7 +42,7 @@ namespace OperationService.Controllers
             return await command.Execute(request);
         }
 
-        [Route("instruments/getFromPortfolio")]
+        [Route("instrument/getFromPortfolio")]
         [HttpGet]
         public async Task<Instrument> GetInstrumentFromPortfolio(
             [FromServices] ICommand<GetInstrumentFromPortfolioRequest, Instrument> command,
@@ -57,22 +57,33 @@ namespace OperationService.Controllers
                    Figi = figi
                });
         }
-        [Route("getBrokerUser")]
+
+        [Route("brokerUser/get")]
         [HttpGet]
         public async Task<BrokerUser> GetBrokerUser(
             [FromServices] ICommand<GetBrokerUserRequest, BrokerUser> command,
-            [FromQuery] string userId,
+            [FromQuery] Guid userId,
             [FromQuery] BrokerType broker
             )
         {
             return await command.Execute(
                new GetBrokerUserRequest()
                {
-                   UserId = Guid.Parse(userId),
+                   UserId = userId,
                    Broker = broker
                });
         }
-        
+
+        [Route("brokerUser/update")]
+        [HttpPut]
+        public async Task<bool> UpdateBrokerUser(
+            [FromServices] ICommand<UpdateBrokerUserRequest, bool> command,
+            [FromBody] UpdateBrokerUserRequest request
+            )
+        {
+            return await command.Execute(request);
+        }
+
 
     }
 }

@@ -20,7 +20,7 @@ namespace OperationService.Commands
             this.client = client;
         }
 
-        private async Task<BrokerUser> GetInstrument(GetBrokerUserRequest request)
+        private async Task<BrokerUser> GetUser(GetBrokerUserRequest request)
         {
             var response = await client.GetResponse<OperationResult<BrokerUser>>(request);
 
@@ -29,7 +29,7 @@ namespace OperationService.Commands
 
         public async Task<BrokerUser> Execute(GetBrokerUserRequest request)
         {
-            return await GetInstrument(request);
+            return await GetUser(request);
         }
     }
 }

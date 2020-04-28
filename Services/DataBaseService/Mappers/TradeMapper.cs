@@ -4,7 +4,6 @@ using DTO;
 using DTO.MarketBrokerObjects;
 using Kernel.CustomExceptions;
 using System;
-using System.Collections.Generic;
 
 namespace DataBaseService.Mappers
 {

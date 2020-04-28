@@ -50,27 +50,40 @@ namespace DataBaseService.Repositories
 
         public BrokerUser GetBrokerUser(GetBrokerUserRequest request)
         {
-            var brokerUser = dbContext.BrokerUsers.FirstOrDefault(
+            var dbBrokerUser = dbContext.BrokerUsers.FirstOrDefault(
                 user => user.Broker == request.Broker.ToString() && user.UserId == request.UserId);
-            if (brokerUser == null)
-                brokerUser = RegisterTinkoffUser(request);
-            return mapper.MapToBrokerUser(brokerUser);
+            if (dbBrokerUser == null)
+            {
+                var newBrokerUser= new BrokerUser()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = request.UserId,
+                    Broker = request.Broker,
+                    BalanceInRub = 0,
+                    BalanceInUsd = 0,
+                    BalanceInEur = 0
+                };
+                RegisterBrokerUser(newBrokerUser);
+                return newBrokerUser;
+            }
+            return mapper.MapToBrokerUser(dbBrokerUser);
+        }
+
+        public void UpdateBrokerUser(BrokerUser brokerUser)
+        {
+            var dbBrokerUser = dbContext.BrokerUsers.FirstOrDefault(
+                user => user.Broker == brokerUser.Broker.ToString() && user.UserId == brokerUser.UserId);
+            dbBrokerUser.BalanceInRub = brokerUser.BalanceInRub;
+            dbBrokerUser.BalanceInUsd = brokerUser.BalanceInUsd;
+            dbBrokerUser.BalanceInEur = brokerUser.BalanceInEur;
+            dbContext.SaveChanges();
         }
         
-        private DbBrokerUser RegisterTinkoffUser(GetBrokerUserRequest request)
+        private void RegisterBrokerUser(BrokerUser brokerUser)
         {
-            var dbBrokerUser = new DbBrokerUser()
-            {
-                UserId = request.UserId,
-                BalanceInRub = 0,
-                BalanceInUsd = 0,
-                BalanceInEur = 0,
-                Broker = request.Broker.ToString(),
-                Id = Guid.NewGuid()
-            };
+            var dbBrokerUser = mapper.MapToDbBrokerUser(brokerUser);
             dbContext.BrokerUsers.Add(dbBrokerUser);
             dbContext.SaveChanges();
-            return dbBrokerUser;
         }
     }
 }

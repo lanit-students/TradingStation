@@ -119,9 +119,27 @@
         };
     }
 
-    private void UpdateBalance()
+    private async Task UpdateBalance()
     {
         balance[currency] += cash;
+        var updateResult = await UpdateBrokerUser();
+        if (updateResult == false)
+        {
+            balance[currency] -= cash;
+        }
+    }
+
+    private async Task<bool> UpdateBrokerUser()
+    {
+        var request = new UpdateBrokerUserRequest()
+        {
+            UserId = await Storage.GetItemAsync<Guid>("id"),
+            Broker = BrokerType.TinkoffBroker,
+            BalanceInRub = balance[Currency.RUB],
+            BalanceInUsd = balance[Currency.USD],
+            BalanceInEur = balance[Currency.EUR]
+        };
+        return  await BrokerManager.UpdateBrokerUser(request);
     }
 
 

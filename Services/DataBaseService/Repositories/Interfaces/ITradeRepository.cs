@@ -9,5 +9,6 @@ namespace DataBaseService.Repositories.Interfaces
         void SaveTransaction(Transaction transaction);
         Instrument GetInstrumentFromPortfolio(GetInstrumentFromPortfolioRequest request);
         BrokerUser GetBrokerUser(GetBrokerUserRequest request);
+        void UpdateBrokerUser(BrokerUser request);
     }
 }
