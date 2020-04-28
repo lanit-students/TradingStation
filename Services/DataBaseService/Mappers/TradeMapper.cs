@@ -63,12 +63,9 @@ namespace DataBaseService.Mappers
                 Id = dbBrokerUser.Id,
                 UserId = dbBrokerUser.UserId,
                 Broker = (BrokerType)Enum.Parse(typeof(BrokerType), dbBrokerUser.Broker),
-                Balance = new Dictionary<Currency, decimal>()
-                {
-                    { Currency.RUB, dbBrokerUser.BalanceInRub },
-                    { Currency.USD, dbBrokerUser.BalanceInUsd },
-                    { Currency.EUR, dbBrokerUser.BalanceInEur }
-                }
+                BalanceInRub = dbBrokerUser.BalanceInRub,
+                BalanceInUsd = dbBrokerUser.BalanceInUsd,
+                BalanceInEur = dbBrokerUser.BalanceInEur
             };
         }
 
@@ -79,9 +76,9 @@ namespace DataBaseService.Mappers
                 Id = brokerUser.Id,
                 UserId = brokerUser.UserId,
                 Broker = brokerUser.Broker.ToString(),
-                BalanceInRub =  brokerUser.Balance[Currency.RUB],
-                BalanceInUsd = brokerUser.Balance[Currency.USD],
-                BalanceInEur = brokerUser.Balance[Currency.EUR],
+                BalanceInRub = brokerUser.BalanceInRub,
+                BalanceInUsd = brokerUser.BalanceInUsd,
+                BalanceInEur = brokerUser.BalanceInEur
             };
         }
     }

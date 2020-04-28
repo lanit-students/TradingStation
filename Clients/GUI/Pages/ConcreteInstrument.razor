@@ -127,15 +127,15 @@
 
     private async Task GetLotsInPortfolio()
     {
-        Guid userId = await Storage.GetItemAsync<Guid>("userId");
+        Guid userId = await Storage.GetItemAsync<Guid>("id");
         var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
         lotsInPortfolio =  instrumentInfo.Lot;
     }
 
     private async Task<BrokerUser> GetTinkoffUser()
     {
-        Guid userId = await Storage.GetItemAsync<Guid>("userId");
-        return await BrokerManager.GetTinkoffUser(userId, BrokerType.TinkoffBroker);
+        Guid userId = await Storage.GetItemAsync<Guid>("id");
+        return await BrokerManager.GetBrokerUser(userId, BrokerType.TinkoffBroker);
     }
 
     private async Task Sell()
@@ -196,11 +196,16 @@
             if (tinkoffToken == null)
             {
                 await SetToken();
-            }         
+            }
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
             await GetLotsInPortfolio();
             var tinkoffUser = await GetTinkoffUser();
-            balance = tinkoffUser.Balance;
+            balance = new Dictionary<Currency, decimal>()
+            {
+                {Currency.RUB, tinkoffUser.BalanceInRub},
+                {Currency.USD, tinkoffUser.BalanceInUsd},
+                {Currency.EUR, tinkoffUser.BalanceInEur}
+            };
             isInstrumentLoading = false;
 
         }

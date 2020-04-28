@@ -50,29 +50,27 @@ namespace DataBaseService.Repositories
 
         public BrokerUser GetBrokerUser(GetBrokerUserRequest request)
         {
-            
-            
-            return new BrokerUser()
-            {
-
-            };
+            var brokerUser = dbContext.BrokerUsers.FirstOrDefault(
+                user => user.Broker == request.Broker.ToString() && user.UserId == request.UserId);
+            if (brokerUser == null)
+                brokerUser = RegisterTinkoffUser(request);
+            return mapper.MapToBrokerUser(brokerUser);
         }
         
-        private void RegisterTinkoffUser(Guid userId)
+        private DbBrokerUser RegisterTinkoffUser(GetBrokerUserRequest request)
         {
-            var tinkoffUser = new DbBrokerUser()
+            var dbBrokerUser = new DbBrokerUser()
             {
-                UserId = userId,
+                UserId = request.UserId,
                 BalanceInRub = 0,
                 BalanceInUsd = 0,
                 BalanceInEur = 0,
-                Broker = BrokerType.TinkoffBroker.ToString(),
+                Broker = request.Broker.ToString(),
                 Id = Guid.NewGuid()
             };
-            dbContext.BrokerUsers.Add(tinkoffUser);
+            dbContext.BrokerUsers.Add(dbBrokerUser);
             dbContext.SaveChanges();
+            return dbBrokerUser;
         }
-
-
     }
 }

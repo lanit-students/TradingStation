@@ -55,9 +55,9 @@ namespace GUI.Scripts
             return await client.Execute();
         }
 
-        public static async Task<BrokerUser> GetTinkoffUser(Guid userId, BrokerType broker)
+        public static async Task<BrokerUser> GetBrokerUser(Guid userId, BrokerType broker)
         {
-            const string url = "https://localhost:5009/operations/getTinkoffUser";
+            const string url = "https://localhost:5009/operations/getBrokerUser";
 
             var queryParams = new Dictionary<string, string>
             {
