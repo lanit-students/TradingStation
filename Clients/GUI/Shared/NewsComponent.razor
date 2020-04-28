@@ -3,13 +3,13 @@
     <div class="container">
         @if (errorMessage == "")
         {
-            @foreach (var category in categories)
-            {                
-            <h1>@category[0].Category</h1>
+            @foreach (List<NewsItem> newsCategory in newsCategories)
+            {
+            <h1>@newsCategory[0].Category</h1>
             <div class="row row-margin-bottom">
                 @for (int i = 0; i < 2; ++i)
                 {
-                    var newsItem = category[i];
+                    var newsItem = newsCategory[i];
                     <div class="col-md-6">
                         <div class="lib-panel">
                             <div class="row box-shadow">
@@ -36,7 +36,7 @@
     </div>
 
 @code {
-    private List<List<NewsItem>> categories;
+    private List<List<NewsItem>> newsCategories;
     private List<NewsItem> news;
     private string urlBusiness = "https://finance.rambler.ru/rss/business/";
     private string urlEconomics = "https://finance.rambler.ru/rss/economics/";
@@ -47,9 +47,10 @@
     {
         try
         {
-            categories.Add(NewsGetter.GetNews(urlBusiness).ToList());
-            categories.Add(NewsGetter.GetNews(urlEconomics).ToList());
-            categories.Add(NewsGetter.GetNews(urlMarkets).ToList());
+            newsCategories = new List<List<NewsItem>>();
+            newsCategories.Add(NewsGetter.GetNews(urlBusiness).ToList());
+            newsCategories.Add(NewsGetter.GetNews(urlEconomics).ToList());
+            newsCategories.Add(NewsGetter.GetNews(urlMarkets).ToList());
         }
         catch (BadRequestException)
         {
