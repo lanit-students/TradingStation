@@ -1,5 +1,6 @@
 ﻿@page  "/NewsComponent"
 
+@* TODO scrolling news *@
     <div class="container">
         @if (errorMessage == "")
         {
@@ -37,7 +38,6 @@
 
 @code {
     private List<List<NewsItem>> newsCategories;
-    private List<NewsItem> news;
     private string urlBusiness = "https://finance.rambler.ru/rss/business/";
     private string urlEconomics = "https://finance.rambler.ru/rss/economics/";
     private string urlMarkets = "https://finance.rambler.ru/rss/markets/";
@@ -54,7 +54,7 @@
         }
         catch (BadRequestException)
         {
-            errorMessage = "Unfortunately, the news is currently unavailable. Please try again later";
+            errorMessage = "Unfortunately, the news are currently unavailable. Please try again later";
         }
     }
 
