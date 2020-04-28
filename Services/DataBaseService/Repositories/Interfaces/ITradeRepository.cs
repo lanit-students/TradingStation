@@ -1,5 +1,6 @@
 ﻿using DTO;
 using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
 
 namespace DataBaseService.Repositories.Interfaces
 {
@@ -7,5 +8,6 @@ namespace DataBaseService.Repositories.Interfaces
     {
         void SaveTransaction(Transaction transaction);
         Instrument GetInstrumentFromPortfolio(GetInstrumentFromPortfolioRequest request);
+        BrokerUser GetBrokerUser(GetBrokerUserRequest request);
     }
 }

@@ -1,5 +1,6 @@
 using DTO;
 using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using GreenPipes;
 using Interfaces;
@@ -64,6 +65,7 @@ namespace OperationService
                 x.AddRequestClient<InternalTradeRequest>(new Uri("rabbitmq://localhost/BrokerService"));
                 x.AddRequestClient<Transaction>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<GetInstrumentFromPortfolioRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<GetBrokerUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
             });
 
             services.AddMassTransitHostedService();
@@ -71,6 +73,7 @@ namespace OperationService
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
             services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
             services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
+            services.AddTransient<ICommand<GetBrokerUserRequest, BrokerUser>, GetBrokerUserCommand>();
 
             //services.AddLogging(log =>
             //{

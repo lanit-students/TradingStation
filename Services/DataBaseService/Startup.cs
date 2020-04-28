@@ -60,6 +60,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<TransactionConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<GetBrokerUserConsumer>(serviceProvider);
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -105,6 +106,7 @@ namespace DataBaseService
                 x.AddUserConsumers();
                 x.AddConsumer<TransactionConsumer>();
                 x.AddConsumer<GetInstrumentFromPortfolioConsumer>();
+                x.AddConsumer<GetBrokerUserConsumer>();
                 x.AddConsumer<AddLogConsumer>();
             });
 

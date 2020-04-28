@@ -124,20 +124,20 @@
         balance[currency] += cash;
     }
 
-    private void UpdateLotsInPortfolio()
-    {
-        
-    }
 
     private async Task GetLotsInPortfolio()
     {
         Guid userId = await Storage.GetItemAsync<Guid>("userId");
         var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
-        if (instrumentInfo == null || instrumentInfo.Lot == null)
-            lotsInPortfolio = 0;
-        else 
-            lotsInPortfolio =  instrumentInfo.Lot;
+        lotsInPortfolio =  instrumentInfo.Lot;
     }
+
+    private async Task<BrokerUser> GetTinkoffUser()
+    {
+        Guid userId = await Storage.GetItemAsync<Guid>("userId");
+        return await BrokerManager.GetTinkoffUser(userId, BrokerType.TinkoffBroker);
+    }
+
     private async Task Sell()
     {
         var result = await SendTradeRequest(OperationType.Sell);
@@ -199,6 +199,8 @@
             }         
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
             await GetLotsInPortfolio();
+            var tinkoffUser = await GetTinkoffUser();
+            balance = tinkoffUser.Balance;
             isInstrumentLoading = false;
 
         }

@@ -57,6 +57,22 @@ namespace OperationService.Controllers
                    Figi = figi
                });
         }
+        [Route("instruments/getTinkoffUser")]
+        [HttpGet]
+        public async Task<BrokerUser> GetBrokerUser(
+            [FromServices] ICommand<GetBrokerUserRequest, BrokerUser> command,
+            [FromQuery] Guid userId,
+            [FromQuery] BrokerType broker
+            )
+        {
+            return await command.Execute(
+               new GetBrokerUserRequest()
+               {
+                   UserId = userId,
+                   Broker = broker
+               });
+        }
         
+
     }
 }

@@ -1,28 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataBaseService.Database.Models
 {
-    public class DbTinkoffUser
+    public class DbBrokerUser
     {
 		public Guid Id { get; set; }
 		public Guid UserId { get; set; }
-        public Guid PortfolioId { get; set; }
+        public string Broker { get; set; }
 		public decimal BalanceInRub { get; set; }
 		public decimal BalanceInUsd { get; set; }
 		public decimal BalanceInEur { get; set; }
     }
 
-    public class DbTinkoffUserConfiguration : IEntityTypeConfiguration<DbTinkoffUser>
+    public class DbTinkoffUserConfiguration : IEntityTypeConfiguration<DbBrokerUser>
     {
-        public void Configure(EntityTypeBuilder<DbTinkoffUser> builder)
+        public void Configure(EntityTypeBuilder<DbBrokerUser> builder)
         {
             builder
-                .ToTable("TinkoffUsers")
+                .ToTable("BrokerUsers")
                 .HasKey(p => p.Id);
             builder
                 .Property(p => p.Id)
@@ -33,8 +30,8 @@ namespace DataBaseService.Database.Models
                 .HasColumnName("UserId")
                 .IsRequired();
             builder
-                .Property(p => p.PortfolioId)
-                .HasColumnName("PortfolioId")
+                .Property(p => p.Broker)
+                .HasColumnName("Broker")
                 .IsRequired();
             builder
                 .Property(p => p.BalanceInRub)

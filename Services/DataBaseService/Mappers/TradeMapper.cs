@@ -4,6 +4,7 @@ using DTO;
 using DTO.MarketBrokerObjects;
 using Kernel.CustomExceptions;
 using System;
+using System.Collections.Generic;
 
 namespace DataBaseService.Mappers
 {
@@ -52,6 +53,35 @@ namespace DataBaseService.Mappers
                 Price = dbTransaction.Price,
                 IsSuccess = dbTransaction.IsSuccess,
                 DateTime = dateTime
+            };
+        }
+
+        public BrokerUser MapToBrokerUser(DbBrokerUser dbBrokerUser)
+        {
+            return new BrokerUser()
+            {
+                Id = dbBrokerUser.Id,
+                UserId = dbBrokerUser.UserId,
+                Broker = (BrokerType)Enum.Parse(typeof(BrokerType), dbBrokerUser.Broker),
+                Balance = new Dictionary<Currency, decimal>()
+                {
+                    { Currency.RUB, dbBrokerUser.BalanceInRub },
+                    { Currency.USD, dbBrokerUser.BalanceInUsd },
+                    { Currency.EUR, dbBrokerUser.BalanceInEur }
+                }
+            };
+        }
+
+        public DbBrokerUser MapToDbBrokerUser(BrokerUser brokerUser)
+        {
+            return new DbBrokerUser()
+            {
+                Id = brokerUser.Id,
+                UserId = brokerUser.UserId,
+                Broker = brokerUser.Broker.ToString(),
+                BalanceInRub =  brokerUser.Balance[Currency.RUB],
+                BalanceInUsd = brokerUser.Balance[Currency.USD],
+                BalanceInEur = brokerUser.Balance[Currency.EUR],
             };
         }
     }

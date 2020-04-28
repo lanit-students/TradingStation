@@ -54,5 +54,20 @@ namespace GUI.Scripts
 
             return await client.Execute();
         }
+
+        public static async Task<BrokerUser> GetTinkoffUser(Guid userId, BrokerType broker)
+        {
+            const string url = "https://localhost:5009/operations/getTinkoffUser";
+
+            var queryParams = new Dictionary<string, string>
+            {
+                { "userId", userId.ToString() },
+                { "broker", broker.ToString()}
+            };
+
+            var client = new RestClient<object, BrokerUser>(url, RestRequestType.GET, queryParams: queryParams);
+
+            return await client.Execute();
+        }
     }
 }

@@ -47,19 +47,29 @@ namespace DataBaseService.Repositories
                 Type = (InstrumentType)Enum.Parse(typeof(InstrumentType), instrument.InstrumentType)
             };
         }
+
+        public BrokerUser GetBrokerUser(GetBrokerUserRequest request)
+        {
+            
+            
+            return new BrokerUser()
+            {
+
+            };
+        }
         
         private void RegisterTinkoffUser(Guid userId)
         {
-            var tinkoffUser = new DbTinkoffUser()
+            var tinkoffUser = new DbBrokerUser()
             {
                 UserId = userId,
                 BalanceInRub = 0,
                 BalanceInUsd = 0,
                 BalanceInEur = 0,
-                PortfolioId = Guid.NewGuid(),
+                Broker = BrokerType.TinkoffBroker.ToString(),
                 Id = Guid.NewGuid()
             };
-            dbContext.TinkoffUsers.Add(tinkoffUser);
+            dbContext.BrokerUsers.Add(tinkoffUser);
             dbContext.SaveChanges();
         }
 

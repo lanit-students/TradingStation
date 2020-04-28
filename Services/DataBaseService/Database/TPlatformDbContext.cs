@@ -13,7 +13,7 @@ namespace DataBaseService.Database
         public DbSet<DbUsersAvatars> UsersAvatars { get; set; }
         public DbSet<DbTransaction> Transactions { get; set; }
         public DbSet<DbPortfolioInstruments> PortfolioInstruments { get; set; }
-        public DbSet<DbTinkoffUser> TinkoffUsers { get; set; }
+        public DbSet<DbBrokerUser> BrokerUsers { get; set; }
         public TPlatformDbContext(DbContextOptions<TPlatformDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
