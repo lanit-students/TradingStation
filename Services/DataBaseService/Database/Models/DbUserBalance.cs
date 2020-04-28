@@ -4,22 +4,21 @@ using System;
 
 namespace DataBaseService.Database.Models
 {
-    public class DbBrokerUser
+    public class DbUserBalance
     {
 		public Guid Id { get; set; }
 		public Guid UserId { get; set; }
-        public string Broker { get; set; }
 		public decimal BalanceInRub { get; set; }
 		public decimal BalanceInUsd { get; set; }
 		public decimal BalanceInEur { get; set; }
     }
 
-    public class DbTinkoffUserConfiguration : IEntityTypeConfiguration<DbBrokerUser>
+    public class DbTinkoffUserConfiguration : IEntityTypeConfiguration<DbUserBalance>
     {
-        public void Configure(EntityTypeBuilder<DbBrokerUser> builder)
+        public void Configure(EntityTypeBuilder<DbUserBalance> builder)
         {
             builder
-                .ToTable("BrokerUsers")
+                .ToTable("UserBalances")
                 .HasKey(p => p.Id);
             builder
                 .Property(p => p.Id)
@@ -28,10 +27,6 @@ namespace DataBaseService.Database.Models
             builder
                 .Property(p => p.UserId)
                 .HasColumnName("UserId")
-                .IsRequired();
-            builder
-                .Property(p => p.Broker)
-                .HasColumnName("Broker")
                 .IsRequired();
             builder
                 .Property(p => p.BalanceInRub)

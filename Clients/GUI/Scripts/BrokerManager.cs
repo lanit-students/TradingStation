@@ -55,7 +55,7 @@ namespace GUI.Scripts
             return await client.Execute();
         }
 
-        public static async Task<BrokerUser> GetBrokerUser(Guid userId, BrokerType broker)
+        public static async Task<UserBalance> GetBrokerUser(Guid userId, BrokerType broker)
         {
             const string url = "https://localhost:5009/operations/brokerUser/get";
 
@@ -65,7 +65,7 @@ namespace GUI.Scripts
                 { "broker", broker.ToString()}
             };
 
-            var client = new RestClient<object, BrokerUser>(url, RestRequestType.GET, queryParams: queryParams);
+            var client = new RestClient<object, UserBalance>(url, RestRequestType.GET, queryParams: queryParams);
 
             return await client.Execute();
         }

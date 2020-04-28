@@ -3,7 +3,7 @@ using System;
 
 namespace DTO.BrokerRequests
 {
-    public class GetBrokerUserRequest
+    public class GetUserBalanceRequest
     {
         public Guid UserId { get; set; }
         public BrokerType Broker { get; set; }

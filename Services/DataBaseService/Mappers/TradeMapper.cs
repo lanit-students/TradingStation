@@ -2,7 +2,6 @@
 using DataBaseService.Mappers.Interfaces;
 using DTO;
 using DTO.MarketBrokerObjects;
-using Kernel.CustomExceptions;
 using System;
 
 namespace DataBaseService.Mappers
@@ -23,8 +22,9 @@ namespace DataBaseService.Mappers
                 Broker = transaction.Broker.ToString(),
                 Figi = transaction.Figi,
                 Operation = transaction.Operation.ToString(),
-                Lots = transaction.Lots,
+                Count = transaction.Count,
                 Price = transaction.Price,
+                Currency = transaction.Currency.ToString(),
                 Date = date,
                 Time = transaction.DateTime, 
                 IsSuccess = transaction.IsSuccess
@@ -45,39 +45,38 @@ namespace DataBaseService.Mappers
             {
                 Id = dbTransaction.Id,
                 UserId = dbTransaction.UserId,
-                Broker = dbTransaction.Broker == "TinkoffBroker" ? BrokerType.TinkoffBroker : throw new BadRequestException(),
+                Broker = (BrokerType)Enum.Parse(typeof(BrokerType), dbTransaction.Broker),
                 Figi = dbTransaction.Figi,
-                Operation = dbTransaction.Operation == "Sell" ? OperationType.Sell : OperationType.Buy,
-                Lots = dbTransaction.Lots,
+                Operation = (OperationType)Enum.Parse(typeof(OperationType), dbTransaction.Operation),
+                Count = dbTransaction.Count,
                 Price = dbTransaction.Price,
+                Currency = (Currency)Enum.Parse(typeof(Currency), dbTransaction.Currency),
                 IsSuccess = dbTransaction.IsSuccess,
                 DateTime = dateTime
             };
         }
 
-        public BrokerUser MapToBrokerUser(DbBrokerUser dbBrokerUser)
+        public UserBalance MapToUserBalance(DbUserBalance dbUserBalance)
         {
-            return new BrokerUser()
+            return new UserBalance()
             {
-                Id = dbBrokerUser.Id,
-                UserId = dbBrokerUser.UserId,
-                Broker = (BrokerType)Enum.Parse(typeof(BrokerType), dbBrokerUser.Broker),
-                BalanceInRub = dbBrokerUser.BalanceInRub,
-                BalanceInUsd = dbBrokerUser.BalanceInUsd,
-                BalanceInEur = dbBrokerUser.BalanceInEur
+                Id = dbUserBalance.Id,
+                UserId = dbUserBalance.UserId,
+                BalanceInRub = dbUserBalance.BalanceInRub,
+                BalanceInUsd = dbUserBalance.BalanceInUsd,
+                BalanceInEur = dbUserBalance.BalanceInEur
             };
         }
 
-        public DbBrokerUser MapToDbBrokerUser(BrokerUser brokerUser)
+        public DbUserBalance MapToDbUserBalance(UserBalance userBalance)
         {
-            return new DbBrokerUser()
+            return new DbUserBalance()
             {
-                Id = brokerUser.Id,
-                UserId = brokerUser.UserId,
-                Broker = brokerUser.Broker.ToString(),
-                BalanceInRub = brokerUser.BalanceInRub,
-                BalanceInUsd = brokerUser.BalanceInUsd,
-                BalanceInEur = brokerUser.BalanceInEur
+                Id = userBalance.Id,
+                UserId = userBalance.UserId,
+                BalanceInRub = userBalance.BalanceInRub,
+                BalanceInUsd = userBalance.BalanceInUsd,
+                BalanceInEur = userBalance.BalanceInEur
             };
         }
     }

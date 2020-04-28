@@ -70,7 +70,7 @@ namespace TinkoffIntegrationLib
             {
                 var transaction = request.Transaction;
                 var operation = transaction.Operation == DTO.MarketBrokerObjects.OperationType.Buy ? OperationType.Buy : OperationType.Sell;
-                var order = new LimitOrder(transaction.Figi, transaction.Lots, operation, transaction.Price);
+                var order = new LimitOrder(transaction.Figi, transaction.Count, operation, transaction.Price);
                 var result = context.PlaceLimitOrderAsync(order).Result;
                 transaction.DateTime = DateTime.Now;
                 transaction.IsSuccess = result.Status == OrderStatus.Fill ? true : false;

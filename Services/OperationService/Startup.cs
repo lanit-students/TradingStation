@@ -65,8 +65,8 @@ namespace OperationService
                 x.AddRequestClient<InternalTradeRequest>(new Uri("rabbitmq://localhost/BrokerService"));
                 x.AddRequestClient<Transaction>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<GetInstrumentFromPortfolioRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
-                x.AddRequestClient<GetBrokerUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
-                x.AddRequestClient<BrokerUser>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<GetUserBalanceRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<UserBalance>(new Uri("rabbitmq://localhost/DatabaseService"));
             });
 
             services.AddMassTransitHostedService();
@@ -74,7 +74,7 @@ namespace OperationService
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
             services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
             services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
-            services.AddTransient<ICommand<GetBrokerUserRequest, BrokerUser>, GetBrokerUserCommand>();
+            services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetBrokerUserCommand>();
             services.AddTransient<ICommand<UpdateBrokerUserRequest, bool>, UpdateBrokerUserCommand>();
 
             //services.AddLogging(log =>

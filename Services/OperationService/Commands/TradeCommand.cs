@@ -51,7 +51,7 @@ namespace OperationService.Commands
                 UserId = request.UserId,
                 Operation = request.Operation,
                 Figi = request.Figi,
-                Lots = request.Lots,
+                Count = request.Count,
                 Price = request.Price
             };
             var tradeRequest = new InternalTradeRequest()

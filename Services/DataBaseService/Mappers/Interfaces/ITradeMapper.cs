@@ -8,7 +8,7 @@ namespace DataBaseService.Mappers.Interfaces
     {
         DbTransaction MapToDbTransaction(Transaction transaction);
         Transaction MapToTransaction(DbTransaction Dbtransaction);
-        DbBrokerUser MapToDbBrokerUser(BrokerUser brokerUser);
-        BrokerUser MapToBrokerUser(DbBrokerUser dbBrokerUser);
+        DbUserBalance MapToDbUserBalance(UserBalance userBalance);
+        UserBalance MapToUserBalance(DbUserBalance dbBrokerUser);
     }
 }

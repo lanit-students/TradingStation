@@ -28,6 +28,7 @@
             </select>
             <input type="number" disabled="disabled" class="col-3" value=@balance[@currency]>
         </div>
+        <br>
         <div class="form-row input-group-prepend">
             <label class="col-3">Update balance</label>
             <input type="number" class="col-3" value=@cash>
@@ -43,7 +44,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Type</th>
                 <th scope="col">Currency</th>
-                <th scope="col">Lot</th>
+                <th scope="col">Count in lot</th>
             </tr>
         </thead>
         <tbody>
@@ -59,8 +60,8 @@
 
     <div class="form-row">
         <div class="form-group col-md-2">
-            <label for="lotsInPortfolio">Lots in portfolio</label>
-            <input type="number" class="form-control" id="lotsInPortfolio" value=@lotsInPortfolio>
+            <label for="countInPortfolio">Count in portfolio</label>
+            <input type="number" class="form-control" id="countInPortfolio" value=@countInPortfolio>
         </div>
         <div class="form-group col-md-2">
             <label for="lotsToTrade">Lots to trade</label>
@@ -90,7 +91,7 @@
 @code {
 
     private string tinkoffToken = "";
-    private int lotsInPortfolio = 1;
+    private int countInPortfolio = 1;
     private int lotsToTrade = 1;
     private decimal price = 100;
     private bool errorOccured = false;
@@ -147,10 +148,10 @@
     {
         Guid userId = await Storage.GetItemAsync<Guid>("id");
         var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
-        lotsInPortfolio =  instrumentInfo.Lot;
+        countInPortfolio =  instrumentInfo.Lot;
     }
 
-    private async Task<BrokerUser> GetTinkoffUser()
+    private async Task<UserBalance> GetTinkoffUser()
     {
         Guid userId = await Storage.GetItemAsync<Guid>("id");
         return await BrokerManager.GetBrokerUser(userId, BrokerType.TinkoffBroker);
@@ -175,7 +176,7 @@
             Token = tinkoffToken,
             Operation = operation,
             Figi = instrument.Figi,
-            Lots = lotsToTrade,
+            Count = lotsToTrade,
             Price = price
         };
 

@@ -10,7 +10,7 @@ namespace DTO.RestRequests
         public string Token { get; set; }
         public OperationType Operation { get; set; }
         public string Figi { get; set; }
-        public int Lots { get; set; }
+        public int Count { get; set; }
         public decimal Price { get; set; }                       
     }
 }

@@ -11,16 +11,16 @@ namespace OperationService.Commands
 {
     public class UpdateBrokerUserCommand: ICommand<UpdateBrokerUserRequest, bool>
     {
-        private readonly IRequestClient<BrokerUser> client;
+        private readonly IRequestClient<UserBalance> client;
 
         public UpdateBrokerUserCommand(
-            [FromServices] IRequestClient<BrokerUser> client
+            [FromServices] IRequestClient<UserBalance> client
             )
         {
             this.client = client;
         }
 
-        private async Task<bool> UpdateUser(BrokerUser brokerUser)
+        private async Task<bool> UpdateUser(UserBalance brokerUser)
         {
             var response = await client.GetResponse<OperationResult<bool>>(brokerUser);
 
@@ -29,10 +29,9 @@ namespace OperationService.Commands
 
         public async Task<bool> Execute(UpdateBrokerUserRequest request)
         {
-            var brokerUser = new BrokerUser()
+            var brokerUser = new UserBalance()
             {
                 UserId = request.UserId,
-                Broker = request.Broker,
                 BalanceInEur = request.BalanceInEur,
                 BalanceInRub = request.BalanceInRub,
                 BalanceInUsd = request.BalanceInUsd

@@ -12,8 +12,9 @@ namespace DataBaseService.Database.Models
         public string Broker { get; set; }
         public string Operation { get; set; }
         public string Figi { get; set; }
-        public int Lots { get; set; }
+        public int Count { get; set; }
         public decimal Price { get; set; }
+        public string Currency { get; set; }
         public bool IsSuccess { get; set; }
         
         [DataType(DataType.Date)]
@@ -47,11 +48,15 @@ namespace DataBaseService.Database.Models
                 .HasColumnName("Price")
                 .IsRequired();
             builder
+                .Property(p => p.Currency)
+                .HasColumnName("Currency")
+                .IsRequired();
+            builder
                 .Property(p => p.Figi)
                 .HasColumnName("Figi")
                 .IsRequired();
             builder
-                .Property(p => p.Lots)
+                .Property(p => p.Count)
                 .HasColumnName("Count")
                 .IsRequired();
             builder

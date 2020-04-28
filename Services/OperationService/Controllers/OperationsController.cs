@@ -60,14 +60,14 @@ namespace OperationService.Controllers
 
         [Route("brokerUser/get")]
         [HttpGet]
-        public async Task<BrokerUser> GetBrokerUser(
-            [FromServices] ICommand<GetBrokerUserRequest, BrokerUser> command,
+        public async Task<UserBalance> GetBrokerUser(
+            [FromServices] ICommand<GetUserBalanceRequest, UserBalance> command,
             [FromQuery] Guid userId,
             [FromQuery] BrokerType broker
             )
         {
             return await command.Execute(
-               new GetBrokerUserRequest()
+               new GetUserBalanceRequest()
                {
                    UserId = userId,
                    Broker = broker

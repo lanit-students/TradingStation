@@ -8,7 +8,7 @@ using DTO.MarketBrokerObjects;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class UpdateBrokerUserConsumer : IConsumer<BrokerUser>
+    public class UpdateBrokerUserConsumer : IConsumer<UserBalance>
     {
         private readonly ITradeRepository tradeRepository;
 
@@ -17,13 +17,13 @@ namespace DataBaseService.BrokerConsumers
             this.tradeRepository = tradeRepository;
         }
 
-        private bool UpdateUser(BrokerUser brokerUser)
+        private bool UpdateUser(UserBalance brokerUser)
         {
-            tradeRepository.UpdateBrokerUser(brokerUser);
+            tradeRepository.UpdateUserBalance(brokerUser);
             return true;
         }
 
-        public async Task Consume(ConsumeContext<BrokerUser> context)
+        public async Task Consume(ConsumeContext<UserBalance> context)
         {
             var response = OperationResultWrapper.CreateResponse(UpdateUser, context.Message);
 

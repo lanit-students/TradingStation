@@ -9,25 +9,25 @@ using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class GetBrokerUserCommand: ICommand<GetBrokerUserRequest, BrokerUser>
+    public class GetBrokerUserCommand: ICommand<GetUserBalanceRequest, UserBalance>
     {
-        private readonly IRequestClient<GetBrokerUserRequest> client;
+        private readonly IRequestClient<GetUserBalanceRequest> client;
 
         public GetBrokerUserCommand(
-            [FromServices] IRequestClient<GetBrokerUserRequest> client
+            [FromServices] IRequestClient<GetUserBalanceRequest> client
             )
         {
             this.client = client;
         }
 
-        private async Task<BrokerUser> GetUser(GetBrokerUserRequest request)
+        private async Task<UserBalance> GetUser(GetUserBalanceRequest request)
         {
-            var response = await client.GetResponse<OperationResult<BrokerUser>>(request);
+            var response = await client.GetResponse<OperationResult<UserBalance>>(request);
 
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        public async Task<BrokerUser> Execute(GetBrokerUserRequest request)
+        public async Task<UserBalance> Execute(GetUserBalanceRequest request)
         {
             return await GetUser(request);
         }
