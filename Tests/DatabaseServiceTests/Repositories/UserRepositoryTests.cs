@@ -36,7 +36,7 @@ namespace DatabaseServiceTests.Repositories
 
         private string firstName = "Adam";
         private string lastName = "Yablokov";
-        private string email = "adam.ya@eden.org";
+        private string email = "example@gmail.com";
         private DateTime birth = DateTime.MinValue;
         private string passwordHash = "passwordHash";
         private string avatarExtension = "jpeg";
@@ -297,10 +297,11 @@ namespace DatabaseServiceTests.Repositories
             Assert.IsTrue(expectedField);
         }
 
-        public void ConfirmUserTrue()
+        [Test]
+        public void ConfirmUserIsActiveTrue()
         {
             var options = new DbContextOptionsBuilder<TPlatformDbContext>()
-                .UseInMemoryDatabase(databaseName: "ConfirmUserOkey")
+                .UseInMemoryDatabase(databaseName: "ConfirmUserIsActiveTrue")
                 .Options;
 
             using var dbContext = new TPlatformDbContext(options);
@@ -309,11 +310,28 @@ namespace DatabaseServiceTests.Repositories
             dbContext.UsersCredentials.Add(dbUserCredential);
             dbContext.SaveChanges();
 
+            var exception = Assert.Throws< BadRequestException> (() => repository.ConfirmUser(email));
 
-            repository.ConfirmUser(dbUserCredential.Email);
-            var expectedField = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email).IsActive;
 
-            Assert.IsFalse(expectedField);
+            Assert.AreEqual("User was confirmed early", exception.Message);
+        }
+
+
+        [Test]
+        public void ConfirmUserNotFound()
+        {
+            var options = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "ConfirmUserNotFound")
+                .Options;
+
+            using var dbContext = new TPlatformDbContext(options);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
+
+
+            var exception = Assert.Throws<NotFoundException>(() => repository.ConfirmUser(email));
+
+
+            Assert.AreEqual("Not found User for confirm", exception.Message);
         }
         #endregion
     }
