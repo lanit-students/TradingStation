@@ -19,7 +19,7 @@ namespace DataBaseService.Database.Models
         {
             builder
                 .ToTable("PortfolioInstruments")
-                .HasKey(p => new List<object>() { p.UserId, p.Figi });
+                .HasKey(p => new { p.UserId, p.Figi });
             builder
                 .Property(p => p.UserId)
                 .HasColumnName("UserId")

@@ -132,8 +132,11 @@
     private async Task GetLotsInPortfolio()
     {
         Guid userId = await Storage.GetItemAsync<Guid>("userId");
-        var instrumentInfo = BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
-        lotsInPortfolio =  instrumentInfo.Result.Lot;
+        var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
+        if (instrumentInfo == null || instrumentInfo.Lot == null)
+            lotsInPortfolio = 0;
+        else 
+            lotsInPortfolio =  instrumentInfo.Lot;
     }
     private async Task Sell()
     {
@@ -193,10 +196,11 @@
             if (tinkoffToken == null)
             {
                 await SetToken();
-            }
-
+            }         
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
+            await GetLotsInPortfolio();
             isInstrumentLoading = false;
+
         }
         catch (Exception)
         {
