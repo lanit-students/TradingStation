@@ -3,11 +3,13 @@
     <div class="container">
         @if (errorMessage == "")
         {
-            <h1>@newsEconomics[0].Category</h1>
+            @foreach (var category in categories)
+            {                
+            <h1>@category[0].Category</h1>
             <div class="row row-margin-bottom">
                 @for (int i = 0; i < 2; ++i)
                 {
-                    var newsItem = newsEconomics[i];
+                    var newsItem = category[i];
                     <div class="col-md-6">
                         <div class="lib-panel">
                             <div class="row box-shadow">
@@ -25,52 +27,7 @@
                     </div>
                 }
             </div>
-
-            <h1>@newsMarkets[2].Category</h1>
-            <div class="row row-margin-bottom">
-                @for (int i = 1; i < 3; ++i)
-                {
-                    var newsItem = newsMarkets[i];
-                    <div class="col-md-6">
-                        <div class="lib-panel">
-                            <div class="row box-shadow">
-                                <div class="lib-row lib-header">
-                                    <a href="@newsItem.Link">@newsItem.Title</a>
-                                    <div class="lib-header-seperator"></div>
-                                </div>
-                                <div class="lib-row lib-desc">
-                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
-                                    <p>@newsItem.Description</p>
-                                    <p>@newsItem.Author</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            <h1>@newsBusiness[0].Category</h1>
-            <div class="row row-margin-bottom">
-                @for (int i = 0; i < 2; ++i)
-                {
-                    var newsItem = newsBusiness[i];
-                    <div class="col-md-6">
-                        <div class="lib-panel">
-                            <div class="row box-shadow">
-                                <div class="lib-row lib-header">
-                                    <a href="@newsItem.Link">@newsItem.Title</a>
-                                    <div class="lib-header-seperator"></div>
-                                </div>
-                                <div class="lib-row lib-desc">
-                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
-                                    <p>@newsItem.Description</p>
-                                    <p>@newsItem.Author</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
+            }
         }
         else
         {
@@ -80,10 +37,7 @@
 
 @code {
     private List<List<NewsItem>> categories;
-    private List<NewsItem> newsBusiness;
-    private List<NewsItem> newsEconomics;
-    private List<NewsItem> newsMarkets;
-    private List<string> feedUrls;
+    private List<NewsItem> news;
     private string urlBusiness = "https://finance.rambler.ru/rss/business/";
     private string urlEconomics = "https://finance.rambler.ru/rss/economics/";
     private string urlMarkets = "https://finance.rambler.ru/rss/markets/";
@@ -93,11 +47,11 @@
     {
         try
         {
-            newsBusiness = NewsGetter.GetNews(urlBusiness).ToList();
-            newsEconomics = NewsGetter.GetNews(urlEconomics).ToList();
-            newsMarkets = NewsGetter.GetNews(urlMarkets).ToList();
+            categories.Add(NewsGetter.GetNews(urlBusiness).ToList());
+            categories.Add(NewsGetter.GetNews(urlEconomics).ToList());
+            categories.Add(NewsGetter.GetNews(urlMarkets).ToList());
         }
-        catch(BadRequestException)
+        catch (BadRequestException)
         {
             errorMessage = "Unfortunately, the news is currently unavailable. Please try again later";
         }
