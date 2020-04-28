@@ -10,6 +10,8 @@ using DTO;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using Kernel.CustomExceptions;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace UserServiceTests
 {
@@ -18,6 +20,8 @@ namespace UserServiceTests
         private ICreateUserCommand command;
         private Mock<IValidator<CreateUserRequest>> validatorMock;
         private Mock<IRequestClient<InternalCreateUserRequest>> clientMock;
+        private Mock<ISecretTokenEngine> secretTokenMock;
+        private Mock<ILogger<CreateUserCommand>> loggerMock;
         private Mock<Response<OperationResult<bool>>> responseMock;
         private Mock<ValidationResult> validatorResultMock;
         private CreateUserRequest request;
@@ -48,7 +52,11 @@ namespace UserServiceTests
                 .Setup(x => x.GetResponse<OperationResult<bool>>(It.IsAny<InternalCreateUserRequest>(), default, default))
                 .Returns(Task.FromResult(responseMock.Object));
 
-            command = new CreateUserCommand(clientMock.Object, validatorMock.Object);
+            secretTokenMock = new Mock<ISecretTokenEngine>();
+
+            loggerMock = new Mock<ILogger<CreateUserCommand>>();
+
+            command = new CreateUserCommand(clientMock.Object, validatorMock.Object,secretTokenMock.Object,loggerMock.Object);
         }
 
         [Test]
