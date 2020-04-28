@@ -17,7 +17,8 @@ namespace UserService.Commands
         private readonly IRequestClient<InternalConfirmUserRequest> client;
         private readonly ISecretTokenEngine secretTokenEngine;
 
-        public ConfirmUserCommand([FromServices]IRequestClient<InternalConfirmUserRequest> client, [FromServices] ISecretTokenEngine secretTokenEngine)
+        public ConfirmUserCommand([FromServices]IRequestClient<InternalConfirmUserRequest> client,
+            [FromServices] ISecretTokenEngine secretTokenEngine)
         {
             this.client = client;
             this.secretTokenEngine = secretTokenEngine;
