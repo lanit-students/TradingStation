@@ -79,9 +79,11 @@
     </div>
 
 @code {
+    private List<List<NewsItem>> categories;
     private List<NewsItem> newsBusiness;
     private List<NewsItem> newsEconomics;
     private List<NewsItem> newsMarkets;
+    private List<string> feedUrls;
     private string urlBusiness = "https://finance.rambler.ru/rss/business/";
     private string urlEconomics = "https://finance.rambler.ru/rss/economics/";
     private string urlMarkets = "https://finance.rambler.ru/rss/markets/";
