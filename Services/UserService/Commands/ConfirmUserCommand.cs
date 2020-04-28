@@ -5,6 +5,7 @@ using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -16,12 +17,13 @@ namespace UserService.Commands
     {
         private readonly IRequestClient<InternalConfirmUserRequest> client;
         private readonly ISecretTokenEngine secretTokenEngine;
-
+        private readonly ILogger<ConfirmUserCommand> logger;
         public ConfirmUserCommand([FromServices]IRequestClient<InternalConfirmUserRequest> client,
-            [FromServices] ISecretTokenEngine secretTokenEngine)
+            [FromServices] ISecretTokenEngine secretTokenEngine, [FromServices] ILogger<ConfirmUserCommand> logger)
         {
             this.client = client;
             this.secretTokenEngine = secretTokenEngine;
+            this.logger = logger;
         }
 
         private async Task<bool> UserConfirmation(InternalConfirmUserRequest request)
@@ -41,7 +43,9 @@ namespace UserService.Commands
 
             if (!confirmUserResult)
             {
-                throw new BadRequestException("Unable to confirm user.");
+                var e = new BadRequestException("Unable to confirm user");
+                logger.LogWarning(e, "BadRequest thrown while trying to confirm User.");
+                throw e;
             }
 
             return confirmUserResult;
