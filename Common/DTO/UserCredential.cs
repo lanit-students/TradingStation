@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+﻿using System;
 
 namespace DTO
 {
-    public class UserCredential: IdentityUser
+    public class UserCredential
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }

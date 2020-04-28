@@ -12,6 +12,7 @@ using FluentValidation.Results;
 using Kernel.CustomExceptions;
 using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace UserServiceTests
 {
@@ -25,13 +26,15 @@ namespace UserServiceTests
         private Mock<Response<OperationResult<bool>>> responseMock;
         private Mock<ValidationResult> validatorResultMock;
         private CreateUserRequest request;
+        Guid token;
 
         [SetUp]
         public void Initialization()
         {
             request = new CreateUserRequest();
             request.Password = "Not empty string";
-
+            request.Email = "TraidPlatform@mail.ru";
+            token = Guid.NewGuid();
             validatorResultMock = new Mock<ValidationResult>();
             validatorResultMock
                 .Setup(x => x.IsValid)
@@ -53,7 +56,9 @@ namespace UserServiceTests
                 .Returns(Task.FromResult(responseMock.Object));
 
             secretTokenMock = new Mock<ISecretTokenEngine>();
-
+            secretTokenMock
+             .Setup(x => x.GetToken(It.IsAny<string>()))
+             .Returns(token);
             loggerMock = new Mock<ILogger<CreateUserCommand>>();
 
             command = new CreateUserCommand(clientMock.Object, validatorMock.Object,secretTokenMock.Object,loggerMock.Object);
@@ -82,6 +87,7 @@ namespace UserServiceTests
         [Test]
         public void CreateUserCommandTrueSuccessfulUserCreation()
         {
+
             Assert.IsTrue(command.Execute(request).Result);
         }
      }
