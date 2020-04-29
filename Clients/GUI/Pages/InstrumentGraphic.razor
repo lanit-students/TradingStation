@@ -1,6 +1,5 @@
 ﻿@page "/instrument/{Figi}"
 @using System.Timers
-@using ChartJs.Blazor.ChartJS
 @using ChartJs.Blazor.ChartJS.Common.Axes
 @using ChartJs.Blazor.ChartJS.Common.Axes.Ticks
 @using ChartJs.Blazor.ChartJS.Common.Enums
@@ -16,7 +15,7 @@
 @inject IJSRuntime JsRuntime
 
 <h1>@errorMessage</h1>
-<ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="600" Height="300" />
+<ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="600" Height="300"/>
 
 @code {
 
@@ -26,7 +25,7 @@
     public HubConnection hubConnection;
     private string errorMessage = "";
     private Timer timer;
-    private string Name;
+    private string Name = "";
     private string token = "";
     private ChartJsLineChart lineChartJs;
     private LineConfig lineConfig;
@@ -39,45 +38,59 @@
         if (firstRender)
         {
             token = await Storage.GetItemAsync<string>("tinkoffToken");
+
             if (token == null)
             {
                 errorMessage = "Access error";
-                StateHasChanged();
                 return;
             }
 
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5009/CandleHub")
-                .Build();
+            await SetUpConnectionHub();
 
-            hubConnection.On<Candle>("ReceiveMessage", Candle =>
-            {
-                if (lasTime == null || lasTime != Candle.Time)
-                {
-                    lasTime = Candle.Time;
-                    tempDataSet.Add(new TimeTuple<decimal>(new Moment(Candle.Time), Candle.Close));
-                    lineConfig.Data.Datasets.Add(tempDataSet);
-                    lineChartJs.Update();
-                } 
-
-                timer.Stop();
-                timer.Dispose();
-            });
-
-            await hubConnection.StartAsync();
-
-            await hubConnection.SendAsync("Subscribe", new SubscribeOnCandleRequest
-            {
-                Token = token,
-                Broker = BrokerType.TinkoffBroker,
-                Figi = Figi
-            });
-
-            timer = new Timer(8000);
-            timer.Elapsed += OnTimedEvent;
-            timer.AutoReset = false;
-            timer.Start();
+            await UpdateName();
         }
+    }
+
+    private async Task UpdateName()
+    {
+        Name = await Storage.GetItemAsync<string>("tinkoffInstrumentName");
+     
+        lineConfig.Options.Title.Text = Name;
+    }
+
+    private async Task SetUpConnectionHub()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:5009/CandleHub")
+            .Build();
+
+        hubConnection.On<Candle>("ReceiveMessage", Candle =>
+        {
+            if (lasTime == null || lasTime != Candle.Time)
+            {
+                lasTime = Candle.Time;
+                tempDataSet.Add(new TimeTuple<decimal>(new Moment(Candle.Time), Candle.Close));
+                lineConfig.Data.Datasets.Add(tempDataSet);
+                lineChartJs.Update();
+            }
+
+            timer.Stop();
+            timer.Dispose();
+        });
+
+        await hubConnection.StartAsync();
+
+        await hubConnection.SendAsync("Subscribe", new SubscribeOnCandleRequest
+        {
+            Token = token,
+            Broker = BrokerType.TinkoffBroker,
+            Figi = Figi
+        });
+
+        timer = new Timer(8000);
+        timer.Elapsed += OnTimedEvent;
+        timer.AutoReset = false;
+        timer.Start();
     }
 
     protected override void OnInitialized()
@@ -95,7 +108,7 @@
                 Title = new OptionsTitle
                 {
                     Display = true,
-                    Text = "Instrument Name"
+                    Text = Name
                 },
                 Legend = new Legend
                 {
@@ -113,7 +126,7 @@
                 Scales = new Scales
                 {
                     xAxes = new List<CartesianAxis>
-                {
+                    {
                         new TimeAxis
                         {
                             Distribution = TimeDistribution.Linear,
@@ -152,8 +165,9 @@
     private void OnTimedEvent(object source, ElapsedEventArgs e)
     {
         errorMessage = "Instrument not found";
-        hubConnection.StopAsync().Wait();
+        hubConnection.StopAsync();
         timer.Stop();
         timer.Dispose();
     }
+
 }
