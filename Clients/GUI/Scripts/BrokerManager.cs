@@ -55,7 +55,7 @@ namespace GUI.Scripts
             return await client.Execute();
         }
 
-        public static async Task<UserBalance> GetBrokerUser(Guid userId, BrokerType broker)
+        public static async Task<UserBalance> GetUserBalance(Guid userId, BrokerType broker)
         {
             const string url = "https://localhost:5009/operations/brokerUser/get";
 
@@ -70,7 +70,7 @@ namespace GUI.Scripts
             return await client.Execute();
         }
 
-        public static async Task <bool> UpdateBrokerUser(UpdateBrokerUserRequest request)
+        public static async Task <bool> UpdateUserBalance(UpdateUserBalanceRequest request)
         {
             const string url = "https://localhost:5009/operations/brokerUser/update";
 

@@ -28,7 +28,9 @@ namespace TinkoffIntegrationLib
 
         public override string Name => tinkoffInstrument.Name;
 
-        public override string Currency => tinkoffInstrument.Currency.ToString();
+        public override DTO.MarketBrokerObjects.Currency Currency 
+            => (DTO.MarketBrokerObjects.Currency)Enum.
+            Parse(typeof(DTO.MarketBrokerObjects.Currency),tinkoffInstrument.Currency.ToString());
 
         public override int Lot => tinkoffInstrument.Lot;
     }

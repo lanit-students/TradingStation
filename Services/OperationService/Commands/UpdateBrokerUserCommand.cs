@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class UpdateBrokerUserCommand: ICommand<UpdateBrokerUserRequest, bool>
+    public class UpdateBrokerUserCommand: ICommand<UpdateUserBalanceRequest, bool>
     {
         private readonly IRequestClient<UserBalance> client;
 
@@ -27,7 +27,7 @@ namespace OperationService.Commands
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        public async Task<bool> Execute(UpdateBrokerUserRequest request)
+        public async Task<bool> Execute(UpdateUserBalanceRequest request)
         {
             var brokerUser = new UserBalance()
             {

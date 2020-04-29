@@ -3,8 +3,8 @@ namespace DTO.MarketBrokerObjects
 {
     public enum Currency
     {
-        RUB,
-        EUR,
-        USD
+        Rub,
+        Eur,
+        Usd
     }
 }

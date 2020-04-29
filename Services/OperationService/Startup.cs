@@ -75,7 +75,7 @@ namespace OperationService
             services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
             services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
             services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetBrokerUserCommand>();
-            services.AddTransient<ICommand<UpdateBrokerUserRequest, bool>, UpdateBrokerUserCommand>();
+            services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateBrokerUserCommand>();
 
             //services.AddLogging(log =>
             //{

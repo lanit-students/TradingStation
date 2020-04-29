@@ -77,8 +77,8 @@ namespace OperationService.Controllers
         [Route("brokerUser/update")]
         [HttpPut]
         public async Task<bool> UpdateBrokerUser(
-            [FromServices] ICommand<UpdateBrokerUserRequest, bool> command,
-            [FromBody] UpdateBrokerUserRequest request
+            [FromServices] ICommand<UpdateUserBalanceRequest, bool> command,
+            [FromBody] UpdateUserBalanceRequest request
             )
         {
             return await command.Execute(request);

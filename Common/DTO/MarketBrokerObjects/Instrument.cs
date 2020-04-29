@@ -17,7 +17,7 @@ namespace DTO
 
         public virtual string Name { get; set; }
 
-        public virtual string Currency { get; set; }
+        public virtual Currency Currency { get; set; }
 
         public virtual int Lot { get; set; }
 

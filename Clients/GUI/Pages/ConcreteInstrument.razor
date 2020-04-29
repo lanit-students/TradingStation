@@ -26,12 +26,12 @@
                     <option value=@cur>@cur</option>
                 }
             </select>
-            <input type="number" disabled="disabled" class="col-3" value=@balance[@currency]>
+            <input type="number" disabled="disabled" class="col-3" value=@currentBalance>
         </div>
         <br>
         <div class="form-row input-group-prepend">
             <label class="col-3">Update balance</label>
-            <input type="number" class="col-3" value=@cash>
+            <input type="number" class="col-3" @bind-value =@cash>
             <button class="btn btn-primary col-3" value="Update" @onclick="@UpdateBalance">Update</button>
         </div>
     </div>
@@ -61,15 +61,15 @@
     <div class="form-row">
         <div class="form-group col-md-2">
             <label for="countInPortfolio">Count in portfolio</label>
-            <input type="number" class="form-control" id="countInPortfolio" value=@countInPortfolio>
+            <input type="number" class="form-control" id="countInPortfolio" @bind-value=@countInPortfolio>
         </div>
         <div class="form-group col-md-2">
             <label for="lotsToTrade">Lots to trade</label>
-            <input type="number" class="form-control" id="lotsToTrade" value=@lotsToTrade>
+            <input type="number" class="form-control" id="lotsToTrade" @bind-value=@lotsToTrade>
         </div>
         <div class="form-group col-md-2">
             <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" value=@price>
+            <input type="number" class="form-control" id="price" @bind-value=@price>
         </div>
         <div class="form-group col-md-3">
             <label for="sellButton"> Sell instrument </label>
@@ -99,72 +99,152 @@
     private Instrument instrument;
     private string errorMessage = "";
     private decimal cash = 100;
-    private Currency currency = Currency.RUB;
-    private List<Currency> currencies = new List<Currency>() { Currency.RUB, Currency.USD, Currency.EUR };
-    private Dictionary<Currency, decimal> balance = new Dictionary<Currency, decimal>()
-    {
-        { Currency.RUB, 1000000 },
-        { Currency.USD, 900000 },
-        { Currency.EUR, 800000 }
-    };
+    private Currency currency = Currency.Rub;
+    private decimal currentBalance = 0;
+    private UserBalance userBalance;
+    private UserBalance oldBalance;
+    private List<Currency> currencies = new List<Currency>() { Currency.Rub, Currency.Usd, Currency.Eur };
 
     private void UpdateCurrency(ChangeEventArgs e)
     {
         var currencyString = e.Value.ToString();
-        currency = currencyString switch
+        currency = (Currency)Enum.Parse(typeof(Currency), currencyString);
+        ShowBalance();
+    }
+
+    private void ShowBalance()
+    {
+        currentBalance = currency switch
         {
-            "RUB" => currency = Currency.RUB,
-            "USD" => currency = Currency.USD,
-            "EUR" => currency = Currency.EUR,
-            _ => throw new BadRequestException()
+            Currency.Rub => userBalance.BalanceInRub,
+            Currency.Usd => userBalance.BalanceInUsd,
+            Currency.Eur => userBalance.BalanceInEur
         };
     }
 
-    private async Task UpdateBalance()
+    private async Task<bool> UpdateBalance()
     {
-        balance[currency] += cash;
-        var updateResult = await UpdateBrokerUser();
-        if (updateResult == false)
+        oldBalance = (UserBalance)userBalance.Clone();
+        switch (currency)
         {
-            balance[currency] -= cash;
+            case Currency.Rub:
+                userBalance.BalanceInRub += cash;
+                break;
+            case Currency.Usd:
+                userBalance.BalanceInUsd += cash;
+                break;
+            case Currency.Eur:
+                userBalance.BalanceInEur += cash;
+                break;
+            default:
+                errorMessage = "This currency is disabled to trade";
+                errorOccured = true;
+                break;
         }
-    }
 
-    private async Task<bool> UpdateBrokerUser()
-    {
-        var request = new UpdateBrokerUserRequest()
+        var request = new UpdateUserBalanceRequest()
         {
-            UserId = await Storage.GetItemAsync<Guid>("id"),
-            Broker = BrokerType.TinkoffBroker,
-            BalanceInRub = balance[Currency.RUB],
-            BalanceInUsd = balance[Currency.USD],
-            BalanceInEur = balance[Currency.EUR]
+            UserId = userBalance.UserId,
+            BalanceInRub = userBalance.BalanceInRub,
+            BalanceInUsd = userBalance.BalanceInUsd,
+            BalanceInEur = userBalance.BalanceInEur
         };
-        return  await BrokerManager.UpdateBrokerUser(request);
+        try
+        {
+            var result =  await BrokerManager.UpdateUserBalance(request);
+            if (result == true)
+            {
+                ShowBalance();
+            }
+
+        }
+        catch(Exception ex)
+        {
+            userBalance = oldBalance;
+            errorOccured = true;
+            errorMessage = ex.Message;
+        }
+
+        return true;
     }
 
 
-    private async Task GetLotsInPortfolio()
+    private async Task GetCountFromPortfolio()
     {
         Guid userId = await Storage.GetItemAsync<Guid>("id");
         var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
         countInPortfolio =  instrumentInfo.Lot;
     }
 
-    private async Task<UserBalance> GetTinkoffUser()
+    private async Task<UserBalance> GetUserBalance()
     {
         Guid userId = await Storage.GetItemAsync<Guid>("id");
-        return await BrokerManager.GetBrokerUser(userId, BrokerType.TinkoffBroker);
+        return await BrokerManager.GetUserBalance(userId, BrokerType.TinkoffBroker);
     }
 
     private async Task Sell()
     {
-        var result = await SendTradeRequest(OperationType.Sell);
+        if(countInPortfolio < lotsToTrade * instrument.Lot)
+            Modal.Show<EmptyModal>("Count in portfolio less than you can sell");
+        else
+        {
+            try
+            {
+                var result = await SendTradeRequest(OperationType.Sell);
+                if (result == false)
+                {
+                    errorOccured = true;
+                    errorMessage = "Unable to sell instrument. Try again later.";
+                }
+                else
+                {
+                    countInPortfolio -= lotsToTrade * instrument.Lot;
+                    UpdateBalance();
+                }
+            }
+            catch (Exception e)
+            {
+                errorOccured = true;
+                errorMessage = e.Message;
+            }
+        }
     }
 
     private async Task Buy()
     {
-        var result = await SendTradeRequest(OperationType.Buy);
+
+        var curr = instrument.Currency;
+        var currentBalance = curr switch
+        {
+            Currency.Rub => userBalance.BalanceInRub,
+            Currency.Usd => userBalance.BalanceInUsd,
+            Currency.Eur => userBalance.BalanceInEur,
+            _ => throw new Exception()
+        };
+        if(currentBalance < lotsToTrade * instrument.Lot * price)
+            Modal.Show<EmptyModal>("You need more money to make a deal");
+        else
+        {
+            try
+            {
+                var result = await SendTradeRequest(OperationType.Buy);
+                if (result == false)
+                {
+                    errorOccured = true;
+                    errorMessage = "Unable to buy instrument. Try again later.";
+                }
+                else
+                {
+                    countInPortfolio += lotsToTrade * instrument.Lot;
+                    UpdateBalance();
+                }
+            }
+            catch (Exception e)
+            {
+                errorOccured = true;
+                errorMessage = e.Message;
+            }
+        }
     }
 
     private async Task<bool> SendTradeRequest(OperationType operation)
@@ -176,8 +256,9 @@
             Token = tinkoffToken,
             Operation = operation,
             Figi = instrument.Figi,
-            Count = lotsToTrade,
-            Price = price
+            Count = lotsToTrade * instrument.Lot,
+            Price = price,
+            Currency = instrument.Currency
         };
 
         return await BrokerManager.Trade(request);
@@ -200,12 +281,11 @@
         instrument = new Instrument()
         {
             Figi = "default",
-            Currency = "default",
-            Name = "default",
+            Currency = Currency.Rub,
+            Name = "Load instrument",
             Lot = 0,
             Price = 0,
             Type = InstrumentType.Currency
-
         };
 
         try
@@ -217,14 +297,9 @@
                 await SetToken();
             }
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
-            await GetLotsInPortfolio();
-            var tinkoffUser = await GetTinkoffUser();
-            balance = new Dictionary<Currency, decimal>()
-            {
-                {Currency.RUB, tinkoffUser.BalanceInRub},
-                {Currency.USD, tinkoffUser.BalanceInUsd},
-                {Currency.EUR, tinkoffUser.BalanceInEur}
-            };
+            await GetCountFromPortfolio();
+            userBalance = await GetUserBalance();
+            ShowBalance();
             isInstrumentLoading = false;
 
         }

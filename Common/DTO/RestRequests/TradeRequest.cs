@@ -11,6 +11,7 @@ namespace DTO.RestRequests
         public OperationType Operation { get; set; }
         public string Figi { get; set; }
         public int Count { get; set; }
-        public decimal Price { get; set; }                       
+        public decimal Price { get; set; }  
+        public Currency Currency { get; set; }
     }
 }

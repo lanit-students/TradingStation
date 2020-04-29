@@ -3,12 +3,24 @@ using System.Collections.Generic;
 
 namespace DTO.MarketBrokerObjects
 {
-    public class UserBalance
+    public class UserBalance : ICloneable
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public decimal BalanceInRub { get; set; }
         public decimal BalanceInUsd { get; set; }
         public decimal BalanceInEur { get; set; }
+
+        public object Clone()
+        {
+            return new UserBalance()
+            {
+                Id = Id,
+                UserId = UserId,
+                BalanceInRub = BalanceInRub,
+                BalanceInUsd = BalanceInUsd,
+                BalanceInEur = BalanceInEur
+            };
+        }
     }
 }

@@ -29,6 +29,22 @@ namespace DataBaseService.Repositories
             this.logger = logger;
         }
 
+        private DbUserBalance RegisterUserBalance(Guid userId)
+        {
+            var userBalance = new UserBalance()
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                BalanceInRub = 0,
+                BalanceInUsd = 0,
+                BalanceInEur = 0
+            };
+            var dbUserBalance = mapper.MapToDbUserBalance(userBalance);
+            dbContext.UserBalances.Add(dbUserBalance);
+            dbContext.SaveChanges();
+            return dbUserBalance;
+        }
+
         private void UpdateBalanceAfterTransaction(Transaction transaction)
         {
             var dbUserBalance = dbContext.UserBalances.FirstOrDefault(
@@ -39,13 +55,13 @@ namespace DataBaseService.Repositories
 
             switch (transaction.Currency)
             {
-                case Currency.RUB:
+                case Currency.Rub:
                     dbUserBalance.BalanceInRub += cost;
                     break;
-                case Currency.USD:
+                case Currency.Usd:
                     dbUserBalance.BalanceInUsd += cost;
                     break;
-                case Currency.EUR:
+                case Currency.Eur:
                     dbUserBalance.BalanceInEur += cost;
                     break;
                 default:
@@ -56,20 +72,21 @@ namespace DataBaseService.Repositories
 
         private void UpdatePortfolioAfterTransaction(Transaction transaction)
         {
-            var portfolio = dbContext.Portfolios.FirstOrDefault(
+            var dbPortfolio = dbContext.Portfolios.FirstOrDefault(
                 p => p.Figi == transaction.Figi && p.UserId == transaction.UserId);
             
-            if(portfolio == null && transaction.Operation == OperationType.Buy)
+            if(dbPortfolio == null && transaction.Operation == OperationType.Buy)
             {
-                portfolio = new DbPortfolio()
+                dbPortfolio = new DbPortfolio()
                 {
                     Figi = transaction.Figi,
                     Count = transaction.Count,
-                    UserId = transaction.UserId
+                    UserId = transaction.UserId,
+                    Broker = transaction.Broker.ToString()
                 };
-                dbContext.Portfolios.Add(portfolio);
+                dbContext.Portfolios.Add(dbPortfolio);
             }
-            else if (transaction.Operation == OperationType.Sell && portfolio.Count <= 0)
+            else if (transaction.Operation == OperationType.Sell && dbPortfolio.Count <= transaction.Count)
             {
                 throw new BadRequestException();
             }
@@ -77,14 +94,25 @@ namespace DataBaseService.Repositories
             {
                 var sign = transaction.Operation == OperationType.Buy ? 1 : -1;
                 var orderLots = sign * transaction.Count;
-            } 
+                dbPortfolio.Count += orderLots;
+            }
+            dbContext.SaveChanges();
         }
 
         public void SaveTransaction(Transaction transaction)
         {
-            dbContext.Transactions.Add(mapper.MapToDbTransaction(transaction));
+            try
+            {
+                dbContext.Transactions.Add(mapper.MapToDbTransaction(transaction));
+                UpdateBalanceAfterTransaction(transaction);
+                UpdatePortfolioAfterTransaction(transaction);
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                throw new BadRequestException();
+            }
             
-            dbContext.SaveChanges();
         }
 
         public Instrument GetInstrumentFromPortfolio(GetInstrumentFromPortfolioRequest request)
@@ -109,16 +137,7 @@ namespace DataBaseService.Repositories
             
             if (dbUserBalance == null)
             {
-                var newUserBalance= new UserBalance()
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = request.UserId,
-                    BalanceInRub = 0,
-                    BalanceInUsd = 0,
-                    BalanceInEur = 0
-                };
-                RegisterBrokerUser(newUserBalance);
-                return newUserBalance;
+                dbUserBalance = RegisterUserBalance(request.UserId);
             }
             return mapper.MapToUserBalance(dbUserBalance);
         }
@@ -127,18 +146,12 @@ namespace DataBaseService.Repositories
         {
             var dbUserBalance = dbContext.UserBalances.FirstOrDefault(
                 user => user.UserId == userBalance.UserId);
-
+            if (dbUserBalance == null)
+                dbUserBalance = RegisterUserBalance(userBalance.Id);
             dbUserBalance.BalanceInRub = userBalance.BalanceInRub;
             dbUserBalance.BalanceInUsd = userBalance.BalanceInUsd;
             dbUserBalance.BalanceInEur = userBalance.BalanceInEur;
 
-            dbContext.SaveChanges();
-        }
-        
-        private void RegisterBrokerUser(UserBalance userBalance)
-        {
-            var dbUserBalance = mapper.MapToDbUserBalance(userBalance);
-            dbContext.UserBalances.Add(dbUserBalance);
             dbContext.SaveChanges();
         }
     }
