@@ -74,18 +74,18 @@ namespace OperationService
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
             services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
             services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
-            services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetBrokerUserCommand>();
-            services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateBrokerUserCommand>();
+            services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetUserBalanceCommand>();
+            services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateUserBalanceCommand>();
 
-            //services.AddLogging(log =>
-            //{
-            //    log.ClearProviders();
-            //});
+            services.AddLogging(log =>
+            {
+                log.ClearProviders();
+            });
 
-            //services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
-            //{
-            //    return new LoggerProvider(provider);
-            //});
+            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            {
+                return new LoggerProvider(provider);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

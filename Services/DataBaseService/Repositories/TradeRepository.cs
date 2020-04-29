@@ -42,6 +42,7 @@ namespace DataBaseService.Repositories
             var dbUserBalance = mapper.MapToDbUserBalance(userBalance);
             dbContext.UserBalances.Add(dbUserBalance);
             dbContext.SaveChanges();
+            logger.LogInformation("New user balance added");
             return dbUserBalance;
         }
 
@@ -65,9 +66,11 @@ namespace DataBaseService.Repositories
                     dbUserBalance.BalanceInEur += cost;
                     break;
                 default:
-                    throw new BadRequestException();
+                    var exception = new BadRequestException("Currency isn't correct");
+                    logger.LogWarning(exception, "Request with currency isn't correct");
+                    throw exception;
             }
-            dbContext.SaveChanges();
+            logger.LogInformation("Request to update balance of user {transaction.UserId} finished successfully");
         }
 
         private void UpdatePortfolioAfterTransaction(Transaction transaction)
@@ -85,18 +88,23 @@ namespace DataBaseService.Repositories
                     Broker = transaction.Broker.ToString()
                 };
                 dbContext.Portfolios.Add(dbPortfolio);
+                logger.LogInformation("Request to add new instrument{transaction.Figi}" +
+                    "to user {transaction.UserId} portfolio finished successfully");
             }
-            else if (transaction.Operation == OperationType.Sell && dbPortfolio.Count <= transaction.Count)
+            else if (transaction.Operation == OperationType.Sell && dbPortfolio.Count < transaction.Count)
             {
-                throw new BadRequestException();
+                var exception = new BadRequestException("Not enough instrument count to sell");
+                logger.LogWarning(exception, 
+                    "User {transaction.UserId} asked to sell more instruments {transaction.Figi} than he has");
+                throw exception;
             }
             else
             {
                 var sign = transaction.Operation == OperationType.Buy ? 1 : -1;
                 var orderLots = sign * transaction.Count;
                 dbPortfolio.Count += orderLots;
+                logger.LogInformation("Request to trade instrument{transaction.Figi} of user {transaction.UserId} finished successfully");
             }
-            dbContext.SaveChanges();
         }
 
         public void SaveTransaction(Transaction transaction)
@@ -107,12 +115,14 @@ namespace DataBaseService.Repositories
                 UpdateBalanceAfterTransaction(transaction);
                 UpdatePortfolioAfterTransaction(transaction);
                 dbContext.SaveChanges();
+                logger.LogInformation("Transaction of user {transaction.UserId} finished successfully");
             }
             catch
             {
-                throw new BadRequestException();
+                var exception = new BadRequestException("Transaction saving failed");
+                logger.LogWarning(exception, "Couldn't save transaction of user {transaction.UserId}");
+                throw exception;
             }
-            
         }
 
         public Instrument GetInstrumentFromPortfolio(GetInstrumentFromPortfolioRequest request)
@@ -122,7 +132,6 @@ namespace DataBaseService.Repositories
             
             if (instrument == null)
                 return new Instrument();
-            
             return new Instrument()
             {
                 Figi = request.Figi,
@@ -146,13 +155,18 @@ namespace DataBaseService.Repositories
         {
             var dbUserBalance = dbContext.UserBalances.FirstOrDefault(
                 user => user.UserId == userBalance.UserId);
+            
             if (dbUserBalance == null)
                 dbUserBalance = RegisterUserBalance(userBalance.Id);
+            
             dbUserBalance.BalanceInRub = userBalance.BalanceInRub;
             dbUserBalance.BalanceInUsd = userBalance.BalanceInUsd;
             dbUserBalance.BalanceInEur = userBalance.BalanceInEur;
 
             dbContext.SaveChanges();
+
+            logger.LogInformation("Balance of user {userBalance.UserId} updated");
+
         }
     }
 }

@@ -5,22 +5,26 @@ using Interfaces;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class UpdateBrokerUserCommand: ICommand<UpdateUserBalanceRequest, bool>
+    public class UpdateUserBalanceCommand: ICommand<UpdateUserBalanceRequest, bool>
     {
         private readonly IRequestClient<UserBalance> client;
+        private readonly ILogger<UpdateUserBalanceCommand> logger;
 
-        public UpdateBrokerUserCommand(
-            [FromServices] IRequestClient<UserBalance> client
+        public UpdateUserBalanceCommand(
+            [FromServices] IRequestClient<UserBalance> client,
+            ILogger<UpdateUserBalanceCommand> logger
             )
         {
             this.client = client;
+            this.logger = logger;
         }
 
-        private async Task<bool> UpdateUser(UserBalance brokerUser)
+        private async Task<bool> UpdateUserBalance(UserBalance brokerUser)
         {
             var response = await client.GetResponse<OperationResult<bool>>(brokerUser);
 
@@ -36,7 +40,9 @@ namespace OperationService.Commands
                 BalanceInRub = request.BalanceInRub,
                 BalanceInUsd = request.BalanceInUsd
             };
-            return await UpdateUser(brokerUser);
+            var result = await UpdateUserBalance(brokerUser);
+            logger.LogInformation("Balance of user{request.UserId} updated successfully");
+            return result;
         }
     }
 }

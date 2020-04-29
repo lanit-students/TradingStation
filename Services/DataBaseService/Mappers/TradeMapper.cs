@@ -10,11 +10,6 @@ namespace DataBaseService.Mappers
     {
         public DbTransaction MapToDbTransaction(Transaction transaction)
         {
-            var date = new DateTime(
-                transaction.DateTime.Year,
-                transaction.DateTime.Month,
-                transaction.DateTime.Minute
-                );
             return new DbTransaction
             {
                 Id = transaction.Id,
@@ -25,7 +20,7 @@ namespace DataBaseService.Mappers
                 Count = transaction.Count,
                 Price = transaction.Price,
                 Currency = transaction.Currency.ToString(),
-                Date = date,
+                Date = transaction.DateTime.Date,
                 Time = transaction.DateTime, 
                 IsSuccess = transaction.IsSuccess
             };

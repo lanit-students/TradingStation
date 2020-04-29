@@ -7,6 +7,7 @@ using Interfaces;
 using DTO.BrokerRequests;
 using DTO.RestRequests;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace OperationService.Controllers
 {
@@ -14,6 +15,12 @@ namespace OperationService.Controllers
     [Route("[controller]")]
     public class OperationsController : ControllerBase
     {
+        private readonly ILogger<OperationsController> logger;
+        public OperationsController([FromServices] ILogger<OperationsController> logger)
+        {
+            this.logger = logger;
+        }
+        
         [Route("instruments/get")]
         [HttpGet]
         public async Task<IEnumerable<Instrument>> GetInstruments(
@@ -39,6 +46,7 @@ namespace OperationService.Controllers
             [FromBody] TradeRequest request
             )
         {
+            logger.LogInformation("Trade request of user {request.UserId} received");
             return await command.Execute(request);
         }
 
@@ -50,6 +58,7 @@ namespace OperationService.Controllers
             [FromQuery] string figi
             )
         {
+            logger.LogInformation("Get instrument {figi} from portfolio of user {userId} received");
             return await command.Execute(
                new GetInstrumentFromPortfolioRequest()
                {
@@ -58,29 +67,25 @@ namespace OperationService.Controllers
                });
         }
 
-        [Route("brokerUser/get")]
+        [Route("userBalance/get")]
         [HttpGet]
-        public async Task<UserBalance> GetBrokerUser(
+        public async Task<UserBalance> GetUserBalance(
             [FromServices] ICommand<GetUserBalanceRequest, UserBalance> command,
-            [FromQuery] Guid userId,
-            [FromQuery] BrokerType broker
+            [FromQuery] Guid userId
             )
         {
-            return await command.Execute(
-               new GetUserBalanceRequest()
-               {
-                   UserId = userId,
-                   Broker = broker
-               });
+            logger.LogInformation("Get user {request.UserId} balance  received");
+            return await command.Execute(new GetUserBalanceRequest() { UserId = userId });
         }
 
-        [Route("brokerUser/update")]
+        [Route("userBalance/update")]
         [HttpPut]
-        public async Task<bool> UpdateBrokerUser(
+        public async Task<bool> UpdateUserBalance(
             [FromServices] ICommand<UpdateUserBalanceRequest, bool> command,
             [FromBody] UpdateUserBalanceRequest request
             )
         {
+            logger.LogInformation("Update user {request.UserId} balance  received");
             return await command.Execute(request);
         }
 

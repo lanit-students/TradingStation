@@ -63,15 +63,15 @@ namespace BrokerService
 
             services.AddMassTransitHostedService();
 
-            //services.AddLogging(log =>
-            //{
-            //    log.ClearProviders();
-            //});
+            services.AddLogging(log =>
+            {
+                log.ClearProviders();
+            });
 
-            //services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
-            //{
-            //    return new LoggerProvider(provider);
-            //});
+            services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
+            {
+                return new LoggerProvider(provider);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

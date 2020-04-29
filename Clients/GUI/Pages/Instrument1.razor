@@ -1,14 +1,14 @@
-﻿@*@page "/instrument"
+﻿@page "/instrument"
 @inject NavigationManager NavManager
 @inject IModalService Modal
 @inject ISessionStorageService Storage
 @attribute [Authorize]
 
-<h3 align ="center">@instrument.Name</h3>
+<h3 align="center">@instrument.Name</h3>
 <br>
 
 <div class="container">
-       @if (isInstrumentLoading)
+    @if (isInstrumentLoading)
     {
         <div class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
@@ -16,74 +16,68 @@
     }
     else if (!errorOccured)
     {
-
-    <div>
-        <div class="form-row input-group-prepend">
-            <label class="col-3">Balance</label>
-            <select @onchange="@UpdateCurrency" class="custom-select col-3">
-                @foreach (var cur in @currencies)
-                {
-                    <option value=@cur>@cur</option>
-                }
-            </select>
-            <input type="number" disabled="disabled" class="col-3" @bind-value=@currentBalance>
+        <div>
+            <div class="form-row input-group-prepend">
+                <label class="col-3">Current balance </label>
+                <input type="text" disabled="disabled" class="col-3" @bind-value=@currency>
+                <input type="number" disabled="disabled" class="col-3" @bind-value=@currentBalance>
+            </div>
+            <br>
+            <div class="form-row input-group-prepend">
+                <label class="col-3">Update balance</label>
+                <input type="number" class="col-3" @bind-value=@cash>
+                <button class="btn btn-primary col-3" value="Update" @onclick="@UpdateBalance">Update</button>
+            </div>
         </div>
         <br>
-        <div class="form-row input-group-prepend">
-            <label class="col-3">Update balance</label>
-            <input type="number" class="col-3" @bind-value =@cash>
-            <button class="btn btn-primary col-3" value="Update" @onclick="@UpdateBalance">Update</button>
-        </div>
-    </div>
-    <br>
 
-    <table class="table table-bordered">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Figi</th>
-                <th scope="col">Name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Currency</th>
-                <th scope="col">Count in lot</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@instrument.Figi</td>
-                <td>@instrument.Name</td>
-                <td>@instrument.Type</td>
-                <td>@instrument.Currency</td>
-                <td>@instrument.Lot</td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Figi</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Currency</th>
+                    <th scope="col">Count in lot</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@instrument.Figi</td>
+                    <td>@instrument.Name</td>
+                    <td>@instrument.Type</td>
+                    <td>@instrument.Currency</td>
+                    <td>@instrument.Lot</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <div class="form-row">
-        <div class="form-group col-md-2">
-            <label for="countInPortfolio">Count in portfolio</label>
-            <input type="number" class="form-control" id="countInPortfolio" @bind-value=@countInPortfolio>
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="countInPortfolio">Count in portfolio</label>
+                <input type="number" disabled="disabled" class="form-control" id="countInPortfolio" @bind-value=@countInPortfolio>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="lotsToTrade">Lots to trade</label>
+                <input type="number" class="form-control" id="lotsToTrade" @bind-value=@lotsToTrade>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" @bind-value=@price>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="sellButton"> Sell instrument </label>
+                <input class="btn btn-primary" id="sellButton" value="Sell" @onclick="@Sell" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="buyButton"> Buy instrument </label>
+                <input class="btn btn-primary" id="buyButton" value="Buy" @onclick="@Buy" />
+            </div>
         </div>
-        <div class="form-group col-md-2">
-            <label for="lotsToTrade">Lots to trade</label>
-            <input type="number" class="form-control" id="lotsToTrade" @bind-value=@lotsToTrade>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" @bind-value=@price>
-        </div>
-        <div class="form-group col-md-3">
-            <label for="sellButton"> Sell instrument </label>
-            <input class="btn btn-primary" id="sellButton" value="Sell" @onclick="@Sell" />
-        </div>
-        <div class="form-group col-md-3">
-            <label for="buyButton"> Buy instrument </label>
-            <input class="btn btn-primary" id="buyButton" value="Buy" @onclick="@Buy" />
-        </div>
-    </div>
     }
     else
     {
-    <h3 class="m-lg-5">@errorMessage</h3>
+        <h3 class="m-lg-5">@errorMessage</h3>
     }
 
 </div>
@@ -103,16 +97,8 @@
     private decimal currentBalance = 0;
     private UserBalance userBalance;
     private UserBalance oldBalance;
-    private List<Currency> currencies = new List<Currency>() { Currency.Rub, Currency.Usd, Currency.Eur };
 
-    private void UpdateCurrency(ChangeEventArgs e)
-    {
-        var currencyString = e.Value.ToString();
-        currency = (Currency)Enum.Parse(typeof(Currency), currencyString);
-        ShowBalance();
-    }
-
-    private void ShowBalance()
+    private void UpdateBalanceVariable()
     {
         currentBalance = currency switch
         {
@@ -122,9 +108,8 @@
         };
     }
 
-    private async Task<bool> UpdateBalance()
+    private void UpdateBalanceInCorrectCurrency()
     {
-        oldBalance = (UserBalance)userBalance.Clone();
         switch (currency)
         {
             case Currency.Rub:
@@ -141,7 +126,13 @@
                 errorOccured = true;
                 break;
         }
+        cash = 0;
+    }
 
+    private async Task UpdateBalance()
+    {
+        oldBalance = (UserBalance)userBalance.Clone();
+        UpdateBalanceInCorrectCurrency();
         var request = new UpdateUserBalanceRequest()
         {
             UserId = userBalance.UserId,
@@ -151,41 +142,36 @@
         };
         try
         {
-            var result =  await BrokerManager.UpdateUserBalance(request);
+            var result = await BrokerManager.UpdateUserBalance(request);
             if (result == true)
             {
-                ShowBalance();
+                UpdateBalanceVariable();
             }
-
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             userBalance = oldBalance;
             errorOccured = true;
-            errorMessage = ex.Message;
+            errorMessage = "Can't update balance, try again later.";
         }
-
-        return true;
     }
-
 
     private async Task GetCountFromPortfolio()
     {
-        Guid userId = await Storage.GetItemAsync<Guid>("id");
-        var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userId, instrument.Figi);
-        countInPortfolio =  instrumentInfo.Lot;
+        var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userBalance.UserId, instrument.Figi);
+        countInPortfolio = instrumentInfo.Lot;
     }
 
     private async Task GetUserBalance()
     {
-        Guid userId = await Storage.GetItemAsync<Guid>("id");
-        userBalance = await BrokerManager.GetUserBalance(userId, BrokerType.TinkoffBroker);
-        ShowBalance();
+        userBalance = await BrokerManager.GetUserBalance(userBalance.UserId);
+        UpdateBalanceVariable();
     }
 
     private async Task Sell()
     {
-        if(countInPortfolio < lotsToTrade * instrument.Lot)
+        UpdateBalanceVariable();
+        if (countInPortfolio < lotsToTrade * instrument.Lot)
             Modal.Show<EmptyModal>("Count in portfolio less than you can sell");
         else
         {
@@ -199,8 +185,8 @@
                 }
                 else
                 {
-                    countInPortfolio -= lotsToTrade * instrument.Lot;
-                    GetUserBalance();
+                    await GetCountFromPortfolio();
+                    await GetUserBalance();
                 }
             }
             catch (Exception e)
@@ -213,16 +199,8 @@
 
     private async Task Buy()
     {
-
-        var curr = instrument.Currency;
-        var currentBalance = curr switch
-        {
-            Currency.Rub => userBalance.BalanceInRub,
-            Currency.Usd => userBalance.BalanceInUsd,
-            Currency.Eur => userBalance.BalanceInEur,
-            _ => throw new Exception()
-        };
-        if(currentBalance < lotsToTrade * instrument.Lot * price)
+        UpdateBalanceVariable();
+        if (currentBalance < lotsToTrade * instrument.Lot * price)
             Modal.Show<EmptyModal>("You need more money to make a deal");
         else
         {
@@ -236,8 +214,8 @@
                 }
                 else
                 {
-                    countInPortfolio += lotsToTrade * instrument.Lot;
-                    GetUserBalance();
+                    await GetCountFromPortfolio();
+                    await GetUserBalance();
                 }
             }
             catch (Exception e)
@@ -252,18 +230,17 @@
     {
         var request = new TradeRequest()
         {
-            UserId = await Storage.GetItemAsync<Guid>("id"),
+            UserId = userBalance.UserId,
             Broker = BrokerType.TinkoffBroker,
             Token = tinkoffToken,
             Operation = operation,
             Figi = instrument.Figi,
             Count = lotsToTrade * instrument.Lot,
             Price = price,
-            Currency = instrument.Currency
+            Currency = currency
         };
 
         return await BrokerManager.Trade(request);
-
     }
 
     private async Task SetToken()
@@ -272,7 +249,7 @@
         var modalResult = await formModal.Result;
         tinkoffToken = (string)modalResult.Data;
 
-        Storage.SetItemAsync("tinkoffToken", tinkoffToken);
+        await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
     }
 
     protected override async Task OnInitializedAsync()
@@ -298,8 +275,9 @@
                 await SetToken();
             }
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
-            await GetCountFromPortfolio();
+            userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };
             await GetUserBalance();
+            await GetCountFromPortfolio();
             isInstrumentLoading = false;
 
         }
@@ -311,5 +289,4 @@
             errorOccured = true;
         }
     }
-
-}*@
+}

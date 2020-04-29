@@ -16,16 +16,17 @@ namespace OperationService.Commands
     {
         private readonly IRequestClient<InternalTradeRequest> tradeClient;
         private readonly IRequestClient<Transaction> saveTransactionClient;
-        //private readonly ILogger<TradeCommand> logger;
+        private readonly ILogger<TradeCommand> logger;
 
         public TradeCommand(
             [FromServices] IRequestClient<InternalTradeRequest> tradeClient,
-            [FromServices] IRequestClient<Transaction> saveTransactionClient
+            [FromServices] IRequestClient<Transaction> saveTransactionClient,
+            [FromServices] ILogger<TradeCommand> logger
             )
         {
             this.tradeClient = tradeClient;
             this.saveTransactionClient = saveTransactionClient;
-            //this.logger = logger;
+            this.logger = logger;
         }
 
         private async Task<Transaction> Trade(InternalTradeRequest request)
@@ -59,13 +60,9 @@ namespace OperationService.Commands
                 Token = request.Token,
                 Transaction = transaction
             };
-            var saveTransactionResult = false;
             transaction = await Trade(tradeRequest);
-            if (transaction.IsSuccess == true)
-            {
-                saveTransactionResult = await SaveTransaction(transaction);
-            }
-                
+            var saveTransactionResult = await SaveTransaction(transaction);
+            logger.LogInformation("Transaction of user {request.UserId} finished successfully");  
             return saveTransactionResult;
         }
     }

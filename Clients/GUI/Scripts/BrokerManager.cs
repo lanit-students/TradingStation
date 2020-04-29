@@ -55,14 +55,13 @@ namespace GUI.Scripts
             return await client.Execute();
         }
 
-        public static async Task<UserBalance> GetUserBalance(Guid userId, BrokerType broker)
+        public static async Task<UserBalance> GetUserBalance(Guid userId)
         {
-            const string url = "https://localhost:5009/operations/brokerUser/get";
+            const string url = "https://localhost:5009/operations/userBalance/get";
 
             var queryParams = new Dictionary<string, string>
             {
-                { "userId", userId.ToString() },
-                { "broker", broker.ToString()}
+                { "userId", userId.ToString() }
             };
 
             var client = new RestClient<object, UserBalance>(url, RestRequestType.GET, queryParams: queryParams);
@@ -72,7 +71,7 @@ namespace GUI.Scripts
 
         public static async Task <bool> UpdateUserBalance(UpdateUserBalanceRequest request)
         {
-            const string url = "https://localhost:5009/operations/brokerUser/update";
+            const string url = "https://localhost:5009/operations/userBalance/update";
 
             var client = new RestClient<object, bool>(url, RestRequestType.PUT);
 

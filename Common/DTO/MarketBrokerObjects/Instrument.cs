@@ -2,9 +2,6 @@
 
 namespace DTO
 {
-    /// <summary>
-    /// Represents market instrument
-    /// </summary>
     public class Instrument
     {
         public virtual string Figi { get; set; }

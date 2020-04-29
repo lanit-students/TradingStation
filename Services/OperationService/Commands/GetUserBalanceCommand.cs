@@ -5,19 +5,23 @@ using Interfaces;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class GetBrokerUserCommand: ICommand<GetUserBalanceRequest, UserBalance>
+    public class GetUserBalanceCommand: ICommand<GetUserBalanceRequest, UserBalance>
     {
         private readonly IRequestClient<GetUserBalanceRequest> client;
+        private readonly ILogger<GetUserBalanceCommand> logger;
 
-        public GetBrokerUserCommand(
-            [FromServices] IRequestClient<GetUserBalanceRequest> client
+        public GetUserBalanceCommand(
+            [FromServices] IRequestClient<GetUserBalanceRequest> client,
+            [FromServices] ILogger<GetUserBalanceCommand> logger
             )
         {
             this.client = client;
+            this.logger = logger;
         }
 
         private async Task<UserBalance> GetUser(GetUserBalanceRequest request)
@@ -29,7 +33,9 @@ namespace OperationService.Commands
 
         public async Task<UserBalance> Execute(GetUserBalanceRequest request)
         {
-            return await GetUser(request);
+            var result = await GetUser(request);
+            logger.LogInformation("Balance of user {request.UserId} received successfully");
+            return result;
         }
     }
 }
