@@ -7,6 +7,6 @@ namespace UserService.Interfaces
 {
     interface IAddBotCommand
     {
-        
+        Task<bool> Execute( request);
     }
 }
