@@ -1,0 +1,66 @@
+﻿@page  "/NewsComponent"
+
+@* TODO scrolling news *@
+    <div class="container">
+        @if (errorMessage == "")
+        {
+            @foreach (List<NewsItem> newsCategory in newsCategories)
+            {
+            <h1>@newsCategory[0].Category</h1>
+            <div class="row row-margin-bottom">
+                @for (int i = 0; i < 2; ++i)
+                {
+                    var newsItem = newsCategory[i];
+                    <div class="col-md-6">
+                        <div class="lib-panel">
+                            <div class="row box-shadow">
+                                <div class="lib-row lib-header">
+                                    <a href="@newsItem.Link">@newsItem.Title</a>
+                                    <div class="lib-header-seperator"></div>
+                                </div>
+                                <div class="lib-row lib-desc">
+                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> @newsItem.PubDate</p>
+                                    <p>@newsItem.Description</p>
+                                    <p>@newsItem.Author</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            }
+        }
+        else
+        {
+            <p>@errorMessage</p>
+        }
+    </div>
+
+@code {
+    private List<List<NewsItem>> newsCategories;
+    private string urlBusiness = "https://finance.rambler.ru/rss/business/";
+    private string urlEconomics = "https://finance.rambler.ru/rss/economics/";
+    private string urlMarkets = "https://finance.rambler.ru/rss/markets/";
+    private string errorMessage = "";
+
+    public async Task GetNews()
+    {
+        try
+        {
+            newsCategories = new List<List<NewsItem>>();
+            newsCategories.Add(NewsGetter.GetNews(urlBusiness).ToList());
+            newsCategories.Add(NewsGetter.GetNews(urlEconomics).ToList());
+            newsCategories.Add(NewsGetter.GetNews(urlMarkets).ToList());
+        }
+        catch (BadRequestException)
+        {
+            errorMessage = "Unfortunately, the news are currently unavailable. Please try again later";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        GetNews();
+    }
+
+}
