@@ -3,16 +3,12 @@
 @using ChartJs.Blazor.ChartJS.Common.Axes
 @using ChartJs.Blazor.ChartJS.Common.Axes.Ticks
 @using ChartJs.Blazor.ChartJS.Common.Enums
-@using ChartJs.Blazor.ChartJS.Common.Handlers
 @using ChartJs.Blazor.ChartJS.Common.Properties
 @using ChartJs.Blazor.ChartJS.Common.Time
 @using ChartJs.Blazor.ChartJS.LineChart
 @using ChartJs.Blazor.Charts
 @using ChartJs.Blazor.Util
-@using GUI.Scripts
-@inject NavigationManager NavigationManager
 @inject ISessionStorageService Storage
-@inject IJSRuntime JsRuntime
 
 <ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="600" Height="300"/>
 
@@ -21,12 +17,12 @@
     [Parameter]
     public string Figi { get; set; }
 
-    private string Name = "";
+    private string name = "";
     private string token = "";
     private ChartJsLineChart lineChartJs;
     private LineConfig lineConfig;
     private LineDataset<TimeTuple<decimal>> tempDataSet;
-    private DateTime lasTime;
+    private DateTime lastTime;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -49,16 +45,16 @@
 
     private async Task UpdateName()
     {
-        Name = await Storage.GetItemAsync<string>("tinkoffInstrumentName");
+        name = await Storage.GetItemAsync<string>("tinkoffInstrumentName");
 
-        lineConfig.Options.Title.Text = Name;
+        lineConfig.Options.Title.Text = name;
     }
 
     private void OnReceivedMessage(Candle Candle)
     {
-        if (lasTime == null || lasTime != Candle.Time)
+        if (lastTime == null || lastTime != Candle.Time)
         {
-            lasTime = Candle.Time;
+            lastTime = Candle.Time;
 
             tempDataSet.Add(new TimeTuple<decimal>(new Moment(Candle.Time), Candle.Close));
             lineConfig.Data.Datasets.Add(tempDataSet);
@@ -89,7 +85,7 @@
                 Title = new OptionsTitle
                 {
                     Display = true,
-                    Text = Name
+                    Text = name
                 },
                 Tooltips = new Tooltips
                 {

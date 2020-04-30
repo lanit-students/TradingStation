@@ -16,11 +16,12 @@ namespace OperationService.Hubs
         {
             this.client = client;
         }
+
         public async Task Subscribe(SubscribeOnCandleRequest request)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId,request.Figi);
+            
             await client.GetResponse<OperationResult>(request);
-
         }
 
         public async Task SendMessage(string Figi, Candle candle)

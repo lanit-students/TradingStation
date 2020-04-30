@@ -68,9 +68,7 @@ namespace TinkoffIntegrationLib
                                 instrument)
                         );
                     }
-                    catch (Exception)
-                    {
-                    }
+                    catch (Exception) { }
                 });
 
             return instruments;
@@ -79,13 +77,13 @@ namespace TinkoffIntegrationLib
 
         public void SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
         {
-            this.sendCandle = SendCandle;
-            context.StreamingEventReceived += onStreamingEventReceived;
+            sendCandle = SendCandle;
+            context.StreamingEventReceived += OnStreamingEventReceived;
             context.SendStreamingRequestAsync(new StreamingRequest.CandleSubscribeRequest(Figi, CandleInterval.Minute));
         }
 
 
-        private void onStreamingEventReceived(object sender, StreamingEventReceivedEventArgs args)
+        private void OnStreamingEventReceived(object sender, StreamingEventReceivedEventArgs args)
         {
             sendCandle(new CandleAdapter(args.Response));
         }
