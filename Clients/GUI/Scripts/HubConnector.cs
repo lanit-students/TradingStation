@@ -13,13 +13,22 @@ namespace GUI.Scripts
 {
     public static class HubConnector
     {
-        private static Timer timer;
         public static async Task SubscribeOnCandle(Action<Candle> onReceivedAction, Action onErrorAction, String token, String Figi)
         {
-
             var hubConnection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:5009/CandleHub")
                 .Build();
+
+
+            var timer = new Timer(5000);
+            timer.Elapsed += async (source, e) =>
+            {
+                onErrorAction.Invoke();
+                await hubConnection.StopAsync();
+                timer.Stop();
+                timer.Dispose();
+            };
+            timer.AutoReset = false;
 
             hubConnection.On<Candle>("ReceiveMessage", Candle =>
             {
@@ -37,15 +46,6 @@ namespace GUI.Scripts
                 Figi = Figi
             });
 
-            timer = new Timer(5000);
-            timer.Elapsed += async (source, e) =>
-            {
-                onErrorAction.Invoke();
-                await hubConnection.StopAsync();
-                timer.Stop();
-                timer.Dispose();
-            };
-            timer.AutoReset = false;
             timer.Start();
         }
     }
