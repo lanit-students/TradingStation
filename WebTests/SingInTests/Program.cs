@@ -50,7 +50,7 @@ namespace SingInTests
 
             var client = new RestClient<CreateUserRequest, bool>(url, RestRequestType.POST);
 
-            await client.Execute(request);
+            await client.ExecuteAsync(request);
         }
 
         private bool TryToSingIn()

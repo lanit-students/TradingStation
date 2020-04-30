@@ -14,7 +14,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<object, UserInfoRequest>(url, RestRequestType.GET, userToken);
 
-            return await client.Execute();
+            return await client.ExecuteAsync();
         }
     }
 }

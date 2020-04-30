@@ -4,24 +4,33 @@ using Microsoft.AspNetCore.Mvc;
 
 using AuthenticationService.Interfaces;
 using Kernel.CustomExceptions;
+using Microsoft.Extensions.Logging;
 
 namespace AuthenticationService.Commands
 {
     public class LogoutCommand : ILogoutCommand
     {
-        private readonly ITokensEngine _tokensEngine;
+        private ILogger<LogoutCommand> logger;
 
-        public LogoutCommand([FromServices] ITokensEngine tokensEngine)
+        public LogoutCommand([FromServices] ILogger<LogoutCommand> logger)
         {
-            _tokensEngine = tokensEngine;
+            this.logger = logger;
         }
 
         public bool Execute(Guid userId)
         {
-            if (userId == Guid.Empty)
-                throw new BadRequestException();
+            logger.LogInformation($"User {userId} trying to log out.");
 
-            return _tokensEngine.DeleteToken(userId).IsSuccess;
+            if (userId == Guid.Empty)
+            {
+                var e = new BadRequestException("Empty id in log out request.");
+                logger.LogWarning(e, "BadRequest thrown while trying to log out.");
+                throw new BadRequestException();
+            }
+
+            logger.LogInformation($"User {userId} logged out.");
+
+            return true;
         }
     }
 }
