@@ -66,14 +66,14 @@ namespace OperationService
                 x.AddConsumer<CandleConsumer>();
 
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
-                x.AddRequestClient<SubscribeOnCandleRequest>(new Uri("rabbitmq://localhost/BrokerService"));
+                x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
             });
 
             services.AddMassTransitHostedService();
 
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
 
-            services.AddTransient<ICommand<SubscribeOnCandleRequest, OperationResult>, SubscribeOnCandleCommand>();
+            services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
 
             services.AddLogging(log =>
             {

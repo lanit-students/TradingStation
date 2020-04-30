@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using DTO;
-using DTO.MarketBrokerObjects;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interfaces;
+using DTO;
 using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
+using Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OperationService.Controllers
 {
@@ -16,14 +15,14 @@ namespace OperationService.Controllers
         [Route("instruments/get")]
         [HttpGet]
         public async Task<IEnumerable<Instrument>> GetInstruments(
-                [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> command,
-                [FromQuery] BrokerType broker,
-                [FromQuery] string token,
-                [FromQuery] InstrumentType instrument,
-                [FromQuery] int depth)
+            [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> command,
+            [FromQuery] BrokerType broker,
+            [FromQuery] string token,
+            [FromQuery] InstrumentType instrument,
+            [FromQuery] int depth)
         {
             return await command.Execute(
-                new GetInstrumentsRequest()
+                new GetInstrumentsRequest
                 {
                     Broker = broker,
                     Token = token,
@@ -32,20 +31,21 @@ namespace OperationService.Controllers
                 });
         }
 
-        [Route("instrument/get")]
+        [Route("candles/get")]
         [HttpGet]
-        public async void SubscribeOnCandle(
-            [FromServices] ICommand<SubscribeOnCandleRequest, OperationResult> command,
+        public async Task<IEnumerable<Candle>> GetCandles(
+            [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> command,
             [FromQuery] BrokerType broker,
             [FromQuery] string token,
-            [FromQuery] string Figi)
+            [FromQuery] string figi
+        )
         {
-            await command.Execute(
-                new SubscribeOnCandleRequest()
+            return await command.Execute(
+                new GetCandlesRequest
                 {
                     Broker = broker,
                     Token = token,
-                    Figi = Figi
+                    Figi = figi
                 });
         }
     }

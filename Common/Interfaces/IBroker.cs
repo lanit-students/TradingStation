@@ -2,6 +2,7 @@
 using DTO;
 using DTO.MarketBrokerObjects;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Interfaces
 {
@@ -9,7 +10,7 @@ namespace Interfaces
     {
         IEnumerable<Instrument> GetInstruments(InstrumentType type);
 
-        void SubscribeOnCandle(string Figi, Action<Candle> SendCandle);
+        IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle);
 
         /// <summary>
         /// Depth of market glass

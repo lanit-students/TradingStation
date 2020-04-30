@@ -20,7 +20,7 @@ namespace OperationService.BrokerConsumers
         {
             await hubContext
                 .Clients.Group(context.Message.Figi)
-                .SendCoreAsync("ReceiveMessage", new[] {context.Message});
+                .SendCoreAsync("ReceiveMessage", new object[] {context.Message});
         }
     }
 }

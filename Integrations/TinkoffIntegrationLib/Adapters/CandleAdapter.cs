@@ -20,6 +20,11 @@ namespace TinkoffIntegrationLib.Adapters
             }
         }
 
+        public CandleAdapter(CandlePayload candlePayload)
+        {
+            this.candlePayload = candlePayload;
+        }
+
         public override decimal Open => candlePayload.Open;
 
         public override decimal Close => candlePayload.Close;

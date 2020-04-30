@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BrokerService.Utils;
 using DTO;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BrokerService.BrokerConsumers
 {
-    public class SubscribeOnCandleConsumer : IConsumer<SubscribeOnCandleRequest>
+    public class SubscribeOnCandleConsumer : IConsumer<GetCandlesRequest>
     {
         private readonly ISendEndpoint endpoint;
         public SubscribeOnCandleConsumer([FromServices] IBus bus)
@@ -20,11 +19,9 @@ namespace BrokerService.BrokerConsumers
             this.endpoint = bus.GetSendEndpoint(uri).Result;
         }
 
-        public OperationResult SubscribeOnCandle(SubscribeOnCandleRequest request)
+        public IEnumerable<Candle> SubscribeOnCandle(GetCandlesRequest request)
         {
-            BrokerFactory.Create(request.Broker, request.Token).SubscribeOnCandle(request.Figi, SendCandle);
-
-            return new OperationResult {IsSuccess = true};
+            return BrokerFactory.Create(request.Broker, request.Token).SubscribeOnCandle(request.Figi, SendCandle);
         }
 
         private void SendCandle(Candle candle)
@@ -32,7 +29,7 @@ namespace BrokerService.BrokerConsumers
             endpoint.Send(candle);
         }
 
-        public async Task Consume(ConsumeContext<SubscribeOnCandleRequest> context)
+        public async Task Consume(ConsumeContext<GetCandlesRequest> context)
         {
             var result = OperationResultWrapper.CreateResponse(SubscribeOnCandle, context.Message);
 

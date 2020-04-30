@@ -75,11 +75,23 @@ namespace TinkoffIntegrationLib
         }
 
 
-        public void SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
+        public IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
         {
             sendCandle = SendCandle;
+
+            var candles = context.MarketCandlesAsync(Figi, DateTime.Now.AddMinutes(-15), DateTime.Now,
+                CandleInterval.Minute).Result;
+
+            var candleList = new List<Candle>();
+
+            candles.Candles.ForEach(candle => candleList.Add(new CandleAdapter(candle)));
+
+            context.SendStreamingRequestAsync(
+                new StreamingRequest.CandleSubscribeRequest(Figi, CandleInterval.Minute));
+
             context.StreamingEventReceived += OnStreamingEventReceived;
-            context.SendStreamingRequestAsync(new StreamingRequest.CandleSubscribeRequest(Figi, CandleInterval.Minute));
+
+            return candleList;
         }
 
 

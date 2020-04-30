@@ -2,7 +2,7 @@
 
 namespace DTO.BrokerRequests
 {
-    public class SubscribeOnCandleRequest
+    public class GetCandlesRequest
     {
         public string Token { get; set; }
 
