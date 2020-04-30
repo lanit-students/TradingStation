@@ -7,11 +7,11 @@ namespace DTO.Bots
         public Guid ID;
         public Guid UserID;
 
-        void Run() { }
+        public void Run(BotRules rules) { }
 
-        void Disable() { }
+        public void Disable() { }
 
-        void GetStatus() { }
+        public void GetStatus() { }
 
     }
 }

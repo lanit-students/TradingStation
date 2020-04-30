@@ -2,7 +2,7 @@
 {
     interface IBot
     {
-        void Run() { }
+        void Run(BotRules rules) { }
 
         void Disable() { }
 

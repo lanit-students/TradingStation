@@ -2,16 +2,19 @@
 @using DTO.Bots;
 <h3>Bots</h3>
 <button @onclick="Create">Create</button>
-<button @onclick="Run(1)">Run</button>
+<button @onclick="Run">Run</button>
 @code {
+
     List<Bot> bots;
+
     public void Create()
     {
-
+        var bot = new Bot();
+        BotCreater.Create(bot);
     }
 
-    public void Run(int index)
+    public void Run()
     {
-        bots[index].Run();
+        bots[1].Run(new BotRules());
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DTO.RestRequests;
 
 namespace UserService.Interfaces
 {
-    interface IAddBotCommand
+    public interface IAddBotCommand
     {
-        Task<bool> Execute( request);
+        Task<bool> Execute(CreateBotRequest request);
     }
 }
