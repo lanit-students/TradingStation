@@ -1,5 +1,4 @@
-﻿using System;
-namespace DTO.Bots
+﻿namespace DTO.Bots
 {
     public class BotRules
     {
