@@ -1,14 +1,35 @@
-﻿using DTO.RestRequests;
+﻿using DTO;
+using DTO.RestRequests;
+using Kernel;
+using Kernel.CustomExceptions;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
 namespace UserService.Commands
 {
-    public class AddBotCommand: IAddBotCommand
+    public class AddBotCommand : IAddBotCommand
     {
-        public Task<bool> Execute(CreateBotRequest request)
+        private readonly IRequestClient<CreateBotRequest> client;
+
+        public AddBotCommand([FromServices] IRequestClient<CreateBotRequest> client)
         {
-            throw new System.NotImplementedException();
+            this.client = client;
+        }
+
+        public async Task<bool> Execute(CreateBotRequest request)
+        {
+            var response = await client.GetResponse<OperationResult<bool>>(request);
+
+            var addBotResult = OperationResultHandler.HandleResponse(response.Message);
+
+            if (!addBotResult)
+            {
+                throw new BadRequestException("Unable to create bot");
+            }
+
+            return addBotResult;
         }
     }
 }
