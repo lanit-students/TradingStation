@@ -9,6 +9,7 @@
 @using ChartJs.Blazor.ChartJS.LineChart
 @using ChartJs.Blazor.Charts
 @using ChartJs.Blazor.Util
+@using GUI.Scripts
 @inject NavigationManager NavigationManager
 @inject ISessionStorageService Storage
 
@@ -78,13 +79,13 @@
         await lineChartJs.Update();
     }
 
-    private void OnReceivedMessage(Candle Candle)
+    private void OnReceivedMessage(Candle candle)
     {
-        if (lastTime == null || lastTime != Candle.Time)
+        if (lastTime == null || lastTime != candle.Time)
         {
-            lastTime = Candle.Time;
+            lastTime = candle.Time;
 
-            tempDataSet.Add(new TimeTuple<decimal>(new Moment(Candle.Time), Candle.Close));
+            tempDataSet.Add(new TimeTuple<decimal>(new Moment(candle.Time), candle.Close));
             if (tempDataSet.Data.Count > 15)
             {
                 tempDataSet.RemoveAt(0);
@@ -99,6 +100,7 @@
     {
         tempDataSet.AddRange(candles.ToList().ConvertAll(candle =>
             new TimeTuple<decimal>(new Moment(candle.Time), candle.Close)));
+        lastTime = candles.Last().Time;
     }
 
     private void OnError()
