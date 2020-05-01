@@ -74,13 +74,27 @@ namespace TinkoffIntegrationLib
             return instruments;
         }
 
-
         public IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
         {
             sendCandle = SendCandle;
 
-            var candles = context.MarketCandlesAsync(Figi, DateTime.Now.AddMinutes(-15), DateTime.Now,
-                CandleInterval.Minute).Result;
+            var candles = GetCandles(DateTime.Now, Figi);
+
+            if (candles.Candles.Count == 0)
+            {
+                var currentHour = DateTime.Now.Hour;
+
+                var lastDate = DateTime.Now.AddHours(-currentHour);
+
+                lastDate = lastDate.AddMinutes(-DateTime.Now.Minute);
+
+                while (candles.Candles.Count == 0)
+                {
+                    candles = GetCandles(lastDate, Figi);
+
+                    lastDate = lastDate.AddDays(-1);
+                }
+            }
 
             var candleList = new List<Candle>();
 
@@ -94,6 +108,11 @@ namespace TinkoffIntegrationLib
             return candleList;
         }
 
+        private CandleList GetCandles(DateTime date, string Figi)
+        {
+            return context.MarketCandlesAsync(Figi, date.AddMinutes(-15), date,
+                CandleInterval.Minute).Result;
+        }
 
         private void OnStreamingEventReceived(object sender, StreamingEventReceivedEventArgs args)
         {
