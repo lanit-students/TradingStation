@@ -49,7 +49,6 @@ namespace Kernel.LoggingEngine
                 ServiceName = Assembly.GetEntryAssembly().GetName().Name,
                 Time = DateTime.UtcNow
             };
-           
             AddLog(message);
         }
     }

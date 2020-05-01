@@ -33,7 +33,7 @@ namespace OperationService.Commands
         public async Task<Instrument> Execute(GetInstrumentFromPortfolioRequest request)
         {
             var result = await GetInstrument(request);
-            logger.LogInformation("Instrument from portfolio of user {request.UserId} received successfully");
+            logger.LogInformation($"Instrument from portfolio of user {request.UserId} received successfully");
             return result;
         }
     }

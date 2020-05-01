@@ -34,7 +34,7 @@ namespace OperationService.Commands
         public async Task<IEnumerable<Instrument>> Execute(GetInstrumentsRequest request)
         {
             var result = await GetInstruments(request);
-            logger.LogInformation("Instruments from {request.Broker} received successfully");
+            logger.LogInformation($"Instruments from {request.Broker} received successfully");
             return result;
         }
     }

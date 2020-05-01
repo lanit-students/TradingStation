@@ -8,11 +8,11 @@ using DTO.MarketBrokerObjects;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class UpdateBrokerUserConsumer : IConsumer<UserBalance>
+    public class UpdateUserBalanceConsumer : IConsumer<UserBalance>
     {
         private readonly ITradeRepository tradeRepository;
 
-        public UpdateBrokerUserConsumer([FromServices] ITradeRepository tradeRepository)
+        public UpdateUserBalanceConsumer([FromServices] ITradeRepository tradeRepository)
         {
             this.tradeRepository = tradeRepository;
         }

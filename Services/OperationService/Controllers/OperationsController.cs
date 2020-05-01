@@ -46,7 +46,7 @@ namespace OperationService.Controllers
             [FromBody] TradeRequest request
             )
         {
-            logger.LogInformation("Trade request of user {request.UserId} received");
+            logger.LogInformation($"Trade request of user {request.UserId} received");
             return await command.Execute(request);
         }
 
@@ -58,7 +58,7 @@ namespace OperationService.Controllers
             [FromQuery] string figi
             )
         {
-            logger.LogInformation("Get instrument {figi} from portfolio of user {userId} received");
+            logger.LogInformation($"Get instrument {figi} from portfolio of user {userId} received");
             return await command.Execute(
                new GetInstrumentFromPortfolioRequest()
                {
@@ -74,7 +74,7 @@ namespace OperationService.Controllers
             [FromQuery] Guid userId
             )
         {
-            logger.LogInformation("Get user {request.UserId} balance  received");
+            logger.LogInformation($"Get user {userId} balance  received");
             return await command.Execute(new GetUserBalanceRequest() { UserId = userId });
         }
 
@@ -85,7 +85,7 @@ namespace OperationService.Controllers
             [FromBody] UpdateUserBalanceRequest request
             )
         {
-            logger.LogInformation("Update user {request.UserId} balance  received");
+            logger.LogInformation($"Update user {request.UserId} balance  received");
             return await command.Execute(request);
         }
 

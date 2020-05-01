@@ -42,7 +42,7 @@ namespace DataBaseService.Repositories
             var dbUserBalance = mapper.MapToDbUserBalance(userBalance);
             dbContext.UserBalances.Add(dbUserBalance);
             dbContext.SaveChanges();
-            logger.LogInformation("New user balance added");
+            logger.LogInformation($"New user {userId} balance added");
             return dbUserBalance;
         }
 
@@ -70,7 +70,7 @@ namespace DataBaseService.Repositories
                     logger.LogWarning(exception, "Request with currency isn't correct");
                     throw exception;
             }
-            logger.LogInformation("Request to update balance of user {transaction.UserId} finished successfully");
+            logger.LogInformation($"Request to update balance of user {transaction.UserId} finished successfully");
         }
 
         private void UpdatePortfolioAfterTransaction(Transaction transaction)
@@ -88,14 +88,14 @@ namespace DataBaseService.Repositories
                     Broker = transaction.Broker.ToString()
                 };
                 dbContext.Portfolios.Add(dbPortfolio);
-                logger.LogInformation("Request to add new instrument{transaction.Figi}" +
-                    "to user {transaction.UserId} portfolio finished successfully");
+                logger.LogInformation($"Request to add new instrument{transaction.Figi}" +
+                    $"to user {transaction.UserId} portfolio finished successfully");
             }
             else if (transaction.Operation == OperationType.Sell && dbPortfolio.Count < transaction.Count)
             {
                 var exception = new BadRequestException("Not enough instrument count to sell");
                 logger.LogWarning(exception, 
-                    "User {transaction.UserId} asked to sell more instruments {transaction.Figi} than he has");
+                    $"User {transaction.UserId} asked to sell more instruments {transaction.Figi} than he has");
                 throw exception;
             }
             else
@@ -103,7 +103,7 @@ namespace DataBaseService.Repositories
                 var sign = transaction.Operation == OperationType.Buy ? 1 : -1;
                 var orderLots = sign * transaction.Count;
                 dbPortfolio.Count += orderLots;
-                logger.LogInformation("Request to trade instrument{transaction.Figi} of user {transaction.UserId} finished successfully");
+                logger.LogInformation($"Request to trade instrument{transaction.Figi} of user {transaction.UserId} finished successfully");
             }
         }
 
@@ -115,12 +115,12 @@ namespace DataBaseService.Repositories
                 UpdateBalanceAfterTransaction(transaction);
                 UpdatePortfolioAfterTransaction(transaction);
                 dbContext.SaveChanges();
-                logger.LogInformation("Transaction of user {transaction.UserId} finished successfully");
+                logger.LogInformation($"Transaction of user {transaction.UserId} finished successfully");
             }
             catch
             {
                 var exception = new BadRequestException("Transaction saving failed");
-                logger.LogWarning(exception, "Couldn't save transaction of user {transaction.UserId}");
+                logger.LogWarning(exception, $"Couldn't save transaction of user {transaction.UserId}");
                 throw exception;
             }
         }
@@ -165,8 +165,7 @@ namespace DataBaseService.Repositories
 
             dbContext.SaveChanges();
 
-            logger.LogInformation("Balance of user {userBalance.UserId} updated");
-
+            logger.LogInformation($"Balance of user {userBalance.UserId} updated");
         }
     }
 }

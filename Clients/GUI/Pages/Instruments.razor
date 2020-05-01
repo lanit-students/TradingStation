@@ -128,7 +128,7 @@
 
     private void GoToInstrumentPage(Instrument instrument)
     {
-        var path = "/instrument";
+        var path = "/currentInstrument";
         Storage.SetItemAsync("instrument", instrument);
         NavigationManager.NavigateTo(path);
     }

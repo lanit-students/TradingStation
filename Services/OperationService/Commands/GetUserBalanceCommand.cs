@@ -34,7 +34,7 @@ namespace OperationService.Commands
         public async Task<UserBalance> Execute(GetUserBalanceRequest request)
         {
             var result = await GetUser(request);
-            logger.LogInformation("Balance of user {request.UserId} received successfully");
+            logger.LogInformation($"Balance of user {request.UserId} received successfully");
             return result;
         }
     }

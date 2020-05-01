@@ -41,7 +41,7 @@ namespace OperationService.Commands
                 BalanceInUsd = request.BalanceInUsd
             };
             var result = await UpdateUserBalance(brokerUser);
-            logger.LogInformation("Balance of user{request.UserId} updated successfully");
+            logger.LogInformation($"Balance of user{request.UserId} updated successfully");
             return result;
         }
     }

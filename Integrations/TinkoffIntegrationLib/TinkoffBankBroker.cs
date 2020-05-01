@@ -78,10 +78,8 @@ namespace TinkoffIntegrationLib
             }
             catch
             {
-                throw new BadRequestException();
+                throw new BadRequestException("Transaction wasn't complete");
             }
-
-            
         }
     }
 }

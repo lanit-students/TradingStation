@@ -8,11 +8,11 @@ using DTO.MarketBrokerObjects;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class GetBrokerUserConsumer : IConsumer<GetUserBalanceRequest>
+    public class GetUserBalanceConsumer : IConsumer<GetUserBalanceRequest>
     {
         private readonly ITradeRepository tradeRepository;
 
-        public GetBrokerUserConsumer([FromServices] ITradeRepository tradeRepository)
+        public GetUserBalanceConsumer([FromServices] ITradeRepository tradeRepository)
         {
             this.tradeRepository = tradeRepository;
         }
