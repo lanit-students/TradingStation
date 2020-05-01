@@ -12,11 +12,11 @@ namespace DataBaseService.Database.Models
         public bool IsActive { get; set; }
     }
 
-    public class DbBotConfiguration : IEntityTypeConfiguration<DbBot>
-    {
-        public void Configure(EntityTypeBuilder<DbBot> builder)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //public class DbBotConfiguration : IEntityTypeConfiguration<DbBot>
+    //{
+    //    public void Configure(EntityTypeBuilder<DbBot> builder)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 }

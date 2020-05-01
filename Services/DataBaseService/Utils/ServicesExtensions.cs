@@ -15,6 +15,7 @@ namespace DataBaseService.Utils
             service.AddConsumer<DeleteUserConsumer>();
             service.AddConsumer<GetUserByIdConsumer>();
             service.AddConsumer<EditUserConsumer>();
+            service.AddConsumer<CreateBotConsumer>();
 
             return service;
         }
