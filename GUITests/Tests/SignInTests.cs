@@ -28,7 +28,7 @@ namespace GUITestsEngine.Tests
 
             var client = new RestClient<CreateUserRequest, bool>(url, RestRequestType.POST);
 
-            var commandResult = client.Execute(request).Result;
+            var commandResult = client.Execute(request);
 
             if (!commandResult)
             {
