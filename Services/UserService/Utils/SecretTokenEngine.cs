@@ -26,7 +26,6 @@ namespace UserService.Utils
             return token;
         }
 
-
         public string GetEmail(Guid token)
         {
             if (secretTokens.TryGetValue(token, out string value))

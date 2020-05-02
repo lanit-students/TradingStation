@@ -5,6 +5,6 @@ namespace UserService.Interfaces
 {
     public interface IConfirmUserCommand
     {
-        Task<bool> Execute(Guid secretToken);
+        Task<string> Execute(Guid secretToken);
     }
 }

@@ -85,7 +85,7 @@ namespace UserService
             services.AddTransient<IValidator<UserInfoRequest>, UserInfoRequestValidator>();
             services.AddTransient<IValidator<PasswordChangeRequest>, PasswordChangeRequestValidator>();
             services.AddTransient<IValidator<AvatarChangeRequest>, AvatarChangeRequestValidator>();
-
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<LoginUserConsumer>();
@@ -100,10 +100,10 @@ namespace UserService
 
             services.AddMassTransitHostedService();
 
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
+            //services.AddLogging(log =>
+            //{
+            //    log.ClearProviders();
+            //});
 
             services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
             {

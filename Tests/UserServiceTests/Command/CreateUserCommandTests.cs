@@ -10,13 +10,12 @@ using DTO;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using Kernel.CustomExceptions;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace UserServiceTests
 {
-     public class CreateUserCommandTests
+    public class CreateUserCommandTests
      {
         private ICreateUserCommand command;
         private Mock<IValidator<CreateUserRequest>> validatorMock;
@@ -26,6 +25,7 @@ namespace UserServiceTests
         private Mock<Response<OperationResult<bool>>> responseMock;
         private Mock<ValidationResult> validatorResultMock;
         private CreateUserRequest request;
+        private Mock<IEmailSender> emailSenderMock;
         Guid token;
 
         [SetUp]
@@ -61,7 +61,10 @@ namespace UserServiceTests
              .Returns(token);
             loggerMock = new Mock<ILogger<CreateUserCommand>>();
 
-            command = new CreateUserCommand(clientMock.Object, validatorMock.Object,secretTokenMock.Object,loggerMock.Object);
+            emailSenderMock = new Mock<IEmailSender>();
+            emailSenderMock
+                .Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<ISecretTokenEngine>()));
+            command = new CreateUserCommand(clientMock.Object, validatorMock.Object,secretTokenMock.Object,loggerMock.Object, emailSenderMock.Object);
         }
 
         [Test]

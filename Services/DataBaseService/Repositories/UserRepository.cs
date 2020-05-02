@@ -120,7 +120,7 @@ namespace DataBaseService.Repositories
                         if (dbUserCredential.PasswordHash != password.OldPasswordHash)
                         {
                             var exception = new ForbiddenException("Can't change password, old password is wrong");
-                            logger.LogWarning(exception, 
+                            logger.LogWarning(exception,
                                 "Edit User with id {1} operation was stopped: old password is wrong ", user.Id);
                             throw exception;
                         }
@@ -166,12 +166,16 @@ namespace DataBaseService.Repositories
 
             if (dbUserCredential is null)
             {
-                throw new NotFoundException("Not found User for confirm");
+                var exception = new NotFoundException("Not found User for confirm");
+                logger.LogWarning(exception, "ConfirmUser: wasn't found");
+                throw exception;
             }
 
             if (dbUserCredential.IsActive)
             {
-                throw new BadRequestException("User was confirmed early");
+                var exception = new BadRequestException("User was confirmed early");
+                logger.LogWarning(exception, "ConfirmUser: was confirmed early");
+                throw exception;
             }
             dbUserCredential.IsActive = true;
             dbContext.SaveChanges();

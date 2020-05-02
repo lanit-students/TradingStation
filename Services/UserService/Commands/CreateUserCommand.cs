@@ -20,14 +20,21 @@ namespace UserService.Commands
         private readonly IValidator<CreateUserRequest> validator;
         private readonly ISecretTokenEngine secretTokenEngine;
         private readonly ILogger<CreateUserCommand> logger;
-    
+        private readonly IEmailSender emailSender;
 
-        public CreateUserCommand([FromServices] IRequestClient<InternalCreateUserRequest> client, [FromServices] IValidator<CreateUserRequest> validator,[FromServices] ISecretTokenEngine secretTokenEngine, [FromServices] ILogger<CreateUserCommand> logger)
+
+        public CreateUserCommand(
+            [FromServices] IRequestClient<InternalCreateUserRequest> client,
+            [FromServices] IValidator<CreateUserRequest> validator,
+            [FromServices] ISecretTokenEngine secretTokenEngine,
+            [FromServices] ILogger<CreateUserCommand> logger,
+            [FromServices] IEmailSender emailSender)
         {
             this.client = client;
             this.validator = validator;
             this.secretTokenEngine = secretTokenEngine;
             this.logger = logger;
+            this.emailSender = emailSender;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
@@ -88,7 +95,7 @@ namespace UserService.Commands
                 throw e;
             }
 
-            EmailSender.SendEmail(request.Email,secretTokenEngine);
+            emailSender.SendEmail(request.Email,secretTokenEngine);
 
             return createUserResult;
         }

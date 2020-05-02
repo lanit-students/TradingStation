@@ -1,6 +1,4 @@
-﻿using Automatonymous;
-using Castle.Core.Logging;
-using DTO;
+﻿using DTO;
 using DTO.BrokerRequests;
 using Kernel.CustomExceptions;
 using MassTransit;
@@ -8,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using UserService.Commands;
 using UserService.Interfaces;
@@ -26,13 +22,12 @@ namespace UserServiceTests.Commands
         string email;
         Guid token;
 
-
         [SetUp]
-
         public void Initialization()
         {
             email = "example@mail.ru";
             token = Guid.NewGuid();
+
             resultMock = new Mock<Response<OperationResult<bool>>>();
 
             clientMock = new Mock<IRequestClient<InternalConfirmUserRequest>>();
@@ -44,7 +39,9 @@ namespace UserServiceTests.Commands
             secretTokenEngineMock
                 .Setup(x => x.GetEmail(It.IsAny<Guid>()))
                 .Returns(email);
+
             loggerMock = new Mock<ILogger<ConfirmUserCommand>>();
+
             command = new ConfirmUserCommand(clientMock.Object, secretTokenEngineMock.Object, loggerMock.Object);
         }
 
@@ -55,7 +52,7 @@ namespace UserServiceTests.Commands
                 .Setup(x => x.Message)
                 .Returns(new OperationResult<bool> { Data = true });
 
-            Assert.IsTrue(command.Execute(token).Result);
+            Assert.AreEqual(command.Execute(token).Result, "<p>Thank you to confirm!</p>");
         }
 
         [Test]
@@ -64,7 +61,6 @@ namespace UserServiceTests.Commands
             resultMock
                .Setup(x => x.Message)
                .Throws(new BadRequestException());
-
 
             Assert.ThrowsAsync<BadRequestException>(() => command.Execute(token));
         }

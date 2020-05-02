@@ -4,6 +4,7 @@ using DTO.RestRequests;
 using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -33,10 +34,8 @@ namespace UserService.Commands
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        public async Task<bool> Execute(Guid secretToken)
+        public async Task<string> Execute(Guid secretToken)
         {
-
-
             var request = new InternalConfirmUserRequest { UserEmail=secretTokenEngine.GetEmail(secretToken) };
 
             var confirmUserResult = await UserConfirmation(request);
@@ -47,8 +46,7 @@ namespace UserService.Commands
                 logger.LogWarning(e, "BadRequest thrown while trying to confirm User.");
                 throw e;
             }
-
-            return confirmUserResult;
+            return "<p>Thank you to confirm!</p>";
         }
     }
 }

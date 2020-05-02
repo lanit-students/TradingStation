@@ -1,13 +1,22 @@
-﻿using System;
+﻿using Kernel.CustomExceptions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Sockets;
 using UserService.Interfaces;
 
 namespace UserService.Utils
 {
-    public static class EmailSender
+    public class EmailSender : IEmailSender
     {
-        public static void SendEmail(string email,ISecretTokenEngine secretTokenEngine)
+        private readonly ILogger<EmailSender> logger;
+
+        public EmailSender([FromServices] ILogger<EmailSender> logger)
+        {
+            this.logger = logger;
+        }
+        public void SendEmail(string email,ISecretTokenEngine secretTokenEngine)
         {
             var from = new MailAddress("traidplatform@mail.ru", "Trading Station");
             var to = new MailAddress(email);
@@ -21,7 +30,16 @@ namespace UserService.Utils
             var smtp = new SmtpClient("smtp.mail.ru", 25);
             smtp.Credentials = new NetworkCredential("traidplatform@mail.ru", "t123plat");
             smtp.EnableSsl = true;
-            smtp.Send(m);
+            try
+            {
+                smtp.Send(m);
+            }
+            catch(SocketException)
+            {
+                var e = new InternalServerException("Internal Server. Email didn't send");
+                logger.LogWarning(e, "InternalServer thrown while trying to Send Eamil to confirm");
+                throw e;
+            }
         }
     }
 }

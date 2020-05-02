@@ -316,7 +316,6 @@ namespace DatabaseServiceTests.Repositories
             Assert.AreEqual("User was confirmed early", exception.Message);
         }
 
-
         [Test]
         public void ConfirmUserNotFound()
         {
