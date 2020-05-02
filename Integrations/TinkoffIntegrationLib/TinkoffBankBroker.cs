@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
@@ -7,12 +8,15 @@ using Interfaces;
 using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
+using TinkoffIntegrationLib.Adapters;
+using InstrumentType = DTO.MarketBrokerObjects.InstrumentType;
 
 namespace TinkoffIntegrationLib
 {
     public class TinkoffBankBroker : IBroker
     {
         private readonly SandboxContext context;
+        private Action<Candle> sendCandle;
 
         public TinkoffBankBroker(string token)
         {
@@ -30,25 +34,27 @@ namespace TinkoffIntegrationLib
                 throw new BadRequestException();
             }
         }
-
+        
         public int Depth { get; set; }
 
-        public IEnumerable<Instrument> GetInstruments(DTO.MarketBrokerObjects.InstrumentType type)
+        public IEnumerable<Instrument> GetInstruments(InstrumentType type)
         {
             var instruments = new List<Instrument>();
 
-            var tinkoffInstrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), type.ToString());
+            var tinkoffInstrumentType =
+                (Tinkoff.Trading.OpenApi.Models.InstrumentType) Enum.Parse(
+                    typeof(Tinkoff.Trading.OpenApi.Models.InstrumentType), type.ToString());
 
-            MarketInstrumentList instrumentsList = tinkoffInstrumentType switch
+            var instrumentsList = tinkoffInstrumentType switch
             {
-                InstrumentType.Bond => context.MarketBondsAsync().Result,
-                InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
-                InstrumentType.Stock => context.MarketStocksAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond => context.MarketBondsAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock => context.MarketStocksAsync().Result,
                 _ => throw new BadRequestException()
             };
 
             Parallel.ForEach(instrumentsList.Instruments,
-                (instrument) =>
+                instrument =>
                 {
                     try
                     {
@@ -56,7 +62,7 @@ namespace TinkoffIntegrationLib
                             new TinkoffInstrumentAdapter(
                                 tinkoffInstrumentType,
                                 instrument)
-                            );
+                        );
                     }
                     catch (Exception) { }
                 });
@@ -80,6 +86,53 @@ namespace TinkoffIntegrationLib
             {
                 throw new BadRequestException("Transaction wasn't complete");
             }
+        }
+        
+        public IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
+        {
+            sendCandle = SendCandle;
+
+            var candles = GetCandles(DateTime.Now, Figi);
+
+            if (candles.Candles.Count == 0)
+            {
+                var lastDate = DateTime.Now.AddHours(-DateTime.Now.Hour - 5).AddMinutes(-DateTime.Now.Minute);
+
+                int days = 5;
+
+                while (days != 0 && candles.Candles.Count == 0)
+                {
+                    days -= 1;
+
+                    candles = GetCandles(lastDate, Figi);
+
+                    lastDate = lastDate.AddDays(-1);
+                }
+            }
+            else
+            {
+                context.SendStreamingRequestAsync(
+                    new StreamingRequest.CandleSubscribeRequest(Figi, CandleInterval.Minute));
+
+                context.StreamingEventReceived += OnStreamingEventReceived;
+            }
+
+            var candleList = new List<Candle>();
+
+            candles.Candles.ForEach(candle => candleList.Add(new CandleAdapter(candle)));
+
+            return candleList;
+        }
+
+        private CandleList GetCandles(DateTime date, string Figi)
+        {
+            return context.MarketCandlesAsync(Figi, date.AddMinutes(-15), date,
+                CandleInterval.Minute).Result;
+        }
+
+        private void OnStreamingEventReceived(object sender, StreamingEventReceivedEventArgs args)
+        {
+            sendCandle(new CandleAdapter(args.Response));
         }
     }
 }

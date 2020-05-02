@@ -13,7 +13,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<CreateUserRequest, bool>(url, RestRequestType.POST);
 
-            await client.Execute(user);
+            await client.ExecuteAsync(user);
         }
     }
 }

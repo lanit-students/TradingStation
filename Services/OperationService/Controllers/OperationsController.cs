@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using DTO;
 using DTO.MarketBrokerObjects;
-using System.Threading.Tasks;
 using Interfaces;
 using DTO.BrokerRequests;
 using DTO.RestRequests;
 using System;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OperationService.Controllers
 {
@@ -31,7 +31,7 @@ namespace OperationService.Controllers
             )
         {
             return await command.Execute(
-                new GetInstrumentsRequest()
+                new GetInstrumentsRequest
                 {
                     Broker = broker,
                     Token = token,
@@ -90,5 +90,22 @@ namespace OperationService.Controllers
         }
 
 
+        [Route("candles/get")]
+        [HttpGet]
+        public async Task<IEnumerable<Candle>> GetCandles(
+            [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> command,
+            [FromQuery] BrokerType broker,
+            [FromQuery] string token,
+            [FromQuery] string figi
+        )
+        {
+            return await command.Execute(
+                new GetCandlesRequest
+                {
+                    Broker = broker,
+                    Token = token,
+                    Figi = figi
+                });
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@page "/instruments"
 @inject IModalService Modal
 @inject ISessionStorageService Storage
-@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 @attribute [Authorize]
 
 <div class="container">
@@ -49,6 +49,8 @@
                         <th scope="col">Currency</th>
                         <th scope="col">Lot</th>
                         <th scope="col">Action</th>
+                        <th scope="col">Info</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +64,7 @@
                             <td @onclick="@(() => GoToInstrumentPage(instrument))">
                                 Go to instrument page
                             </td>
+                            <td @onclick="@(() => OpenInstrument(instrument))">Open</td>
                         </tr>
                     }
                 </tbody>
@@ -130,7 +133,7 @@
     {
         var path = "/currentInstrument";
         Storage.SetItemAsync("instrument", instrument);
-        NavigationManager.NavigateTo(path);
+        Navigation.NavigateTo(path);
     }
 
     private async Task SetToken()
@@ -198,4 +201,11 @@
             errorOccured = true;
         }
     }
+
+    private void OpenInstrument(Instrument instrument)
+    {
+        Storage.SetItemAsync("tinkoffInstrumentName", instrument.Name);
+        Navigation.NavigateTo($"/instrument/{instrument.Figi}");
+    }
+
 }

@@ -1,8 +1,8 @@
-﻿using DTO;
-using System;
+﻿using System;
+using DTO;
 using Tinkoff.Trading.OpenApi.Models;
 
-namespace TinkoffIntegrationLib
+namespace TinkoffIntegrationLib.Adapters
 {
     public class TinkoffInstrumentAdapter : Instrument
     {

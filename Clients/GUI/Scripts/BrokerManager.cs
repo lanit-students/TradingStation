@@ -28,7 +28,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<object, IEnumerable<Instrument>>(url, RestRequestType.GET, queryParams: queryParams);
 
-            return await client.Execute();
+            return await client.ExecuteAsync();
         }
 
         public static async Task<bool> Trade (TradeRequest request)

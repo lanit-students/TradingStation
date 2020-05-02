@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OperationService.Commands;
 using System;
 using System.Collections.Generic;
+using OperationService.BrokerConsumers;
+using OperationService.Hubs;
 
 namespace OperationService
 {
@@ -48,6 +49,8 @@ namespace OperationService
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<CandleConsumer>(serviceProvider);
                 });
             });
         }
@@ -70,6 +73,8 @@ namespace OperationService
                 x.AddRequestClient<GetInstrumentFromPortfolioRequest>(databaseUri);
                 x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
                 x.AddRequestClient<UserBalance>(databaseUri);
+				x.AddRequestClient<GetCandlesRequest>(brokerUri);
+                x.AddConsumer<CandleConsumer>();   
             });
 
             services.AddMassTransitHostedService();
@@ -80,6 +85,8 @@ namespace OperationService
             services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetUserBalanceCommand>();
             services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateUserBalanceCommand>();
 
+            services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
+
             services.AddLogging(log =>
             {
                 log.ClearProviders();
@@ -89,6 +96,8 @@ namespace OperationService
             {
                 return new LoggerProvider(provider);
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +118,7 @@ namespace OperationService
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<CandleHub>("/CandleHub");
                 endpoints.MapControllers();
             });
         }

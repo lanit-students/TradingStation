@@ -14,7 +14,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<LoginRequest, UserToken>(url, RestRequestType.POST);
 
-            return await client.Execute(request);
+            return await client.ExecuteAsync(request);
         }
     }
 }

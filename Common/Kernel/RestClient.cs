@@ -30,11 +30,41 @@ namespace Kernel
                 _ => new InternalServerException()
             };
 
-        private async Task<TOut> GetResponse()
+        private async Task<TOut> GetResponseAsync()
         {
             try
             {
                 var response = (HttpWebResponse)await _request.GetResponseAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    throw GetCustomException(response.StatusCode);
+
+                using var responseStream = response.GetResponseStream();
+                using var streamReader = new StreamReader(responseStream, Encoding.UTF8);
+
+                return JsonSerializer.Deserialize<TOut>(
+                    streamReader.ReadToEnd(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    });
+            }
+            catch (WebException e)
+            {
+                if (e.Response == null)
+                {
+                    throw new InternalServerException();
+                }
+
+                throw GetCustomException(((HttpWebResponse)e.Response).StatusCode);
+            }
+        }
+
+        private TOut GetResponse()
+        {
+            try
+            {
+                var response = (HttpWebResponse)_request.GetResponse();
 
                 if (response.StatusCode != HttpStatusCode.OK)
                     throw GetCustomException(response.StatusCode);
@@ -108,11 +138,20 @@ namespace Kernel
             }
         }
 
-        public async Task<TOut> Execute(TIn bodyObject = null)
+        public async Task<TOut> ExecuteAsync(TIn bodyObject = null)
         {
             WriteRequestBody(bodyObject);
 
-            return await GetResponse();
+            var res = await GetResponseAsync();
+
+            return res;
+        }
+
+        public TOut Execute(TIn bodyObject = null)
+        {
+            WriteRequestBody(bodyObject);
+
+            return GetResponse();
         }
     }
 }
