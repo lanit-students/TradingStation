@@ -1,5 +1,4 @@
 ﻿using DTO.Bots;
-using System;
 
 namespace DTO.RestRequests
 {

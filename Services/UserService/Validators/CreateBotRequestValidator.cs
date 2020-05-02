@@ -7,7 +7,7 @@ namespace UserService.Validators
     {
         public CreateBotRequestValidator()
         {
-            RuleFor(request => request.userId)
+            RuleFor(request => request.bot)
                 .NotEmpty()
                 .WithMessage(ErrorsMessages.IdIsNullOrEmpty);
         }
