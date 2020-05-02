@@ -5,7 +5,6 @@ namespace DTO.MarketBrokerObjects
 {
     public class UserBalance : ICloneable
     {
-        public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public decimal BalanceInRub { get; set; }
         public decimal BalanceInUsd { get; set; }
@@ -15,7 +14,6 @@ namespace DTO.MarketBrokerObjects
         {
             return new UserBalance()
             {
-                Id = Id,
                 UserId = UserId,
                 BalanceInRub = BalanceInRub,
                 BalanceInUsd = BalanceInUsd,

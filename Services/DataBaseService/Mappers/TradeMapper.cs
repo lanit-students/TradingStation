@@ -55,7 +55,6 @@ namespace DataBaseService.Mappers
         {
             return new UserBalance()
             {
-                Id = dbUserBalance.Id,
                 UserId = dbUserBalance.UserId,
                 BalanceInRub = dbUserBalance.BalanceInRub,
                 BalanceInUsd = dbUserBalance.BalanceInUsd,
@@ -67,7 +66,6 @@ namespace DataBaseService.Mappers
         {
             return new DbUserBalance()
             {
-                Id = userBalance.Id,
                 UserId = userBalance.UserId,
                 BalanceInRub = userBalance.BalanceInRub,
                 BalanceInUsd = userBalance.BalanceInUsd,

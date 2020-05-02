@@ -31,7 +31,7 @@ namespace DataBaseService.Repositories
 
         private DbUserBalance RegisterUserBalance(Guid userId)
         {
-            var userBalance = new UserBalance()
+            var dbUserBalance = new DbUserBalance()
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
@@ -39,7 +39,6 @@ namespace DataBaseService.Repositories
                 BalanceInUsd = 0,
                 BalanceInEur = 0
             };
-            var dbUserBalance = mapper.MapToDbUserBalance(userBalance);
             dbContext.UserBalances.Add(dbUserBalance);
             dbContext.SaveChanges();
             logger.LogInformation($"New user {userId} balance added");
@@ -157,7 +156,7 @@ namespace DataBaseService.Repositories
                 user => user.UserId == userBalance.UserId);
             
             if (dbUserBalance == null)
-                dbUserBalance = RegisterUserBalance(userBalance.Id);
+                dbUserBalance = RegisterUserBalance(userBalance.UserId);
             
             dbUserBalance.BalanceInRub = userBalance.BalanceInRub;
             dbUserBalance.BalanceInUsd = userBalance.BalanceInUsd;
