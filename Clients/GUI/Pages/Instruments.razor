@@ -49,7 +49,6 @@
                         <th scope="col">Currency</th>
                         <th scope="col">Lot</th>
                         <th scope="col">Action</th>
-                        <th scope="col">Info</th>
 
                     </tr>
                 </thead>
@@ -61,10 +60,7 @@
                             <td>@instrument.Name</td>
                             <td>@instrument.Currency</td>
                             <td>@instrument.CountInLot</td>
-                            <td @onclick="@(() => GoToInstrumentPage(instrument))">
-                                Go to instrument page
-                            </td>
-                            <td @onclick="@(() => OpenInstrument(instrument))">Open</td>
+                            <td @onclick="@(() => OpenInstrument(instrument))">Open instrument</td>
                         </tr>
                     }
                 </tbody>
@@ -127,13 +123,6 @@
 
             errorMessage = "Can't load instruments, try again later";
         }
-    }
-
-    private void GoToInstrumentPage(Instrument instrument)
-    {
-        var path = "/currentInstrument";
-        Storage.SetItemAsync("instrument", instrument);
-        Navigation.NavigateTo(path);
     }
 
     private async Task SetToken()
@@ -204,8 +193,8 @@
 
     private void OpenInstrument(Instrument instrument)
     {
-        Storage.SetItemAsync("tinkoffInstrumentName", instrument.Name);
-        Navigation.NavigateTo($"/instrument/{instrument.Figi}");
+        Storage.SetItemAsync("instrument", instrument);
+        Navigation.NavigateTo("/instrumentInfo");
     }
 
 }
