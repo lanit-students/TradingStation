@@ -6,12 +6,10 @@ namespace DTO.RestRequests
     public class CreateBotRequest
     {
         public Bot bot;
-        public Guid userId;
 
-        public CreateBotRequest(Bot bot, Guid userId)
+        public CreateBotRequest(Bot bot)
         {
             this.bot = bot;
-            this.userId = userId;
         }
     }
 }

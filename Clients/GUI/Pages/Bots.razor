@@ -1,20 +1,43 @@
 ﻿@page "/bots"
 @using DTO.Bots;
-<h3>Bots</h3>
-<button @onclick="Create">Create</button>
+@inject NavigationManager NavManager
+@inject IModalService Modal
+@inject ISessionStorageService Storage
+@attribute [Authorize]
+
+
+<div align="center" class="h3" min-width:>
+     <h3><b>Bots</b></h3>
+</div>
+<button @onclick="CreateBot">Create</button>
 <button @onclick="Run">Run</button>
+
+
 @code {
 
     List<Bot> bots;
+    private UserToken userToken;
 
-    public void Create()
+    public async void CreateBot()
     {
         var bot = new Bot();
-        BotCreater.Create(bot,Guid.NewGuid());
+        var request = new CreateBotRequest(bot);
+        await BotCreater.Create(userToken, request);
     }
 
     public void Run()
     {
         bots[1].Run(new BotRules());
+    }
+
+    protected override void OnInitialized()
+    {
+        userToken = new UserToken();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+        userToken.Body = await Storage.GetItemAsync<string>("token");
     }
 }
