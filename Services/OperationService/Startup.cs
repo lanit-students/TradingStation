@@ -60,13 +60,16 @@ namespace OperationService
 
             services.AddMassTransit(x =>
             {
+                var brokerUri = new Uri("rabbitmq://localhost/BrokerService");
+                var databaseUri = new Uri("rabbitmq://localhost/DatabaseService");
+
                 x.AddBus(provider => CreateBus(provider));
-                x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
-                x.AddRequestClient<InternalTradeRequest>(new Uri("rabbitmq://localhost/BrokerService"));
-                x.AddRequestClient<Transaction>(new Uri("rabbitmq://localhost/DatabaseService"));
-                x.AddRequestClient<GetInstrumentFromPortfolioRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
-                x.AddRequestClient<GetUserBalanceRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
-                x.AddRequestClient<UserBalance>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<GetInstrumentsRequest>(brokerUri);
+                x.AddRequestClient<InternalTradeRequest>(brokerUri);
+                x.AddRequestClient<Transaction>(databaseUri);
+                x.AddRequestClient<GetInstrumentFromPortfolioRequest>(databaseUri);
+                x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
+                x.AddRequestClient<UserBalance>(databaseUri);
             });
 
             services.AddMassTransitHostedService();
