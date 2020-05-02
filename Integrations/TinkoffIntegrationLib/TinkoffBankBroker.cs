@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DTO;
 using Interfaces;
@@ -82,28 +83,30 @@ namespace TinkoffIntegrationLib
 
             if (candles.Candles.Count == 0)
             {
-                var currentHour = DateTime.Now.Hour;
+                var lastDate = DateTime.Now.AddHours(-DateTime.Now.Hour - 5).AddMinutes(-DateTime.Now.Minute);
 
-                var lastDate = DateTime.Now.AddHours(-currentHour);
+                int days = 5;
 
-                lastDate = lastDate.AddMinutes(-DateTime.Now.Minute);
-
-                while (candles.Candles.Count == 0)
+                while (days != 0 && candles.Candles.Count == 0)
                 {
+                    days -= 1;
+
                     candles = GetCandles(lastDate, Figi);
 
                     lastDate = lastDate.AddDays(-1);
                 }
             }
+            else
+            {
+                context.SendStreamingRequestAsync(
+                    new StreamingRequest.CandleSubscribeRequest(Figi, CandleInterval.Minute));
+
+                context.StreamingEventReceived += OnStreamingEventReceived;
+            }
 
             var candleList = new List<Candle>();
 
             candles.Candles.ForEach(candle => candleList.Add(new CandleAdapter(candle)));
-
-            context.SendStreamingRequestAsync(
-                new StreamingRequest.CandleSubscribeRequest(Figi, CandleInterval.Minute));
-
-            context.StreamingEventReceived += OnStreamingEventReceived;
 
             return candleList;
         }

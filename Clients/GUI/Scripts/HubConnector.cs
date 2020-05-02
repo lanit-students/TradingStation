@@ -26,7 +26,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<object, IEnumerable<Candle>>(url, RestRequestType.GET, queryParams: queryParams);
 
-            var listCandles =   client.Execute();
+            var listCandles = await client.ExecuteAsync();
 
             var subscribeOnCandle = listCandles.ToList();
 
