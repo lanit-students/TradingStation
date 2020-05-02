@@ -37,7 +37,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<object, bool>(url, RestRequestType.POST);
 
-            return await client.Execute(request);
+            return await client.ExecuteAsync(request);
         }
 
         public static async Task<Instrument> GetInstrumentFromPortfolio(Guid userId, string figi)
@@ -52,7 +52,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<object, Instrument>(url, RestRequestType.GET, queryParams: queryParams);
 
-            return await client.Execute();
+            return await client.ExecuteAsync();
         }
 
         public static async Task<UserBalance> GetUserBalance(Guid userId)
@@ -66,7 +66,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<object, UserBalance>(url, RestRequestType.GET, queryParams: queryParams);
 
-            return await client.Execute();
+            return await client.ExecuteAsync();
         }
 
         public static async Task <bool> UpdateUserBalance(UpdateUserBalanceRequest request)
@@ -75,7 +75,7 @@ namespace GUI.Scripts
 
             var client = new RestClient<object, bool>(url, RestRequestType.PUT);
 
-            return await client.Execute(request);
+            return await client.ExecuteAsync(request);
         }
     }
 }
