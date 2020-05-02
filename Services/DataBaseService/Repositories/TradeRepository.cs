@@ -135,7 +135,7 @@ namespace DataBaseService.Repositories
             return new Instrument()
             {
                 Figi = request.Figi,
-                Lot = instrument.Count,
+                TotalCount = instrument.Count,
             };
         }
 

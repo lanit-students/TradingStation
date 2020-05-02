@@ -47,7 +47,7 @@
                     <td>@instrument.Name</td>
                     <td>@instrument.Type</td>
                     <td>@instrument.Currency</td>
-                    <td>@instrument.Lot</td>
+                    <td>@instrument.CountInLot</td>
                 </tr>
             </tbody>
         </table>
@@ -108,7 +108,7 @@
         };
     }
 
-    private void UpdateBalanceInCorrectCurrency()
+     private void UpdateBalanceInCorrectCurrency()
     {
         switch (currency)
         {
@@ -148,7 +148,7 @@
                 UpdateBalanceVariable();
             }
         }
-        catch (Exception ex)
+        catch
         {
             userBalance = oldBalance;
             errorOccured = true;
@@ -159,7 +159,7 @@
     private async Task GetCountFromPortfolio()
     {
         var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userBalance.UserId, instrument.Figi);
-        countInPortfolio = instrumentInfo.Lot;
+        countInPortfolio = instrumentInfo.TotalCount;
     }
 
     private async Task GetUserBalance()
@@ -171,7 +171,7 @@
     private async Task Sell()
     {
         UpdateBalanceVariable();
-        if (countInPortfolio < lotsToTrade * instrument.Lot)
+        if (countInPortfolio < lotsToTrade * instrument.CountInLot)
             Modal.Show<EmptyModal>("Count in portfolio less than you can sell");
         else
         {
@@ -200,7 +200,7 @@
     private async Task Buy()
     {
         UpdateBalanceVariable();
-        if (currentBalance < lotsToTrade * instrument.Lot * price)
+        if (currentBalance < lotsToTrade * instrument.CountInLot * price)
             Modal.Show<EmptyModal>("You need more money to make a deal");
         else
         {
@@ -235,7 +235,7 @@
             Token = tinkoffToken,
             Operation = operation,
             Figi = instrument.Figi,
-            Count = lotsToTrade * instrument.Lot,
+            Count = lotsToTrade * instrument.CountInLot,
             Price = price,
             Currency = currency
         };
@@ -261,7 +261,7 @@
             Figi = "default",
             Currency = Currency.Rub,
             Name = "Load instrument",
-            Lot = 0,
+            CountInLot = 0,
             Price = 0,
             Type = InstrumentType.Currency
         };
@@ -275,6 +275,7 @@
                 await SetToken();
             }
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
+            currency = instrument.Currency;
             userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };
             await GetUserBalance();
             await GetCountFromPortfolio();

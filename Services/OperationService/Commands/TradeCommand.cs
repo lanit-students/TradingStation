@@ -53,7 +53,8 @@ namespace OperationService.Commands
                 Operation = request.Operation,
                 Figi = request.Figi,
                 Count = request.Count,
-                Price = request.Price
+                Price = request.Price,
+                Currency = request.Currency
             };
             var tradeRequest = new InternalTradeRequest()
             {

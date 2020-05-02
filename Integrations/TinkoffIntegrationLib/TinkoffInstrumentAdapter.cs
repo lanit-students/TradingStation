@@ -32,6 +32,6 @@ namespace TinkoffIntegrationLib
             => (DTO.MarketBrokerObjects.Currency)Enum.
             Parse(typeof(DTO.MarketBrokerObjects.Currency),tinkoffInstrument.Currency.ToString());
 
-        public override int Lot => tinkoffInstrument.Lot;
+        public override int CountInLot => tinkoffInstrument.Lot;
     }
 }

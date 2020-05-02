@@ -16,8 +16,10 @@ namespace DTO
 
         public virtual Currency Currency { get; set; }
 
-        public virtual int Lot { get; set; }
+        public virtual int CountInLot { get; set; }
 
         public virtual decimal Price { get; set; }
+
+        public virtual int TotalCount { get; set; }
     }
 }
