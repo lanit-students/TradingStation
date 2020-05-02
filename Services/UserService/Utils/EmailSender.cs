@@ -18,7 +18,7 @@ namespace UserService.Utils
         }
         public void SendEmail(string email,ISecretTokenEngine secretTokenEngine)
         {
-            var from = new MailAddress("traidplatform@mail.ru", "Trading Station");
+            var from = new MailAddress("t.platform@mail.ru", "Trading Station");
             var to = new MailAddress(email);
             string secretToken =  secretTokenEngine.GetToken(email).ToString();
             string link = $"https://localhost:5011/users/confirm?secretToken={secretToken}";
@@ -28,7 +28,7 @@ namespace UserService.Utils
             m.Body = htmlCode;
             m.IsBodyHtml = true;
             var smtp = new SmtpClient("smtp.mail.ru", 25);
-            smtp.Credentials = new NetworkCredential("traidplatform@mail.ru", "t123plat");
+            smtp.Credentials = new NetworkCredential("t.platform@mail.ru", "t123plat");
             smtp.EnableSsl = true;
             try
             {
