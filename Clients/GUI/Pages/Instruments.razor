@@ -60,7 +60,7 @@
                             <td>@instrument.Name</td>
                             <td>@instrument.Currency</td>
                             <td>@instrument.CountInLot</td>
-                            <td @onclick="@(() => OpenInstrument(instrument))">Open instrument</td>
+                            <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
                         </tr>
                     }
                 </tbody>
@@ -196,5 +196,4 @@
         Storage.SetItemAsync("instrument", instrument);
         Navigation.NavigateTo("/instrumentInfo");
     }
-
 }

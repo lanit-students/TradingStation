@@ -17,6 +17,7 @@ namespace TinkoffIntegrationLib
     {
         private readonly SandboxContext context;
         private Action<Candle> sendCandle;
+        private const decimal CmaxBalance = decimal.MaxValue - 1;
 
         public TinkoffBankBroker(string token)
         {
@@ -25,9 +26,9 @@ namespace TinkoffIntegrationLib
                 var conn = ConnectionFactory.GetSandboxConnection(token);
                 context = conn.Context;
                 context.RegisterAsync();
-                context.SetCurrencyBalanceAsync(Currency.Rub, 10000000000);
-                context.SetCurrencyBalanceAsync(Currency.Usd, 10000000000);
-                context.SetCurrencyBalanceAsync(Currency.Eur, 10000000000);
+                context.SetCurrencyBalanceAsync(Currency.Rub, CmaxBalance);
+                context.SetCurrencyBalanceAsync(Currency.Usd, CmaxBalance);
+                context.SetCurrencyBalanceAsync(Currency.Eur, CmaxBalance);
             }
             catch (Exception)
             {
