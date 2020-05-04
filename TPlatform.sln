@@ -63,6 +63,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingInTests", "WebTests\Sin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestForSignUp", "WebTests\TestForSignUp\TestForSignUp.csproj", "{BC446F3D-D9D6-49A0-99CA-521E1F8EEA2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogReader", "LogReader\LogReader\LogReader.csproj", "{10022C0C-5116-42EA-B2C7-893846B735CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{BC446F3D-D9D6-49A0-99CA-521E1F8EEA2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC446F3D-D9D6-49A0-99CA-521E1F8EEA2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC446F3D-D9D6-49A0-99CA-521E1F8EEA2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10022C0C-5116-42EA-B2C7-893846B735CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10022C0C-5116-42EA-B2C7-893846B735CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10022C0C-5116-42EA-B2C7-893846B735CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10022C0C-5116-42EA-B2C7-893846B735CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

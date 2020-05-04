@@ -1,0 +1,31 @@
+﻿<Window x:Class="LogReader.LogsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogReader"
+        mc:Ignorable="d"
+        Title="LogWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <DataGrid AutoGenerateColumns="False" x:Name="logsGrid">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="ParentID" Binding="{Binding ParentId}"/>
+                    <DataGridTextColumn Header="Level" Binding="{Binding Level}"/>
+                    <DataGridTextColumn Header="Time" Binding="{Binding Time}"/>
+                    <DataGridTextColumn Header="Message" Binding="{Binding Message}"/>
+                    <DataGridTextColumn Header="ServiceName" Binding="{Binding ServiceName}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>
