@@ -9,6 +9,7 @@ using System;
 using FluentValidation;
 using System.Threading.Tasks;
 using UserService.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.Commands
 {
@@ -16,11 +17,16 @@ namespace UserService.Commands
     {
         private readonly IRequestClient<InternalCreateUserRequest> client;
         private readonly IValidator<CreateUserRequest> validator;
+        private ILogger<CreateUserCommand> logger;
 
-        public CreateUserCommand([FromServices] IRequestClient<InternalCreateUserRequest> client, [FromServices] IValidator<CreateUserRequest> validator)
+        public CreateUserCommand(
+            [FromServices] IRequestClient<InternalCreateUserRequest> client,
+            [FromServices] IValidator<CreateUserRequest> validator,
+            [FromServices] ILogger<CreateUserCommand> logger)
         {
             this.client = client;
             this.validator = validator;
+            this.logger = logger;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
@@ -72,14 +78,19 @@ namespace UserService.Commands
                 UserAvatar = userAvatar
             };
 
-            var createUserResult = await CreateUser(internalCreateUserRequest);
-
-            if (!createUserResult)
+            try
             {
-                throw new BadRequestException("Unable to create user");
+                var createUserResult = await CreateUser(internalCreateUserRequest);
+                return createUserResult;
             }
+            catch (BadRequestException e)
+            {
+                var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
 
-            return createUserResult;
+                var ex = new NotFoundException(errorData.Item3);
+                logger.LogInformation(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
+                throw ex;
+            }
         }
     }
 }

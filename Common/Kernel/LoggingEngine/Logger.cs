@@ -40,12 +40,14 @@ namespace Kernel.LoggingEngine
             if (formatter == null)
                 return;
 
+            var data = ErrorMessageFormatter.GetMessageData(formatter(state, exception));
+
             var message = new LogMessage
             {
-                Id = Guid.NewGuid(),
-                ParentId = null,
+                Id = data.Item1 ?? Guid.NewGuid(),
+                ParentId = data.Item2,
                 Level = logLevel,
-                Message = formatter(state, exception),
+                Message = data.Item3,
                 ServiceName = Assembly.GetEntryAssembly().GetName().Name,
                 Time = DateTime.UtcNow
             };

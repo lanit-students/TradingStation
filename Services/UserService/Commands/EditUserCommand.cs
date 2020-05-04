@@ -7,6 +7,7 @@ using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 
@@ -90,15 +91,27 @@ namespace UserService.Commands
                 UserAvatar = userAvatar
             };
 
-            var editUserResult = await EditUser(internalEditUserInfoRequest);
-            if (!editUserResult)
+            try
             {
-                var exception = new BadRequestException("Unable to edit");
-                logger.LogWarning(exception, "Bad request exception was catched on edit user command");
-                throw exception;
+                await EditUser(internalEditUserInfoRequest);
+                return true;
             }
+            catch (ForbiddenException e)
+            {
+                var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
 
-            return true;
+                var ex = new ForbiddenException(errorData.Item3);
+                logger.LogInformation(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
+                throw ex;
+            }
+            catch (BadRequestException e)
+            {
+                var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
+
+                var ex = new BadRequestException(errorData.Item3);
+                logger.LogInformation(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
+                throw ex;
+            }
         }
     }
 }

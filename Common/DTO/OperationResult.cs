@@ -1,4 +1,6 @@
-﻿namespace DTO
+﻿using System;
+
+namespace DTO
 {
     public class OperationResult
     {
