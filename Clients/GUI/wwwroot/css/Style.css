@@ -1,29 +1,9 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 .header {
-    overflow: hidden;
-    background-color: #f2f2f2;
-    padding: 10px;
-    height: 80px;
-}
-
-.header a {
-    float: left;
-    color: black;
-    text-align: center;
-    padding: 10px;
-    text-decoration: none;
-    font-size: 17px;
-    line-height: 21px;
-}
-
-.header a.active {
-    background-color: dodgerblue;
-    color: white;
-}
-
-.header-right {
-    float: right;
+    background: #f2f2f2;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .currencies {

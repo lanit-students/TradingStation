@@ -1,38 +1,98 @@
 ﻿@inject AuthStateProvider AuthenticationProvider
-@inject Blazored.SessionStorage.ISessionStorageService Storage
+@inject ISessionStorageService Storage
 @inject IModalService modal
 
-
 <div class="header">
-    <a href="#"><img src="Picture/Logo.png"></a>
-    <a href="#">News</a>
-    <AuthorizeView>
-        <Authorized>
-            <a href="instruments">Instruments</a>
-        </Authorized>
-    </AuthorizeView>
-    <div class="header-right">
-        <AuthorizeView>
-            <NotAuthorized>
-                <a class="header_item" href="signup">Sign up</a>
-                <a> / </a>
-                <a class="header_item" @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
-            </NotAuthorized>
-            <Authorized>
-                <a class="header_item" href="#" @onclick="@SignOut">Sign Out</a>
-                <a> / </a>
-                <a class="header_item" href="userinfo">User Info</a>
-            </Authorized>
-        </AuthorizeView>
-        <a href="#"><img src="Picture/Avatar.png"></a>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-custom-color">
+        <a class="navbar-brand pl-5" href="#">
+            <img src="Picture/Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">News</a>
+                </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <a class="nav-link" href="instruments">Instruments</a>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+            </ul>
+
+            <div class="navbar-nav ml-auto">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <a @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
+
+                        <a @onclick="@(() => modal.Show<Pages.SignIn>())" class="btn btn-outline-secondary" aria-pressed="true" role="button">Sign In</a>
+                    </NotAuthorized>
+                    <Authorized>
+                        <a class="navbar-brand" href="#">
+                            <img src="@imgSrc" width="30" height="30" class="d-inline-block align-top" alt="Avatar">
+                        </a>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </nav>
 </div>
 
 @code {
+    private string imgSrc = "";
+    private const string CDefaultImagePath = @"\wwwroot\Picture\Avatar.png";
+
     private void SignOut()
     {
         Storage.ClearAsync();
+
         AuthenticationProvider.MarkSignedOut();
     }
-}
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (AuthenticationProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+            {
+                var userToken = new UserToken
+                {
+                    Body = await Storage.GetItemAsync<string>("token"),
+                    UserId = await Storage.GetItemAsync<Guid>("id")
+                };
+
+                if (userToken.Body == null)
+                {
+                    return;
+                }
+
+                var requestResult = await UserGetter.GetUserById(userToken);
+
+                if (requestResult.Avatar != null)
+                    imgSrc = GetUserImage(requestResult.Avatar, requestResult.AvatarExtension);
+                else
+                    imgSrc = GetDefaultImage();
+            }
+        }
+    }
+
+    private string GetDefaultImage()
+    {
+        var imagePath = Directory.GetCurrentDirectory() + CDefaultImagePath;
+        var file = File.ReadAllBytes(imagePath);
+        var ext = imagePath.Substring(imagePath.IndexOf('.') + 1);
+        var base64 = Convert.ToBase64String(file);
+        return $"data:image/{ext};base64,{base64}";
+    }
+
+    private string GetUserImage(byte[] avatar, string extension)
+    {
+        var base64 = Convert.ToBase64String(avatar);
+        return string.Format("data:image/{0};base64,{1}", extension, base64);
+    }
+
+}
