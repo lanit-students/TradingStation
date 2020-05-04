@@ -2,6 +2,7 @@
 using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
+using System;
 using System.Threading.Tasks;
 
 namespace GUI.Scripts
@@ -15,6 +16,11 @@ namespace GUI.Scripts
             var client = new RestClient<CreateBotRequest, bool>(url, RestRequestType.POST, userToken);
 
             await client.ExecuteAsync(request);
+        }
+
+        public static void Delete(Guid ID)
+        {
+
         }
     }
 }

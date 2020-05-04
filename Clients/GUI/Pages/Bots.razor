@@ -9,8 +9,38 @@
 <div align="center" class="h3" min-width:>
      <h3><b>Bots</b></h3>
 </div>
+<div class="container">
+            <div class="row row-margin-bottom">
+                @foreach (var bot in bots)
+                {
+                    <div class="col-md-6">
+                        <div class="lib-panel">
+                            <div class="row box-shadow">
+                                <div class="lib-row lib-header">
+                                    <a href="AYE">@bot.Name</a>
+                                </div>
+                                <div class="lib-row lib-desc">
+                                    @foreach (var rule in bot.Rules)
+                                    {
+                                        <p>"AYE"</p>
+                                    }
+                                    <p>"AYE"</p>
+                                    <p>"AYE"</p>
+                                    <p>"AYE"</p>
+                                </div>
+                                <div class="lib-row lib-desk">
+                                    <p><button @onclick="() => Run(bot.ID)">Run</button>
+                                    <button @onclick="() => Disable(bot.ID)">Disable</button></p>
+                                    <button @onclick="() => Edit(bot.ID)">Edit rules</button>
+                                    <p><button @onclick="() => Delete(bot.ID)">Delete</button></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+</div>
 <button @onclick="CreateBot">Create</button>
-<button @onclick="Run">Run</button>
 
 
 @code {
@@ -20,24 +50,68 @@
 
     public async void CreateBot()
     {
-        var bot = new Bot();
+        var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
+        var modalResult = await formModal.Result;
+        var name = (string)modalResult.Data;
+        var bot = new Bot()
+        {
+            Name = name,
+            ID = Guid.NewGuid(),
+            UserID = Guid.NewGuid(),
+            Rules = new List<BotRules>()
+        };
         var request = new CreateBotRequest(bot);
         await BotCreater.Create(userToken, request);
     }
 
-    public void Run()
+
+
+    /* private async Task Create()
+     {
+         var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
+         var modalResult = await formModal.Result;
+         var name = (string)modalResult.Data;
+         var bot = new Bot()
+         {
+             Name = name,
+             ID = Guid.NewGuid(),
+             UserID = Guid.NewGuid(),
+             Rules = new List<BotRules>()
+         };
+         bots.Add(bot);
+     }*/
+
+
+    public void Run(Guid ID)
     {
-        bots[1].Run(new BotRules());
+        BotRunner.Run(ID);
+    }
+
+    public void Disable(Guid ID)
+    {
+        BotRunner.Disable(ID);
+    }
+
+    public void Edit(Guid ID)
+    {
+        () => Modal.Show<GUI.Pages.EditBot>()
+    }
+
+    public void Delete(Guid ID)
+    {
+        BotCreater.Delete(ID);
     }
 
     protected override void OnInitialized()
     {
         userToken = new UserToken();
+        bots = new List<Bot>();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         userToken.UserId = await Storage.GetItemAsync<Guid>("id");
         userToken.Body = await Storage.GetItemAsync<string>("token");
+        //bots = BotGetter.GetBots(userToken);
     }
 }
