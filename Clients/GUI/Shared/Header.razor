@@ -1,4 +1,5 @@
-﻿@inject AuthStateProvider AuthenticationProvider
+﻿@using GUI.Authentication
+@inject AuthStateProvider AuthenticationProvider
 @inject ISessionStorageService Storage
 @inject IModalService modal
 
@@ -27,9 +28,7 @@
             <div class="navbar-nav ml-auto">
                 <AuthorizeView>
                     <NotAuthorized>
-                        <a @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
-
-                        <a @onclick="@(() => modal.Show<Pages.SignIn>())" class="btn btn-outline-secondary" aria-pressed="true" role="button">Sign In</a>
+                        <a @onclick="@((e) => modal.Show<Pages.SignIn>())" class="btn btn-outline-secondary" aria-pressed="true" role="button">Sign In</a>
                     </NotAuthorized>
                     <Authorized>
                         <a class="navbar-brand" href="#">
