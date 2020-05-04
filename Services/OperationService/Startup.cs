@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OperationService.Commands;
 using System;
 using System.Collections.Generic;
+using OperationService.BrokerConsumers;
+using OperationService.Hubs;
 
 namespace OperationService
 {
@@ -46,6 +47,8 @@ namespace OperationService
                 {
                     ep.PrefetchCount = 16;
                     ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                    ep.ConfigureConsumer<CandleConsumer>(serviceProvider);
                 });
             });
         }
@@ -59,12 +62,18 @@ namespace OperationService
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
+
+                x.AddConsumer<CandleConsumer>();
+
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
+                x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
             });
 
             services.AddMassTransitHostedService();
 
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
+
+            services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
 
             services.AddLogging(log =>
             {
@@ -75,6 +84,8 @@ namespace OperationService
             {
                 return new LoggerProvider(provider);
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,6 +106,7 @@ namespace OperationService
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<CandleHub>("/CandleHub");
                 endpoints.MapControllers();
             });
         }
