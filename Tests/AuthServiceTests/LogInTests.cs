@@ -1,12 +1,14 @@
 ﻿using AuthenticationService;
 using AuthenticationService.Commands;
 using AuthenticationService.Interfaces;
+using Castle.Core.Logging;
 using DTO;
 using DTO.BrokerRequests;
 using DTO.RestRequests;
 using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -40,7 +42,7 @@ namespace AuthenticationServiceTests
                 .Setup(x => x.GetResponse<OperationResult<UserCredential>>(It.IsAny<InternalLoginRequest>(), default, default))
                 .Returns(Task.FromResult(responseMock.Object));
 
-            command = new LoginCommand(tokensEngine, clientMock.Object);
+            command = new LoginCommand(tokensEngine, clientMock.Object, new Mock<ILogger<LoginCommand>>().Object);
         }
 
         [Test]

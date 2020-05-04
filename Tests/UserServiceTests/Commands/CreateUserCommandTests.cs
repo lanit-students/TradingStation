@@ -10,6 +10,7 @@ using DTO;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using Kernel.CustomExceptions;
+using Microsoft.Extensions.Logging;
 
 namespace UserServiceTests
 {
@@ -48,7 +49,7 @@ namespace UserServiceTests
                 .Setup(x => x.GetResponse<OperationResult<bool>>(It.IsAny<InternalCreateUserRequest>(), default, default))
                 .Returns(Task.FromResult(responseMock.Object));
 
-            command = new CreateUserCommand(clientMock.Object, validatorMock.Object);
+            command = new CreateUserCommand(clientMock.Object, validatorMock.Object, new Mock<ILogger<CreateUserCommand>>().Object);
         }
 
         [Test]
