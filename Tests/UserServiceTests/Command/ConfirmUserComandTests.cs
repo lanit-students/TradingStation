@@ -65,7 +65,6 @@ namespace UserServiceTests.Commands
             Assert.ThrowsAsync<BadRequestException>(() => command.Execute(token));
         }
     }
-
 }
 
 

@@ -22,7 +22,7 @@ namespace UserService.Utils
             var to = new MailAddress(email);
             string secretToken =  secretTokenEngine.GetToken(email).ToString();
             string link = $"https://localhost:5011/users/confirm?secretToken={secretToken}";
-            string htmlCode = $"<p>Please, click this <a href ={link}>link</a> to confirm regestration.</p>";
+            string htmlCode = $"<p>Please, click this <a href ={link}>link</a> to confirm registration.</p>";
             var m = new MailMessage(from, to);
             m.Subject = "Registration confirmation";
             m.Body = htmlCode;

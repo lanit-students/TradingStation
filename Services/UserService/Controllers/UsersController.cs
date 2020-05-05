@@ -28,7 +28,7 @@ namespace UserService.Controllers
         public async Task<bool> CreateUser([FromServices] ICreateUserCommand command, [FromBody] CreateUserRequest request)
         {
             logger.LogInformation("Create user request received from GUI to UserService");
-            return await command.Execute(request); ;
+            return await command.Execute(request);
         }
 
         [Route("confirm")]
