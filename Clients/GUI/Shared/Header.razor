@@ -1,8 +1,8 @@
 ﻿@inject AuthStateProvider AuthenticationProvider
-@inject ISessionStorageService Storage
+@inject Blazored.SessionStorage.ISessionStorageService Storage
 @inject IModalService modal
 
-<div class="header">
+<div class="header"
     <nav class="navbar navbar-expand-lg navbar-light bg-custom-color">
         <a class="navbar-brand pl-5" href="#">
             <img src="Picture/Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
@@ -23,16 +23,26 @@
                     </Authorized>
                 </AuthorizeView>
             </ul>
-
             <div class="navbar-nav ml-auto">
                 <AuthorizeView>
                     <NotAuthorized>
-                        <a class="header_item" @onclick="@(e => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
+                        <button type="button" class="btn btn-outline-secondary" @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</button>
                     </NotAuthorized>
                     <Authorized>
-                        <a class="navbar-brand" href="#">
-                            <img src="@imgSrc" width="30" height="30" class="d-inline-block align-top" alt="Avatar">
-                        </a>
+                        <div class="btn-group dropleft">
+                            <a class="navbar-brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="d-inline-block align-top" alt="Avatar">
+                            </a>
+
+                            <div class="dropdown-menu">
+                                <a class="navbar-brand" style="padding: .25rem 1.5rem;">
+                                    <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="d-inline-block align-top" alt="Avatar">
+                                </a>
+                                <a class="dropdown-item" href="userinfo">User Info</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/" @onclick="SignOut">Sign out</a>
+                            </div>
+                        </div>
                     </Authorized>
                 </AuthorizeView>
             </div>
@@ -41,8 +51,7 @@
 </div>
 
 @code {
-    private string imgSrc = "";
-    private const string CDefaultImagePath = @"\wwwroot\Picture\Avatar.png";
+    private string imgSrc = "Picture/Avatar.svg";
 
     private void SignOut()
     {
@@ -51,40 +60,23 @@
         AuthenticationProvider.MarkSignedOut();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async void LoadImageSrc() 
     {
-        if (firstRender)
+        var userToken = new UserToken
         {
-            if (AuthenticationProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
-            {
-                var userToken = new UserToken
-                {
-                    Body = await Storage.GetItemAsync<string>("token"),
-                    UserId = await Storage.GetItemAsync<Guid>("id")
-                };
+            Body = await Storage.GetItemAsync<string>("token"),
+            UserId = await Storage.GetItemAsync<Guid>("id")
+        };
 
-                if (userToken.Body == null)
-                {
-                    return;
-                }
-
-                var requestResult = await UserGetter.GetUserById(userToken);
-
-                if (requestResult.Avatar != null)
-                    imgSrc = GetUserImage(requestResult.Avatar, requestResult.AvatarExtension);
-                else
-                    imgSrc = GetDefaultImage();
-            }
+        if (userToken.Body == null)
+        {
+            return;
         }
-    }
 
-    private string GetDefaultImage()
-    {
-        var imagePath = Directory.GetCurrentDirectory() + CDefaultImagePath;
-        var file = File.ReadAllBytes(imagePath);
-        var ext = imagePath.Substring(imagePath.IndexOf('.') + 1);
-        var base64 = Convert.ToBase64String(file);
-        return $"data:image/{ext};base64,{base64}";
+        var requestResult = await UserGetter.GetUserById(userToken);
+
+        if (requestResult.Avatar != null)
+            imgSrc = GetUserImage(requestResult.Avatar, requestResult.AvatarExtension);
     }
 
     private string GetUserImage(byte[] avatar, string extension)
@@ -92,5 +84,4 @@
         var base64 = Convert.ToBase64String(avatar);
         return string.Format("data:image/{0};base64,{1}", extension, base64);
     }
-
 }
