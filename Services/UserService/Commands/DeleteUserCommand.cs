@@ -52,7 +52,7 @@ namespace UserService.Commands
                 var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
 
                 var ex = new NotFoundException(errorData.Item3);
-                logger.LogInformation(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
+                logger.LogWarning(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
                 throw ex;
             }
             catch (BadRequestException e)
@@ -60,7 +60,7 @@ namespace UserService.Commands
                 var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
 
                 var ex = new BadRequestException(errorData.Item3);
-                logger.LogInformation(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
+                logger.LogWarning(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
                 throw ex;
             }
         }

@@ -10,7 +10,6 @@ using MassTransit;
 using System;
 using GreenPipes;
 using BrokerService.BrokerConsumers;
-using DTO;
 
 namespace BrokerService
 {

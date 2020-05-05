@@ -1,13 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DTO;
-using DTO.BrokerRequests;
-using Interfaces;
-using MassTransit;
-using Microsoft.AspNetCore.Mvc;
+﻿using DTO.BrokerRequests;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
-using OperationService.Commands;
 
 namespace OperationService.Hubs
 {

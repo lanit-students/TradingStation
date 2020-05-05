@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTO
+﻿namespace DTO
 {
     public class OperationResult
     {

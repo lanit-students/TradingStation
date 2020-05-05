@@ -1,7 +1,6 @@
 ﻿using AuthenticationService;
 using AuthenticationService.Commands;
 using AuthenticationService.Interfaces;
-using Castle.Core.Logging;
 using DTO;
 using DTO.BrokerRequests;
 using DTO.RestRequests;
