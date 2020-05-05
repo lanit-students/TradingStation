@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
 using DTO.MarketBrokerObjects;
+using DTO.RestRequests;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using OperationService.Interfaces;
 
 namespace OperationService.Controllers
 {
@@ -12,6 +15,13 @@ namespace OperationService.Controllers
     [Route("[controller]")]
     public class OperationsController : ControllerBase
     {
+        private readonly ILogger<OperationsController> logger;
+
+        public OperationsController([FromServices] ILogger<OperationsController> logger)
+        {
+            this.logger = logger;
+        }
+
         [Route("instruments/get")]
         [HttpGet]
         public async Task<IEnumerable<Instrument>> GetInstruments(
@@ -47,6 +57,14 @@ namespace OperationService.Controllers
                     Token = token,
                     Figi = figi
                 });
+        }
+
+        [Route("addbot")]
+        [HttpPost]
+        public async Task<bool> CreateBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        {
+            logger.LogInformation("Add bot request received from GUI to UserService");
+            return await command.Execute(request);
         }
     }
 }
