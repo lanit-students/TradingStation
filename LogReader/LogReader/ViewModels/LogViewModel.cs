@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace LogReader.ViewModels
 {
     public class LogViewModel : INotifyPropertyChanged
     {
-        private readonly LogContext logContext;
+        private LogContext logContext;
 
         public ObservableCollection<Node> Logs { get; private set; }
 
@@ -31,8 +32,7 @@ namespace LogReader.ViewModels
                 }
 
                 selectedLogLevel = value;
-                Logs = GetLogsTree(value);
-                OnPropertyChanged("Logs");
+                UpdateLogs();
             }
         }
 
@@ -41,6 +41,20 @@ namespace LogReader.ViewModels
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void UpdateLogs()
+        {
+            Logs = GetLogsTree();
+            OnPropertyChanged("Logs");
+        }
+
+        private void SetUpdateTimer()
+        {
+            DispatcherTimer dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler((s, e) => UpdateLogs());
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 15);
+            dispatcherTimer.Start();
         }
 
         public LogViewModel(LogContext context)
@@ -56,25 +70,27 @@ namespace LogReader.ViewModels
 
             logContext = context;
 
-            Logs = GetLogsTree(selectedLogLevel);
+            Logs = GetLogsTree();
+
+            SetUpdateTimer();
         }
 
-        private ObservableCollection<Node> GetLogsTree(LogLevel level)
+        private ObservableCollection<Node> GetLogsTree()
         {
             var nodes = new ObservableCollection<Node>();
 
             // Getting single logs (no children, no parents)
-            var logs = logContext.Logs;
+            var logs = logContext.Logs.OrderByDescending(x => x.Time);
 
             var parentless = logs.Where(x => x.ParentId == null);
 
             var childrenOfParentless = logs.Except(parentless).Where(x => (parentless.Select(x => x.Id).Contains(x.ParentId.Value)));
 
-            var single = parentless.Where(x => !childrenOfParentless.Select(child => child.ParentId ?? Guid.Empty).Contains(x.Id) && x.Level == level);
+            var single = parentless.Where(x => !childrenOfParentless.Select(child => child.ParentId ?? Guid.Empty).Contains(x.Id) && x.Level == selectedLogLevel);
 
             // Getting other log chains
             var notSingle = logs.Except(single);
-            var children = notSingle.Where(x => !(notSingle.Select(x => x.ParentId)).Contains(x.Id) && x.Level == level);
+            var children = notSingle.Where(x => !(notSingle.Select(x => x.ParentId)).Contains(x.Id) && x.Level == selectedLogLevel);
 
             // Adding logs to tree
             foreach (var child in children)

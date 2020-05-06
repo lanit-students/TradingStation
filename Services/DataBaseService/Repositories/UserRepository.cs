@@ -81,7 +81,7 @@ namespace DataBaseService.Repositories
             if (dbUserAvatar != null && dbUserAvatar.Avatar != null)
                 userAvatar = mapper.MapUserAvatar(dbUserAvatar);
 
-            logger.LogInformation("GetUserWithAvatarById: User with id {1} was found and sent to UserService", userId);
+            logger.LogInformation($"GetUserWithAvatarById: User with id {userId} was found and sent to UserService");
             return new InternalGetUserByIdResponse
             {
                 User = user,
@@ -96,14 +96,14 @@ namespace DataBaseService.Repositories
             if (dbUserCredential is null)
             {
                 var e = new NotFoundException($"{Guid.NewGuid()}_Not found user to delete");
-                logger.LogWarning(e, e.Message);
+                logger.LogWarning(e, $"{e.Message}, user id: {userId}");
                 throw e;
             }
 
             if(!dbUserCredential.IsActive)
             {
                 var e = new BadRequestException($"{Guid.NewGuid()}_User was deleted earlier or not confirmed");
-                logger.LogWarning(e, e.Message);
+                logger.LogWarning(e, $"{e.Message}, user id: {userId}");
                 throw e;
             }
             dbUserCredential.IsActive = false;
@@ -158,7 +158,7 @@ namespace DataBaseService.Repositories
                     }
                 }
                 dbContext.SaveChanges();
-                logger.LogInformation($"EditUser: Information about user with id {user.Id} was changed ");
+                logger.LogInformation($"EditUser: Information about user with id {user.Id} was changed");
             }
             else
             {

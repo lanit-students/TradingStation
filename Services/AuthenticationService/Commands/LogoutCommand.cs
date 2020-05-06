@@ -24,7 +24,7 @@ namespace AuthenticationService.Commands
             if (userId == Guid.Empty)
             {
                 var e = new BadRequestException("Empty id in log out request.");
-                logger.LogWarning(e, "BadRequest thrown while trying to log out.");
+                logger.LogWarning(e, $"Attempt to logout user with empty id.");
                 throw new BadRequestException();
             }
 
