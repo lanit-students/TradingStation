@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using OperationService.BrokerConsumers;
 using OperationService.Hubs;
+using OperationService.Interfaces;
 
 namespace OperationService
 {
@@ -67,6 +68,8 @@ namespace OperationService
 
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
                 x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
+
+                x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
             });
 
             services.AddMassTransitHostedService();
@@ -74,6 +77,17 @@ namespace OperationService
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
 
             services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
+
+
+            services.AddTransient<ICreateBotCommand, CreateBotCommand>();
+
+            services.AddTransient<IDeleteBotCommand, DeleteBotCommand>();
+
+            services.AddTransient<IRunBotCommand, RunBotCommand>();
+
+            services.AddTransient<IDisableBotCommand, DisableBotCommand>();
+
+            services.AddTransient<IGetBotCommand, GetBotsCommand>();
 
             services.AddLogging(log =>
             {

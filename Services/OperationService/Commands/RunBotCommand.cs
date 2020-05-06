@@ -1,4 +1,5 @@
-﻿using OperationService.Interfaces;
+﻿using DTO.RestRequests;
+using OperationService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +9,9 @@ namespace OperationService.Commands
 {
     public class RunBotCommand: IRunBotCommand
     {
+        public Task<bool> Execute(EditBotRequest request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

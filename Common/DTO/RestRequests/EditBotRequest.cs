@@ -4,7 +4,8 @@ using System.Text;
 
 namespace DTO.RestRequests
 {
-    public class DeleteBotRequest
+    public class EditBotRequest
     {
+        public Guid ID;
     }
 }

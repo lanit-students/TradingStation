@@ -7,5 +7,6 @@ namespace OperationService.Interfaces
 {
     public interface IDisableBotCommand
     {
+        Task<bool> Execute(EditBotRequest request);
     }
 }

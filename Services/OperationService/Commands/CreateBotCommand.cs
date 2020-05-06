@@ -12,31 +12,27 @@ using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class AddBotCommand : IAddBotCommand
+    public class CreateBotCommand : ICreateBotCommand
     {
         private readonly IRequestClient<CreateBotRequest> client;
-        private readonly IValidator<CreateBotRequest> validator;
 
-        public AddBotCommand([FromServices] IRequestClient<CreateBotRequest> client, [FromServices] IValidator<CreateBotRequest> validator)
+        public CreateBotCommand([FromServices] IRequestClient<CreateBotRequest> client)
         {
             this.client = client;
-            this.validator = validator;
         }
 
         public async Task<bool> Execute(CreateBotRequest request)
         {
-            validator.ValidateAndThrow(request);
-
             var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            var addBotResult = OperationResultHandler.HandleResponse(response.Message);
+            var create = OperationResultHandler.HandleResponse(response.Message);
 
-            if (!addBotResult)
+            if (!create)
             {
                 throw new BadRequestException("Unable to create bot");
             }
 
-            return addBotResult;
+            return create;
         }
     }
 }

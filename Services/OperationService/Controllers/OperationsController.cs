@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
@@ -59,36 +60,44 @@ namespace OperationService.Controllers
                 });
         }
 
-        [Route("addbot")]
+        [Route("bot/create")]
         [HttpPost]
-        public async Task<bool> CreateBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        public async Task<bool> CreateBot([FromServices] ICreateBotCommand command, [FromBody] CreateBotRequest request)
         {
-            logger.LogInformation("Add bot request received from GUI to UserService");
+            logger.LogInformation("Create bot request received from GUI to OperationService");
             return await command.Execute(request);
         }
 
-        [Route("deletebot")]
+        [Route("bot/delete")]
         [HttpDelete]
-        public async Task<bool> DeleteBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        public async Task<bool> DeleteBot([FromServices] IDeleteBotCommand command, [FromBody] EditBotRequest request)
         {
-            logger.LogInformation("Add bot request received from GUI to UserService");
+            logger.LogInformation("Delete bot request received from GUI to UserService");
             return await command.Execute(request);
         }
 
-        [Route("runbot")]
-        [HttpPost]
-        public async Task<bool> RunBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        [Route("bot/run")]
+        [HttpPut]
+        public async Task<bool> RunBot([FromServices] IRunBotCommand command, [FromBody] CreateBotRequest request)
         {
-            logger.LogInformation("Add bot request received from GUI to UserService");
+            logger.LogInformation("Run bot request received from GUI to UserService");
             return await command.Execute(request);
         }
 
-        [Route("disablebot")]
-        [HttpPost]
-        public async Task<bool> DisableBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        [Route("bot/disable")]
+        [HttpPut]
+        public async Task<bool> DisableBot([FromServices] IDisableBotCommand command, [FromBody] CreateBotRequest request)
         {
-            logger.LogInformation("Add bot request received from GUI to UserService");
+            logger.LogInformation("Disable bot request received from GUI to UserService");
             return await command.Execute(request);
+        }
+
+        [Route("bot/get")]
+        [HttpGet]
+        public async Task<bool> GetBot([FromServices] IDisableBotCommand command, [FromHeader] Guid userId)
+        {
+            logger.LogInformation("Get bots request received from GUI to UserService");
+            return await command.Execute(userId);
         }
     }
 }

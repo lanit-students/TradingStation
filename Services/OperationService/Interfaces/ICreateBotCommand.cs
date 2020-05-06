@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace OperationService.Interfaces
 {
-    public interface IAddBotCommand
+    public interface ICreateBotCommand
     {
         Task<bool> Execute(CreateBotRequest request);
     }

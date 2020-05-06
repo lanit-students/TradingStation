@@ -8,20 +8,20 @@ namespace GUI.Scripts
 {
     public class BotRunner
     {
-        public static async Task Run(RunBotRequest request, UserToken userToken)
+        public static async Task Run(UserToken userToken, EditBotRequest request)
         {
-            const string url = "https://localhost:5011/operations/runbot";
+            const string url = "https://localhost:5009/operations/runbot";
 
-            var client = new RestClient<RunBotRequest, bool>(url, RestRequestType.PUT, userToken);
+            var client = new RestClient<EditBotRequest, bool>(url, RestRequestType.PUT, userToken);
 
             await client.ExecuteAsync(request);
         }
 
-        public static async Task Disable(DisableBotRequest request, UserToken userToken)
+        public static async Task Disable(UserToken userToken, EditBotRequest request)
         {
-            const string url = "https://localhost:5011/operations/runbot";
+            const string url = "https://localhost:5009/operations/runbot";
 
-            var client = new RestClient<DisableBotRequest, bool>(url, RestRequestType.PUT, userToken);
+            var client = new RestClient<EditBotRequest, bool>(url, RestRequestType.PUT, userToken);
 
             await client.ExecuteAsync(request);
         }

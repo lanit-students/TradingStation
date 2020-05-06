@@ -22,7 +22,7 @@
                                 <div class="lib-row lib-desc">
                                     @foreach (var rule in bot.Rules)
                                     {
-                                        <p>@rule.ToString()</p>
+                                        <p>@rule</p>
                                     }
                                     <p>Example</p>
                                     <p>"Example"</p>
@@ -40,56 +40,51 @@
                 }
             </div>
 </div>
-<button @onclick="CreateBot">Create</button>
+<button @onclick="Create">Create</button>
 
 
 @code {
 
-    List<Bot> bots;
+    List<BotInfo> bots;
     private UserToken userToken;
 
-    public async void CreateBot()
+    public async void Create()
     {
         var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
         var modalResult = await formModal.Result;
         var name = (string)modalResult.Data;
-        var bot = new Bot()
+        var request = new CreateBotRequest()
         {
-            Name = name,
-            ID = Guid.NewGuid(),
-            UserID = Guid.NewGuid(),
-            Rules = new List<BotRules>()
+            Name = name
         };
-        var request = new CreateBotRequest(bot);
         await BotCreater.Create(userToken, request);
     }
 
-
-
-    /* private async Task Create()
-     {
-         var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
-         var modalResult = await formModal.Result;
-         var name = (string)modalResult.Data;
-         var bot = new Bot()
-         {
-             Name = name,
-             ID = Guid.NewGuid(),
-             UserID = Guid.NewGuid(),
-             Rules = new List<BotRules>()
-         };
-         bots.Add(bot);
-     }*/
-
-
-    public void Run(Guid ID)
+    public async void Delete(Guid id)
     {
-        BotRunner.Run(ID);
+        var request = new EditBotRequest()
+        {
+            ID = id
+        };
+        await BotCreater.Delete(userToken, request);
     }
 
-    public void Disable(Guid ID)
+    public async void Run(Guid id)
     {
-        BotRunner.Disable(ID);
+        var request = new EditBotRequest()
+        {
+            ID = id
+        };
+        await BotRunner.Run(userToken, request);
+    }
+
+    public async void Disable(Guid id)
+    {
+        var request = new EditBotRequest()
+        {
+            ID = id
+        };
+        await BotRunner.Disable(userToken, request);
     }
 
     public void Edit(Guid ID)
@@ -97,21 +92,16 @@
         Modal.Show<GUI.Pages.EditBot>();
     }
 
-    public void Delete(Guid ID)
-    {
-        BotCreater.Delete(ID);
-    }
-
     protected override void OnInitialized()
     {
         userToken = new UserToken();
-        bots = new List<Bot>();
+        bots = new List<BotInfo>();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         userToken.UserId = await Storage.GetItemAsync<Guid>("id");
         userToken.Body = await Storage.GetItemAsync<string>("token");
-        //bots = BotGetter.GetBots(userToken);
+        bots = await BotGetter.GetBots(userToken);
     }
 }
