@@ -70,7 +70,7 @@ namespace OperationService.Controllers
 
         [Route("bot/delete")]
         [HttpDelete]
-        public async Task<bool> DeleteBot([FromServices] IDeleteBotCommand command, [FromBody] EditBotRequest request)
+        public async Task<bool> DeleteBot([FromServices] IDeleteBotCommand command, [FromBody] DeleteBotRequest request)
         {
             logger.LogInformation("Delete bot request received from GUI to UserService");
             return await command.Execute(request);
@@ -78,7 +78,7 @@ namespace OperationService.Controllers
 
         [Route("bot/run")]
         [HttpPut]
-        public async Task<bool> RunBot([FromServices] IRunBotCommand command, [FromBody] CreateBotRequest request)
+        public async Task<bool> RunBot([FromServices] IRunBotCommand command, [FromBody] RunBotRequest request)
         {
             logger.LogInformation("Run bot request received from GUI to UserService");
             return await command.Execute(request);
@@ -86,7 +86,7 @@ namespace OperationService.Controllers
 
         [Route("bot/disable")]
         [HttpPut]
-        public async Task<bool> DisableBot([FromServices] IDisableBotCommand command, [FromBody] CreateBotRequest request)
+        public async Task<bool> DisableBot([FromServices] IDisableBotCommand command, [FromBody] DisableBotRequest request)
         {
             logger.LogInformation("Disable bot request received from GUI to UserService");
             return await command.Execute(request);

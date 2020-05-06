@@ -50,13 +50,5 @@ namespace UserService.Controllers
             logger.LogInformation("Get user request received from GUI to UserService");
             return await command.Execute(userId);
         }
-
-        [Route("addbot")]
-        [HttpPost]
-        public async Task<bool> CreateBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
-        {
-            logger.LogInformation("Add bot request received from GUI to UserService");
-            return await command.Execute(request);
-        }
     }
 }
