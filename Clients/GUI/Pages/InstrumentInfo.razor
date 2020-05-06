@@ -283,7 +283,7 @@
         };
     }
 
-    private void UpdateBalanceInCorrectCurrency()
+    private void IncreaseBalanceInCorrectCurrency()
     {
         switch (currency)
         {
@@ -307,7 +307,7 @@
     private async Task UpdateBalance()
     {
         oldBalance = (UserBalance)userBalance.Clone();
-        UpdateBalanceInCorrectCurrency();
+        IncreaseBalanceInCorrectCurrency();
         var request = new UpdateUserBalanceRequest()
         {
             UserId = userBalance.UserId,
@@ -414,8 +414,17 @@
             Price = price,
             Currency = currency
         };
-
-        return await BrokerManager.Trade(request);
+        bool result = false;
+        try
+        {
+            result = await BrokerManager.Trade(request);
+        }
+        catch
+        {
+            errorOccured = true;
+            errorMessage = "Unable to make a deal. Try again later.";
+        }
+        return result;
     }
 
     private async Task SetToken()
