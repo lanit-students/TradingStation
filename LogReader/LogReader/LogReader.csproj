@@ -20,4 +20,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-preview.3.20215.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
+  </ItemGroup>
+
 </Project>

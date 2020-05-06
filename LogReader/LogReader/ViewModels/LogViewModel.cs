@@ -1,4 +1,5 @@
-﻿using LogReader.Database;
+﻿using Kernel;
+using LogReader.Database;
 using LogReader.Models;
 using Microsoft.Extensions.Logging;
 using System;
@@ -106,7 +107,7 @@ namespace LogReader.ViewModels
             return nodes;
         }
 
-        private Node GetParentsChain(IQueryable<Log> logs, Log log)
+        private Node GetParentsChain(IQueryable<LogMessage> logs, LogMessage log)
         {
             if (log.ParentId != null)
             {

@@ -1,4 +1,4 @@
-﻿using LogReader.Models;
+﻿using Kernel;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogReader.Database
@@ -14,11 +14,11 @@ namespace LogReader.Database
         {
         }
 
-        public virtual DbSet<Log> Logs { get; set; }
+        public virtual DbSet<LogMessage> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Log>(entity =>
+            modelBuilder.Entity<LogMessage>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
