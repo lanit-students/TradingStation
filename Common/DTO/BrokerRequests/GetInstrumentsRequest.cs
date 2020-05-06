@@ -9,7 +9,5 @@ namespace DTO.BrokerRequests
         public string Token { get; set; }
 
         public InstrumentType Type { get; set; }
-
-        public int Depth { get; set; }
     }
 }
