@@ -2,7 +2,6 @@
 using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
-using System;
 using System.Threading.Tasks;
 
 namespace GUI.Scripts
@@ -11,16 +10,20 @@ namespace GUI.Scripts
     {
         public static async Task Create(UserToken userToken, CreateBotRequest request)
         {
-            const string url = "https://localhost:5011/users/addbot";
+            const string url = "https://localhost:5011/operations/addbot";
 
             var client = new RestClient<CreateBotRequest, bool>(url, RestRequestType.POST, userToken);
 
             await client.ExecuteAsync(request);
         }
 
-        public static void Delete(Guid ID)
+        public static async Task Delete(UserToken userToken, DeleteBotRequest request)
         {
+            const string url = "https://localhost:5011/operations/deletebot";
 
+            var client = new RestClient<DeleteBotRequest, bool>(url, RestRequestType.DELETE, userToken);
+
+            await client.ExecuteAsync(request);
         }
     }
 }

@@ -1,17 +1,21 @@
 ﻿using DTO;
-using DTO.Bots;
-using System;
+using DTO.RestRequests;
+using Kernel;
+using Kernel.Enums;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GUI.Scripts
 {
     public class BotGetter
     {
-        public static List<Bot> GetBots(UserToken token)
+        public static async Task<List<BotsInfoRequest>> GetBots(UserToken userToken)
         {
-            return new List<Bot>();
+            const string url = "https://localhost:5011/operations/getbots";
+
+            var client = new RestClient<object, List<BotsInfoRequest>>(url, RestRequestType.GET, userToken);
+
+            return await client.ExecuteAsync();
         }
     }
 }

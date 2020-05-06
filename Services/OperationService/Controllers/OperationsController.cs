@@ -66,5 +66,29 @@ namespace OperationService.Controllers
             logger.LogInformation("Add bot request received from GUI to UserService");
             return await command.Execute(request);
         }
+
+        [Route("deletebot")]
+        [HttpDelete]
+        public async Task<bool> DeleteBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        {
+            logger.LogInformation("Add bot request received from GUI to UserService");
+            return await command.Execute(request);
+        }
+
+        [Route("runbot")]
+        [HttpPost]
+        public async Task<bool> RunBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        {
+            logger.LogInformation("Add bot request received from GUI to UserService");
+            return await command.Execute(request);
+        }
+
+        [Route("disablebot")]
+        [HttpPost]
+        public async Task<bool> DisableBot([FromServices] IAddBotCommand command, [FromBody] CreateBotRequest request)
+        {
+            logger.LogInformation("Add bot request received from GUI to UserService");
+            return await command.Execute(request);
+        }
     }
 }
