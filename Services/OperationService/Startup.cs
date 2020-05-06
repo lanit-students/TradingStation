@@ -1,5 +1,7 @@
 using DTO;
 using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
+using DTO.RestRequests;
 using GreenPipes;
 using Interfaces;
 using Kernel;
@@ -61,17 +63,27 @@ namespace OperationService
 
             services.AddMassTransit(x =>
             {
+                var brokerUri = new Uri("rabbitmq://localhost/BrokerService");
+                var databaseUri = new Uri("rabbitmq://localhost/DatabaseService");
+
                 x.AddBus(provider => CreateBus(provider));
-
-                x.AddConsumer<CandleConsumer>();
-
-                x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
-                x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
+                x.AddRequestClient<GetInstrumentsRequest>(brokerUri);
+                x.AddRequestClient<InternalTradeRequest>(brokerUri);
+                x.AddRequestClient<Transaction>(databaseUri);
+                x.AddRequestClient<GetInstrumentFromPortfolioRequest>(databaseUri);
+                x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
+                x.AddRequestClient<UserBalance>(databaseUri);
+				x.AddRequestClient<GetCandlesRequest>(brokerUri);
+                x.AddConsumer<CandleConsumer>();   
             });
 
             services.AddMassTransitHostedService();
 
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
+            services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
+            services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
+            services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetUserBalanceCommand>();
+            services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateUserBalanceCommand>();
 
             services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
 

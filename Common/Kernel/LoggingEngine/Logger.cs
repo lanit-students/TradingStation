@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Kernel.LoggingEngine
 {
-    public class Logger: ILogger
+    public class Logger : ILogger
     {
         private readonly IServiceProvider provider;
 

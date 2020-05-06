@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTO;
+using DTO.BrokerRequests;
 using Interfaces;
 using Kernel.CustomExceptions;
 using Tinkoff.Trading.OpenApi.Models;
@@ -13,32 +14,27 @@ namespace TinkoffIntegrationLib
 {
     public class TinkoffBankBroker : IBroker
     {
-        private readonly Context context;
+        private readonly SandboxContext context;
         private Action<Candle> sendCandle;
+        private const decimal CmaxBalance = decimal.MaxValue - 1;
 
-        public TinkoffBankBroker(string token, int depth = 10)
+        public TinkoffBankBroker(string token)
         {
             try
             {
                 var conn = ConnectionFactory.GetSandboxConnection(token);
                 context = conn.Context;
-
-                Depth = depth;
+                context.RegisterAsync();
+                context.SetCurrencyBalanceAsync(Currency.Rub, CmaxBalance);
+                context.SetCurrencyBalanceAsync(Currency.Usd, CmaxBalance);
+                context.SetCurrencyBalanceAsync(Currency.Eur, CmaxBalance);
             }
             catch (Exception)
             {
                 throw new BadRequestException();
             }
         }
-
-        /*
-         * After creating the broker, if you want receive response to request
-         * with another depth, you must change depth here and make
-         * a request again
-        */
-        /// <summary>
-        ///     Depth of market glass
-        /// </summary>
+        
         public int Depth { get; set; }
 
         public IEnumerable<Instrument> GetInstruments(InstrumentType type)
@@ -74,6 +70,24 @@ namespace TinkoffIntegrationLib
             return instruments;
         }
 
+        public Transaction Trade(InternalTradeRequest request)
+        {
+            try
+            {
+                var transaction = request.Transaction;
+                var operation = transaction.Operation == DTO.MarketBrokerObjects.OperationType.Buy ? OperationType.Buy : OperationType.Sell;
+                var order = new LimitOrder(transaction.Figi, transaction.Count, operation, transaction.Price);
+                var result = context.PlaceLimitOrderAsync(order).Result;
+                transaction.DateTime = DateTime.Now;
+                transaction.IsSuccess = result.Status == OrderStatus.Fill ? true : false;
+                return transaction;
+            }
+            catch
+            {
+                throw new BadRequestException("Transaction wasn't complete");
+            }
+        }
+        
         public IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
         {
             sendCandle = SendCandle;
