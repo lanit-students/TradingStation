@@ -62,7 +62,7 @@
 
     public async void Delete(Guid id)
     {
-        var request = new EditBotRequest()
+        var request = new DeleteBotRequest()
         {
             ID = id
         };
@@ -71,7 +71,7 @@
 
     public async void Run(Guid id)
     {
-        var request = new EditBotRequest()
+        var request = new RunBotRequest()
         {
             ID = id
         };
@@ -80,14 +80,14 @@
 
     public async void Disable(Guid id)
     {
-        var request = new EditBotRequest()
+        var request = new DisableBotRequest()
         {
             ID = id
         };
         await BotRunner.Disable(userToken, request);
     }
 
-    public void Edit(Guid ID)
+    public void Edit(Guid id)
     {
         Modal.Show<GUI.Pages.EditBot>();
     }

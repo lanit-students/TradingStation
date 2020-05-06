@@ -11,7 +11,7 @@ namespace GUI.Scripts
     {
         public static async Task<List<BotInfo>> GetBots(UserToken userToken)
         {
-            const string url = "https://localhost:5009/operations/getbots";
+            const string url = "https://localhost:5009/operations/bot/get";
 
             var client = new RestClient<object, List<BotInfo>>(url, RestRequestType.GET, userToken);
 
