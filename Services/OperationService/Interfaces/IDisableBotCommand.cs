@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DTO.RestRequests;
 using System.Threading.Tasks;
 
 namespace OperationService.Interfaces
 {
     public interface IDisableBotCommand
     {
-        Task<bool> Execute(EditBotRequest request);
+        Task<bool> Execute(DisableBotRequest request);
     }
 }

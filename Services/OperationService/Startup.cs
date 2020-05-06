@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using OperationService.BrokerConsumers;
 using OperationService.Hubs;
 using OperationService.Interfaces;
+using DTO.RestRequests;
 
 namespace OperationService
 {
@@ -69,7 +70,12 @@ namespace OperationService
                 x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
                 x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
 
-                x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
+                x.AddRequestClient<CreateBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
+                x.AddRequestClient<DeleteBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
+                x.AddRequestClient<RunBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
+                x.AddRequestClient<DisableBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
+                x.AddRequestClient<BotInfoRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
+
             });
 
             services.AddMassTransitHostedService();

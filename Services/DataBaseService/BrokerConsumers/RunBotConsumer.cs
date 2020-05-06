@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class CreateBotConsumer : IConsumer<CreateBotRequest>
+    public class RunBotConsumer : IConsumer<RunBotRequest>
     {
         private readonly IBotRepository botRepository;
 
-        public CreateBotConsumer([FromServices] IBotRepository botRepository)
+        public RunBotConsumer([FromServices] IBotRepository botRepository)
         {
             this.botRepository = botRepository;
         }
 
-        private bool CreateBot(CreateBotRequest request)
+        private bool RunBot(RunBotRequest request)
         {
             return true;
         }
 
-        public async Task Consume(ConsumeContext<CreateBotRequest> context)
+        public async Task Consume(ConsumeContext<RunBotRequest> context)
         {
-            var response = OperationResultWrapper.CreateResponse(CreateBot, context.Message);
+            var response = OperationResultWrapper.CreateResponse(RunBot, context.Message);
 
             await context.RespondAsync(response);
         }

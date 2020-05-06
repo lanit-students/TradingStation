@@ -58,7 +58,12 @@ namespace DataBaseService
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
+
                     ep.ConfigureConsumer<CreateBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<RunBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<BotInfoConsumer>(serviceProvider);
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -91,6 +96,7 @@ namespace DataBaseService
             });
 
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IBotRepository, BotRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
             services.AddTransient<ILogMapper, LogMapper>();
