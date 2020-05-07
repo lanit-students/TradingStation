@@ -1,0 +1,478 @@
+﻿@page "/instrumentInfo"
+@using System.Drawing
+@using ChartJs.Blazor.ChartJS.Common
+@using ChartJs.Blazor.ChartJS.Common.Axes
+@using ChartJs.Blazor.ChartJS.Common.Axes.Ticks
+@using ChartJs.Blazor.ChartJS.Common.Enums
+@using ChartJs.Blazor.ChartJS.Common.Properties
+@using ChartJs.Blazor.ChartJS.Common.Time
+@using ChartJs.Blazor.ChartJS.LineChart
+@using ChartJs.Blazor.Charts
+@using ChartJs.Blazor.Util
+@using GUI.Scripts
+@inject NavigationManager NavigationManager
+@inject ISessionStorageService Storage
+@inject IModalService Modal
+
+<div class="modal-body row">
+    <div class="col-md-6">
+        <div style="position: fixed; height:22vh; width:44vw">
+            <ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="300" Height="150" />
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h3 align="center">@instrument.Name</h3>
+        <br>
+        <div class="container">
+            @if (isInstrumentLoading)
+            {
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            }
+            else if (!errorOccured)
+            {
+                <div>
+                    <div class="form-row input-group-prepend">
+                        <label class="col-3">Current balance </label>
+                        <input type="text" disabled="disabled" class="col-3" @bind-value=@currency>
+                        <input type="number" disabled="disabled" class="col-3" @bind-value=@currentBalance>
+                    </div>
+                    <br>
+                    <div class="form-row input-group-prepend">
+                        <label class="col-3">Update balance</label>
+                        <input type="number" class="col-3" @bind-value=@cash>
+                        <button class="btn btn-primary col-3" value="Update" @onclick="@UpdateBalance">Update</button>
+                    </div>
+                </div>
+                <br>
+
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Figi</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Count in lot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@instrument.Figi</td>
+                            <td>@instrument.Name</td>
+                            <td>@instrument.Type</td>
+                            <td>@instrument.Currency</td>
+                            <td>@instrument.CountInLot</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="countInPortfolio">Count in portfolio</label>
+                        <input type="number" disabled="disabled" class="form-control" id="countInPortfolio" @bind-value=@countInPortfolio>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="lotsToTrade">Lots to trade</label>
+                        <input type="number" class="form-control" id="lotsToTrade" @bind-value=@lotsToTrade>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" @bind-value=@price>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="sellButton"> Sell instrument </label>
+                        <input class="btn btn-primary col-md-11" id="sellButton" value="Sell" @onclick="@Sell" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="buyButton"> Buy instrument </label>
+                        <input class="btn btn-primary col-md-11" id="buyButton" value="Buy" @onclick="@Buy" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <h3 class="m-lg-5">@errorMessage</h3>
+            }
+
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+
+    private ChartJsLineChart lineChartJs;
+    private LineConfig lineConfig;
+    private LineDataset<TimeTuple<decimal>> tempDataSet;
+    private DateTime lastTime;
+
+    private string tinkoffToken = "";
+    private int countInPortfolio = 1;
+    private int lotsToTrade = 1;
+    private decimal price = 100;
+    private bool errorOccured = false;
+    private bool isInstrumentLoading = false;
+    private Instrument instrument;
+    private string errorMessage = "";
+    private decimal cash = 100;
+    private Currency currency = Currency.Rub;
+    private decimal currentBalance = 0;
+    private UserBalance userBalance;
+    private UserBalance oldBalance;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            tinkoffToken = await Storage.GetItemAsync<string>("tinkoffToken");
+
+            if (tinkoffToken == null)
+            {
+                lineConfig.Options.Title.Text = new IndexableOption<string>("Access error");
+
+                await lineChartJs.Update();
+
+                return;
+            }
+
+            IEnumerable<Candle> list = null;
+
+            try
+            {
+                list = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, tinkoffToken);
+
+                if (list.Any())
+                {
+                    AddCandles(list);
+
+                    await UpdateNameInstrument();
+                }
+                else
+                {
+                    ChangeTitle("Exchange doesn't work");
+                }
+            }
+            catch (InternalServerException e)
+            {
+                ChangeTitle("Figi not found");
+            }
+        }
+    }
+
+    private async Task UpdateNameInstrument()
+    {
+        ChangeTitle(instrument.Name);
+    }
+
+    private async void ChangeTitle(string title)
+    {
+        lineConfig.Options.Title.Text = new IndexableOption<string>(title);
+        await lineChartJs.Update();
+    }
+
+    private void OnReceivedMessage(Candle candle)
+    {
+        if (lastTime == null || lastTime != candle.Time)
+        {
+            lastTime = candle.Time;
+
+            tempDataSet.Add(new TimeTuple<decimal>(new Moment(candle.Time), candle.Close));
+            if (tempDataSet.Data.Count > 15)
+            {
+                tempDataSet.RemoveAt(0);
+            }
+            lineConfig.Data.Datasets.Add(tempDataSet);
+
+            lineChartJs.Update();
+        }
+    }
+
+    private void AddCandles(IEnumerable<Candle> candles)
+    {
+        tempDataSet.AddRange(candles.ToList().ConvertAll(candle =>
+            new TimeTuple<decimal>(new Moment(candle.Time), candle.Close)));
+
+        lineConfig.Data.Datasets.Add(tempDataSet);
+
+        lastTime = candles.Last().Time;
+    }
+
+    private void OnError()
+    {
+        lineConfig.Options.Title.Text = "Instrument not found";
+
+        lineChartJs.Update();
+    }
+
+    protected override void OnInitialized()
+    {
+        SetChartConfig();
+    }
+
+    private void SetChartConfig()
+    {
+        lineConfig = new LineConfig
+        {
+            Options = new LineOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = ""
+                },
+                Tooltips = new Tooltips
+                {
+                    Mode = InteractionMode.Nearest,
+                    Intersect = false
+                },
+                Scales = new Scales
+                {
+                    xAxes = new List<CartesianAxis>
+        {
+            new TimeAxis
+            {
+                Distribution = TimeDistribution.Linear,
+                Ticks = new TimeTicks
+                {
+                    Source = TickSource.Data
+                },
+                Time = new TimeOptions
+                {
+                    Unit = TimeMeasurement.Minute,
+                    Round = TimeMeasurement.Minute,
+                    TooltipFormat = "DD.MM.YYYY HH:mm",
+                    DisplayFormats = TimeDisplayFormats.DE_CH
+                }
+            }
+        }
+                },
+                Hover = new LineOptionsHover
+                {
+                    Intersect = true,
+                    Mode = InteractionMode.Y
+                },
+                Legend =
+    {
+        Display = false
+    }
+            }
+        };
+
+        tempDataSet = new LineDataset<TimeTuple<decimal>>
+        {
+            BorderColor = ColorUtil.FromDrawingColor(Color.CornflowerBlue),
+            Fill = false,
+            BorderWidth = 2,
+            PointRadius = 3,
+            PointBorderWidth = 1,
+            SteppedLine = SteppedLine.False
+        };
+    }
+
+    private void UpdateBalanceVariable()
+    {
+        currentBalance = currency switch
+        {
+            Currency.Rub => userBalance.BalanceInRub,
+            Currency.Usd => userBalance.BalanceInUsd,
+            Currency.Eur => userBalance.BalanceInEur
+        };
+    }
+
+    private void IncreaseBalanceInCorrectCurrency()
+    {
+        switch (currency)
+        {
+            case Currency.Rub:
+                userBalance.BalanceInRub += cash;
+                break;
+            case Currency.Usd:
+                userBalance.BalanceInUsd += cash;
+                break;
+            case Currency.Eur:
+                userBalance.BalanceInEur += cash;
+                break;
+            default:
+                errorMessage = "This currency is disabled to trade";
+                errorOccured = true;
+                break;
+        }
+        cash = 0;
+    }
+
+    private async Task UpdateBalance()
+    {
+        oldBalance = (UserBalance)userBalance.Clone();
+        IncreaseBalanceInCorrectCurrency();
+        var request = new UpdateUserBalanceRequest()
+        {
+            UserId = userBalance.UserId,
+            BalanceInRub = userBalance.BalanceInRub,
+            BalanceInUsd = userBalance.BalanceInUsd,
+            BalanceInEur = userBalance.BalanceInEur
+        };
+        try
+        {
+            var result = await BrokerManager.UpdateUserBalance(request);
+            if (result == true)
+            {
+                UpdateBalanceVariable();
+            }
+        }
+        catch
+        {
+            userBalance = oldBalance;
+            errorOccured = true;
+            errorMessage = "Can't update balance, try again later.";
+        }
+    }
+
+    private async Task GetCountFromPortfolio()
+    {
+        var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userBalance.UserId, instrument.Figi);
+        countInPortfolio = instrumentInfo.TotalCount;
+    }
+
+    private async Task GetUserBalance()
+    {
+        userBalance = await BrokerManager.GetUserBalance(userBalance.UserId);
+        UpdateBalanceVariable();
+    }
+
+    private async Task Sell()
+    {
+        UpdateBalanceVariable();
+        if (countInPortfolio < lotsToTrade * instrument.CountInLot)
+            Modal.Show<EmptyModal>("Count in portfolio less than you can sell");
+        else
+        {
+            try
+            {
+                var result = await SendTradeRequest(OperationType.Sell);
+                if (result == false)
+                {
+                    errorOccured = true;
+                    errorMessage = "Unable to sell instrument. Try again later.";
+                }
+                else
+                {
+                    await GetCountFromPortfolio();
+                    await GetUserBalance();
+                }
+            }
+            catch (Exception e)
+            {
+                errorOccured = true;
+                errorMessage = e.Message;
+            }
+        }
+    }
+
+    private async Task Buy()
+    {
+        UpdateBalanceVariable();
+        if (currentBalance < lotsToTrade * instrument.CountInLot * price)
+            Modal.Show<EmptyModal>("You need more money to make a deal");
+        else
+        {
+            try
+            {
+                var result = await SendTradeRequest(OperationType.Buy);
+                if (result == false)
+                {
+                    errorOccured = true;
+                    errorMessage = "Unable to buy instrument. Try again later.";
+                }
+                else
+                {
+                    await GetCountFromPortfolio();
+                    await GetUserBalance();
+                }
+            }
+            catch (Exception e)
+            {
+                errorOccured = true;
+                errorMessage = e.Message;
+            }
+        }
+    }
+
+    private async Task<bool> SendTradeRequest(OperationType operation)
+    {
+        var request = new TradeRequest()
+        {
+            UserId = userBalance.UserId,
+            Broker = BrokerType.TinkoffBroker,
+            Token = tinkoffToken,
+            Operation = operation,
+            Figi = instrument.Figi,
+            Count = lotsToTrade * instrument.CountInLot,
+            Price = price,
+            Currency = currency
+        };
+        bool result = false;
+        try
+        {
+            result = await BrokerManager.Trade(request);
+        }
+        catch
+        {
+            errorOccured = true;
+            errorMessage = "Unable to make a deal. Try again later.";
+        }
+        return result;
+    }
+
+    private async Task SetToken()
+    {
+        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
+        var modalResult = await formModal.Result;
+        tinkoffToken = (string)modalResult.Data;
+
+        await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorOccured = false;
+        isInstrumentLoading = true;
+        instrument = new Instrument()
+        {
+            Figi = "default",
+            Currency = Currency.Rub,
+            Name = "Load instrument",
+            CountInLot = 0,
+            Price = 0,
+            Type = InstrumentType.Currency
+        };
+
+        try
+        {
+            tinkoffToken = await Storage.GetItemAsync<string>("tinkoffToken");
+
+            if (tinkoffToken == null)
+            {
+                await SetToken();
+            }
+            instrument = await Storage.GetItemAsync<Instrument>("instrument");
+            currency = instrument.Currency;
+            userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };
+            await GetUserBalance();
+            await GetCountFromPortfolio();
+            isInstrumentLoading = false;
+
+        }
+        catch (Exception)
+        {
+            isInstrumentLoading = false;
+
+            errorMessage = "Can't load instruments, try again later";
+            errorOccured = true;
+        }
+    }
+}
+
