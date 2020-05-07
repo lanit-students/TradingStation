@@ -18,6 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private bool DeleteBot(DeleteBotRequest request)
         {
+            botRepository.DeleteBot(request.ID);
             return true;
         }
 

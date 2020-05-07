@@ -18,6 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private bool CreateBot(DisableBotRequest request)
         {
+            botRepository.Disable(request.ID);
             return true;
         }
 
