@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
+    <PackageReference Include="MailKit" Version="2.6.0" />
     <PackageReference Include="MassTransit" Version="6.2.3" />
     <PackageReference Include="MassTransit.AspNetCore" Version="6.2.3" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="6.2.3" />
@@ -49,6 +50,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DTO\DTO.csproj" />
     <ProjectReference Include="..\..\Common\Kernel\Kernel.csproj" />
+    <ProjectReference Include="..\AuthenticationService\AuthenticationService.csproj" />
   </ItemGroup>
 
 </Project>

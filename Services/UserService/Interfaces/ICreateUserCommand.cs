@@ -1,4 +1,5 @@
-﻿using DTO.RestRequests;
+﻿using DTO;
+using DTO.RestRequests;
 using System.Threading.Tasks;
 
 namespace UserService.Interfaces

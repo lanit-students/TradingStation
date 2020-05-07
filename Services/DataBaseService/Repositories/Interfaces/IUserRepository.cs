@@ -18,6 +18,8 @@ namespace DataBaseService.Repositories.Interfaces
 
         void DeleteUser(Guid userIdCredential);
 
+        void ConfirmUser(string Email);
+
         void EditUser(User user, PasswordHashChangeRequest password, UserAvatar userAvatar);
     }
 }

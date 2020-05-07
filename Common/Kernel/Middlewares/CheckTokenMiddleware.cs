@@ -25,8 +25,10 @@ namespace Kernel.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (string.Equals(context.Request.Method, RestRequestType.POST.ToString(), StringComparison.OrdinalIgnoreCase)
+            if ((string.Equals(context.Request.Method, RestRequestType.POST.ToString(), StringComparison.OrdinalIgnoreCase)
                 && string.Equals(context.Request.Path, "/users/create", StringComparison.OrdinalIgnoreCase))
+                ||(string.Equals(context.Request.Method, RestRequestType.GET.ToString(), StringComparison.OrdinalIgnoreCase)
+                && string.Equals(context.Request.Path, "/users/confirm", StringComparison.OrdinalIgnoreCase)))
             {
                 await _next.Invoke(context);
 
