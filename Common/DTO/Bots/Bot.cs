@@ -9,6 +9,7 @@ namespace DTO.Bots
         public Guid ID;
         public Guid UserID;
         public List<BotRules> Rules;
+        public bool isActive;
         public void Run() { }
 
         public void Disable() { }
