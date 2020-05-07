@@ -17,8 +17,11 @@ using UserService.Validators;
 using DTO.RestRequests;
 using FluentValidation;
 using DTO.BrokerRequests;
+using DTO;
 using Microsoft.Extensions.Logging;
 using Kernel.LoggingEngine;
+using UserService.Utils;
+using AuthenticationService.Interfaces;
 
 namespace UserService
 {
@@ -65,20 +68,24 @@ namespace UserService
 
             services.AddControllers();
 
+            services.AddSingleton<ISecretTokenEngine, SecretTokenEngine>();
+
             services.AddTransient<IValidator<DeleteUserRequest>, DeleteUserRequestValidator>();
 
             services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
 
+            services.AddTransient<IConfirmUserCommand, ConfirmUserCommand>();
+
             services.AddTransient<IGetUserByIdCommand, GetUserByIdCommand>();
 
-            services.AddTransient<ICreateUserCommand, CreateUserCommand> ();
+            services.AddTransient<ICreateUserCommand, CreateUserCommand>();
             services.AddTransient<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
 
             services.AddTransient<IEditUserCommand, EditUserCommand>();
             services.AddTransient<IValidator<UserInfoRequest>, UserInfoRequestValidator>();
             services.AddTransient<IValidator<PasswordChangeRequest>, PasswordChangeRequestValidator>();
             services.AddTransient<IValidator<AvatarChangeRequest>, AvatarChangeRequestValidator>();
-
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<LoginUserConsumer>();
@@ -87,6 +94,7 @@ namespace UserService
                 x.AddRequestClient<InternalCreateUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalGetUserByIdRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalEditUserInfoRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
+                x.AddRequestClient<InternalConfirmUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
                 x.AddRequestClient<InternalDeleteUserRequest>(new Uri("rabbitmq://localhost/DatabaseService"));
             });
 

@@ -58,10 +58,13 @@ namespace DataBaseService
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
+
+                    ep.ConfigureConsumer<ConfirmUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<TransactionConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
+
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
