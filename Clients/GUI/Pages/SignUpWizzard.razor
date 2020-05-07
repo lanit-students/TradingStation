@@ -1,5 +1,4 @@
 ﻿@page "/signup"
-@using GUI.Components
 @inject IModalService modal
 @inject NavigationManager NavigationManager
 
@@ -81,11 +80,10 @@
 @code {
     private SignUpViewModel userInput;
     private EditContext editContext;
-    private string fileName = "";
     private bool showLoading = false;
     private string errorServerMessage = "";
     private string avatar = "/Picture/Avatar.svg";
-    private string defaultMessage = "/Picture/Avatar.svg";
+    private const string DefaultMessage = "/Picture/Avatar.svg";
 
     private bool HasError()
     {
@@ -95,10 +93,13 @@
     public async Task TrySignUp()
     {
         errorServerMessage = "";
+
         showLoading = true;
+        
         if (HasError())
         {
             showLoading = false;
+
             return;
         }
         try
@@ -115,7 +116,8 @@
             };
 
             await SignUpper.SignUp(request);
-            modal.Show<GUI.Pages.SignIn>();
+
+            modal.Show<SignIn>();
 
         }
         catch (BadRequestException)
@@ -181,7 +183,7 @@
 
         userInput.AvatarExtension = null;
 
-        avatar = defaultMessage;
+        avatar = DefaultMessage;
     }
 
     private string GetUserImage(byte[] avatar, string extension)
@@ -189,6 +191,7 @@
         try
         {
             var base64 = Convert.ToBase64String(avatar);
+
             return string.Format("data:image/{0};base64,{1}", extension, base64);
         }
         catch (Exception e)
