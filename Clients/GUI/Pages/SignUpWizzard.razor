@@ -149,8 +149,6 @@
 
         if (file != null)
         {
-            fileName = file.Name;
-
             // 2MB =  2097152 byte
             if (file.Size > 2097152)
             {
@@ -177,8 +175,6 @@
 
     private void ClearFile()
     {
-        fileName = "";
-
         userInput.Avatar = null;
 
         userInput.AvatarExtension = null;
