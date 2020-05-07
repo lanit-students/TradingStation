@@ -9,6 +9,8 @@ using System;
 using FluentValidation;
 using System.Threading.Tasks;
 using UserService.Interfaces;
+using UserService.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.Commands
 {
@@ -16,11 +18,23 @@ namespace UserService.Commands
     {
         private readonly IRequestClient<InternalCreateUserRequest> client;
         private readonly IValidator<CreateUserRequest> validator;
+        private readonly ISecretTokenEngine secretTokenEngine;
+        private readonly ILogger<CreateUserCommand> logger;
+        private readonly IEmailSender emailSender;
 
-        public CreateUserCommand([FromServices] IRequestClient<InternalCreateUserRequest> client, [FromServices] IValidator<CreateUserRequest> validator)
+
+        public CreateUserCommand(
+            [FromServices] IRequestClient<InternalCreateUserRequest> client,
+            [FromServices] IValidator<CreateUserRequest> validator,
+            [FromServices] ISecretTokenEngine secretTokenEngine,
+            [FromServices] ILogger<CreateUserCommand> logger,
+            [FromServices] IEmailSender emailSender)
         {
             this.client = client;
             this.validator = validator;
+            this.secretTokenEngine = secretTokenEngine;
+            this.logger = logger;
+            this.emailSender = emailSender;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
@@ -76,8 +90,12 @@ namespace UserService.Commands
 
             if (!createUserResult)
             {
-                throw new BadRequestException("Unable to create user");
+                var e = new BadRequestException("Unable to create user");
+                logger.LogWarning(e, "BadRequest thrown while trying to create User.");
+                throw e;
             }
+
+            emailSender.SendEmail(request.Email,secretTokenEngine);
 
             return createUserResult;
         }
