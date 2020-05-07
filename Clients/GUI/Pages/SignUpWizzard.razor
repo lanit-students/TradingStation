@@ -4,68 +4,70 @@
 @inject NavigationManager NavigationManager
 
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
-    <Wizard Id="Wizard" HasError="@HasError">
-        <WizardStep Name="First Step">
-            <DataAnnotationsValidator />
+    
+    <DataAnnotationsValidator/>
+    <Wizard Id="Wizard">
+        <WizardStep Name="1 Step">
             <div class="form-group mt-5">
                 <label for="Name">Name:</label>
-                <InputText class="form-control col-3" @bind-Value="userInput.FirstName" placeholder="Your name" />
+                <InputText class="form-control" @bind-Value="userInput.FirstName" placeholder="Your name" />
+                <ValidationMessage For="@(() => userInput.FirstName)" />
             </div>
             <div class="form-group">
                 <label for="Surname">Surname:</label>
-                <InputText class="form-control col-3" @bind-Value="userInput.LastName" placeholder="Your surname" />
+                <InputText class="form-control" @bind-Value="userInput.LastName" placeholder="Your surname" />
+                <ValidationMessage For="@(() => userInput.LastName)" />
             </div>
             <div class="form-group">
                 <label for="Birthday">Birthday:</label>
-                <InputDate class="form-control col-3" @bind-Value="userInput.Birthday" />
+                <InputDate class="form-control" @bind-Value="userInput.Birthday" />
+                <ValidationMessage For="@(() => userInput.Birthday)" />
             </div>
+            @if (errorServerMessage.Length != 0)
+            {
+                <label style="color: red;"> @errorServerMessage </label>
+                <br />
+            }
+        </WizardStep>
+        <WizardStep Name="2 Step">
             <div class="form-group">
                 <label for="Email">Email</label>
-                <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+                <InputText class="form-control" @bind-Value="userInput.Email" placeholder="example@gmail.com"/>
+                <ValidationMessage For="@(() => userInput.Email)"/>
             </div>
             <div class="form-group">
                 <label for="Password">Password</label>
-                <InputText class="form-control col-3" type="password" @bind-Value="userInput.Password" placeholder="*****" />
+                <InputText class="form-control" type="password" @bind-Value="userInput.Password" placeholder="*****"/>
+                <ValidationMessage For="@(() => userInput.Password)"/>
             </div>
 
             <div class="form-group">
                 <label for="ConfirmPassword">Confirm Password</label>
-                <InputText class="form-control col-3" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+                <InputText class="form-control" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****"/>
+                <ValidationMessage For="@(() => userInput.ConfirmPassword)"/>
             </div>
-            <br />
-
-            <ValidationSummary />
+            <br/>
             @if (errorServerMessage.Length != 0)
             {
-                <label style=" color: red;"> @errorServerMessage </label>
-                <br />
+                <label style="color: red;"> @errorServerMessage </label>
+                <br/>
             }
-
         </WizardStep>
-        <WizardStep Name="Second Step">
-            <div class="row">
-                <div class="container m-5">
-                    <label>Send your avatar</label>
-                    <br />
-                    <label for="files" class="btn btn-primary">Select Image</label>
-                    <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" OnChange="HandleSelection" />
-                    <br />
-                    <label>@fileName</label>
-                    <br />
-                    <button class="btn btn-secondary btn-sm" type="button" @onclick="ClearFile">clear</button>
-                    <br />
-                    @if (errorMessage.Length != 0)
-                    {
-                        <label style="color: red;"> @errorMessage </label>
-                        <br />
-                    }
-                    @if (errorServerMessage.Length != 0)
-                    {
-                        <label style=" color: red;"> @errorServerMessage </label>
-                        <br />
-                    }
-                </div>
+        <WizardStep Name="3 Step">
+            <div>
+                <label for="files" class=" btn btn-success btn-sm">Upload Avatar</label>
+                <label @onclick="ClearFile" class=" btn-sm">Clear</label>
+
+                <img src="@avatar" width="200" height="200" class="rounded mx-auto d-block mb-3" alt="Avatar">
+                <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" OnChange="HandleSelection" />
             </div>
+            <ValidationSummary/>
+
+            @if (errorServerMessage.Length != 0)
+            {
+                <label style="color: red;"> @errorServerMessage </label>
+                <br/>
+            }
             @if (showLoading)
             {
                 <div class="spinner-border" role="status">
@@ -81,12 +83,13 @@
     private EditContext editContext;
     private string fileName = "";
     private bool showLoading = false;
-    private string errorMessage = "";
     private string errorServerMessage = "";
+    private string avatar = "/Picture/Avatar.svg";
+    private string defaultMessage = "/Picture/Avatar.svg";
 
     private bool HasError()
     {
-        return !editContext.Validate() || errorMessage.Length != 0;
+        return !editContext.Validate();
     }
 
     public async Task TrySignUp()
@@ -132,37 +135,65 @@
     protected override void OnInitialized()
     {
         userInput = new SignUpViewModel();
+
         editContext = new EditContext(userInput);
     }
 
     async Task HandleSelection(IFileListEntry[] files)
     {
         showLoading = true;
-        errorMessage = "";
+        
         var file = files[^1];
+
         if (file != null)
         {
             fileName = file.Name;
+
             // 2MB =  2097152 byte
             if (file.Size > 2097152)
             {
-                errorMessage = "File is too big. Only 2 MB";
+                errorServerMessage = "File is too big. Only 2 MB";
+
                 showLoading = false;
+
                 return;
             }
+
             using var ms = new MemoryStream();
+
             await file.Data.CopyToAsync(ms);
-            userInput.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
+
+            userInput.AvatarExtension = Path.GetExtension(file.Name)?.TrimStart('.');
+
             userInput.Avatar = ms.ToArray();
+
+            avatar = GetUserImage(userInput.Avatar, userInput.AvatarExtension);
         }
+
         showLoading = false;
     }
 
     private void ClearFile()
     {
-        errorMessage = "";
         fileName = "";
+
         userInput.Avatar = null;
+
         userInput.AvatarExtension = null;
+
+        avatar = defaultMessage;
+    }
+
+    private string GetUserImage(byte[] avatar, string extension)
+    {
+        try
+        {
+            var base64 = Convert.ToBase64String(avatar);
+            return string.Format("data:image/{0};base64,{1}", extension, base64);
+        }
+        catch (Exception e)
+        {
+            return "/Picture/Avatar.svg";
+        }
     }
 }
