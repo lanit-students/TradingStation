@@ -9,11 +9,11 @@ namespace DataBaseService.BrokerConsumers
 {
     public class BotInfoConsumer : IConsumer<BotInfoRequest>
     {
-        private readonly IBotRepository userRepository;
+        private readonly IBotRepository botRepository;
 
-        public BotInfoConsumer([FromServices] IBotRepository userRepository)
+        public BotInfoConsumer([FromServices] IBotRepository botRepository)
         {
-            this.userRepository = userRepository;
+            this.botRepository = botRepository;
         }
 
         private bool BotInfo(BotInfoRequest request)
