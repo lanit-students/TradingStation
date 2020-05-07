@@ -45,8 +45,8 @@
 
 @code {
 
-    List<BotInfo> bots;
-    private UserToken userToken;
+        List<BotInfoRequest> bots;
+        private UserToken userToken;
 
     public async void Create()
     {
@@ -55,7 +55,8 @@
         var name = (string)modalResult.Data;
         var request = new CreateBotRequest()
         {
-            Name = name
+            Name = name,
+            UserId = userToken.UserId
         };
         await BotCreater.Create(userToken, request);
     }
@@ -95,7 +96,7 @@
     protected override void OnInitialized()
     {
         userToken = new UserToken();
-        bots = new List<BotInfo>();
+        bots = new List<BotInfoRequest>();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
