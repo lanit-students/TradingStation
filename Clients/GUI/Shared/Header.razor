@@ -5,7 +5,7 @@
 
 <div class="header">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand pl-5" href="#">
+        <a class="navbar-brand pl-5" href="/">
             <img src="Picture/Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,13 +34,13 @@
                     <Authorized>
                         <div class="btn-group dropleft">
                             <a class="navbar-brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="d-inline-block align-top" alt="Avatar">
+                                <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="Avatar">
                             </a>
 
                             <div class="dropdown-menu">
-                                <a class="navbar-brand">
-                                    <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="d-inline-block align-top" alt="Avatar">
-                                </a>
+                                <a class="dropdown-item">
+                                <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="align-items-center rounded-circle" alt="Avatar">
+                                    </a>
                                 <a class="dropdown-item" href="userinfo">User Info</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/" @onclick="SignOut">Sign out</a>

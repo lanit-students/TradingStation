@@ -1,5 +1,4 @@
-﻿@page "/signup"
-@inject IModalService modal
+﻿@inject IModalService modal
 @inject NavigationManager NavigationManager
 
 <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
@@ -78,6 +77,8 @@
 </EditForm>
 
 @code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
     private SignUpViewModel userInput;
     private EditContext editContext;
     private bool showLoading = false;
@@ -139,6 +140,8 @@
         userInput = new SignUpViewModel();
 
         editContext = new EditContext(userInput);
+
+        BlazoredModal.SetTitle("Sign Up");
     }
 
     async Task HandleSelection(IFileListEntry[] files)
