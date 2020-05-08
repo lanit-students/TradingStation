@@ -1,0 +1,22 @@
+﻿@page "/transactions"
+@inject ISessionStorageService Storage
+
+<h3>Operations</h3>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var a  =await BrokerManager.GetTransactions(await Storage.GetItemAsync<Guid>("id"));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        var b = 1;
+    }
+
+}

@@ -18,6 +18,7 @@ using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
+using DTO.BrokerRequests;
 using Kernel.LoggingEngine;
 using Microsoft.Extensions.Logging;
 
@@ -64,7 +65,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
-
+                    ep.ConfigureConsumer<GetTransactionConsumer>(serviceProvider);
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -113,6 +114,7 @@ namespace DataBaseService
                 x.AddConsumer<GetUserBalanceConsumer>();
                 x.AddConsumer<UpdateUserBalanceConsumer>();
                 x.AddConsumer<AddLogConsumer>();
+                x.AddConsumer<GetTransactionConsumer>();
             });
 
             services.AddMassTransitHostedService();

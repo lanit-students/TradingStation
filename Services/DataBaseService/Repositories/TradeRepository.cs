@@ -9,6 +9,7 @@ using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataBaseService.Repositories
@@ -165,6 +166,37 @@ namespace DataBaseService.Repositories
             dbContext.SaveChanges();
 
             logger.LogInformation($"Balance of user {userBalance.UserId} updated");
+        }
+
+        public List<Transaction> GetUserTransactions(GetUserTransactions request)
+        {
+            try
+            {
+
+                var dbUserTransactions = dbContext.Transactions
+                    .Where(transaction => transaction.UserId == request.UserId);
+
+                if (!dbUserTransactions.Any())
+                {
+                    var exception = new BadRequestException("No transactions for user");
+                    logger.LogWarning(exception, $"No transactions for user {request.UserId}");
+                    throw exception;
+                }
+
+                var userTransactions = new List<Transaction>();
+
+                foreach (DbTransaction transaction in dbUserTransactions)
+                {
+                    userTransactions.Add(mapper.MapToTransaction(transaction));
+                }
+
+                return userTransactions;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
