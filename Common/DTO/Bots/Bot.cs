@@ -3,18 +3,17 @@ using System.Collections.Generic;
 
 namespace DTO.Bots
 {
-    public class Bot : IBot
+    public class Bot
     {
         public string Name;
         public Guid ID;
         public Guid UserID;
-        public List<BotRules> Rules;
+        public List<BotRule> Rules;
         public bool isActive;
+        public Status CurrentStatus;
+
         public void Run() { }
 
         public void Disable() { }
-
-        public void GetStatus() { }
-
     }
 }

@@ -1,15 +1,15 @@
 ﻿using DTO;
 using DTO.RestRequests;
+using Interfaces;
 using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using OperationService.Interfaces;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class CreateBotCommand : ICreateBotCommand
+    public class CreateBotCommand : ICommand<CreateBotRequest, bool>
     {
         private readonly IRequestClient<CreateBotRequest> client;
 

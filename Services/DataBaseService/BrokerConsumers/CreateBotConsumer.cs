@@ -26,7 +26,7 @@ namespace DataBaseService.BrokerConsumers
                 Name = request.Name,
                 ID = Guid.NewGuid(),
                 UserID = request.UserId,
-                Rules = new List<BotRules>(),
+                Rules = new List<BotRule>(),
                 isActive = false
             };
             botRepository.CreateBot(bot);

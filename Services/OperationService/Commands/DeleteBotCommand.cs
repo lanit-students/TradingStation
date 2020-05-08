@@ -1,15 +1,15 @@
 ﻿using DTO;
 using DTO.RestRequests;
+using Interfaces;
 using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using OperationService.Interfaces;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class DeleteBotCommand: IDeleteBotCommand
+    public class DeleteBotCommand : ICommand<DeleteBotRequest, bool>
     {
         private readonly IRequestClient<DeleteBotRequest> client;
 

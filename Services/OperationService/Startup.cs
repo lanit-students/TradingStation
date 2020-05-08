@@ -85,15 +85,15 @@ namespace OperationService
             services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
 
 
-            services.AddTransient<ICreateBotCommand, CreateBotCommand>();
+            services.AddTransient<ICommand<CreateBotRequest, bool>, CreateBotCommand>();
 
-            services.AddTransient<IDeleteBotCommand, DeleteBotCommand>();
+            services.AddTransient<ICommand<DeleteBotRequest, bool>, DeleteBotCommand>();
+            
+            services.AddTransient<ICommand<RunBotRequest, bool>, RunBotCommand>();
 
-            services.AddTransient<IRunBotCommand, RunBotCommand>();
+            services.AddTransient<ICommand<DisableBotRequest, bool>, DisableBotCommand>();
 
-            services.AddTransient<IDisableBotCommand, DisableBotCommand>();
-
-            services.AddTransient<IGetBotCommand, GetBotsCommand>();
+            services.AddTransient<ICommand<Guid, bool>, GetBotsCommand>();
 
             services.AddLogging(log =>
             {
