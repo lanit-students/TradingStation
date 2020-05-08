@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using DTO;
-using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
 

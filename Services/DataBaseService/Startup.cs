@@ -100,6 +100,7 @@ namespace DataBaseService
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
             services.AddTransient<ILogMapper, LogMapper>();
+            services.AddTransient<IBotMapper, BotMapper>();
 
             services.AddMassTransit(x =>
             {
@@ -108,6 +109,11 @@ namespace DataBaseService
                 x.AddUserConsumers();
 
                 x.AddConsumer<AddLogConsumer>();
+                x.AddConsumer<CreateBotConsumer>();
+                x.AddConsumer<DeleteBotConsumer>();
+                x.AddConsumer<RunBotConsumer>();
+                x.AddConsumer<DeleteBotConsumer>();
+                x.AddConsumer<BotInfoConsumer>();
             });
 
             services.AddMassTransitHostedService();

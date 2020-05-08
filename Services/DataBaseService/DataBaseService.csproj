@@ -18,6 +18,7 @@
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0004_CreateUsersAvatarsTable.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0007_CreateTransactionsTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0001_CreateBotsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>

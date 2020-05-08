@@ -1,18 +1,16 @@
-﻿using DTO.Bots;
+﻿using DTO;
 using System;
 
 namespace DataBaseService.Repositories.Interfaces
 {
     public interface IBotRepository
     {
-        void CreateBot(Bot bot);
+        void CreateBot(BotData bot);
 
         void DeleteBot(Guid ID);
 
-        void Run(Guid ID);
+        void RunBot(Guid ID);
 
-        void Disable(Guid ID);
-
-//        List<Bot> GetBots();
+        void StopBot(Guid ID);
     }
 }

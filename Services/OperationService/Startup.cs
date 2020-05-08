@@ -15,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using OperationService.BrokerConsumers;
 using OperationService.Hubs;
-using OperationService.Interfaces;
 using DTO.RestRequests;
 
 namespace OperationService

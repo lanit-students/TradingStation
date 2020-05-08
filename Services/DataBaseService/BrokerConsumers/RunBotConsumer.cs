@@ -18,7 +18,7 @@ namespace DataBaseService.BrokerConsumers
 
         private bool RunBot(RunBotRequest request)
         {
-            botRepository.Run(request.ID);
+            botRepository.RunBot(request.ID);
             return true;
         }
 

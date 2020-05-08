@@ -1,11 +1,10 @@
 ﻿using DataBaseService.Repositories.Interfaces;
-using DTO.Bots;
+using DTO;
 using DTO.RestRequests;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
@@ -21,15 +20,15 @@ namespace DataBaseService.BrokerConsumers
 
         private bool CreateBot(CreateBotRequest request)
         {
-            var bot = new Bot()
+            var bot = new BotData()
             {
                 Name = request.Name,
-                ID = Guid.NewGuid(),
-                UserID = request.UserId,
-                Rules = new List<BotRule>(),
-                isActive = false
+                Id = Guid.NewGuid(),
+                UserId = request.UserId,
+                IsRunning = false
             };
             botRepository.CreateBot(bot);
+            // TODO add rules
             return true;
         }
 
