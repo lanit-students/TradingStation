@@ -1,0 +1,36 @@
+﻿@page "/confirm/{secretToken}"
+
+
+<div class="col-12">
+    <h3>Confirmation</h3>
+    <hr />
+    @if (result)
+    {
+        <p>Your email was confirmed!</p>
+    }
+    else
+    {
+        <p>Something went wrong!</p>
+        <p>Try again or ask for help.</p>
+    }
+</div>
+
+@code
+{
+    [Parameter]
+    public string secretToken { get; set; }
+
+    public bool result;
+
+    private async Task Confirmation(string secretToken)
+    {
+        result = await UserConfirmer.UserConfirm(secretToken);
+    }
+
+    protected override void OnInitialized()
+    {
+        Confirmation(secretToken);
+    }
+}
+
+

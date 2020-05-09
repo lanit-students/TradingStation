@@ -86,6 +86,7 @@ namespace UserService.Commands
                 UserAvatar = userAvatar
             };
 
+            
             var createUserResult = await CreateUser(internalCreateUserRequest);
 
             if (!createUserResult)

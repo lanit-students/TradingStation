@@ -3,7 +3,10 @@
 @inject NavigationManager NavigationManager
 @inject ISessionStorageService Storage
 
-<h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password</h3>
+
+<h3 style="color: red; display:@(isActive ? "none" : "block")"> User wasn't confirm or deleted.</h3>
+<h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password.</h3>
+
 <div class="col-12">
     <h3><b>Sign In</b></h3>
     <hr />
@@ -30,6 +33,7 @@
     private Task<AuthenticationState> authState { get; set; }
     private SignInViewModel userInput;
     bool isHidden = true;
+    bool isActive = true;
 
     private async Task TrySignIn()
     {
@@ -45,7 +49,7 @@
 
             var userToken = await SignInner.SignIn(request);
 
-            Storage.SetItemAsync("id" ,userToken.UserId);
+            Storage.SetItemAsync("id", userToken.UserId);
             Storage.SetItemAsync("token", userToken.Body);
 
             AuthenticationProvider.MarkSignedIn();
@@ -56,9 +60,18 @@
                 || e is NotFoundException
                 || e is InternalServerException)
         {
-            userInput.Password = "";
-            isHidden = false;
+            if (e is ForbiddenException)
+            {
+                userInput.Password = "";
+                isActive = false;
+            }
+            else
+            {
+                userInput.Password = "";
+                isHidden = false;
+            }
         }
+
     }
 
     protected async override Task OnInitializedAsync()

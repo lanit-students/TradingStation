@@ -55,7 +55,10 @@ namespace DataBaseService.Repositories
             {
                 throw new NotFoundException("User with given email not found");
             }
-
+            if(!dbCredential.IsActive)
+            {
+                throw new ForbiddenException("User wasn't confirm or delete");
+            }
             return mapper.MapUserCredential(dbCredential);
         }
 
