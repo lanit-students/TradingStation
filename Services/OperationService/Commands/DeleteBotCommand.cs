@@ -18,18 +18,23 @@ namespace OperationService.Commands
             this.client = client;
         }
 
-        public async Task<bool> Execute(DeleteBotRequest request)
+        private async Task<bool> DeleteBot(DeleteBotRequest request)
         {
             var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            var delete = OperationResultHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
+        }
 
-            if (!delete)
+        public async Task<bool> Execute(DeleteBotRequest request)
+        {
+            var deleteUserResult = await DeleteBot(request);
+
+            if (!deleteUserResult)
             {
                 throw new BadRequestException("Unable to create bot");
             }
 
-            return delete;
+            return deleteUserResult;
         }
     }
 }

@@ -18,18 +18,22 @@ namespace OperationService.Commands
             this.client = client;
         }
 
-        public async Task<bool> Execute(RunBotRequest request)
+        private async Task<bool> RunBot(RunBotRequest request)
         {
             var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            var run = OperationResultHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
+        }
 
-            if (!run)
+        public async Task<bool> Execute(RunBotRequest request)
+        {
+            var runBotResult = await RunBot(request);
+            if (!runBotResult)
             {
                 throw new BadRequestException("Unable to run bot");
             }
 
-            return run;
+            return runBotResult;
         }
     }
 }

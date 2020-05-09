@@ -18,18 +18,22 @@ namespace OperationService.Commands
             this.client = client;
         }
 
-        public async Task<bool> Execute(DisableBotRequest request)
+        private async Task<bool> DisableBot(DisableBotRequest request)
         {
             var response = await client.GetResponse<OperationResult<bool>>(request);
 
-            var run = OperationResultHandler.HandleResponse(response.Message);
+            return OperationResultHandler.HandleResponse(response.Message);
+        }
 
-            if (!run)
+        public async Task<bool> Execute(DisableBotRequest request)
+        {
+            var disableBotresult = await DisableBot(request);
+            if (!disableBotresult)
             {
                 throw new BadRequestException("Unable to disable bot");
             }
 
-            return run;
+            return disableBotresult;
         }
     }
 }
