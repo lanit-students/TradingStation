@@ -76,14 +76,13 @@ namespace OperationService
                 x.AddRequestClient<UserBalance>(databaseUri);
 				x.AddRequestClient<GetCandlesRequest>(brokerUri);
                 x.AddConsumer<CandleConsumer>();
-                
-                x.AddRequestClient<CreateBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
-                x.AddRequestClient<DeleteBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
-                x.AddRequestClient<RunBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
-                x.AddRequestClient<DisableBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
-                x.AddRequestClient<BotInfoRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
-   
-                        });
+
+                x.AddRequestClient<CreateBotRequest>(databaseUri);
+                x.AddRequestClient<DeleteBotRequest>(databaseUri);
+                x.AddRequestClient<RunBotRequest>(databaseUri);
+                x.AddRequestClient<DisableBotRequest>(databaseUri);
+                x.AddRequestClient<BotInfoRequest>(databaseUri);
+            });
 
             services.AddMassTransitHostedService();
 
@@ -98,7 +97,7 @@ namespace OperationService
 			services.AddTransient<ICommand<CreateBotRequest, bool>, CreateBotCommand>();
 
             services.AddTransient<ICommand<DeleteBotRequest, bool>, DeleteBotCommand>();
-            
+
             services.AddTransient<ICommand<RunBotRequest, bool>, RunBotCommand>();
 
             services.AddTransient<ICommand<DisableBotRequest, bool>, DisableBotCommand>();
