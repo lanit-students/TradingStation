@@ -38,10 +38,10 @@
                             </a>
 
                             <div class="dropdown-menu">
-                                <a class="dropdown-item">
-                                <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="align-items-center rounded-circle" alt="Avatar">
-                                    </a>
-                                <a class="dropdown-item" href="userinfo">User Info</a>
+                                <a class="dropdown-item align-items-center" href="userinfo">
+                                    <a>User Info</a>
+                                    <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="align-items-center rounded-circle" alt="Avatar">
+                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/" @onclick="SignOut">Sign out</a>
                             </div>

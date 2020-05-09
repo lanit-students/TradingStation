@@ -1,80 +1,81 @@
 ﻿@inject IModalService modal
 @inject NavigationManager NavigationManager
 
-<EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
-    
-    <DataAnnotationsValidator/>
-    <Wizard Id="Wizard">
-        <WizardStep Name="1 Step">
-            <div class="form-group mt-5">
-                <label for="Name">Name:</label>
-                <InputText class="form-control" @bind-Value="userInput.FirstName" placeholder="Your name" />
-                <ValidationMessage For="@(() => userInput.FirstName)" />
-            </div>
-            <div class="form-group">
-                <label for="Surname">Surname:</label>
-                <InputText class="form-control" @bind-Value="userInput.LastName" placeholder="Your surname" />
-                <ValidationMessage For="@(() => userInput.LastName)" />
-            </div>
-            <div class="form-group">
-                <label for="Birthday">Birthday:</label>
-                <InputDate class="form-control" @bind-Value="userInput.Birthday" />
-                <ValidationMessage For="@(() => userInput.Birthday)" />
-            </div>
-            @if (errorServerMessage.Length != 0)
-            {
-                <label style="color: red;"> @errorServerMessage </label>
-                <br />
-            }
-        </WizardStep>
-        <WizardStep Name="2 Step">
-            <div class="form-group">
-                <label for="Email">Email</label>
-                <InputText class="form-control" @bind-Value="userInput.Email" placeholder="example@gmail.com"/>
-                <ValidationMessage For="@(() => userInput.Email)"/>
-            </div>
-            <div class="form-group">
-                <label for="Password">Password</label>
-                <InputText class="form-control" type="password" @bind-Value="userInput.Password" placeholder="*****"/>
-                <ValidationMessage For="@(() => userInput.Password)"/>
-            </div>
+<div style="width: 330px;">
+        <EditForm EditContext="@editContext" OnValidSubmit="@TrySignUp">
+            <DataAnnotationsValidator />
+            <Wizard Id="Wizard">
+                <WizardStep Name="1 Step">
+                    <div class="form-group mt-5">
+                        <label for="Name">Name:</label>
+                        <InputText class="form-control" @bind-Value="userInput.FirstName" placeholder="Your name" />
+                        <ValidationMessage For="@(() => userInput.FirstName)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Surname">Surname:</label>
+                        <InputText class="form-control" @bind-Value="userInput.LastName" placeholder="Your surname" />
+                        <ValidationMessage For="@(() => userInput.LastName)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Birthday">Birthday:</label>
+                        <InputDate class="form-control" @bind-Value="userInput.Birthday" />
+                        <ValidationMessage For="@(() => userInput.Birthday)" />
+                    </div>
+                    @if (errorServerMessage.Length != 0)
+                    {
+                        <label style="color: red;"> @errorServerMessage </label>
+                        <br />
+                    }
+                </WizardStep>
+                <WizardStep Name="2 Step">
+                    <div class="form-group">
+                        <label for="Email">Email</label>
+                        <InputText class="form-control" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+                        <ValidationMessage For="@(() => userInput.Email)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Password">Password</label>
+                        <InputText class="form-control" type="password" @bind-Value="userInput.Password" placeholder="*****" />
+                        <ValidationMessage For="@(() => userInput.Password)" />
+                    </div>
 
-            <div class="form-group">
-                <label for="ConfirmPassword">Confirm Password</label>
-                <InputText class="form-control" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****"/>
-                <ValidationMessage For="@(() => userInput.ConfirmPassword)"/>
-            </div>
-            <br/>
-            @if (errorServerMessage.Length != 0)
-            {
-                <label style="color: red;"> @errorServerMessage </label>
-                <br/>
-            }
-        </WizardStep>
-        <WizardStep Name="3 Step">
-            <div>
-                <label for="files" class=" btn btn-success btn-sm">Upload Avatar</label>
-                <label @onclick="ClearFile" class=" btn-sm">Clear</label>
+                    <div class="form-group">
+                        <label for="ConfirmPassword">Confirm Password</label>
+                        <InputText class="form-control" type="password" @bind-Value="userInput.ConfirmPassword" placeholder="*****" />
+                        <ValidationMessage For="@(() => userInput.ConfirmPassword)" />
+                    </div>
+                    <br />
+                    @if (errorServerMessage.Length != 0)
+                    {
+                        <label style="color: red;"> @errorServerMessage </label>
+                        <br />
+                    }
+                </WizardStep>
+                <WizardStep Name="3 Step">
+                    <div>
+                        <label for="files" class=" btn btn-success btn-sm">Upload Avatar</label>
+                        <label @onclick="ClearFile" class=" btn-sm">Clear</label>
 
-                <img src="@avatar" width="200" height="200" class="rounded mx-auto d-block mb-3" alt="Avatar">
-                <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" OnChange="HandleSelection" />
-            </div>
-            <ValidationSummary/>
+                        <img src="@avatar" width="200" height="200" class="rounded mx-auto d-block mb-3" alt="Avatar">
+                        <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" OnChange="HandleSelection" />
+                    </div>
+                    <ValidationSummary />
 
-            @if (errorServerMessage.Length != 0)
-            {
-                <label style="color: red;"> @errorServerMessage </label>
-                <br/>
-            }
-            @if (showLoading)
-            {
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            }
-        </WizardStep>
-    </Wizard>
-</EditForm>
+                    @if (errorServerMessage.Length != 0)
+                    {
+                        <label style="color: red;"> @errorServerMessage </label>
+                        <br />
+                    }
+                    @if (showLoading)
+                    {
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    }
+                </WizardStep>
+            </Wizard>
+        </EditForm>
+    </div>
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
@@ -117,6 +118,8 @@
             };
 
             await SignUpper.SignUp(request);
+
+            BlazoredModal.Close();
 
             modal.Show<SignIn>();
 
