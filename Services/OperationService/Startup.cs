@@ -81,7 +81,7 @@ namespace OperationService
                 x.AddRequestClient<DeleteBotRequest>(databaseUri);
                 x.AddRequestClient<RunBotRequest>(databaseUri);
                 x.AddRequestClient<DisableBotRequest>(databaseUri);
-                x.AddRequestClient<BotInfoResponse>(databaseUri);
+                x.AddRequestClient<InternalGetBotsRequest>(databaseUri);
             });
 
             services.AddMassTransitHostedService();

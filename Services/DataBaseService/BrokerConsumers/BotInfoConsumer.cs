@@ -1,13 +1,15 @@
 ﻿using DataBaseService.Repositories.Interfaces;
+using DTO.BrokerRequests;
 using DTO.RestRequests;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class BotInfoConsumer : IConsumer<BotInfoResponse>
+    public class BotInfoConsumer : IConsumer<InternalGetBotsRequest>
     {
         private readonly IBotRepository botRepository;
 
@@ -16,13 +18,13 @@ namespace DataBaseService.BrokerConsumers
             this.botRepository = botRepository;
         }
 
-        private bool BotInfo(BotInfoResponse request)
+        private List<BotInfoResponse> BotInfo(InternalGetBotsRequest request)
         {
-            
-            return true;
+
+            return botRepository.GetBots(request);
         }
 
-        public async Task Consume(ConsumeContext<BotInfoResponse> context)
+        public async Task Consume(ConsumeContext<InternalGetBotsRequest> context)
         {
             var response = OperationResultWrapper.CreateResponse(BotInfo, context.Message);
 

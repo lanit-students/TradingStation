@@ -144,7 +144,8 @@ namespace OperationService.Controllers
         public async Task<List<BotInfoResponse>> GetBot([FromServices] ICommand<Guid, List<BotInfoResponse>> command, [FromHeader] Guid userId)
         {
             logger.LogInformation("Get bots request received from GUI to UserService");
-            return await command.Execute(userId);
+            var result = await command.Execute(userId);
+            return result;
         }
     }
 }

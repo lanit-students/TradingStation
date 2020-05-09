@@ -2,10 +2,13 @@
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
+using DTO.BrokerRequests;
+using DTO.RestRequests;
 using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataBaseService.Repositories
@@ -57,6 +60,12 @@ namespace DataBaseService.Repositories
             {
                 throw new NotFoundException();
             }
+        }
+
+        public List<BotInfoResponse> GetBots(InternalGetBotsRequest request)
+        {
+            //TODO get bots from db
+            return new List<BotInfoResponse>();
         }
     }
 }

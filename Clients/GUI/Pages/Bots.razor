@@ -44,7 +44,7 @@
 
 @code {
 
-        List<BotInfoRequest> bots;
+        List<BotInfoResponse> bots;
         private UserToken userToken;
 
     public async void Create()
@@ -95,13 +95,13 @@
     protected override void OnInitialized()
     {
         userToken = new UserToken();
-        bots = new List<BotInfoRequest>();
+        bots = new List<BotInfoResponse>();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         userToken.UserId = await Storage.GetItemAsync<Guid>("id");
         userToken.Body = await Storage.GetItemAsync<string>("token");
-        //bots = await BotGetter.GetBots(userToken);
+        bots = await BotGetter.GetBots(userToken);
     }
 }

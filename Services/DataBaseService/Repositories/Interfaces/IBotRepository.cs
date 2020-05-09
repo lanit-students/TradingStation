@@ -1,5 +1,8 @@
 ﻿using DTO;
+using DTO.BrokerRequests;
+using DTO.RestRequests;
 using System;
+using System.Collections.Generic;
 
 namespace DataBaseService.Repositories.Interfaces
 {
@@ -12,5 +15,7 @@ namespace DataBaseService.Repositories.Interfaces
         void RunBot(Guid ID);
 
         void StopBot(Guid ID);
+
+        List<BotInfoResponse> GetBots(InternalGetBotsRequest request);
     }
 }
