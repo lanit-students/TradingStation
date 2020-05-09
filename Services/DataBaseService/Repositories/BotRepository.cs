@@ -37,7 +37,14 @@ namespace DataBaseService.Repositories
 
         public void RunBot(Guid Id)
         {
-
+            try
+            {
+                dbContext.Bots.FirstOrDefault(bot => bot.Id == Id).IsRunning = true;
+            }
+            catch
+            {
+                throw new NotFoundException();
+            }
         }
 
         public void StopBot(Guid Id)

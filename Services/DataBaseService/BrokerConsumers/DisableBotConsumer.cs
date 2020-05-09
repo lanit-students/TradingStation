@@ -16,7 +16,7 @@ namespace DataBaseService.BrokerConsumers
             this.botRepository = botRepository;
         }
 
-        private bool CreateBot(DisableBotRequest request)
+        private bool DisableBot(DisableBotRequest request)
         {
             botRepository.StopBot(request.ID);
             return true;
@@ -24,7 +24,7 @@ namespace DataBaseService.BrokerConsumers
 
         public async Task Consume(ConsumeContext<DisableBotRequest> context)
         {
-            var response = OperationResultWrapper.CreateResponse(CreateBot, context.Message);
+            var response = OperationResultWrapper.CreateResponse(DisableBot, context.Message);
 
             await context.RespondAsync(response);
         }
