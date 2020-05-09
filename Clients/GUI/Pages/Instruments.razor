@@ -60,7 +60,8 @@
                             <td>@instrument.Name</td>
                             <td>@instrument.Currency</td>
                             <td>@instrument.CountInLot</td>
-                            <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
+                            <td><button alingn="center" class=" btn btn-primary" 
+                                        @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
                         </tr>
                     }
                 </tbody>
@@ -86,7 +87,7 @@
 
     private int pageIndex;
     private int pageSize = 10;
-    private string token;
+    private string token = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
 
     private void UpdatePageSize(ChangeEventArgs e)
     {
@@ -125,15 +126,6 @@
         }
     }
 
-    private async Task SetToken()
-    {
-        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
-        var modalResult = await formModal.Result;
-        token = (string)modalResult.Data;
-
-        Storage.SetItemAsync("tinkoffToken", token);
-    }
-
     private void PreviousPage()
     {
         --pageIndex;
@@ -169,13 +161,6 @@
 
         try
         {
-            token = await Storage.GetItemAsync<string>("tinkoffToken");
-
-            if (token == null)
-            {
-                await SetToken();
-            }
-
             var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);
 
             marketInstruments = result;
