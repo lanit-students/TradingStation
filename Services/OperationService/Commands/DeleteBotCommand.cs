@@ -31,7 +31,7 @@ namespace OperationService.Commands
 
             if (!deleteUserResult)
             {
-                throw new BadRequestException("Unable to create bot");
+                throw new BadRequestException("Unable to delete bot");
             }
 
             return deleteUserResult;

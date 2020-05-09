@@ -68,7 +68,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<CreateBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<RunBotConsumer>(serviceProvider);
-                    ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<DisableBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<BotInfoConsumer>(serviceProvider);
 
                 });
@@ -124,7 +124,7 @@ namespace DataBaseService
 				x.AddConsumer<CreateBotConsumer>();
                 x.AddConsumer<DeleteBotConsumer>();
                 x.AddConsumer<RunBotConsumer>();
-                x.AddConsumer<DeleteBotConsumer>();
+                x.AddConsumer<DisableBotConsumer>();
                 x.AddConsumer<BotInfoConsumer>();
             
                 x.AddConsumer<AddLogConsumer>();
