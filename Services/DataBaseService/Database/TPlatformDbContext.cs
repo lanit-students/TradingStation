@@ -15,7 +15,6 @@ namespace DataBaseService.Database
         public DbSet<DbPortfolio> Portfolios { get; set; }
         public DbSet<DbUserBalance> UserBalances { get; set; }
         public DbSet<DbBot> Bots { get; set; }
-        public DbSet<DbBotRule> BotRules { get; set; }
 
         public TPlatformDbContext(DbContextOptions<TPlatformDbContext> options) : base(options) { }
 
