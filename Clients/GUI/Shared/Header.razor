@@ -32,15 +32,18 @@
                         <button type="button" class="btn btn-outline-secondary" @onclick="@(() => modal.Show<GUI.Pages.SignUpWizzard>())">Sign up</button>
                     </NotAuthorized>
                     <Authorized>
+                        @{
+                            LoadImageSrc();
+                        }
                         <div class="btn-group dropleft">
                             <a class="navbar-brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="Avatar">
+                                <img src="@imgSrc" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="Avatar">
                             </a>
 
                             <div class="dropdown-menu">
                                 <a class="dropdown-item align-items-center" href="userinfo">
                                     <a>User Info</a>
-                                    <img src="@imgSrc" @onload="LoadImageSrc" width="30" height="30" class="align-items-center rounded-circle" alt="Avatar">
+                                    <img src="@imgSrc" width="30" height="30" class="align-items-center rounded-circle" alt="Avatar">
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/" @onclick="SignOut">Sign out</a>
@@ -54,6 +57,7 @@
 </div>
 
 @code {
+    private string defaultImgSrc = "Picture/Avatar.svg";
     private string imgSrc = "Picture/Avatar.svg";
 
     private void SignOut()
@@ -79,12 +83,8 @@
         var requestResult = await UserGetter.GetUserById(userToken);
 
         if (requestResult.Avatar != null)
-            imgSrc = GetUserImage(requestResult.Avatar, requestResult.AvatarExtension);
-    }
-
-    private string GetUserImage(byte[] avatar, string extension)
-    {
-        var base64 = Convert.ToBase64String(avatar);
-        return string.Format("data:image/{0};base64,{1}", extension, base64);
+            imgSrc = AvatarGetter.GetUserImage(requestResult.Avatar, requestResult.AvatarExtension);
+        else
+            imgSrc = defaultImgSrc;
     }
 }

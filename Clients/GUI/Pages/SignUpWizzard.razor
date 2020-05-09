@@ -86,6 +86,7 @@
     private string errorServerMessage = "";
     private string avatar = "/Picture/Avatar.svg";
     private const string DefaultMessage = "/Picture/Avatar.svg";
+    private const int CMaxSizeOfImageInBytes = 2097152;
 
     private bool HasError()
     {
@@ -155,8 +156,7 @@
 
         if (file != null)
         {
-            // 2MB =  2097152 byte
-            if (file.Size > 2097152)
+            if (file.Size > CMaxSizeOfImageInBytes)
             {
                 errorServerMessage = "File is too big. Only 2 MB";
 
@@ -173,7 +173,7 @@
 
             userInput.Avatar = ms.ToArray();
 
-            avatar = GetUserImage(userInput.Avatar, userInput.AvatarExtension);
+            avatar = AvatarGetter.GetUserImage(userInput.Avatar, userInput.AvatarExtension);
         }
 
         showLoading = false;
@@ -188,17 +188,4 @@
         avatar = DefaultMessage;
     }
 
-    private string GetUserImage(byte[] avatar, string extension)
-    {
-        try
-        {
-            var base64 = Convert.ToBase64String(avatar);
-
-            return string.Format("data:image/{0};base64,{1}", extension, base64);
-        }
-        catch (Exception e)
-        {
-            return "/Picture/Avatar.svg";
-        }
-    }
 }
