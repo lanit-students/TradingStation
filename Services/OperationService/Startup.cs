@@ -103,7 +103,7 @@ namespace OperationService
 
             services.AddTransient<ICommand<DisableBotRequest, bool>, DisableBotCommand>();
 
-            services.AddTransient<ICommand<Guid, bool>, GetBotsCommand>();
+            services.AddTransient<ICommand<Guid, List<BotInfoRequest>>, GetBotsCommand>();
 
 
             services.AddLogging(log =>

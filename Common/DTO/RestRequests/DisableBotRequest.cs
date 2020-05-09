@@ -4,6 +4,6 @@ namespace DTO.RestRequests
 {
     public class DisableBotRequest
     {
-        public Guid ID;
+        public Guid ID { get; set; }
     }
 }

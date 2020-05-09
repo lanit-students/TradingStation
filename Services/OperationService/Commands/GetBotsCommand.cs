@@ -1,14 +1,16 @@
-﻿using Interfaces;
+﻿using DTO.RestRequests;
+using Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class GetBotsCommand : ICommand<Guid, bool>
+    public class GetBotsCommand : ICommand<Guid, List<BotInfoRequest>>
     {
-        public async Task<bool> Execute(Guid id)
+        public async Task<List<BotInfoRequest>> Execute(Guid id)
         {
-            return true;
+            return new List<BotInfoRequest>();
         }
     }
 }

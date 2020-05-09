@@ -5,8 +5,8 @@ namespace DTO.RestRequests
 {
     public class BotInfoRequest
     {
-        public string Name;
-        public List<string> Rules;
-        public Guid ID;
+        public string Name { get; set; }
+        public List<string> Rules { get; set; }
+        public Guid ID { get; set; }
     }
 }
