@@ -27,7 +27,6 @@
                     <option value=10>10</option>
                     <option value=20>20</option>
                     <option value=50>50</option>
-                    <option value=100>100</option>
                 </select>
             </div>
         </div>
@@ -60,14 +59,35 @@
                             <td>@instrument.Name</td>
                             <td>@instrument.Currency</td>
                             <td>@instrument.CountInLot</td>
-                            <td><button alingn="center" class=" btn btn-primary" 
-                                        @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
+                            <td>
+                                <button class=" btn btn-primary align-content-lg-center"
+                                        @onclick="@(() => OpenInstrument(instrument))">
+                                    Open instrument
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
-            <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <input type="@(prevDisabled ? "hidden" : "button")" 
+                               class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
+                    </li>
+                    @for (int i = 0; i <= Math.Min(lastPageIndex, 2); i++)
+                    {
+                        <li class="page-item"><a class="page-link" href="#">@pagesToShow[i]</a></li>
+                    }
+                    <li class="page-item"><a class="page-link" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">@lastPageIndex</a></li>
+                    <li class="page-item">
+                        <input type="@(nextDisabled ? "hidden" : "button")" 
+                               class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
+                    </li>
+                </ul>
+            </nav>
         }
         else
         {
@@ -86,6 +106,10 @@
     private string errorMessage;
 
     private int pageIndex;
+    private int nextPage;
+    private int nextNextPageIndex;
+    private int[] pagesToShow;
+    private int lastPageIndex;
     private int pageSize = 10;
     private string token = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
 
@@ -96,6 +120,9 @@
         pageSize = int.Parse(e.Value.ToString());
 
         pageIndex = oldSize * pageIndex / pageSize;
+
+        lastPageIndex = marketInstruments.Count() / pageSize;
+
 
         StateHasChanged();
     }
@@ -115,6 +142,8 @@
             areInstrumentsLoading = false;
 
             marketInstruments = result;
+
+            lastPageIndex = marketInstruments.Count() / pageSize;
         }
         catch (Exception)
         {
@@ -129,6 +158,10 @@
     private void PreviousPage()
     {
         --pageIndex;
+        for (int i = 0; i <= lastPageIndex; i++)
+        {
+            pagesToShow[i] -= 1;
+        }
         StateHasChanged();
     }
 
@@ -138,6 +171,10 @@
     private void NextPage()
     {
         ++pageIndex;
+        for (int i = 0; i <= lastPageIndex; i++)
+        {
+            pagesToShow[i] += 1;
+        }
         StateHasChanged();
     }
 
@@ -152,8 +189,8 @@
 
         instrumentOptions = new List<string>()
 {
-            "Currency",
             "Bond",
+            "Currency",
             "Stock"
         };
 
@@ -166,6 +203,16 @@
             marketInstruments = result;
 
             areInstrumentsLoading = false;
+
+            pageIndex = 0;
+            lastPageIndex = marketInstruments.Count() / pageSize;
+
+            pagesToShow = new int[lastPageIndex + 1];
+            for (int i = 0; i <= lastPageIndex; i++)
+            {
+                pagesToShow[i] = i;
+            }
+
         }
         catch (Exception)
         {
