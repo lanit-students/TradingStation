@@ -26,7 +26,7 @@ namespace Kernel
                 context.Response.StatusCode = exception.StatusCode;
 
                 errorResponse.Header = exception.Header;
-                errorResponse.Message = exception.Message;
+                errorResponse.Message = ErrorMessageFormatter.GetMessageData(exception.Message).Item3;
             }
             else
             {

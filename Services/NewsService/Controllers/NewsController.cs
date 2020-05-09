@@ -5,7 +5,6 @@ using FluentValidation;
 using DTO.NewsRequests.Currency;
 using DTO;
 using NewsService.Interfaces;
-using DTO.RestRequests;
 
 namespace NewsService.Controllers
 {
