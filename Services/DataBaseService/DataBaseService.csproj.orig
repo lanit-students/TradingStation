@@ -25,12 +25,9 @@
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0003_AddIsActiveColumnToUsersCredential.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0004_CreateUsersAvatarsTable.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0007_CreateTransactionsTable.sql" />
-<<<<<<< HEAD
-    <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0001_CreateBotsTable.sql" />
-=======
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0008_AlterTableTransaction.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0010_CreateBalanceUsersTable.sql" />
->>>>>>> develop
+    <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0001_CreateBotsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>

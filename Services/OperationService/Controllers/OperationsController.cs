@@ -6,12 +6,8 @@ using DTO.BrokerRequests;
 using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Interfaces;
-using DTO.BrokerRequests;
-using DTO.RestRequests;
-using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace OperationService.Controllers
 {
@@ -25,21 +21,20 @@ namespace OperationService.Controllers
         {
             this.logger = logger;
         }
+
         [Route("instruments/get")]
         [HttpGet]
         public async Task<IEnumerable<Instrument>> GetInstruments(
             [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> command,
             [FromQuery] BrokerType broker,
             [FromQuery] string token,
-            [FromQuery] InstrumentType instrument,
-            [FromQuery] int depth)
+            [FromQuery] InstrumentType instrument)
         {
             return await command.Execute(
                 new GetInstrumentsRequest
                 {
                     Broker = broker,
                     Token = token,
-                    Depth = depth,
                     Type = instrument
                 });
         }
@@ -94,7 +89,6 @@ namespace OperationService.Controllers
             return await command.Execute(request);
         }
 
-
         [Route("candles/get")]
         [HttpGet]
         public async Task<IEnumerable<Candle>> GetCandles(
@@ -111,6 +105,8 @@ namespace OperationService.Controllers
                     Token = token,
                     Figi = figi
                 });
+        }
+
 		[Route("bot/create")]
         [HttpPost]
         public async Task<bool> CreateBot([FromServices] ICommand<CreateBotRequest, bool> command, [FromBody] CreateBotRequest request)
@@ -149,9 +145,6 @@ namespace OperationService.Controllers
         {
             logger.LogInformation("Get bots request received from GUI to UserService");
             return await command.Execute(userId);
-        }
-    }
-}
         }
     }
 }
