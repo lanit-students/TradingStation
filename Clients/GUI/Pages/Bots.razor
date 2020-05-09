@@ -1,5 +1,4 @@
 ﻿@page "/bots"
-@using DTO.Bots;
 @inject NavigationManager NavManager
 @inject IModalService Modal
 @inject ISessionStorageService Storage
@@ -103,6 +102,6 @@
     {
         userToken.UserId = await Storage.GetItemAsync<Guid>("id");
         userToken.Body = await Storage.GetItemAsync<string>("token");
-        bots = await BotGetter.GetBots(userToken);
+        //bots = await BotGetter.GetBots(userToken);
     }
 }
