@@ -9,6 +9,7 @@ using System;
 using FluentValidation;
 using System.Threading.Tasks;
 using UserService.Interfaces;
+using UserService.Utils;
 using Microsoft.Extensions.Logging;
 
 namespace UserService.Commands
@@ -17,16 +18,22 @@ namespace UserService.Commands
     {
         private readonly IRequestClient<InternalCreateUserRequest> client;
         private readonly IValidator<CreateUserRequest> validator;
-        private ILogger<CreateUserCommand> logger;
+        private readonly ISecretTokenEngine secretTokenEngine;
+        private readonly ILogger<CreateUserCommand> logger;
+        private readonly IEmailSender emailSender;
 
         public CreateUserCommand(
             [FromServices] IRequestClient<InternalCreateUserRequest> client,
             [FromServices] IValidator<CreateUserRequest> validator,
-            [FromServices] ILogger<CreateUserCommand> logger)
+            [FromServices] ISecretTokenEngine secretTokenEngine,
+            [FromServices] ILogger<CreateUserCommand> logger,
+            [FromServices] IEmailSender emailSender)
         {
             this.client = client;
             this.validator = validator;
+            this.secretTokenEngine = secretTokenEngine;
             this.logger = logger;
+            this.emailSender = emailSender;
         }
 
         private async Task<bool> CreateUser(InternalCreateUserRequest request)
@@ -81,12 +88,13 @@ namespace UserService.Commands
             try
             {
                 var createUserResult = await CreateUser(internalCreateUserRequest);
+                emailSender.SendEmail(request.Email, secretTokenEngine);
+
                 return createUserResult;
             }
             catch (BadRequestException e)
             {
                 var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
-
                 var ex = new BadRequestException(errorData.Item3);
                 logger.LogWarning(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
                 throw ex;

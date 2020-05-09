@@ -167,5 +167,25 @@ namespace DataBaseService.Repositories
                 throw e;
             }
         }
+        public void ConfirmUser(string Email)
+        {
+            var dbUserCredential = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == Email);
+
+            if (dbUserCredential is null)
+            {
+                var exception = new NotFoundException("Not found User for confirm");
+                logger.LogWarning(exception, "ConfirmUser: wasn't found");
+                throw exception;
+            }
+
+            if (dbUserCredential.IsActive)
+            {
+                var exception = new BadRequestException("User was confirmed early");
+                logger.LogWarning(exception, "ConfirmUser: was confirmed early");
+                throw exception;
+            }
+            dbUserCredential.IsActive = true;
+            dbContext.SaveChanges();
+        }
     }
 }

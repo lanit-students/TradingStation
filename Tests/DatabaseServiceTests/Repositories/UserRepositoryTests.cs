@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DatabaseServiceTests.Repositories
 {
-    public class UserRepositoryDeleteTests
+    public class UserRepositoryTests
     {
         #region Common
 
@@ -36,7 +36,7 @@ namespace DatabaseServiceTests.Repositories
 
         private string firstName = "Adam";
         private string lastName = "Yablokov";
-        private string email = "adam.ya@eden.org";
+        private string email = "example@gmail.com";
         private DateTime birth = DateTime.MinValue;
         private string passwordHash = "passwordHash";
         private string avatarExtension = "jpeg";
@@ -145,6 +145,7 @@ namespace DatabaseServiceTests.Repositories
             };
 
             #endregion
+
         }
 
         #region Create user tests
@@ -189,7 +190,7 @@ namespace DatabaseServiceTests.Repositories
         {
             using var dbContext = new TPlatformDbContext(dbOptionsCreateAvatar);
             repository = new UserRepository(mapper, dbContext, logger.Object);
-            repository.CreateUser(user,email);
+            repository.CreateUser(user, email);
             repository.CreateUserAvatar(userAvatar);
             DbUserAvatarComparer comparer = new DbUserAvatarComparer();
             Assert.AreEqual(1, dbContext.UsersAvatars.CountAsync().Result);
@@ -223,6 +224,7 @@ namespace DatabaseServiceTests.Repositories
 
             Assert.IsFalse(expectedField);
         }
+
 
         [Test]
         public void DeleteUserIsActiveFalse()
@@ -266,6 +268,67 @@ namespace DatabaseServiceTests.Repositories
             userId = temp;
         }
 
+        #endregion
+
+        #region ConfirmTest
+
+        [Test]
+        public void ConfirmUserOk()
+        {
+            var options = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "ConfirmUserOkey")
+                .Options;
+
+            using var dbContext = new TPlatformDbContext(options);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
+
+            dbContext.UsersCredentials.Add(dbUserCredential);
+            dbContext.SaveChanges();
+
+            dbUserCredential.IsActive = false;
+
+            repository.ConfirmUser(dbUserCredential.Email);
+
+            var expectedField = dbContext.UsersCredentials.FirstOrDefault(uc => uc.Email == email).IsActive;
+
+            Assert.IsTrue(expectedField);
+        }
+
+        [Test]
+        public void ConfirmUserIsActiveTrue()
+        {
+            var options = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "ConfirmUserIsActiveTrue")
+                .Options;
+
+            using var dbContext = new TPlatformDbContext(options);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
+
+            dbContext.UsersCredentials.Add(dbUserCredential);
+            dbContext.SaveChanges();
+
+            var exception = Assert.Throws< BadRequestException> (() => repository.ConfirmUser(email));
+
+
+            Assert.AreEqual("User was confirmed early", exception.Message);
+        }
+
+        [Test]
+        public void ConfirmUserNotFound()
+        {
+            var options = new DbContextOptionsBuilder<TPlatformDbContext>()
+                .UseInMemoryDatabase(databaseName: "ConfirmUserNotFound")
+                .Options;
+
+            using var dbContext = new TPlatformDbContext(options);
+            repository = new UserRepository(mapper, dbContext, logger.Object);
+
+
+            var exception = Assert.Throws<NotFoundException>(() => repository.ConfirmUser(email));
+
+
+            Assert.AreEqual("Not found User for confirm", exception.Message);
+        }
         #endregion
     }
 }

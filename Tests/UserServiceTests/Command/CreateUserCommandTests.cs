@@ -11,24 +11,30 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using Kernel.CustomExceptions;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace UserServiceTests
 {
-     public class CreateUserCommandTests
+    public class CreateUserCommandTests
      {
         private ICreateUserCommand command;
         private Mock<IValidator<CreateUserRequest>> validatorMock;
         private Mock<IRequestClient<InternalCreateUserRequest>> clientMock;
+        private Mock<ISecretTokenEngine> secretTokenMock;
+        private Mock<ILogger<CreateUserCommand>> loggerMock;
         private Mock<Response<OperationResult<bool>>> responseMock;
         private Mock<ValidationResult> validatorResultMock;
         private CreateUserRequest request;
+        private Mock<IEmailSender> emailSenderMock;
+        Guid token;
 
         [SetUp]
         public void Initialization()
         {
             request = new CreateUserRequest();
             request.Password = "Not empty string";
-
+            request.Email = "TraidPlatform@mail.ru";
+            token = Guid.NewGuid();
             validatorResultMock = new Mock<ValidationResult>();
             validatorResultMock
                 .Setup(x => x.IsValid)
@@ -49,7 +55,16 @@ namespace UserServiceTests
                 .Setup(x => x.GetResponse<OperationResult<bool>>(It.IsAny<InternalCreateUserRequest>(), default, default))
                 .Returns(Task.FromResult(responseMock.Object));
 
-            command = new CreateUserCommand(clientMock.Object, validatorMock.Object, new Mock<ILogger<CreateUserCommand>>().Object);
+            secretTokenMock = new Mock<ISecretTokenEngine>();
+            secretTokenMock
+             .Setup(x => x.GetToken(It.IsAny<string>()))
+             .Returns(token);
+            loggerMock = new Mock<ILogger<CreateUserCommand>>();
+
+            emailSenderMock = new Mock<IEmailSender>();
+            emailSenderMock
+                .Setup(x => x.SendEmail(It.IsAny<string>(), It.IsAny<ISecretTokenEngine>()));
+            command = new CreateUserCommand(clientMock.Object, validatorMock.Object,secretTokenMock.Object,loggerMock.Object, emailSenderMock.Object);
         }
 
         [Test]
@@ -75,6 +90,7 @@ namespace UserServiceTests
         [Test]
         public void CreateUserCommandTrueSuccessfulUserCreation()
         {
+
             Assert.IsTrue(command.Execute(request).Result);
         }
      }
