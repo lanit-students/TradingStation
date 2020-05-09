@@ -12,7 +12,7 @@ namespace BrokerService.BrokerConsumers
     {
         public IEnumerable<Instrument> GetInstruments(GetInstrumentsRequest request)
         {
-            return BrokerFactory.Create(request.Broker, request.Token, request.Depth).GetInstruments(request.Type);
+            return BrokerFactory.Create(request.Broker, request.Token).GetInstruments(request.Type);
         }
 
         public async Task Consume(ConsumeContext<GetInstrumentsRequest> context)

@@ -2,9 +2,6 @@
 
 namespace DTO
 {
-    /// <summary>
-    /// Represents market instrument
-    /// </summary>
     public class Instrument
     {
         public virtual string Figi { get; set; }
@@ -17,10 +14,12 @@ namespace DTO
 
         public virtual string Name { get; set; }
 
-        public virtual string Currency { get; set; }
+        public virtual Currency Currency { get; set; }
 
-        public virtual int Lot { get; set; }
+        public virtual int CountInLot { get; set; }
 
         public virtual decimal Price { get; set; }
+
+        public virtual int TotalCount { get; set; }
     }
 }

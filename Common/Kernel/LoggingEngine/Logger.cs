@@ -21,7 +21,7 @@ namespace Kernel.LoggingEngine
 
             var uri = new Uri("rabbitmq://localhost/DatabaseService_Logs");
 
-            var endpont = await bus.GetSendEndpoint(uri);
+            var endpont =  await bus.GetSendEndpoint(uri);
             await endpont.Send(log);
         }
 
@@ -49,7 +49,6 @@ namespace Kernel.LoggingEngine
                 ServiceName = Assembly.GetEntryAssembly().GetName().Name,
                 Time = DateTime.UtcNow
             };
-
             AddLog(message);
         }
     }

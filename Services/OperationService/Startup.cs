@@ -1,5 +1,7 @@
 using DTO;
 using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
+using DTO.RestRequests;
 using GreenPipes;
 using Interfaces;
 using Kernel;
@@ -15,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using OperationService.BrokerConsumers;
 using OperationService.Hubs;
-using DTO.RestRequests;
 
 namespace OperationService
 {
@@ -62,29 +63,39 @@ namespace OperationService
 
             services.AddMassTransit(x =>
             {
+            	var brokerUri = new Uri("rabbitmq://localhost/BrokerService");
+                var databaseUri = new Uri("rabbitmq://localhost/DatabaseService");
+
                 x.AddBus(provider => CreateBus(provider));
 
+                x.AddRequestClient<GetInstrumentsRequest>(brokerUri);
+                x.AddRequestClient<InternalTradeRequest>(brokerUri);
+                x.AddRequestClient<Transaction>(databaseUri);
+                x.AddRequestClient<GetInstrumentFromPortfolioRequest>(databaseUri);
+                x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
+                x.AddRequestClient<UserBalance>(databaseUri);
+				x.AddRequestClient<GetCandlesRequest>(brokerUri);
                 x.AddConsumer<CandleConsumer>();
-
-                x.AddRequestClient<GetInstrumentsRequest>(new Uri("rabbitmq://localhost/BrokerService"));
-                x.AddRequestClient<GetCandlesRequest>(new Uri("rabbitmq://localhost/BrokerService"));
-
+                
                 x.AddRequestClient<CreateBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
                 x.AddRequestClient<DeleteBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
                 x.AddRequestClient<RunBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
                 x.AddRequestClient<DisableBotRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
                 x.AddRequestClient<BotInfoRequest>(new Uri("rabbitmq://localhost/DataBaseService"));
-
-            });
+   
+                        });
 
             services.AddMassTransitHostedService();
 
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
+			services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
+            services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
+            services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetUserBalanceCommand>();
+            services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateUserBalanceCommand>();
+
 
             services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
-
-
-            services.AddTransient<ICommand<CreateBotRequest, bool>, CreateBotCommand>();
+			services.AddTransient<ICommand<CreateBotRequest, bool>, CreateBotCommand>();
 
             services.AddTransient<ICommand<DeleteBotRequest, bool>, DeleteBotCommand>();
             
@@ -93,6 +104,7 @@ namespace OperationService
             services.AddTransient<ICommand<DisableBotRequest, bool>, DisableBotCommand>();
 
             services.AddTransient<ICommand<Guid, bool>, GetBotsCommand>();
+
 
             services.AddLogging(log =>
             {
