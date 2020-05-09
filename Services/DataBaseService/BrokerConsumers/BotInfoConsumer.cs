@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class BotInfoConsumer : IConsumer<BotInfoRequest>
+    public class BotInfoConsumer : IConsumer<BotInfoResponse>
     {
         private readonly IBotRepository botRepository;
 
@@ -16,13 +16,13 @@ namespace DataBaseService.BrokerConsumers
             this.botRepository = botRepository;
         }
 
-        private bool BotInfo(BotInfoRequest request)
+        private bool BotInfo(BotInfoResponse request)
         {
             
             return true;
         }
 
-        public async Task Consume(ConsumeContext<BotInfoRequest> context)
+        public async Task Consume(ConsumeContext<BotInfoResponse> context)
         {
             var response = OperationResultWrapper.CreateResponse(BotInfo, context.Message);
 

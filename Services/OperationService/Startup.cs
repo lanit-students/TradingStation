@@ -81,7 +81,7 @@ namespace OperationService
                 x.AddRequestClient<DeleteBotRequest>(databaseUri);
                 x.AddRequestClient<RunBotRequest>(databaseUri);
                 x.AddRequestClient<DisableBotRequest>(databaseUri);
-                x.AddRequestClient<BotInfoRequest>(databaseUri);
+                x.AddRequestClient<BotInfoResponse>(databaseUri);
             });
 
             services.AddMassTransitHostedService();
@@ -102,7 +102,7 @@ namespace OperationService
 
             services.AddTransient<ICommand<DisableBotRequest, bool>, DisableBotCommand>();
 
-            services.AddTransient<ICommand<Guid, List<BotInfoRequest>>, GetBotsCommand>();
+            services.AddTransient<ICommand<Guid, List<BotInfoResponse>>, GetBotsCommand>();
 
 
             services.AddLogging(log =>

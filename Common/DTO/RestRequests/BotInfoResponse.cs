@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DTO.RestRequests
 {
-    public class BotInfoRequest
+    public class BotInfoResponse
     {
         public string Name { get; set; }
         public List<string> Rules { get; set; }
