@@ -4,7 +4,32 @@
 @inject NavigationManager NavigationManager
 
 <div class="header">
-     <nav class="navbar navbar-expand-lg navbar-light">
+<<<<<<< HEAD
+    <a href="#"><img src="Picture/Logo.png"></a>
+    <a href="#">News</a>
+    <AuthorizeView>
+        <Authorized>
+            <a href="instruments">Instruments</a>
+            <a href="bots">Bots</a>
+        </Authorized>
+    </AuthorizeView>
+    <div class="header-right">
+        <AuthorizeView>
+            <NotAuthorized>
+                <a class="header_item" href="signup">Sign up</a>
+                <a> / </a>
+                <a class="header_item" @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
+            </NotAuthorized>
+            <Authorized>
+                <a class="header_item" href="#" @onclick="@SignOut">Sign Out</a>
+                <a> / </a>
+                <a class="header_item" href="userinfo">User Info</a>
+            </Authorized>
+        </AuthorizeView>
+        <a href="#"><img src="Picture/Avatar.png"></a>
+    </div>
+=======
+    <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand pl-5" href="/">
             <img src="Picture/Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
         </a>
@@ -54,20 +79,21 @@
             </div>
         </div>
     </nav>
+>>>>>>> develop
 </div>
 
-
 @code {
-	private string defaultImgSrc = "Picture/Avatar.svg";
+    private string defaultImgSrc = "Picture/Avatar.svg";
     private string imgSrc = "Picture/Avatar.svg";
 
     private void SignOut()
     {
         Storage.ClearAsync();
+
         AuthenticationProvider.MarkSignedOut();
     }
 
-	private async void LoadImageSrc()
+    private async void LoadImageSrc()
     {
         var userToken = new UserToken
         {

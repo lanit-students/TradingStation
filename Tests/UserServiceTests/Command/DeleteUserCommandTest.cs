@@ -7,6 +7,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Kernel.CustomExceptions;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UserService.Commands;
@@ -53,7 +54,7 @@ namespace UserServiceTests.Commands
                     x.Validate(It.IsAny<ValidationContext>()))
                 .Throws(new ValidationException("error"));
 
-            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object);
+            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object, new Mock<ILogger<DeleteUserCommand>>().Object);
 
             Assert.ThrowsAsync<ValidationException>(() => command.Execute(request));
         }
@@ -65,7 +66,7 @@ namespace UserServiceTests.Commands
                 .Setup(x => x.Message)
                 .Throws(new NotFoundException());
 
-            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object);
+            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object, new Mock<ILogger<DeleteUserCommand>>().Object);
 
             Assert.ThrowsAsync<NotFoundException>(() => command.Execute(request));
         }
@@ -77,7 +78,7 @@ namespace UserServiceTests.Commands
                 .Setup(x => x.Message)
                 .Throws(new BadRequestException());
 
-            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object);
+            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object, new Mock<ILogger<DeleteUserCommand>>().Object);
 
             Assert.ThrowsAsync<BadRequestException>(() => command.Execute(request));
         }
@@ -89,7 +90,7 @@ namespace UserServiceTests.Commands
                 .Setup(x => x.Message)
                 .Returns(new OperationResult<bool> { StatusCode = 400 });
 
-            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object);
+            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object, new Mock<ILogger<DeleteUserCommand>>().Object);
 
             Assert.ThrowsAsync<BadRequestException>(() => command.Execute(request));
         }
@@ -101,7 +102,7 @@ namespace UserServiceTests.Commands
                 .Setup(x => x.Message)
                 .Returns(new OperationResult<bool> { Data = true });
 
-            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object);
+            var command = new DeleteUserCommand(requestClientMock.Object, validatorMock.Object, new Mock<ILogger<DeleteUserCommand>>().Object);
 
             Assert.True(command.Execute(request).Result);
         }
