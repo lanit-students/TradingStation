@@ -3,7 +3,6 @@
 @inject ISessionStorageService Storage
 @inject NavigationManager Navigation
 @attribute [Authorize]
-
 <div class="container">
     <div class="row">
         <div class="col-md">
@@ -60,7 +59,7 @@
                             <td>@instrument.Currency</td>
                             <td>@instrument.CountInLot</td>
                             <td>
-                                <button class=" btn btn-primary align-content-lg-center"
+                                <button class=" btn btn-light"
                                         @onclick="@(() => OpenInstrument(instrument))">
                                     Open instrument
                                 </button>
@@ -69,34 +68,32 @@
                     }
                 </tbody>
             </table>
-
             <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <input type="@(prevDisabled ? "hidden" : "button")" 
-                               class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
-                    </li>
-                    @for (int i = 0; i <= Math.Min(lastPageIndex, 2); i++)
-                    {
-                        <li class="page-item"><a class="page-link" href="#">@pagesToShow[i]</a></li>
-                    }
-                    <li class="page-item"><a class="page-link" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">@lastPageIndex</a></li>
-                    <li class="page-item">
-                        <input type="@(nextDisabled ? "hidden" : "button")" 
-                               class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
-                    </li>
+                <ul class="pagination align-content-center">
+                    <input type="@(prevDisabled ? "hidden" : "button")"
+                           class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
+                    
+                    <input class="btn btn-active btn-sm col-1" disabled="true" value="@pagesToShow[0]"/>
+                    <input class="btn btn-light btn-sm col-1" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
+                    <input class="btn btn-light btn-sm col-1" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+
+                    <input class="btn btn-light btn-sm col-2" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
+
+                    <input class=" btn btn-light btn-sm col-1" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
+                    
+                    <input type=" @(nextDisabled ? "hidden" : "button" )"
+                           class="btn btn-primary m-1 mr-3" value="Next" @onclick="@NextPage" />
+
                 </ul>
             </nav>
         }
         else
         {
-            <h3 class="m-lg-5">@errorMessage</h3>
-        }
-    </div>
+            <h3 class=" m-lg-5">
+                    @errorMessage</h3>
+                }
 </div>
-
-
+</div>
 @code {
     private IEnumerable<Instrument> marketInstruments;
     private List<string> instrumentOptions;
@@ -144,6 +141,12 @@
             marketInstruments = result;
 
             lastPageIndex = marketInstruments.Count() / pageSize;
+
+            pagesToShow = new int[100];
+            for (int i = 0; i <= lastPageIndex; i++)
+            {
+                pagesToShow[i] = i;
+            }
         }
         catch (Exception)
         {
@@ -161,6 +164,16 @@
         for (int i = 0; i <= lastPageIndex; i++)
         {
             pagesToShow[i] -= 1;
+        }
+        StateHasChanged();
+    }
+
+    private void MoveTo(int page)
+    {
+        pageIndex = page;
+        for (int i = 0; i <= lastPageIndex; i++)
+        {
+            pagesToShow[i] = page + i;
         }
         StateHasChanged();
     }
@@ -198,7 +211,7 @@
 
         try
         {
-            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Bond);
 
             marketInstruments = result;
 
@@ -207,7 +220,7 @@
             pageIndex = 0;
             lastPageIndex = marketInstruments.Count() / pageSize;
 
-            pagesToShow = new int[lastPageIndex + 1];
+            pagesToShow = new int[100];
             for (int i = 0; i <= lastPageIndex; i++)
             {
                 pagesToShow[i] = i;
@@ -229,3 +242,4 @@
         Navigation.NavigateTo("/instrumentInfo");
     }
 }
+
