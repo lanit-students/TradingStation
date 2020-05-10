@@ -29,8 +29,6 @@ namespace AuthenticationService.Controllers
         [HttpPost]
         public async Task<UserToken> Login([FromServices] ILoginCommand command, [FromBody] LoginRequest request)
         {
-            logger.LogInformation("Success");
-
             return await command.Execute(request);
         }
 
