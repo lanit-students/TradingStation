@@ -29,7 +29,6 @@ namespace CentralBankIntegrationLib.XmlSerializationObjects
             get
             {
                 decimal val;
-                //TODO: Add log
                 decimal.TryParse(ValueInString.Replace(',', '.'), NumberStyles.Currency, CultureInfo.InvariantCulture, out val);
 
                 if (FaceValue > 1)
