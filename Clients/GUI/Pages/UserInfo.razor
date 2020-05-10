@@ -197,7 +197,7 @@
             await file.Data.CopyToAsync(ms);
             user.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
             user.Avatar = ms.ToArray();
-            imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
+            imgSrc = AvatarGetter.GetUserImage(user.Avatar, user.AvatarExtension);
         }
         showLoading = false;
     }
@@ -219,7 +219,7 @@
 
             };
             if (user.Avatar != null)
-                imgSrc = GetUserImage(user.Avatar, user.AvatarExtension);
+                imgSrc = AvatarGetter.GetUserImage(user.Avatar, user.AvatarExtension);
             else
                 imgSrc = GetDefaultImage();
         }
@@ -234,11 +234,7 @@
         }
     }
 
-    private string GetUserImage(byte[] avatar, string extension)
-    {
-        var base64 = Convert.ToBase64String(avatar);
-        return String.Format("data:image/{0};base64,{1}", extension, base64);
-    }
+    
 
     private string GetDefaultImage()
     {
