@@ -59,14 +59,14 @@ namespace DataBaseService.Repositories
                 logger.LogWarning(e, e.Message);
                 throw e;
             }
-            
+
             if(!dbCredential.IsActive)
             {
                 var e = new ForbiddenException("User wasn't confirm or delete");
                 logger.LogWarning(e, "GetUserCredential: User {1} wasn't confirm or delete", email);
                 throw e;
             }
-            
+
             return mapper.MapUserCredential(dbCredential);
         }
 
@@ -102,7 +102,6 @@ namespace DataBaseService.Repositories
 
             if (dbUserCredential is null)
             {
-
                 var e = new NotFoundException($"{Guid.NewGuid()}_Not found user to delete");
                 logger.LogWarning(e, $"{e.Message}, user id: {userId}");
                 throw e;
@@ -192,6 +191,7 @@ namespace DataBaseService.Repositories
                 logger.LogWarning(exception, "ConfirmUser: was confirmed early");
                 throw exception;
             }
+
             dbUserCredential.IsActive = true;
             dbContext.SaveChanges();
         }

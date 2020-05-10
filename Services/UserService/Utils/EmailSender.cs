@@ -48,8 +48,8 @@ namespace UserService.Utils
                     if (k < 5)
                         k++;
                 }
-
             }
+
             if(!flag)
             {
                 var e = new InternalServerException("Internal Server. Email didn't send");
