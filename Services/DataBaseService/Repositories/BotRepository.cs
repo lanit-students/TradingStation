@@ -1,4 +1,5 @@
 ﻿using DataBaseService.Database;
+using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
@@ -63,9 +64,25 @@ namespace DataBaseService.Repositories
         }
 
         public List<BotInfoResponse> GetBots(InternalGetBotsRequest request)
-        {
-            //TODO get bots from db
-            return new List<BotInfoResponse>();
+        {            
+            var dbbots = dbContext.Bots.Where(bot => bot.UserId == request.UserId);
+
+            if (dbbots == null) return new List<BotInfoResponse>();
+
+            var bots = new List<BotInfoResponse>();
+
+            foreach(var dbbot in dbbots)
+            {
+                var bot = new BotInfoResponse()
+                {
+                    Name = dbbot.Name,
+                    isRunning = dbbot.IsRunning,
+                    ID = dbbot.Id
+                };
+                bots.Add(bot);
+            }
+
+            return bots;
         }
     }
 }

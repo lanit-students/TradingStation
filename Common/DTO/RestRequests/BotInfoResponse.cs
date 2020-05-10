@@ -6,7 +6,7 @@ namespace DTO.RestRequests
     public class BotInfoResponse
     {
         public string Name { get; set; }
-        public List<string> Rules { get; set; }
         public Guid ID { get; set; }
+        public bool isRunning { get; set; }
     }
 }
