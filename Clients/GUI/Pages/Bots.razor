@@ -53,7 +53,7 @@
             Name = name,
             UserId = userToken.UserId
         };
-        await BotCreater.Create(userToken, request);
+        await BotManager.CreateBot(userToken, request);
     }
 
     public async void Delete(Guid id)
@@ -62,7 +62,7 @@
         {
             ID = id
         };
-        await BotCreater.Delete(userToken, request);
+        await BotManager.DeleteBot(userToken, request);
     }
 
     public async void Run(Guid id)
@@ -71,7 +71,7 @@
         {
             ID = id
         };
-        await BotRunner.Run(userToken, request);
+        await BotManager.RunBot(userToken, request);
     }
 
     public async void Disable(Guid id)
@@ -80,7 +80,7 @@
         {
             ID = id
         };
-        await BotRunner.Disable(userToken, request);
+        await BotManager.DisableBot(userToken, request);
     }
 
     public void Edit(Guid id)
@@ -98,6 +98,6 @@
     {
         userToken.UserId = await Storage.GetItemAsync<Guid>("id");
         userToken.Body = await Storage.GetItemAsync<string>("token");
-        bots = await BotGetter.GetBots(userToken);
+        bots = await BotManager.GetBots(userToken);
     }
 }
