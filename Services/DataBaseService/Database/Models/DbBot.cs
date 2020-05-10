@@ -37,7 +37,7 @@ namespace DataBaseService.Database.Models
             builder
                 .Property(p => p.IsRunning)
                 .HasColumnName("IsRunning")
-                .HasDefaultValue(false);
+                .IsRequired();
             builder
                 .HasIndex(p => p.Id)
                 .IsUnique();
