@@ -23,7 +23,6 @@ namespace OperationService.Commands
         {
             this.client = client;
             this.logger = logger;
-
         }
 
         private async Task<List<BotInfoResponse>> GetBotsByUserId(InternalGetBotsRequest request)
