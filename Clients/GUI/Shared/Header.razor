@@ -86,5 +86,6 @@
             imgSrc = AvatarGetter.GetUserImage(requestResult.Avatar, requestResult.AvatarExtension);
         else
             imgSrc = defaultImgSrc;
+        StateHasChanged();
     }
 }
