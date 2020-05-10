@@ -66,7 +66,7 @@
                 isHidden = false;
             }
         }
-        catch(InternalServerException)
+        catch(Exception)
         {
 
         }
@@ -74,29 +74,50 @@
 
     public async void Delete(Guid id)
     {
-        var request = new DeleteBotRequest()
+        try
         {
-            ID = id
-        };
-        await BotManager.DeleteBot(userToken, request);
+            var request = new DeleteBotRequest()
+            {
+                ID = id
+            };
+            await BotManager.DeleteBot(userToken, request);
+        }
+        catch(Exception)
+        {
+
+        }
     }
 
     public async void Run(Guid id)
     {
-        var request = new RunBotRequest()
+        try
         {
-            ID = id
-        };
-        await BotManager.RunBot(userToken, request);
+            var request = new RunBotRequest()
+            {
+                ID = id
+            };
+            await BotManager.RunBot(userToken, request);
+        }
+        catch (Exception)
+        {
+
+        }
     }
 
     public async void Disable(Guid id)
     {
-        var request = new DisableBotRequest()
+        try
         {
-            ID = id
-        };
-        await BotManager.DisableBot(userToken, request);
+            var request = new DisableBotRequest()
+            {
+                ID = id
+            };
+            await BotManager.DisableBot(userToken, request);
+        }
+        catch(Exception)
+        {
+
+        }
     }
 
     public void Edit(Guid id)

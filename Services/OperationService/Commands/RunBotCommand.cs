@@ -5,6 +5,7 @@ using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
@@ -27,13 +28,14 @@ namespace OperationService.Commands
 
         public async Task<bool> Execute(RunBotRequest request)
         {
-            var runBotResult = await RunBot(request);
-            if (!runBotResult)
+            try
             {
-                throw new BadRequestException("Unable to run bot");
+                return await RunBot(request);
             }
-
-            return runBotResult;
+            catch (Exception)
+            {
+                throw new NotFoundException("bot not found");
+            }
         }
     }
 }

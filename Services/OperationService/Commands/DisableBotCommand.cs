@@ -5,6 +5,7 @@ using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
@@ -27,13 +28,14 @@ namespace OperationService.Commands
 
         public async Task<bool> Execute(DisableBotRequest request)
         {
-            var disableBotresult = await DisableBot(request);
-            if (!disableBotresult)
+            try
             {
-                throw new BadRequestException("Unable to disable bot");
+                return await DisableBot(request);
             }
-
-            return disableBotresult;
+            catch (Exception)
+            {
+                throw new NotFoundException("bot not found");
+            }
         }
     }
 }

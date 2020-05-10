@@ -6,6 +6,7 @@ using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
@@ -30,16 +31,14 @@ namespace OperationService.Commands
 
         public async Task<bool> Execute(CreateBotRequest request)
         {
-            var createBotResult = await CreateBot(request);
-
-            if (!createBotResult)
+            try
             {
-                var e = new BadRequestException("Unable to create bot");
-                logger.LogWarning(e, "BadRequest thrown while trying to create Bot.");
-                throw e;
+                return await CreateBot(request);
             }
-
-            return createBotResult;
+            catch (Exception)
+            {
+                throw new BadRequestException("unable to create bot");
+            }
         }
     }
 }

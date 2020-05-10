@@ -2,6 +2,7 @@
 using DTO.BrokerRequests;
 using Interfaces;
 using Kernel;
+using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,9 +34,16 @@ namespace OperationService.Commands
 
         public async Task<List<BotData>> Execute(Guid request)
         {
-            var internalRequest = new InternalGetBotsRequest { UserId = request };
+            try
+            {
+                var internalRequest = new InternalGetBotsRequest { UserId = request };
 
-            return await GetBotsByUserId(internalRequest);
+                return await GetBotsByUserId(internalRequest);
+            }
+            catch(Exception)
+            {
+                throw new NotFoundException("user didn't found");
+            }
         }
     }
 }

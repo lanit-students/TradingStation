@@ -5,6 +5,7 @@ using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace OperationService.Commands
@@ -27,14 +28,14 @@ namespace OperationService.Commands
 
         public async Task<bool> Execute(DeleteBotRequest request)
         {
-            var deleteBotResult = await DeleteBot(request);
-
-            if (!deleteBotResult)
+            try
             {
-                throw new BadRequestException("Unable to delete bot");
+                return await DeleteBot(request);
             }
-
-            return deleteBotResult;
+            catch (Exception)
+            {
+                throw new NotFoundException("bot not found");
+            }
         }
     }
 }
