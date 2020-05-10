@@ -63,21 +63,22 @@ namespace DataBaseService.Repositories
             }
         }
 
-        public List<BotInfoResponse> GetBots(InternalGetBotsRequest request)
+        public List<BotData> GetBots(InternalGetBotsRequest request)
         {            
             var dbbots = dbContext.Bots.Where(bot => bot.UserId == request.UserId);
 
-            if (dbbots == null) return new List<BotInfoResponse>();
+            if (dbbots == null) return new List<BotData>();
 
-            var bots = new List<BotInfoResponse>();
+            var bots = new List<BotData>();
 
             foreach(var dbbot in dbbots)
             {
-                var bot = new BotInfoResponse()
+                var bot = new BotData()
                 {
+                    Id = dbbot.Id,
+                    UserId = dbbot.UserId,
                     Name = dbbot.Name,
-                    isRunning = dbbot.IsRunning,
-                    ID = dbbot.Id
+                    IsRunning = dbbot.IsRunning
                 };
                 bots.Add(bot);
             }

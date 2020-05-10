@@ -24,10 +24,10 @@
                                     <p>"Example"</p>
                                 </div>
                                 <div class="lib-row lib-desk">
-                                    <p><button @onclick="() => Run(bot.ID)">Run</button>
-                                    <button @onclick="() => Disable(bot.ID)">Disable</button></p>
-                                    <button @onclick="() => Edit(bot.ID)">Edit rules</button>
-                                    <p><button @onclick="() => Delete(bot.ID)">Delete</button></p>
+                                    <p><button @onclick="() => Run(bot.Id)">Run</button>
+                                    <button @onclick="() => Disable(bot.Id)">Disable</button></p>
+                                    <button @onclick="() => Edit(bot.Id)">Edit rules</button>
+                                    <p><button @onclick="() => Delete(bot.Id)">Delete</button></p>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
 
 @code {
 
-    List<BotInfoResponse> bots;
+    List<BotData> bots;
     private UserToken userToken;
 
     public async void Create()
@@ -91,7 +91,7 @@
     protected override void OnInitialized()
     {
         userToken = new UserToken();
-        bots = new List<BotInfoResponse>();
+        bots = new List<BotData>();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

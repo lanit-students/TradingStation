@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OperationService.Commands
 {
-    public class GetBotsCommand : ICommand<Guid, List<BotInfoResponse>>
+    public class GetBotsCommand : ICommand<Guid, List<BotData>>
     {
         private readonly IRequestClient<InternalGetBotsRequest> client;
         private readonly ILogger<GetBotsCommand> logger;
@@ -25,14 +25,14 @@ namespace OperationService.Commands
             this.logger = logger;
         }
 
-        private async Task<List<BotInfoResponse>> GetBotsByUserId(InternalGetBotsRequest request)
+        private async Task<List<BotData>> GetBotsByUserId(InternalGetBotsRequest request)
         {
             logger.LogInformation("Response from Database Service GetBotsByUserId method received");
-            var response = await client.GetResponse<OperationResult<List<BotInfoResponse>>>(request);
+            var response = await client.GetResponse<OperationResult<List<BotData>>>(request);
             return OperationResultHandler.HandleResponse(response.Message);
         }
 
-        public async Task<List<BotInfoResponse>> Execute(Guid request)
+        public async Task<List<BotData>> Execute(Guid request)
         {
             var internalRequest = new InternalGetBotsRequest { UserId = request };
 

@@ -141,7 +141,7 @@ namespace OperationService.Controllers
 
         [Route("bot/get")]
         [HttpGet]
-        public async Task<List<BotInfoResponse>> GetBot([FromServices] ICommand<Guid, List<BotInfoResponse>> command, [FromHeader] Guid userId)
+        public async Task<List<BotData>> GetBot([FromServices] ICommand<Guid, List<BotData>> command, [FromHeader] Guid userId)
         {
             logger.LogInformation("Get bots request received from GUI to OperationService");
             var result = await command.Execute(userId);

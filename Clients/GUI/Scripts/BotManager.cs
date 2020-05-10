@@ -45,11 +45,11 @@ namespace GUI.Scripts
             await client.ExecuteAsync(request);
         }
 
-        public static async Task<List<BotInfoResponse>> GetBots(UserToken userToken)
+        public static async Task<List<BotData>> GetBots(UserToken userToken)
         {
             const string url = "https://localhost:5009/operations/bot/get";
 
-            var client = new RestClient<object, List<BotInfoResponse>>(url, RestRequestType.GET, userToken);
+            var client = new RestClient<object, List<BotData>>(url, RestRequestType.GET, userToken);
 
             return await client.ExecuteAsync();
         }

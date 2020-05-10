@@ -1,6 +1,6 @@
 ﻿using DataBaseService.Repositories.Interfaces;
+using DTO;
 using DTO.BrokerRequests;
-using DTO.RestRequests;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,7 @@ namespace DataBaseService.BrokerConsumers
             this.botRepository = botRepository;
         }
 
-        private List<BotInfoResponse> BotInfo(InternalGetBotsRequest request)
+        private List<BotData> BotInfo(InternalGetBotsRequest request)
         {
             return botRepository.GetBots(request);
         }
