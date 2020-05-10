@@ -52,7 +52,7 @@ namespace UserServiceTests.Commands
                 .Setup(x => x.Message)
                 .Returns(new OperationResult<bool> { Data = true });
 
-            Assert.AreEqual(command.Execute(token).Result, "<p>Thank you to confirm!</p>");
+            Assert.AreEqual(command.Execute(token).Result, true);
         }
 
         [Test]
