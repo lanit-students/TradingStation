@@ -20,6 +20,7 @@ using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
 using Kernel.LoggingEngine;
 using Microsoft.Extensions.Logging;
+using DTO.BrokerRequests;
 
 namespace DataBaseService
 {
@@ -64,6 +65,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<GetPortfolioConsumer>(serviceProvider);
 
                 });
 
@@ -112,6 +114,7 @@ namespace DataBaseService
                 x.AddConsumer<GetInstrumentFromPortfolioConsumer>();
                 x.AddConsumer<GetUserBalanceConsumer>();
                 x.AddConsumer<UpdateUserBalanceConsumer>();
+                x.AddConsumer<GetPortfolioConsumer>();
                 x.AddConsumer<AddLogConsumer>();
             });
 

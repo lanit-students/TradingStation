@@ -20,7 +20,7 @@ namespace OperationService.Controllers
         {
             this.logger = logger;
         }
-        
+
         [Route("instruments/get")]
         [HttpGet]
         public async Task<IEnumerable<Instrument>> GetInstruments(
@@ -65,6 +65,16 @@ namespace OperationService.Controllers
                    UserId = Guid.Parse(userId),
                    Figi = figi
                });
+        }
+
+        [Route("getportfolio")]
+        [HttpGet]
+        public async Task<List<InstrumentData>> GetPortfolio(
+            [FromServices] ICommand<GetPortfolioRequest, List<InstrumentData>> command,
+            [FromHeader] Guid userId
+            )
+        {
+            return await command.Execute(new GetPortfolioRequest() { UserId = userId });
         }
 
         [Route("userBalance/get")]

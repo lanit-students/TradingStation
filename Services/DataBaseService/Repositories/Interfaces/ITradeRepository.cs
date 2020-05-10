@@ -1,6 +1,7 @@
 ﻿using DTO;
 using DTO.BrokerRequests;
 using DTO.MarketBrokerObjects;
+using System.Collections.Generic;
 
 namespace DataBaseService.Repositories.Interfaces
 {
@@ -10,5 +11,6 @@ namespace DataBaseService.Repositories.Interfaces
         Instrument GetInstrumentFromPortfolio(GetInstrumentFromPortfolioRequest request);
         UserBalance GetUserBalance(GetUserBalanceRequest request);
         void UpdateUserBalance(UserBalance userBalance);
+        List<InstrumentData> GetPortfolio(GetPortfolioRequest request);
     }
 }

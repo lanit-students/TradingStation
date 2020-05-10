@@ -21,7 +21,7 @@ namespace DataBaseService.Mappers
                 Price = transaction.Price,
                 Currency = transaction.Currency.ToString(),
                 Date = transaction.DateTime.Date,
-                Time = transaction.DateTime, 
+                Time = transaction.DateTime,
                 IsSuccess = transaction.IsSuccess
             };
         }
@@ -70,6 +70,16 @@ namespace DataBaseService.Mappers
                 BalanceInRub = userBalance.BalanceInRub,
                 BalanceInUsd = userBalance.BalanceInUsd,
                 BalanceInEur = userBalance.BalanceInEur
+            };
+        }
+
+        public InstrumentData MapToInstrument(DbPortfolio dbPortfolio)
+        {
+            return new InstrumentData()
+            {
+                Figi = dbPortfolio.Figi,
+                Count = dbPortfolio.Count,
+                Broker = Enum.Parse<BrokerType>(dbPortfolio.Broker)
             };
         }
     }

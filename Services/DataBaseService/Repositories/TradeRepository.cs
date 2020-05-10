@@ -9,6 +9,7 @@ using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataBaseService.Repositories
@@ -136,6 +137,11 @@ namespace DataBaseService.Repositories
                 Figi = request.Figi,
                 TotalCount = instrument.Count,
             };
+        }
+
+        public List<InstrumentData> GetPortfolio(GetPortfolioRequest request)
+        {
+            return dbContext.Portfolios.Where(p => p.UserId == request.UserId).Select(p => mapper.MapToInstrument(p)).ToList();
         }
 
         public UserBalance GetUserBalance(GetUserBalanceRequest request)

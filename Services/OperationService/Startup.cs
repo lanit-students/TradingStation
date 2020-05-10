@@ -74,7 +74,8 @@ namespace OperationService
                 x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
                 x.AddRequestClient<UserBalance>(databaseUri);
 				x.AddRequestClient<GetCandlesRequest>(brokerUri);
-                x.AddConsumer<CandleConsumer>();   
+                x.AddRequestClient<GetPortfolioRequest>(databaseUri);
+                x.AddConsumer<CandleConsumer>();
             });
 
             services.AddMassTransitHostedService();
@@ -84,6 +85,7 @@ namespace OperationService
             services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
             services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetUserBalanceCommand>();
             services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateUserBalanceCommand>();
+            services.AddTransient<ICommand<GetPortfolioRequest, List<InstrumentData>>, GetPortfolioCommand>();
 
             services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
 
