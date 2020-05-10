@@ -26,9 +26,9 @@
         result = await UserConfirmer.UserConfirm(secretToken);
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Confirmation(secretToken);
+        await Confirmation(secretToken);
     }
 }
 
