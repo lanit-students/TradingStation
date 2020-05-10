@@ -28,7 +28,9 @@ namespace DataBaseService.Repositories
         {
             if (dbContext.UsersCredentials.Any(userCredential => userCredential.Email == email))
             {
-                throw new BadRequestException("This email is already taken by someone.");
+                var exception = new BadRequestException("This email is already taken by someone.");
+                logger.LogWarning(exception, "CreateUser: This email {1} is already taken by someone.", user.Email);
+                throw exception;
             }
 
             dbContext.Users.Add(mapper.MapToDbUser(user));
@@ -53,11 +55,15 @@ namespace DataBaseService.Repositories
 
             if (dbCredential == null)
             {
-                throw new NotFoundException("User with given email not found");
+                var exception = new NotFoundException("User with given email not found");
+                logger.LogWarning(exception, "GetUserCredential: User with given email {1} not found.", email);
+                throw exception;
             }
             if(!dbCredential.IsActive)
             {
-                throw new ForbiddenException("User wasn't confirm or delete");
+                var exception = new ForbiddenException("User wasn't confirm or delete");
+                logger.LogWarning(exception, "GetUserCredential: User {1} wasn't confirm or delete", email);
+                throw exception;
             }
             return mapper.MapUserCredential(dbCredential);
         }
@@ -94,12 +100,16 @@ namespace DataBaseService.Repositories
 
             if (dbUserCredential is null)
             {
-                throw new NotFoundException("Not found User for delete");
+                var exception = new NotFoundException("Not found User for delete");
+                logger.LogWarning(exception, "DeleteUser: Not found User for delete");
+                throw exception;
             }
 
             if(!dbUserCredential.IsActive)
             {
-                throw new BadRequestException("User was deleted early or not confirmed");
+                var exception = new BadRequestException("User was deleted early or not confirmed");
+                logger.LogWarning(exception, "DeleteUser: User was deleted early or not confirmed");
+                throw exception;
             }
             dbUserCredential.IsActive = false;
             dbContext.SaveChanges();

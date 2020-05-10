@@ -29,7 +29,7 @@ namespace UserService.Controllers
         {
             logger.LogInformation("Create user request received from GUI to UserService");
             return await command.Execute(request);
-        }
+         }
 
         [Route("confirm")]
         [HttpGet]
