@@ -35,6 +35,7 @@
                 }
             </div>
 </div>
+<a style="color: red; display: @(isHidden ? "none" : "block")" class="mb-1"> Can't create bot with empty name</a>
 <button @onclick="Create">Create</button>
 
 
@@ -42,18 +43,33 @@
 
     List<BotData> bots;
     private UserToken userToken;
+    private bool isHidden;
 
     public async void Create()
     {
-        var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
-        var modalResult = await formModal.Result;
-        var name = (string)modalResult.Data;
-        var request = new CreateBotRequest()
+        try
         {
-            Name = name,
-            UserId = userToken.UserId
-        };
-        await BotManager.CreateBot(userToken, request);
+            var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
+            var modalResult = await formModal.Result;
+            var name = (string)modalResult.Data;
+            if (name != "")
+            {
+                var request = new CreateBotRequest()
+                {
+                    Name = name,
+                    UserId = userToken.UserId
+                };
+                await BotManager.CreateBot(userToken, request);
+            }
+            else
+            {
+                isHidden = false;
+            }
+        }
+        catch(InternalServerException)
+        {
+
+        }
     }
 
     public async void Delete(Guid id)
@@ -92,6 +108,7 @@
     {
         userToken = new UserToken();
         bots = new List<BotData>();
+        isHidden = true;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,5 +116,6 @@
         userToken.UserId = await Storage.GetItemAsync<Guid>("id");
         userToken.Body = await Storage.GetItemAsync<string>("token");
         bots = await BotManager.GetBots(userToken);
+        isHidden = true;
     }
 }

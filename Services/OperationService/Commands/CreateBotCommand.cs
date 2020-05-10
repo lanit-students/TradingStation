@@ -34,8 +34,8 @@ namespace OperationService.Commands
 
             if (!createBotResult)
             {
-                var e = new BadRequestException("Unable to create user");
-                logger.LogWarning(e, "BadRequest thrown while trying to create User.");
+                var e = new BadRequestException("Unable to create bot");
+                logger.LogWarning(e, "BadRequest thrown while trying to create Bot.");
                 throw e;
             }
 

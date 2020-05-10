@@ -1,6 +1,5 @@
 ﻿using DTO;
 using DTO.BrokerRequests;
-using DTO.RestRequests;
 using Interfaces;
 using Kernel;
 using MassTransit;

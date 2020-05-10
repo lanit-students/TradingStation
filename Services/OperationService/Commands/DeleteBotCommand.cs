@@ -27,14 +27,14 @@ namespace OperationService.Commands
 
         public async Task<bool> Execute(DeleteBotRequest request)
         {
-            var deleteUserResult = await DeleteBot(request);
+            var deleteBotResult = await DeleteBot(request);
 
-            if (!deleteUserResult)
+            if (!deleteBotResult)
             {
                 throw new BadRequestException("Unable to delete bot");
             }
 
-            return deleteUserResult;
+            return deleteBotResult;
         }
     }
 }

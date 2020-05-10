@@ -4,7 +4,6 @@ using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
-using DTO.RestRequests;
 using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
