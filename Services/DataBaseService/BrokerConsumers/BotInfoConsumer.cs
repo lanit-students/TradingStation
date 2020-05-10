@@ -20,7 +20,6 @@ namespace DataBaseService.BrokerConsumers
 
         private List<BotInfoResponse> BotInfo(InternalGetBotsRequest request)
         {
-
             return botRepository.GetBots(request);
         }
 

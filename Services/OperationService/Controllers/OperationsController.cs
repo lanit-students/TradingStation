@@ -143,7 +143,7 @@ namespace OperationService.Controllers
         [HttpGet]
         public async Task<List<BotInfoResponse>> GetBot([FromServices] ICommand<Guid, List<BotInfoResponse>> command, [FromHeader] Guid userId)
         {
-            logger.LogInformation("Get bots request received from GUI to UserService");
+            logger.LogInformation("Get bots request received from GUI to OperationService");
             var result = await command.Execute(userId);
             return result;
         }
