@@ -20,7 +20,7 @@ namespace DataBaseService.Repositories
         private readonly ILogger<TradeRepository> logger;
 
         public TradeRepository(
-            ITradeMapper mapper, TPlatformDbContext dbContext, 
+            ITradeMapper mapper, TPlatformDbContext dbContext,
             [FromServices] ILogger<TradeRepository> logger
             )
         {
@@ -76,7 +76,7 @@ namespace DataBaseService.Repositories
         {
             var dbPortfolio = dbContext.Portfolios.FirstOrDefault(
                 p => p.Figi == transaction.Figi && p.UserId == transaction.UserId);
-            
+
             if(dbPortfolio == null && transaction.Operation == OperationType.Buy)
             {
                 dbPortfolio = new DbPortfolio()
@@ -93,8 +93,8 @@ namespace DataBaseService.Repositories
             else if (transaction.Operation == OperationType.Sell && dbPortfolio.Count < transaction.Count)
             {
                 var exception = new BadRequestException("Not enough instrument count to sell");
-                logger.LogWarning(exception, 
-                    $"User {transaction.UserId} asked to sell more instruments {transaction.Figi} than he has");
+                logger.LogWarning(exception,
+                    $"{Guid.NewGuid()}_User {transaction.UserId} asked to sell more instruments {transaction.Figi} than he has");
                 throw exception;
             }
             else
@@ -119,7 +119,7 @@ namespace DataBaseService.Repositories
             catch
             {
                 var exception = new BadRequestException("Transaction saving failed");
-                logger.LogWarning(exception, $"Couldn't save transaction of user {transaction.UserId}");
+                logger.LogWarning(exception, $"{Guid.NewGuid()}_Couldn't save transaction of user {transaction.UserId}");
                 throw exception;
             }
         }
@@ -128,7 +128,7 @@ namespace DataBaseService.Repositories
         {
             var instrument = dbContext.Portfolios.FirstOrDefault(
                 instrument => instrument.UserId == request.UserId && instrument.Figi == request.Figi);
-            
+
             if (instrument == null)
                 return new Instrument();
             return new Instrument()
@@ -142,7 +142,7 @@ namespace DataBaseService.Repositories
         {
             var dbUserBalance = dbContext.UserBalances.FirstOrDefault(
                 user => user.UserId == request.UserId);
-            
+
             if (dbUserBalance == null)
             {
                 dbUserBalance = RegisterUserBalance(request.UserId);
@@ -154,10 +154,10 @@ namespace DataBaseService.Repositories
         {
             var dbUserBalance = dbContext.UserBalances.FirstOrDefault(
                 user => user.UserId == userBalance.UserId);
-            
+
             if (dbUserBalance == null)
                 dbUserBalance = RegisterUserBalance(userBalance.UserId);
-            
+
             dbUserBalance.BalanceInRub = userBalance.BalanceInRub;
             dbUserBalance.BalanceInUsd = userBalance.BalanceInUsd;
             dbUserBalance.BalanceInEur = userBalance.BalanceInEur;

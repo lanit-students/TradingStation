@@ -61,9 +61,22 @@ namespace OperationService.Commands
                 Token = request.Token,
                 Transaction = transaction
             };
-            transaction = await Trade(tradeRequest);
-            var saveTransactionResult = await SaveTransaction(transaction);
-            logger.LogInformation($"Transaction of user {request.UserId} finished successfully");  
+
+            try
+            {
+                transaction = await Trade(tradeRequest);
+                await SaveTransaction(transaction);
+            }
+            catch (BadRequestException e)
+            {
+                var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
+
+                var ex = new BadRequestException(errorData.Item3);
+                logger.LogWarning(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
+                throw ex;
+            }
+
+            logger.LogInformation($"Transaction of user {request.UserId} finished successfully");
             return transaction.IsSuccess;
         }
     }
