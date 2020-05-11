@@ -2,9 +2,11 @@
 using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Kernel;
+using Kernel.CustomExceptions;
 using Kernel.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GUI.Scripts
@@ -53,6 +55,28 @@ namespace GUI.Scripts
             var client = new RestClient<object, Instrument>(url, RestRequestType.GET, queryParams: queryParams);
 
             return await client.ExecuteAsync();
+        }
+
+        public static async Task<List<InstrumentData>> GetPortfolio(UserToken userToken, string tinkoffToken)
+        {
+            const string url = "https://localhost:5009/operations/getportfolio";
+
+            var client = new RestClient<object, List<InstrumentData>>(url, RestRequestType.GET, userToken);
+
+            var portfolio = await client.ExecuteAsync();
+
+            var bonds = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Bond);
+            var stocks = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Stock);
+            var currencies = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Currency);
+
+            var instrumetns = bonds.Concat(stocks).Concat(currencies);
+
+            foreach (var instrumentData in portfolio)
+            {
+                instrumentData.Name = instrumetns.FirstOrDefault(i => i.Figi == instrumentData.Figi).Name ?? throw new NotFoundException();
+            }
+
+            return portfolio;
         }
 
         public static async Task<UserBalance> GetUserBalance(Guid userId)

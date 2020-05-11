@@ -34,7 +34,7 @@ namespace TinkoffIntegrationLib
                 throw new BadRequestException();
             }
         }
-        
+
         public int Depth { get; set; }
 
         public IEnumerable<Instrument> GetInstruments(InstrumentType type)
@@ -87,7 +87,7 @@ namespace TinkoffIntegrationLib
                 throw new BadRequestException("Transaction wasn't complete");
             }
         }
-        
+
         public IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
         {
             sendCandle = SendCandle;

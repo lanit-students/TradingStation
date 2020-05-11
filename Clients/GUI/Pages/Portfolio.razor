@@ -1,0 +1,101 @@
+﻿@page "/portfolio"
+@inject NavigationManager Navigation
+@inject ISessionStorageService Storage
+@attribute [Authorize]
+
+    <div class="container">
+        <div class="row">
+            @if (areInstrumentsLoading)
+            {
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            }
+            else if (!errorOccured)
+            {
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Figi</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Provider</th>
+                            <th scope="col">Count</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (InstrumentData instrument in portfolio.Skip(pageIndex * 20).Take(20))
+                        {
+                            <tr>
+                                <td>@instrument.Figi</td>
+                                <td>@instrument.Name</td>
+                                <td>@instrument.Broker</td>
+                                <td>@instrument.Count</td>
+                                <td>0</td>
+                                <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(new Instrument()))">Open instrument</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
+                <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
+            }
+            else
+            {
+                <h3 class="m-lg-5">@errorMessage</h3>
+            }
+        </div>
+    </div>
+
+@code {
+    private UserToken userToken;
+    private List<InstrumentData> portfolio;
+    private string token;
+    private bool areInstrumentsLoading;
+    private bool errorOccured;
+    private string errorMessage;
+    private int pageIndex;
+
+    private void PreviousPage()
+    {
+        --pageIndex;
+        StateHasChanged();
+    }
+
+    private bool prevDisabled =>
+            pageIndex == 0;
+
+    private void NextPage()
+    {
+        ++pageIndex;
+        StateHasChanged();
+    }
+
+    private bool nextDisabled =>
+            (pageIndex + 1) * 20 > portfolio.Count();
+
+    private void OpenInstrument(Instrument instrument)
+    {
+        Storage.SetItemAsync("instrument", instrument);
+        Navigation.NavigateTo("/instrumentInfo");
+    }
+
+    protected override void OnInitialized()
+    {
+        userToken = new UserToken();
+        portfolio = new List<InstrumentData>();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+            userToken.Body = await Storage.GetItemAsync<string>("token");
+            token = "";
+            portfolio = await BrokerManager.GetPortfolio(userToken, token);
+            StateHasChanged();
+        }
+    }
+}
