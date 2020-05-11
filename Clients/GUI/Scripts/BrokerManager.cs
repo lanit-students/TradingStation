@@ -73,7 +73,14 @@ namespace GUI.Scripts
 
             foreach (var instrumentData in portfolio)
             {
-                instrumentData.Name = instrumetns.FirstOrDefault(i => i.Figi == instrumentData.Figi).Name ?? throw new NotFoundException();
+                var i = instrumetns.FirstOrDefault(i => i.Figi == instrumentData.Figi);
+
+                if (i == null)
+                {
+                    continue;
+                }
+
+                instrumentData.Name = i.Name;
             }
 
             return portfolio;
