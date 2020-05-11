@@ -14,6 +14,7 @@
                     <label class="input-group-text">Instrument</label>
                 </div>
                 <select @onchange="@UpdateInstruments" class="custom-select">
+                    <option value="" selected="selected" hidden="hidden">@curInstrument</option>
                     @foreach (var instrument in instrumentOptions)
                     {
                         <option value=@instrument>@instrument</option>
@@ -23,7 +24,8 @@
                     <label class="input-group-text">Page size</label>
                 </div>
                 <select @onchange="@UpdatePageSize" class="custom-select">
-                    <option value=10>10</option>
+                    <option value=5>5</option>
+                    <option selected="selected" value=10>10</option>
                     <option value=20>20</option>
                     <option value=50>50</option>
                 </select>
@@ -70,20 +72,33 @@
             </table>
             <nav aria-label="Page navigation example">
                 <ul class="pagination align-content-center">
-                    <input type="@(prevDisabled ? "hidden" : "button")"
-                           class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
-                    
-                    <input class="btn btn-active btn-sm col-1" disabled="true" value="@pagesToShow[0]"/>
-                    <input class="btn btn-light btn-sm col-1" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
-                    <input class="btn btn-light btn-sm col-1" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+                    <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
+                           class="btn btn-primary" @onclick="@PreviousPage" />
 
-                    <input class="btn btn-light btn-sm col-2" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
+                    <input class="btn btn-outline-primary " value="@pageIndex" />
 
-                    <input class=" btn btn-light btn-sm col-1" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
-                    
-                    <input type=" @(nextDisabled ? "hidden" : "button" )"
-                           class="btn btn-primary m-1 mr-3" value="Next" @onclick="@NextPage" />
+                    @if (pageIndex < lastPageIndex)
+                    {
+                        <input class="btn btn-light btn-sm col-1" type=" @(nextDisabled ? "hidden" : "button" )"
+                               readonly="readonly" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
 
+                        @if (pageIndex + 1 < lastPageIndex)
+                        {
+                            <input class="btn btn-light btn-sm col-1" readonly="readonly" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+
+                            @if (pageIndex + 2 < lastPageIndex)
+                            {
+                                <input class="btn btn-light btn-sm col-2" readonly="readonly" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
+
+                                <input class=" btn btn-light btn-sm col-1" readonly="readonly" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
+                            }
+                        }
+                        <input type="button" readonly="readonly"
+                               class="btn btn-secondary" value="Go to " @onclick="@(() => MoveTo(pageToMove))" />
+                        <input type="number" class="text-right" @bind-value="@pageToMove" />
+
+
+                    }
                 </ul>
             </nav>
         }
@@ -101,13 +116,13 @@
     private bool areInstrumentsLoading;
     private bool errorOccured;
     private string errorMessage;
-
+    private string curInstrument;
+    private int pageToMove = 0;
     private int pageIndex;
-    private int nextPage;
-    private int nextNextPageIndex;
     private int[] pagesToShow;
     private int lastPageIndex;
     private int pageSize = 10;
+    private const int CIndexesToShow = 3;
     private string token = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
 
     private void UpdatePageSize(ChangeEventArgs e)
@@ -120,6 +135,10 @@
 
         lastPageIndex = marketInstruments.Count() / pageSize;
 
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] = pageIndex + i;
+        }
 
         StateHasChanged();
     }
@@ -142,8 +161,7 @@
 
             lastPageIndex = marketInstruments.Count() / pageSize;
 
-            pagesToShow = new int[100];
-            for (int i = 0; i <= lastPageIndex; i++)
+            for (int i = 0; i < CIndexesToShow; i++)
             {
                 pagesToShow[i] = i;
             }
@@ -161,7 +179,7 @@
     private void PreviousPage()
     {
         --pageIndex;
-        for (int i = 0; i <= lastPageIndex; i++)
+        for (int i = 0; i < CIndexesToShow; i++)
         {
             pagesToShow[i] -= 1;
         }
@@ -171,7 +189,7 @@
     private void MoveTo(int page)
     {
         pageIndex = page;
-        for (int i = 0; i <= lastPageIndex; i++)
+        for (int i = 0; i < CIndexesToShow; i++)
         {
             pagesToShow[i] = page + i;
         }
@@ -184,7 +202,7 @@
     private void NextPage()
     {
         ++pageIndex;
-        for (int i = 0; i <= lastPageIndex; i++)
+        for (int i = 0; i < CIndexesToShow; i++)
         {
             pagesToShow[i] += 1;
         }
@@ -192,7 +210,7 @@
     }
 
     private bool nextDisabled =>
-            (pageIndex + 1) * pageSize > marketInstruments.Count();
+            pageIndex < lastPageIndex;
 
     protected override async Task OnInitializedAsync()
     {
@@ -201,7 +219,7 @@
         marketInstruments = new List<Instrument>();
 
         instrumentOptions = new List<string>()
-{
+        {
             "Bond",
             "Currency",
             "Stock"
@@ -211,7 +229,18 @@
 
         try
         {
-            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Bond);
+            var instrument = await Storage.GetItemAsync<Instrument>("instrument");
+            InstrumentType typeToGet;
+            if (instrument == null)
+            {
+                typeToGet = InstrumentType.Bond;
+            }
+            else
+            {
+                typeToGet = instrument.Type;
+            }
+            curInstrument = typeToGet.ToString();
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, typeToGet);
 
             marketInstruments = result;
 
@@ -220,8 +249,8 @@
             pageIndex = 0;
             lastPageIndex = marketInstruments.Count() / pageSize;
 
-            pagesToShow = new int[100];
-            for (int i = 0; i <= lastPageIndex; i++)
+            pagesToShow = new int[CIndexesToShow];
+            for (int i = 0; i < CIndexesToShow; i++)
             {
                 pagesToShow[i] = i;
             }
