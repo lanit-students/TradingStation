@@ -74,7 +74,7 @@ namespace OperationService
                 x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
                 x.AddRequestClient<UserBalance>(databaseUri);
 				x.AddRequestClient<GetCandlesRequest>(brokerUri);
-                x.AddConsumer<CandleConsumer>();   
+                x.AddConsumer<CandleConsumer>();
             });
 
             services.AddMassTransitHostedService();

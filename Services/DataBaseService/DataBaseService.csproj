@@ -13,6 +13,9 @@
     <None Remove="Database\Migrations\Scripts\04.2020\0008_AlterTableTransaction.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0009_CreatePortfoliosTable.sql" />
     <None Remove="Database\Migrations\Scripts\04.2020\0010_CreateBalanceUsersTable.sql" />
+    <None Remove="Database\Migrations\Scripts\05.2020\0001_CreateBotsTable.sql" />
+    <None Remove="Database\Migrations\Scripts\05.2020\0002_CreateBotRulesTable.sql" />
+    <None Remove="Database\Migrations\Scripts\05.2020\0003_CreateUsersCredentialsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +30,9 @@
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0007_CreateTransactionsTable.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0008_AlterTableTransaction.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0010_CreateBalanceUsersTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0001_CreateBotsTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0002_CreateBotRulesTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0003_CreateUsersCredentialsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>

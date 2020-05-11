@@ -1,5 +1,4 @@
-﻿
-namespace DTO.MarketBrokerObjects
+﻿namespace DTO.MarketBrokerObjects
 {
     public enum OperationType
     {
