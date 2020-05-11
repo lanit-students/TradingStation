@@ -241,9 +241,8 @@ namespace DatabaseServiceTests.Repositories
 
             dbUserCredential.IsActive = false;
 
-            var exception = Assert.Throws<BadRequestException>(() => repository.DeleteUser(userId));
+            Assert.Throws<BadRequestException>(() => repository.DeleteUser(userId));
 
-            Assert.AreEqual("User was deleted early or not confirmed", exception.Message);
             // Come back
             dbUserCredential.IsActive = true;
         }
@@ -264,9 +263,7 @@ namespace DatabaseServiceTests.Repositories
             Guid temp = userId;
             userId = Guid.NewGuid();
 
-            var exception = Assert.Throws<NotFoundException>(() => repository.DeleteUser(userId));
-
-            Assert.AreEqual("Not found User for delete", exception.Message);
+            Assert.Throws<NotFoundException>(() => repository.DeleteUser(userId));
             // Come back
             userId = temp;
         }

@@ -16,7 +16,7 @@ namespace GUI.ViewModels
 
         [Required(ErrorMessage = "Surname is required")]
         [StringLength(32, ErrorMessage = "Surname is too long.")]
-        [NameValidation("surname")]
+        [NameValidation("Surname")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Date of birth is required")]
@@ -30,7 +30,7 @@ namespace GUI.ViewModels
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
 
-        [Compare(nameof(Password))]
+        [CompareProperty(nameof(Password), ErrorMessage = "Password mismatch")]
         public string ConfirmPassword { get; set; }
         public byte[] Avatar { get; set; }
         public string AvatarExtension { get; set; }

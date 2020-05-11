@@ -8,20 +8,19 @@ namespace Kernel
         public static T HandleResponse<T>(OperationResult<T> response)
         {
             var statusCode = response.StatusCode;
-            var message = response.ErrorMessage;
 
             if (statusCode != 200)
             {
                 switch (statusCode)
                 {
                     case 400:
-                        throw new BadRequestException(message);
+                        throw new BadRequestException(response.ErrorMessage);
                     case 403:
-                        throw new ForbiddenException(message);
+                        throw new ForbiddenException(response.ErrorMessage);
                     case 404:
-                        throw new NotFoundException(message);
+                        throw new NotFoundException(response.ErrorMessage);
                     default:
-                        throw new InternalServerException(message);
+                        throw new InternalServerException(response.ErrorMessage);
                 }
             }
 

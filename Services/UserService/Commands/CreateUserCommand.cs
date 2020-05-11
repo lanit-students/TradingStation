@@ -22,7 +22,6 @@ namespace UserService.Commands
         private readonly ILogger<CreateUserCommand> logger;
         private readonly IEmailSender emailSender;
 
-
         public CreateUserCommand(
             [FromServices] IRequestClient<InternalCreateUserRequest> client,
             [FromServices] IValidator<CreateUserRequest> validator,
@@ -86,18 +85,20 @@ namespace UserService.Commands
                 UserAvatar = userAvatar
             };
 
-            var createUserResult = await CreateUser(internalCreateUserRequest);
-
-            if (!createUserResult)
+            try
             {
-                var e = new BadRequestException("Unable to create user");
-                logger.LogWarning(e, "BadRequest thrown while trying to create User.");
-                throw e;
+                var createUserResult = await CreateUser(internalCreateUserRequest);
+                emailSender.SendEmail(request.Email, secretTokenEngine);
+
+                return createUserResult;
             }
-
-            emailSender.SendEmail(request.Email,secretTokenEngine);
-
-            return createUserResult;
+            catch (BadRequestException e)
+            {
+                var errorData = ErrorMessageFormatter.GetMessageData(e.Message);
+                var ex = new BadRequestException(errorData.Item3);
+                logger.LogWarning(ex, $"{Guid.NewGuid()}_{errorData.Item1}_{errorData.Item3}");
+                throw ex;
+            }
         }
     }
 }
