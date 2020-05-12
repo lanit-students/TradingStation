@@ -38,13 +38,13 @@ namespace DataBaseService.Repositories
             {
                 dbContext.Bots.Remove(dbContext.Bots.FirstOrDefault(bot => bot.Id == Id));
                 dbContext.SaveChanges();
-            } 
+            }
             catch
             {
                 var e = new NotFoundException("Not found bot to delete");
                 logger.LogWarning(e, $"{e.Message}, botId: {Id}");
                 throw e;
-            }        
+            }
             // TODO: remove records from bot rules table also (task for one who implements rules)
         }
 
@@ -68,6 +68,7 @@ namespace DataBaseService.Repositories
             try
             {
                 dbContext.Bots.FirstOrDefault(bot => bot.Id == Id).IsRunning = false;
+                dbContext.SaveChanges();
             }
             catch
             {
@@ -78,13 +79,13 @@ namespace DataBaseService.Repositories
         }
 
         public List<BotData> GetBots(InternalGetBotsRequest request)
-        {            
+        {
             var dbbots = dbContext.Bots.Where(bot => bot.UserId == request.UserId);
 
             if (dbbots == null) return new List<BotData>();
 
             var bots = new List<BotData>();
- 
+
             foreach(var dbbot in dbbots)
             {
                 bots.Add(mapper.DbBotToBotData(dbbot));
