@@ -30,10 +30,10 @@
                             <tr>
                                 <td>@instrument.Figi</td>
                                 <td>@instrument.Name</td>
-                                <td>@instrument.Broker</td>
+                                <td>@GetBrokerName(instrument.Broker)</td>
                                 <td>@instrument.Count</td>
                                 <td>0</td>
-                                <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(new Instrument()))">Open instrument</button></td>
+                                <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
                             </tr>
                         }
                     </tbody>
@@ -51,7 +51,7 @@
 @code {
     private UserToken userToken;
     private List<InstrumentData> portfolio;
-    private string token;
+    private string tinkoffToken;
     private bool areInstrumentsLoading;
     private bool errorOccured;
     private string errorMessage;
@@ -75,10 +75,24 @@
     private bool nextDisabled =>
             (pageIndex + 1) * 20 > portfolio.Count();
 
-    private void OpenInstrument(Instrument instrument)
+    private void OpenInstrument(InstrumentData instrument)
     {
-        Storage.SetItemAsync("instrument", instrument);
+        Storage.SetItemAsync("instrument", new Instrument() { Figi = instrument.Figi, Name = instrument.Name });
         Navigation.NavigateTo("/instrumentInfo");
+    }
+
+    private string GetBrokerName(BrokerType broker)
+    {
+        return broker switch
+        {
+            BrokerType.TinkoffBroker => "Tinkoff",
+            _ => "Unknown"
+        };
+    }
+
+    private void OnReceivedMessage()
+    {
+
     }
 
     protected override void OnInitialized()
@@ -93,8 +107,14 @@
         {
             userToken.UserId = await Storage.GetItemAsync<Guid>("id");
             userToken.Body = await Storage.GetItemAsync<string>("token");
-            token = "";
-            portfolio = await BrokerManager.GetPortfolio(userToken, token);
+            tinkoffToken = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
+
+            await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
+
+            portfolio = await BrokerManager.GetPortfolio(userToken, tinkoffToken);
+
+            //var list = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, tinkoffToken);
+
             StateHasChanged();
         }
     }

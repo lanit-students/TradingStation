@@ -125,15 +125,6 @@
         }
     }
 
-    private async Task SetToken()
-    {
-        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
-        var modalResult = await formModal.Result;
-        token = (string)modalResult.Data;
-
-        Storage.SetItemAsync("tinkoffToken", token);
-    }
-
     private void PreviousPage()
     {
         --pageIndex;
@@ -173,7 +164,8 @@
 
             if (token == null)
             {
-                await SetToken();
+                token = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
+                await Storage.SetItemAsync("tinkoffToken", "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw");
             }
 
             var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);

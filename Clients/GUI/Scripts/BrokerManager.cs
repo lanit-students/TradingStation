@@ -65,22 +65,20 @@ namespace GUI.Scripts
 
             var portfolio = await client.ExecuteAsync();
 
-            var bonds = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Bond);
-            var stocks = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Stock);
-            var currencies = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Currency);
-
-            var instrumetns = bonds.Concat(stocks).Concat(currencies);
+            var instruments = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Any);
 
             foreach (var instrumentData in portfolio)
             {
-                var i = instrumetns.FirstOrDefault(i => i.Figi == instrumentData.Figi);
-
-                if (i == null)
+                try
                 {
-                    continue;
+                    var instrument = instruments.First(x => x.Figi == instrumentData.Figi);
+                    instrumentData.Name = instrument.Name;
+                }
+                catch
+                {
+                    instrumentData.Name = "Name unavailable";
                 }
 
-                instrumentData.Name = i.Name;
             }
 
             return portfolio;

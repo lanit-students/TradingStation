@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
@@ -35,39 +36,50 @@ namespace TinkoffIntegrationLib
             }
         }
 
-        public int Depth { get; set; }
+        private List<Instrument> ParseInstruments(List<MarketInstrument> marketInstruments, Tinkoff.Trading.OpenApi.Models.InstrumentType type)
+        {
+            var res = new List<Instrument>();
+
+            Parallel.ForEach(marketInstruments,
+                instrument =>
+                {
+                    res.Add(
+                            new TinkoffInstrumentAdapter(
+                                type,
+                                instrument)
+                        );
+                });
+
+            return res;
+        }
 
         public IEnumerable<Instrument> GetInstruments(InstrumentType type)
         {
-            var instruments = new List<Instrument>();
+            if (type == InstrumentType.Any)
+            {
+                var bonds = context.MarketBondsAsync().Result.Instruments;
+                var currencies = context.MarketCurrenciesAsync().Result.Instruments;
+                var stocks = context.MarketStocksAsync().Result.Instruments;
+
+                return
+                    ParseInstruments(bonds, Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond)
+                    .Concat(ParseInstruments(currencies, Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency))
+                    .Concat(ParseInstruments(stocks, Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock));
+            }
 
             var tinkoffInstrumentType =
                 (Tinkoff.Trading.OpenApi.Models.InstrumentType) Enum.Parse(
                     typeof(Tinkoff.Trading.OpenApi.Models.InstrumentType), type.ToString());
 
-            var instrumentsList = tinkoffInstrumentType switch
+            var instruments = tinkoffInstrumentType switch
             {
-                Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond => context.MarketBondsAsync().Result,
-                Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
-                Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock => context.MarketStocksAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond => context.MarketBondsAsync().Result.Instruments,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency => context.MarketCurrenciesAsync().Result.Instruments,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock => context.MarketStocksAsync().Result.Instruments,
                 _ => throw new BadRequestException()
             };
 
-            Parallel.ForEach(instrumentsList.Instruments,
-                instrument =>
-                {
-                    try
-                    {
-                        instruments.Add(
-                            new TinkoffInstrumentAdapter(
-                                tinkoffInstrumentType,
-                                instrument)
-                        );
-                    }
-                    catch (Exception) { }
-                });
-
-            return instruments;
+            return ParseInstruments(instruments, tinkoffInstrumentType);
         }
 
         public Transaction Trade(InternalTradeRequest request)
