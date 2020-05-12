@@ -2,7 +2,7 @@
 
 namespace OperationService.Bots.Utils
 {
-    abstract class Trigger
+    public abstract class Trigger
     {
         public Guid Id { get; set; }
 
