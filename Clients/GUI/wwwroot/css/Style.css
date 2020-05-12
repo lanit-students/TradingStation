@@ -71,6 +71,7 @@ body {
 .lib-panel {
     margin-bottom: 20px;
     padding: 0 20px 0 20px;
+    height: 50vh;
 }
 
     .lib-panel img {
@@ -82,6 +83,7 @@ body {
     .lib-panel .col-md-6 {
         padding: 0;
         background-color: #FFFFFF;
+        height: 100%;
     }
 
     .lib-panel .lib-row {
@@ -94,7 +96,7 @@ body {
             padding: 10px 20px 0 20px;
         }
 
-            .lib-panel .lib-row.lib-header .lib-header-seperator {
+            .lib-panel .lib-row.lib-header .lib-header-separator {
                 height: 2px;
                 width: 26px;
                 background-color: #d9d9d9;
@@ -114,6 +116,10 @@ body {
                 left: 20px;
             }
 
+        .lib-panel .lib-row.lib-desc .lib-footer {
+            bottom: 5px;
+        }
+
 .row-margin-bottom {
     margin-bottom: 20px;
 }
@@ -122,3 +128,33 @@ body {
     -webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,.10);
     box-shadow: 0 0 10px 0 rgba(0,0,0,.10);
 }
+
+.carousel-control-prev {
+    margin-left: -100px;
+}
+
+.carousel-control-next {
+    margin-right: -100px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    height: 50px;
+    width: 50px;
+    outline: black;
+    background-size: 100%, 100%;
+    border-radius: 100%;
+    background-image: none;
+}
+
+    .carousel-control-next-icon:after {
+        content: '>';
+        font-size: 30px;
+        color: darkgrey;
+    }
+
+    .carousel-control-prev-icon:after {
+        content: '<';
+        font-size: 30px;
+        color: darkgrey;
+    }
