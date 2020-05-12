@@ -69,17 +69,10 @@ namespace DataBaseService.Repositories
             if (dbbots == null) return new List<BotData>();
 
             var bots = new List<BotData>();
-
+ 
             foreach(var dbbot in dbbots)
             {
-                var bot = new BotData()
-                {
-                    Id = dbbot.Id,
-                    UserId = dbbot.UserId,
-                    Name = dbbot.Name,
-                    IsRunning = dbbot.IsRunning
-                };
-                bots.Add(bot);
+                bots.Add(mapper.DbBotToBotData(dbbot));
             }
 
             return bots;
