@@ -38,7 +38,7 @@ namespace OperationService.Controllers
                     Type = instrument
                 });
         }
-		
+
         [Route("trade")]
         [HttpPost]
         public async Task <bool> Trade (
