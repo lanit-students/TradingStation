@@ -71,7 +71,7 @@ body {
 .lib-panel {
     margin-bottom: 20px;
     padding: 0 20px 0 20px;
-    height: 35vh;
+    height: 50vh;
 }
 
     .lib-panel img {
@@ -83,6 +83,7 @@ body {
     .lib-panel .col-md-6 {
         padding: 0;
         background-color: #FFFFFF;
+        height: 100%;
     }
 
     .lib-panel .lib-row {
@@ -114,6 +115,10 @@ body {
                 bottom: 10px;
                 left: 20px;
             }
+
+        .lib-panel .lib-row.lib-desc .lib-footer {
+            bottom: 5px;
+        }
 
 .row-margin-bottom {
     margin-bottom: 20px;

@@ -15,36 +15,24 @@
                         {
                             <div class=@($"carousel-item {(i == 0 ? "active" : "")}")>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="lib-panel">
-                                            <div class="row box-shadow">
-                                                <div class="lib-row lib-header">
-                                                    <a href="@newsCategories[j][i].Link">@newsCategories[j][i].Title</a>
-                                                    <div class="lib-header-separator"></div>
-                                                </div>
-                                                <div class="lib-row lib-desc">
-                                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> >@newsCategories[j][i].PubDate</p>
-                                                    <p>@newsCategories[j][i].Description</p>
-                                                    <p>@newsCategories[j][i].Author</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="lib-panel">
-                                            <div class="row box-shadow">
-                                                <div class="lib-row lib-header">
-                                                    <a href="@newsCategories[j][i + 1].Link">@newsCategories[j][i + 1].Title</a>
-                                                    <div class="lib-header-separator"></div>
-                                                </div>
-                                                <div class="lib-row lib-desc">
-                                                    <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> >@newsCategories[j][i + 1].PubDate</p>
-                                                    <p>@newsCategories[j][i + 1].Description</p>
-                                                    <p>@newsCategories[j][i + 1].Author</p>
+                                    @for (var k = 0; k < 3; ++k)
+                                    {
+                                        <div class="col-md-4">
+                                            <div class="lib-panel">
+                                                <div class="row box-shadow">
+                                                    <div class="lib-row lib-header">
+                                                        <a href="@newsCategories[j][i + k].Link">@newsCategories[j][i + k].Title</a>
+                                                        <div class="lib-header-separator"></div>
+                                                    </div>
+                                                    <div class="lib-row lib-desc">
+                                                        <p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> >@newsCategories[j][i + k].PubDate</p>
+                                                        <p>@FormatDescription(newsCategories[j][i + k].Description)</p>
+                                                        <p class="lib-footer">@newsCategories[j][i + k].Author</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         }
@@ -75,14 +63,24 @@
     private string urlMarkets = "https://finance.rambler.ru/rss/markets/";
     private string errorMessage = "";
 
-    public void GetNews()
+    private string FormatDescription(string desc)
+    {
+        if (desc.Length > 200)
+        {
+            desc = desc.Substring(0, 200) + "...";
+        }
+
+        return desc;
+    }
+
+    private void GetNews()
     {
         try
         {
             newsCategoryTitles = new List<string>();
-            newsCategoryTitles.Add("Бизнес");
-            newsCategoryTitles.Add("Экономика");
-            newsCategoryTitles.Add("Рынки");
+            newsCategoryTitles.Add("Business");
+            newsCategoryTitles.Add("Economics");
+            newsCategoryTitles.Add("Markets");
 
             newsCategories = new List<List<NewsItem>>();
             newsCategories.Add(NewsGetter.GetNews(urlBusiness).ToList());
