@@ -34,7 +34,7 @@ namespace DataBaseService.Database.Models
             builder
                 .Property(p => p.IdRule)
                 .HasColumnName("IdRule")
-                .IsRequired();            
+                .IsRequired();
         }
     }
 }

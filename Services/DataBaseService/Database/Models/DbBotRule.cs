@@ -13,7 +13,7 @@ namespace DataBaseService.Database.Models
 
         public int OperationType { get; set; }
 
-        public int TriggerType { get; set; }
+        public int TimeMarker { get; set; }
 
         public int TriggerValue { get; set; }
 
@@ -33,8 +33,8 @@ namespace DataBaseService.Database.Models
                     .HasColumnName("OperationType")
                     .IsRequired();
                 builder
-                    .Property(p => p.TriggerType)
-                    .HasColumnName("TriggerType")
+                    .Property(p => p.TimeMarker)
+                    .HasColumnName("TimeMarker")
                     .IsRequired();
                 builder
                     .Property(p => p.TriggerValue)

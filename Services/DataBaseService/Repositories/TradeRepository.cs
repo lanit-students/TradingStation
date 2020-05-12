@@ -20,7 +20,7 @@ namespace DataBaseService.Repositories
         private readonly ILogger<TradeRepository> logger;
 
         public TradeRepository(
-            ITradeMapper mapper, TPlatformDbContext dbContext, 
+            ITradeMapper mapper, TPlatformDbContext dbContext,
             [FromServices] ILogger<TradeRepository> logger
             )
         {
