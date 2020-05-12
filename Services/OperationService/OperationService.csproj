@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BotLogic\**" />
     <Compile Remove="Utils\**" />
+    <Content Remove="BotLogic\**" />
     <Content Remove="Utils\**" />
+    <EmbeddedResource Remove="BotLogic\**" />
     <EmbeddedResource Remove="Utils\**" />
+    <None Remove="BotLogic\**" />
     <None Remove="Utils\**" />
   </ItemGroup>
 
