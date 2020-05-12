@@ -63,7 +63,7 @@ namespace OperationService.Commands
             };
             transaction = await Trade(tradeRequest);
             var saveTransactionResult = await SaveTransaction(transaction);
-            logger.LogInformation($"Transaction of user {request.UserId} finished successfully");  
+            logger.LogInformation($"Transaction of user {request.UserId} finished successfully");
             return transaction.IsSuccess;
         }
     }
