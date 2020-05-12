@@ -9,15 +9,15 @@ namespace OperationService.Bots.BotRules
     {
         public Guid Id { get; set; }
 
-        private OperationType type { get; set; }
+        private OperationType Type { get; set; }
 
-        private Trigger trigger { get; set; }
+        private Trigger Trigger { get; set; }
 
         public void Execute(List<string> figis)
         {
             foreach (string figi in figis)
             {
-                if (!trigger.Check(figi))
+                if (!Trigger.Check(figi))
                     continue;
             }
         }

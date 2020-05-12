@@ -65,6 +65,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
 
+                    ep.ConfigureConsumer<SaveRuleConsumerConsumer>(serviceProvider);
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -99,8 +100,10 @@ namespace DataBaseService
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ITradeRepository, TradeRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
+            services.AddTransient<IBotRuleRepository, BotRuleRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
             services.AddTransient<ITradeMapper, TradeMapper>();
+            services.AddTransient<IBotRuleMapper, BotRuleMapper>();
             services.AddTransient<ILogMapper, LogMapper>();
 
             services.AddMassTransit(x =>
