@@ -34,7 +34,17 @@ namespace DataBaseService.Repositories
 
         public void DeleteBot(Guid Id)
         {
-            dbContext.Bots.Remove(dbContext.Bots.FirstOrDefault(bot => bot.Id == Id));
+            try
+            {
+                dbContext.Bots.Remove(dbContext.Bots.FirstOrDefault(bot => bot.Id == Id));
+                dbContext.SaveChanges();
+            } 
+            catch
+            {
+                var e = new NotFoundException("Not found bot to delete");
+                logger.LogWarning(e, $"{e.Message}, botId: {Id}");
+                throw e;
+            }        
             // TODO: remove records from bot rules table also (task for one who implements rules)
         }
 
@@ -43,10 +53,13 @@ namespace DataBaseService.Repositories
             try
             {
                 dbContext.Bots.FirstOrDefault(bot => bot.Id == Id).IsRunning = true;
+                dbContext.SaveChanges();
             }
             catch
             {
-                throw new NotFoundException();
+                var e = new NotFoundException("Not found bot to run");
+                logger.LogWarning(e, $"{e.Message}, botId: {Id}");
+                throw e;
             }
         }
 
@@ -58,7 +71,9 @@ namespace DataBaseService.Repositories
             }
             catch
             {
-                throw new NotFoundException();
+                var e = new NotFoundException("Not found bot to disable");
+                logger.LogWarning(e, $"{e.Message}, botId: {Id}");
+                throw e;
             }
         }
 
