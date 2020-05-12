@@ -42,7 +42,9 @@ namespace OperationService.Commands
             }
             catch(Exception)
             {
-                throw new NotFoundException("user didn't found");
+                var e = new NotFoundException("Not found user to get bots");
+                logger.LogWarning(e, $"{e.Message}, userId: {request}");
+                throw e;
             }
         }
     }

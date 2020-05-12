@@ -24,6 +24,8 @@ namespace OperationService.Commands
 
         private async Task<bool> CreateBot(CreateBotRequest request)
         {
+            logger.LogInformation("Response from Database Service CreateBot method received");
+
             var response = await client.GetResponse<OperationResult<bool>>(request);
 
             return OperationResultHandler.HandleResponse(response.Message);
@@ -37,7 +39,9 @@ namespace OperationService.Commands
             }
             catch (Exception)
             {
-                throw new BadRequestException("unable to create bot");
+                var e = new BadRequestException("Unable to create bot");
+                logger.LogWarning(e, $"{e.Message}");
+                throw e;
             }
         }
     }
