@@ -93,43 +93,45 @@
             }
             else
             {
-                <div class="row">
-                    @if (errorMessage.Length != 0)
-                    {
-                        <h4>@errorMessage</h4>
-                    }
-                    else
-                    {
-                        <table id="transactions" class="table">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Figi</th>
-                                <th scope="col">Broker</th>
-                                <th scope="col">Count</th>
-                                <th scope="col">Currency</th>
-                                <th scope="col">Date Time</th>
-                                <th scope="col">Successful</th>
-                                <th scope="col">Operation</th>
-                                <th scope="col">Price</th>
+        <div class="row">
+            @if (errorMessage.Length != 0)
+            {
+                <h4>@errorMessage</h4>
+            }
+            else
+            {
+                <div class="table-responsive mr-5 mb-3">
+                    <table id="transactions" class="table table-bordered table-striped table-hover" width="100%">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Figi</th>
+                            <th scope="col">Broker</th>
+                            <th scope="col">Count</th>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Date Time</th>
+                            <th scope="col">Successful</th>
+                            <th scope="col">Operation</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var transaction in lisTransactions)
+                        {
+                            <tr class="align-items-center">
+                                <td>@transaction.Figi</td>
+                                <td>@BrokerToString(transaction.Broker)</td>
+                                <td>@transaction.Count</td>
+                                <td>@transaction.Currency</td>
+                                <td>@transaction.DateTime</td>
+                                <td>@(transaction.IsSuccess ? "Yes" : "No")</td>
+                                <td>@transaction.Operation</td>
+                                <td>@transaction.Price</td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            @foreach (var transaction in lisTransactions)
-                            {
-                                <tr class="align-items-center">
-                                    <td>@transaction.Figi</td>
-                                    <td>@BrokerToString(transaction.Broker)</td>
-                                    <td>@transaction.Count</td>
-                                    <td>@transaction.Currency</td>
-                                    <td>@transaction.DateTime</td>
-                                    <td>@(transaction.IsSuccess ? "Yes" : "No")</td>
-                                    <td>@transaction.Operation</td>
-                                    <td>@transaction.Price</td>
-                                </tr>
-                            }
+                        }
+                        </tbody>
+                    </table>
+                    </div>
 
-                            </tbody>
-                        </table>
                     }
                 </div>
             }
@@ -359,13 +361,23 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
-        userToken.Body = await Storage.GetItemAsync<string>("token");
-
-        if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
+        if (showUserInfo)
         {
-            await UpdateUserModel();
-            StateHasChanged();
+            userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+            userToken.Body = await Storage.GetItemAsync<string>("token");
+
+            if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
+            {
+                await UpdateUserModel();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            if (!firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("AddTableSort");
+            }
         }
     }
 
@@ -378,10 +390,8 @@
         else
         {
             showUserInfo = false;
-            await JSRuntime.InvokeVoidAsync("AddTableSort");
         }
         StateHasChanged();
-
     }
 
     private string BrokerToString(BrokerType transactionBroker)
