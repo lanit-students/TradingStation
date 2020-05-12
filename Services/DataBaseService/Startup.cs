@@ -64,6 +64,12 @@ namespace DataBaseService
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
+                    
+                    ep.ConfigureConsumer<CreateBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<RunBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<DisableBotConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<BotInfoConsumer>(serviceProvider);
 
                     ep.ConfigureConsumer<SaveRuleConsumerConsumer>(serviceProvider);
                 });
@@ -98,12 +104,15 @@ namespace DataBaseService
             });
 
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ITradeRepository, TradeRepository>();
+			services.AddTransient<ITradeRepository, TradeRepository>();
+            services.AddTransient<IBotRepository, BotRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
             services.AddTransient<IBotRuleRepository, BotRuleRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
             services.AddTransient<ITradeMapper, TradeMapper>();
             services.AddTransient<IBotRuleMapper, BotRuleMapper>();
+            services.AddTransient<IBotMapper, BotMapper>();
+			services.AddTransient<ITradeMapper, TradeMapper>();
             services.AddTransient<ILogMapper, LogMapper>();
 
             services.AddMassTransit(x =>
@@ -111,10 +120,17 @@ namespace DataBaseService
                 x.AddBus(provider => CreateBus(provider));
 
                 x.AddUserConsumers();
-                x.AddConsumer<TransactionConsumer>();
+				x.AddConsumer<TransactionConsumer>();
                 x.AddConsumer<GetInstrumentFromPortfolioConsumer>();
                 x.AddConsumer<GetUserBalanceConsumer>();
                 x.AddConsumer<UpdateUserBalanceConsumer>();
+                x.AddConsumer<AddLogConsumer>();
+				x.AddConsumer<CreateBotConsumer>();
+                x.AddConsumer<DeleteBotConsumer>();
+                x.AddConsumer<RunBotConsumer>();
+                x.AddConsumer<DisableBotConsumer>();
+                x.AddConsumer<BotInfoConsumer>();
+            
                 x.AddConsumer<AddLogConsumer>();
             });
 
