@@ -1,15 +1,5 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": [
-    {
-      "library": "jquery.tablesorter@2.31.3",
-      "destination": "wwwroot/lib/jquery.tablesorter/"
-    }
-  ,
-{
-  "library": "jquery@3.5.1",
-  "destination": "wwwroot/lib/jquery/"
-}
-]
+  "libraries": []
 } 
