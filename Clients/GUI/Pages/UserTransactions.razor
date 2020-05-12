@@ -13,6 +13,7 @@
         <table id="transactions" class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>
+                    <th scope="col">Figi</th>
                     <th scope="col">Broker</th>
                     <th scope="col">Count</th>
                     <th scope="col">Currency</th>
@@ -26,6 +27,7 @@
                 @foreach (var transaction in lisTransactions)
                 {
                     <tr class="align-items-center">
+                        <td>@transaction.Figi</td>
                         <td>@BrokerTostring(transaction.Broker)</td>
                         <td>@transaction.Count</td>
                         <td>@transaction.Currency</td>

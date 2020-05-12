@@ -8,72 +8,83 @@
 }
     <div class="wrapper">
 
-        <div align="center" class="h3" min-width:>
-            <h3><b>User Info</b></h3>
+        <div align="center">
+            <div class="tab-content" id="pills-tabContent-header">
+                <div class="tab-pane fade show active" id="pills-home-header" role="tabpanel" aria-labelledby="pills-info-tab"><h3><b>User Info</b></h3></div>
+                <div class="tab-pane fade" id="pills-transactions-header" role="tabpanel" aria-labelledby="pills-transactions-tab"><h3><b>Transactions</b></h3></div>
+            </div>
         </div>
-        <nav class="navbar navbar-expand-sm" align ="center">
-            <ul class="navbar-nav m-auto text-lg-center" >
-                <li class="nav-item"><a class="nav-link" href="userinfo">Personal Information</a></li>
-                <li class="nav-item"><a class="nav-link" href="/transactions">Transaction History</a></li>
+        <nav class="navbar navbar-expand-sm" align="center">
+            <ul class="navbar-nav m-auto text-lg-center">
+                <li class="nav-item"><a class="nav-link active" id="pills-info-tab" data-toggle="pill" href="#userinfo">Personal Information</a></li>
+                <li class="nav-item"><a class="nav-link" id="pills-transactions-tab" data-toggle="pill" href="#transactions">Transactions</a></li>
             </ul>
         </nav>
-        <div class="row">
-            <div class="form-group col-sm-5" align ="center">
-                <EditForm Model="@user">
-                    <p><img src=@imgSrc style="max-width:200px; max-height:200px;" alt="Avatar"></p>
-                    <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
-                        <br />
-                        <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary col-4">Select Image</label>
-                        <InputFile style="display: none" id="files"  accept=".jpg, .jpeg, .png" @onclick =" ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
-                        <br />
-                        <button class="btn btn-secondary col-4" @onclick="Reset">Reset</button>
-                        <br />
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" >
+                <div class="row">
+                    <div class="form-group col-sm-5" align="center">
+                        <EditForm Model="@user">
+                            <p><img src=@imgSrc style="max-width:200px; max-height:200px;" alt="Avatar"></p>
+                            <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
+                                <br />
+                                <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary col-4">Select Image</label>
+                                <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" @onclick=" ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
+                                <br />
+                                <button class="btn btn-secondary col-4" @onclick="Reset">Reset</button>
+                                <br />
+                            </div>
+                        </EditForm>
                     </div>
-                </EditForm>
+                    <div class=" = col-sm-7">
+                        <EditForm Model="@user">
+                            <DataAnnotationsValidator />
+                            <div class="form-group">
+                                <label for="Name">Name:</label>
+                                <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Surname">Surname:</label>
+                                <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Birthday">Birthday:</label>
+                                <InputDate class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Email">Email:</label>
+                                <InputText class="form-control col-4" disabled="true" @bind-Value="@user.Email" />
+                            </div>
+                            <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+                                <label for="OldPassword">Enter old password: </label>
+                                <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
+                                           disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
+                            </div>
+                            <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+                                <label for="NewPassword">Enter new password: </label>
+                                <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
+                                           disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
+                            </div>
+                            <br />
+                            <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
+                                   class="form-control col-4 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
+                            <br />
+                            <input type="@(IsAvatarBeingChanged || IsPasswordBeingChanged || IsUserInfoBeingChanged ? "button" : "hidden")"
+                                   @onclick="@DiscardAllChanges" class="form-control col-4 button btn-primary" value="Discard all changes" />
+                            <br />
+                            <ValidationSummary />
+                            <h4 style="display:@(ErrorOccured ? "block" : "hidden"); color:red">@ErrorMessage</h4>
+                            <input type="button" @onclick="@EditInfoClickHandler" class="form-control col-4 button btn-primary" value="@(IsEditModeDisabled ? "Edit" : "Save changes")" />
+                        </EditForm>
+                    </div>
+                </div>
             </div>
-        <div class=" = col-sm-7">
-            <EditForm Model="@user">
-                <DataAnnotationsValidator />
-                <div class="form-group">
-                    <label for="Name">Name:</label>
-                    <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
-                </div>
-                <div class="form-group">
-                    <label for="Surname">Surname:</label>
-                    <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
-                </div>
-                <div class="form-group">
-                    <label for="Birthday">Birthday:</label>
-                    <InputDate class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
-                </div>
-                <div class="form-group">
-                    <label for="Email">Email:</label>
-                    <InputText class="form-control col-4" disabled="true" @bind-Value="@user.Email" />
-                </div>
-                <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
-                    <label for="OldPassword">Enter old password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
-                               disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
-                </div>
-                <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
-                    <label for="NewPassword">Enter new password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
-                                disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
-                </div>
-                <br />
-                <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
-                       class="form-control col-4 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
-                <br />
-                <input type="@(IsAvatarBeingChanged || IsPasswordBeingChanged || IsUserInfoBeingChanged ? "button" : "hidden")"
-                       @onclick="@DiscardAllChanges" class="form-control col-4 button btn-primary" value="Discard all changes" />
-                <br />
-                <ValidationSummary />
-                <h4 style="display:@(ErrorOccured ? "block" : "hidden"); color:red">@ErrorMessage</h4>
-                <input type="button" @onclick="@EditInfoClickHandler" class="form-control col-4 button btn-primary" value="@(IsEditModeDisabled ? "Edit" : "Save changes")" />
-            </EditForm>
+            <div class="tab-pane fade">
+
+            </div>
         </div>
+        
     </div>
-        </div>
 
 @code {
 
@@ -164,7 +175,6 @@
         }
     }
 
-
     private void UserInfoChangeHandler()
     {
         IsUserInfoBeingChanged = true;
@@ -234,8 +244,6 @@
         }
     }
 
-    
-
     private string GetDefaultImage()
     {
         var imagePath = System.IO.Directory.GetCurrentDirectory() + CDefaultImagePath;
@@ -264,7 +272,6 @@
         IsUserInfoBeingChanged = false;
         Modal.Show<Modals.EmptyModal>("Changes discarded");
     }
-
 
     protected override void OnInitialized()
     {
