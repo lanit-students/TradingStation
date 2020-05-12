@@ -1,5 +1,6 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO;
+using DTO.BrokerRequests;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -7,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class SaveRuleConsumerConsumer : IConsumer<BotRule>
+    public class SaveBotRuleConsumer : IConsumer<InternalSaveRuleRequest>
     {
         private readonly IBotRuleRepository botRuleRepository;
 
-        public SaveRuleConsumerConsumer([FromServices] IBotRuleRepository botRuleRepository)
+        public SaveBotRuleConsumer([FromServices] IBotRuleRepository botRuleRepository)
         {
             this.botRuleRepository = botRuleRepository;
         }
 
-        private bool SaveRule(BotRule rule)
+        private bool SaveRule(InternalSaveRuleRequest request)
         {
-            botRuleRepository.SaveRuleForBot(rule);
+            botRuleRepository.SaveRuleForBot(request.Rule);
             return true;
         }
 
-        public async Task Consume(ConsumeContext<BotRule> context)
+        public async Task Consume(ConsumeContext<InternalSaveRuleRequest> context)
         {
             var response = OperationResultWrapper.CreateResponse(SaveRule, context.Message);
 
