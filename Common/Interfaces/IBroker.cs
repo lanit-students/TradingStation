@@ -12,6 +12,6 @@ namespace Interfaces
 
         Transaction Trade(InternalTradeRequest request);
 
-        IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle);
+        IEnumerable<Candle> SubscribeOnCandle(string Figi, int interval, Action<Candle> SendCandle);
     }
 }

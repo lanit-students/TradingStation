@@ -1,14 +1,11 @@
 ﻿using DTO;
 using DTO.BrokerRequests;
-using DTO.RestRequests;
 using Kernel;
 using Kernel.CustomExceptions;
 using MassTransit;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 

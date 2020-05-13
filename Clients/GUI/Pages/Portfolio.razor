@@ -7,12 +7,16 @@
         <div class="row">
             @if (areInstrumentsLoading)
             {
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
+                <div class="spinner-container">
+                    <div class="spinner-frame">
+                        <div class="spinner-cover"></div>
+                        <div class="spinner-bar"></div>
+                    </div>
                 </div>
             }
             else if (!errorOccured)
             {
+                <p>Total price: @TotalPortfolioPrice()</p>
                 <table class="table table-bordered">
                     <thead class="thead-light">
                         <tr>
@@ -25,14 +29,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (InstrumentData instrument in portfolio.Skip(pageIndex * 20).Take(20))
+                        @foreach (InstrumentData instrument in searchedPortfolio.Skip(pageIndex * 20).Take(20))
                         {
                             <tr>
                                 <td>@instrument.Figi</td>
                                 <td>@instrument.Name</td>
                                 <td>@GetBrokerName(instrument.Broker)</td>
                                 <td>@instrument.Count</td>
-                                <td>0</td>
+                                <td><p class="text-center">@GetInstrumentPriceField(instrument.Figi)</p></td>
                                 <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
                             </tr>
                         }
@@ -43,7 +47,7 @@
             }
             else
             {
-                <h3 class="m-lg-5">@errorMessage</h3>
+                <h3 class="m-lg-5 text-center">@errorMessage</h3>
             }
         </div>
     </div>
@@ -51,11 +55,13 @@
 @code {
     private UserToken userToken;
     private List<InstrumentData> portfolio;
+    private List<InstrumentData> searchedPortfolio;
     private string tinkoffToken;
-    private bool areInstrumentsLoading;
+    private bool areInstrumentsLoading = true;
     private bool errorOccured;
     private string errorMessage;
     private int pageIndex;
+    private Dictionary<string, (Currency, decimal)> priceTrackers;
 
     private void PreviousPage()
     {
@@ -81,6 +87,39 @@
         Navigation.NavigateTo("/instrumentInfo");
     }
 
+    private string GetInstrumentPriceField(string figi)
+    {
+        try
+        {
+            if (priceTrackers[figi].Item2 == 0)
+            {
+                return "Unavailable";
+            }
+
+            return priceTrackers[figi].Item2.ToString() + " " + priceTrackers[figi].Item1.ToString();
+        }
+        catch
+        {
+            return "Unavailable";
+        }
+    }
+
+    private decimal TotalPortfolioPriceByCurrency(Currency currency)
+    {
+        return priceTrackers.Where(x => x.Value.Item1 == currency).Select(x => x.Value.Item2).Sum();
+    }
+
+    private string TotalPortfolioPrice()
+    {
+        return
+            TotalPortfolioPriceByCurrency(Currency.Rub).ToString() +
+            " Rub. " +
+            TotalPortfolioPriceByCurrency(Currency.Eur).ToString() +
+            " Eur " +
+            TotalPortfolioPriceByCurrency(Currency.Usd).ToString() +
+            " Usd";
+    }
+
     private string GetBrokerName(BrokerType broker)
     {
         return broker switch
@@ -90,32 +129,53 @@
         };
     }
 
-    private void OnReceivedMessage()
+    private void OnReceivedMessage(Candle candle)
     {
+        priceTrackers[candle.Figi] = (priceTrackers[candle.Figi].Item1, candle.Close);
 
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
     {
         userToken = new UserToken();
         portfolio = new List<InstrumentData>();
+        searchedPortfolio = new List<InstrumentData>();
+        priceTrackers = new Dictionary<string, (Currency, decimal)>();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            userToken.UserId = await Storage.GetItemAsync<Guid>("id");
-            userToken.Body = await Storage.GetItemAsync<string>("token");
-            tinkoffToken = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
+            try
+            {
+                areInstrumentsLoading = true;
+                userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+                userToken.Body = await Storage.GetItemAsync<string>("token");
+                tinkoffToken = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
 
-            await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
+                await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
 
-            portfolio = await BrokerManager.GetPortfolio(userToken, tinkoffToken);
+                portfolio = await BrokerManager.GetPortfolio(userToken, tinkoffToken);
+                searchedPortfolio = portfolio;
 
-            //var list = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, tinkoffToken);
+                foreach (var instrument in portfolio)
+                {
+                    priceTrackers[instrument.Figi] = (instrument.Currency, 0);
+                    await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, 30, tinkoffToken);
+                }
 
-            StateHasChanged();
+                areInstrumentsLoading = false;
+
+                StateHasChanged();
+            }
+            catch
+            {
+                areInstrumentsLoading = false;
+                errorOccured = true;
+                errorMessage = "Can't load portfolio, try again later";
+            }
         }
     }
 }

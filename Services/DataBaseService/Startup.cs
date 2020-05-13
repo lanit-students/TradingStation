@@ -20,7 +20,6 @@ using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
 using Kernel.LoggingEngine;
 using Microsoft.Extensions.Logging;
-using DTO.BrokerRequests;
 
 namespace DataBaseService
 {

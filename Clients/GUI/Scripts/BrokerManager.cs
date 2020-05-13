@@ -2,7 +2,6 @@
 using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Kernel;
-using Kernel.CustomExceptions;
 using Kernel.Enums;
 using System;
 using System.Collections.Generic;
@@ -73,12 +72,12 @@ namespace GUI.Scripts
                 {
                     var instrument = instruments.First(x => x.Figi == instrumentData.Figi);
                     instrumentData.Name = instrument.Name;
+                    instrumentData.Currency = instrument.Currency;
                 }
                 catch
                 {
                     instrumentData.Name = "Name unavailable";
                 }
-
             }
 
             return portfolio;

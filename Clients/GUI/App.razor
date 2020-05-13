@@ -1,7 +1,14 @@
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-            <Authorizing> Loading... </Authorizing>
+            <Authorizing>
+                <div class="spinner-container">
+                    <div class="spinner-frame">
+                        <div class="spinner-cover"></div>
+                        <div class="spinner-bar"></div>
+                    </div>
+                </div>
+            </Authorizing>
             <NotAuthorized> You are not signed in.</NotAuthorized>
         </AuthorizeRouteView>
     </Found>

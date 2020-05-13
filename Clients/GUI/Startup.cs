@@ -1,6 +1,5 @@
 using Blazored.Modal;
 using Blazored.SessionStorage;
-using DTO;
 using GUI.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;

@@ -1,7 +1,4 @@
 ﻿using DTO.MarketBrokerObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DTO
 {
@@ -11,9 +8,10 @@ namespace DTO
 
         public string Name { get; set; }
 
+        public Currency Currency { get; set; }
+
         public BrokerType Broker { get; set; }
 
         public int Count { get; set; }
-
     }
 }

@@ -1,5 +1,4 @@
-﻿using DTO.MarketBrokerObjects;
-using System;
+﻿using System;
 
 namespace DTO.RestRequests
 {

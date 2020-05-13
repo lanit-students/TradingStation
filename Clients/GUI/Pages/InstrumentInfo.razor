@@ -142,7 +142,7 @@
 
             try
             {
-                list = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, tinkoffToken);
+                list = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, 15, tinkoffToken);
 
                 if (list.Any())
                 {

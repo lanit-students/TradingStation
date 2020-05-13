@@ -21,8 +21,8 @@ namespace Kernel.LoggingEngine
 
             var uri = new Uri("rabbitmq://localhost/DatabaseService_Logs");
 
-            var endpont = await bus.GetSendEndpoint(uri);
-            await endpont.Send(log);
+            var endpoint = await bus.GetSendEndpoint(uri);
+            await endpoint.Send(log);
         }
 
         public IDisposable BeginScope<TState>(TState state)

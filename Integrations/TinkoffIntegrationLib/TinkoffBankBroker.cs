@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace TinkoffIntegrationLib
 
         private List<Instrument> ParseInstruments(List<MarketInstrument> marketInstruments, Tinkoff.Trading.OpenApi.Models.InstrumentType type)
         {
-            var res = new List<Instrument>();
+            var res = new ConcurrentBag<Instrument>();
 
             Parallel.ForEach(marketInstruments,
                 instrument =>
@@ -50,7 +51,7 @@ namespace TinkoffIntegrationLib
                         );
                 });
 
-            return res;
+            return res.ToList();
         }
 
         public IEnumerable<Instrument> GetInstruments(InstrumentType type)
@@ -100,11 +101,11 @@ namespace TinkoffIntegrationLib
             }
         }
 
-        public IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
+        public IEnumerable<Candle> SubscribeOnCandle(string Figi, int timeInterval, Action<Candle> SendCandle)
         {
             sendCandle = SendCandle;
 
-            var candles = GetCandles(DateTime.Now, Figi);
+            var candles = GetCandles(DateTime.Now, timeInterval, Figi);
 
             if (candles.Candles.Count == 0)
             {
@@ -116,7 +117,7 @@ namespace TinkoffIntegrationLib
                 {
                     days -= 1;
 
-                    candles = GetCandles(lastDate, Figi);
+                    candles = GetCandles(lastDate, timeInterval, Figi);
 
                     lastDate = lastDate.AddDays(-1);
                 }
@@ -136,9 +137,9 @@ namespace TinkoffIntegrationLib
             return candleList;
         }
 
-        private CandleList GetCandles(DateTime date, string Figi)
+        private CandleList GetCandles(DateTime date, int timeInterval, string Figi)
         {
-            return context.MarketCandlesAsync(Figi, date.AddMinutes(-15), date,
+            return context.MarketCandlesAsync(Figi, date.AddMinutes(-timeInterval), date,
                 CandleInterval.Minute).Result;
         }
 
