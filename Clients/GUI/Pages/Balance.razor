@@ -1,0 +1,149 @@
+﻿@page "/balance"
+@inject NavigationManager NavigationManager
+@inject ISessionStorageService Storage
+@inject IModalService Modal
+
+<h3 align="center">Balance</h3>
+<br>
+<div class="container">
+    @if (isPageLoading)
+    {
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    }
+    else if (!errorOccured)
+    {
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th style="width: 50%" scope="col" class="text-center">Currency</th>
+                    <th style="width: 50%" scope="col" class="text-center">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kvp in balanceInCurrencies)
+                {
+                    <tr>
+                        <td class="text-center">@kvp.Key</td>
+                        <td class="text-center">@kvp.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br>
+        <div class="input-group-prepend">
+            <input type="text" class="col-6" readonly="readonly" value="Increase balance in currency ">
+            <select @onchange="@UpdateCurrency" class="custom-select col-6">
+                @foreach (var kvp in balanceInCurrencies)
+                {
+                    <option>@kvp.Key</option>
+                }
+            </select>
+        </div>
+        <br>
+        <div class="input-group-prepend">
+            <input type="text" class="col-4" readonly="readonly" value="Enter value ">
+            <input type="number" class="col-4" @bind-value=@cash>
+            <button class="btn btn-primary col-4" value="Update" @onclick="@UpdateBalance">Update</button>
+        </div>
+        <br>
+    }
+    else
+    {
+        <h3 class="m-lg-5">@errorMessage</h3>
+    }
+
+</div>
+
+@code {
+    private decimal price = 100;
+    private bool errorOccured = false;
+    private string errorMessage = "";
+    private decimal cash = 100;
+    private Currency currency = Currency.Rub;
+    private UserBalance userBalance;
+    private UserBalance oldBalance;
+    private bool isPageLoading = false;
+    private Dictionary<Currency, decimal> balanceInCurrencies;
+
+    private void UpdateCurrency(ChangeEventArgs e)
+    {
+        currency = (Currency)Enum.Parse(typeof(Currency), e.Value.ToString());
+    }
+
+    private void IncreaseBalanceInCorrectCurrency()
+    {
+        switch (currency)
+        {
+            case Currency.Rub:
+                userBalance.BalanceInRub += cash;
+                break;
+            case Currency.Usd:
+                userBalance.BalanceInUsd += cash;
+                break;
+            case Currency.Eur:
+                userBalance.BalanceInEur += cash;
+                break;
+            default:
+                errorMessage = "This currency is disabled to trade";
+                errorOccured = true;
+                break;
+        }
+        cash = 0;
+    }
+
+    private async Task UpdateBalance()
+    {
+        oldBalance = (UserBalance)userBalance.Clone();
+        IncreaseBalanceInCorrectCurrency();
+        var request = new UpdateUserBalanceRequest()
+        {
+            UserId = userBalance.UserId,
+            BalanceInRub = userBalance.BalanceInRub,
+            BalanceInUsd = userBalance.BalanceInUsd,
+            BalanceInEur = userBalance.BalanceInEur
+        };
+        try
+        {
+            var result = await BrokerManager.UpdateUserBalance(request);
+            if (result == true)
+            {
+                balanceInCurrencies[Currency.Rub] = userBalance.BalanceInRub;
+                balanceInCurrencies[Currency.Usd] = userBalance.BalanceInUsd;
+                balanceInCurrencies[Currency.Rub] = userBalance.BalanceInEur;
+            }
+        }
+        catch
+        {
+            userBalance = oldBalance;
+            Modal.Show<EmptyModal>("Can't update balance now, try again later");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorOccured = false;
+        isPageLoading = true;
+
+        try
+        {
+            userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };
+            userBalance = await BrokerManager.GetUserBalance(userBalance.UserId);
+            balanceInCurrencies = new Dictionary<Currency, decimal>()
+            {
+                {Currency.Rub, userBalance.BalanceInRub },
+                {Currency.Usd, userBalance.BalanceInUsd },
+                {Currency.Eur, userBalance.BalanceInEur }
+            };
+            isPageLoading = false;
+        }
+        catch (Exception)
+        {
+            isPageLoading = false;
+            errorMessage = "Can't load balance, try again later";
+            errorOccured = true;
+        }
+    }
+}
+
