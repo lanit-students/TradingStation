@@ -59,10 +59,10 @@
                     @foreach (var instrument in marketInstruments.Skip(pageIndex * pageSize).Take(pageSize))
                     {
                         <tr>
-                            <td>@instrument.Figi</td>
-                            <td>@instrument.Name</td>
-                            <td>@instrument.Currency</td>
-                            <td>@instrument.CountInLot</td>
+                            <td class="align-middle">@instrument.Figi</td>
+                            <td class="align-middle">@instrument.Name</td>
+                            <td class="align-middle">@instrument.Currency</td>
+                            <td class="align-middle">@instrument.CountInLot</td>
                             <td>
                                 <button class=" btn btn-light"
                                         @onclick="@(() => OpenInstrument(instrument))">
@@ -183,6 +183,17 @@
 
             errorMessage = "Can't load instruments, try again later";
         }
+    }
+
+    private void PreviousPage()
+    {
+        --pageIndex;
+        --pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] -= 1;
+        }
+        StateHasChanged();
     }
 
     private void MoveTo(int page)

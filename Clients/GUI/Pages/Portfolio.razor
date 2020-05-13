@@ -37,7 +37,7 @@
                                 <td class="align-middle">@GetBrokerName(instrument.Broker)</td>
                                 <td class="align-middle">@instrument.Count</td>
                                 <td class="align-middle">@GetInstrumentPriceField(instrument.Figi)</td>
-                                <td class="align-middle"><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
+                                <td class="align-middle"><button class=" btn btn-light" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
                             </tr>
                         }
                     </tbody>
