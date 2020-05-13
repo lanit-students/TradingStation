@@ -20,7 +20,13 @@
             <ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="300" Height="150" />
         </div>
     </div>
+    
     <div class="col-md-6">
+        <div class="form-row input-group-prepend">
+            <label class="col-9 text-right">Current balance:  @currentBalance  @currency</label>
+            <input type="button" class="btn-link col-md-3" value="Increase balance" @onclick="GoToBalancePage">
+        </div>
+        <br>
         <h3 align="center">@instrument.Name</h3>
         <br>
         <div class="container">
@@ -32,13 +38,6 @@
             }
             else if (!errorOccured)
             {
-                <div class="form-row input-group-prepend">
-                    <label class="col-3">Current balance </label>
-                    <input type="text" disabled="disabled" class="col-3" @bind-value=@currency>
-                    <input type="number" disabled="disabled" class="col-3" @bind-value=@currentBalance>
-                </div>
-                <br>
-
                 <table class="table table-bordered">
                     <thead class="thead-light">
                         <tr>
@@ -405,6 +404,11 @@
             errorMessage = "Unable to make a deal. Try again later.";
         }
         return result;
+    }
+
+    private void GoToBalancePage()
+    {
+        NavigationManager.NavigateTo("/balance");
     }
 
     protected override async Task OnInitializedAsync()
