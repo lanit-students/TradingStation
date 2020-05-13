@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 
 <div class="header">
-    <nav class="navbar navbar-expand-lg navbar-light">
+     <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand pl-5" href="/">
             <img src="Picture/Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
         </a>
@@ -23,6 +23,13 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/portfolio">Portfolio</a>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bots">Bots</a>
                         </li>
                     </Authorized>
                 </AuthorizeView>
@@ -59,17 +66,17 @@
     </nav>
 </div>
 
+
 @code {
-    private string defaultImgSrc = "Picture/Avatar.svg";
+	private string defaultImgSrc = "Picture/Avatar.svg";
     private string imgSrc = "Picture/Avatar.svg";
 
     private void SignOut()
     {
         Storage.ClearAsync();
-
         AuthenticationProvider.MarkSignedOut();
     }
-
+    
     private async Task LoadImageSrc()
     {
         var userToken = new UserToken
