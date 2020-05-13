@@ -18,6 +18,7 @@ using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
+using DTO.BrokerRequests;
 using Kernel.LoggingEngine;
 using Microsoft.Extensions.Logging;
 
@@ -65,6 +66,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetPortfolioConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<GetTransactionConsumer>(serviceProvider);
 
                     ep.ConfigureConsumer<CreateBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
@@ -122,13 +124,13 @@ namespace DataBaseService
                 x.AddConsumer<UpdateUserBalanceConsumer>();
                 x.AddConsumer<GetPortfolioConsumer>();
                 x.AddConsumer<AddLogConsumer>();
+                x.AddConsumer<GetTransactionConsumer>();
 				x.AddConsumer<CreateBotConsumer>();
                 x.AddConsumer<DeleteBotConsumer>();
                 x.AddConsumer<RunBotConsumer>();
                 x.AddConsumer<DisableBotConsumer>();
                 x.AddConsumer<BotInfoConsumer>();
             
-                x.AddConsumer<AddLogConsumer>();
             });
 
             services.AddMassTransitHostedService();

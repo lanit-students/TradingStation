@@ -172,5 +172,27 @@ namespace DataBaseService.Repositories
 
             logger.LogInformation($"Balance of user {userBalance.UserId} updated");
         }
+
+        public List<Transaction> GetUserTransactions(GetUserTransactions request)
+        {
+            var dbUserTransactions = dbContext.Transactions
+                .Where(transaction => transaction.UserId == request.UserId);
+
+            if (!dbUserTransactions.Any())
+            {
+                var exception = new BadRequestException("No transactions for user");
+                logger.LogWarning(exception, $"No transactions for user {request.UserId}");
+                throw exception;
+            }
+
+            var userTransactions = new List<Transaction>();
+
+            foreach (DbTransaction transaction in dbUserTransactions)
+            {
+                userTransactions.Add(mapper.MapToTransaction(transaction));
+            }
+
+            return userTransactions;
+        }
     }
 }

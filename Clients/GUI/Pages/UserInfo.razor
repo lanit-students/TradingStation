@@ -2,78 +2,142 @@
 @inject NavigationManager NavManager
 @inject IModalService Modal
 @inject ISessionStorageService Storage
+@inject IJSRuntime JSRuntime
 @attribute [Authorize]
 @{
 
 }
-    <div class="wrapper">
-
-        <div align="center" class="h3" min-width:>
-            <h3><b>User Info</b></h3>
-        </div>
-        <nav class="navbar navbar-expand-sm" align ="center">
-            <ul class="navbar-nav m-auto text-lg-center" >
-                <li class="nav-item"><a class="nav-link" href="userinfo">Personal Information</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Transaction History</a></li>
-            </ul>
-        </nav>
-        <div class="row">
-            <div class="form-group col-sm-5" align ="center">
-                <EditForm Model="@user">
-                    <p><img src=@imgSrc style="max-width:200px; max-height:200px;" alt="Avatar"></p>
-                    <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
-                        <br />
-                        <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary col-4">Select Image</label>
-                        <InputFile style="display: none" id="files"  accept=".jpg, .jpeg, .png" @onclick =" ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
-                        <br />
-                        <button class="btn btn-secondary col-4" @onclick="Reset">Reset</button>
-                        <br />
-                    </div>
-                </EditForm>
+<div class="wrapper">
+    <div align="center">
+        <div class="tab-content" id="pills-tabContent-header">
+            <div class="tab-pane fade show active" id="pills-home-header" role="tabpanel" aria-labelledby="pills-info-tab">
+                <h3>
+                        @if (showUserInfo)
+                        {
+                            <b>User Info</b>
+                        }
+                        else
+                        {
+                            <b>Transactions</b>
+                        }
+                </h3>
             </div>
-        <div class=" = col-md-6">
-            <EditForm Model="@user">
-                <DataAnnotationsValidator />
-                <div class="form-group">
-                    <label for="Name">Name:</label>
-                    <InputText class="form-control col-8" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
-                </div>
-                <div class="form-group">
-                    <label for="Surname">Surname:</label>
-                    <InputText class="form-control col-8" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
-                </div>
-                <div class="form-group">
-                    <label for="Birthday">Birthday:</label>
-                    <InputDate class="form-control col-8" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
-                </div>
-                <div class="form-group">
-                    <label for="Email">Email:</label>
-                    <InputText class="form-control col-8" disabled="true" @bind-Value="@user.Email" />
-                </div>
-                <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
-                    <label for="OldPassword">Enter old password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
-                               disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
-                </div>
-                <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
-                    <label for="NewPassword">Enter new password: </label>
-                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
-                                disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
-                </div>
-                <br />
-                <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
-                       class="form-control col-4 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
-                <br />
-                <input type="@(IsAvatarBeingChanged || IsPasswordBeingChanged || IsUserInfoBeingChanged ? "button" : "hidden")"
-                       @onclick="@DiscardAllChanges" class="form-control col-4 button btn-primary" value="Discard all changes" />
-                <br />
-                <ValidationSummary />
-                <h4 style="display:@(ErrorOccured ? "block" : "hidden"); color:red">@ErrorMessage</h4>
-                <input type="button" @onclick="@EditInfoClickHandler" class="form-control col-4 button btn-primary" value="@(IsEditModeDisabled ? "Edit" : "Save changes")" />
-            </EditForm>
         </div>
     </div>
+    <nav class="navbar navbar-expand-sm" align="center">
+        <ul class="navbar-nav m-auto text-lg-center">
+            <li class="nav-item"><a class="nav-link @(showUserInfo? "active" : "") " @onclick="@(()=> SetUserInfoActive(true))" data-toggle="pill" href="#userinfo">Personal Information</a></li>
+            <li class="nav-item"><a class="nav-link @(showUserInfo? "" : "active")" @onclick="@(()=> SetUserInfoActive(false))" data-toggle="pill" href="#transactions">Transactions</a></li>
+        </ul>
+    </nav>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active">
+            @if (showUserInfo)
+            {
+                <div class="row">
+                    <div class="form-group col-sm-5" align="center">
+                        <EditForm Model="@user">
+                            <p><img src=@imgSrc style="max-width: 200px; max-height: 200px;" alt="Avatar"></p>
+                            <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
+                                <br />
+                                <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary col-4">Select Image</label>
+                                <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" @onclick="ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
+                                <br />
+                                <button class="btn btn-secondary col-4" @onclick="Reset">Reset</button>
+                                <br />
+                            </div>
+                        </EditForm>
+                    </div>
+                    <div class=" = col-sm-7">
+                        <EditForm Model="@user">
+                            <DataAnnotationsValidator />
+                            <div class="form-group">
+                                <label for="Name">Name:</label>
+                                <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Surname">Surname:</label>
+                                <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Birthday">Birthday:</label>
+                                <InputDate class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Email">Email:</label>
+                                <InputText class="form-control col-4" disabled="true" @bind-Value="@user.Email" />
+                            </div>
+                            <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+                                <label for="OldPassword">Enter old password: </label>
+                                <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
+                                           disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
+                            </div>
+                            <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+                                <label for="NewPassword">Enter new password: </label>
+                                <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
+                                           disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
+                            </div>
+                            <br />
+                            <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
+                                   class="form-control col-4 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
+                            <br />
+                            <input type="@(IsAvatarBeingChanged || IsPasswordBeingChanged || IsUserInfoBeingChanged ? "button" : "hidden")"
+                                   @onclick="@DiscardAllChanges" class="form-control col-4 button btn-primary" value="Discard all changes" />
+                            <br />
+                            <ValidationSummary />
+                            <h4 style="display: @(ErrorOccured ? "block" : "hidden"); color: red">@ErrorMessage</h4>
+                            <input type="button" @onclick="@EditInfoClickHandler" class="form-control col-4 button btn-primary" value="@(IsEditModeDisabled ? "Edit" : "Save changes")" />
+                        </EditForm>
+                    </div>
+                </div>
+            }
+            else
+            {
+        <div class="row">
+            @if (errorMessage.Length != 0)
+            {
+                <h4>@errorMessage</h4>
+            }
+            else
+            {
+                <div class="table-responsive mr-5 mb-3">
+                    <table id="transactions" class="table table-bordered table-striped table-hover" width="100%">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Figi</th>
+                            <th scope="col">Broker</th>
+                            <th scope="col">Count</th>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Date Time</th>
+                            <th scope="col">Successful</th>
+                            <th scope="col">Operation</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var transaction in lisTransactions)
+                        {
+                            <tr class="align-items-center">
+                                <td>@transaction.Figi</td>
+                                <td>@BrokerToString(transaction.Broker)</td>
+                                <td>@transaction.Count</td>
+                                <td>@transaction.Currency</td>
+                                <td>@transaction.DateTime</td>
+                                <td>@(transaction.IsSuccess ? "Yes" : "No")</td>
+                                <td>@transaction.Operation</td>
+                                <td>@transaction.Price</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                    </div>
+
+                    }
+                </div>
+            }
         </div>
+    </div>
+</div>
 
 @code {
 
@@ -93,6 +157,9 @@
     private string imgSrc = "";
     private const int CMaxSizeOfImageInBytes = 2097152;
     private const string CDefaultImagePath = "\\wwwroot\\images\\withoutAvatar.png";
+    private bool showUserInfo = true;
+    private string errorMessage = "";
+    private IEnumerable<Transaction> lisTransactions = new List<Transaction>();
 
     private async Task EditInfoClickHandler()
     {
@@ -164,7 +231,6 @@
         }
     }
 
-
     private void UserInfoChangeHandler()
     {
         IsUserInfoBeingChanged = true;
@@ -234,8 +300,6 @@
         }
     }
 
-
-
     private string GetDefaultImage()
     {
         var imagePath = System.IO.Directory.GetCurrentDirectory() + CDefaultImagePath;
@@ -265,7 +329,6 @@
         Modal.Show<Modals.EmptyModal>("Changes discarded");
     }
 
-
     protected override void OnInitialized()
     {
         userToken = new UserToken();
@@ -280,15 +343,63 @@
         InputStyleClass = "input-group-text";
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            lisTransactions = await BrokerManager.GetTransactions(await Storage.GetItemAsync<Guid>("id"));
+        }
+        catch (BaseException e)
+        {
+            errorMessage = e.Message;
+        }
+        catch (Exception e)
+        {
+            errorMessage = "The server cannot process your request.";
+        }
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
-        userToken.Body = await Storage.GetItemAsync<string>("token");
-
-        if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
+        if (showUserInfo)
         {
-            await UpdateUserModel();
-            StateHasChanged();
+            userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+            userToken.Body = await Storage.GetItemAsync<string>("token");
+
+            if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
+            {
+                await UpdateUserModel();
+                StateHasChanged();
+            }
         }
+        else
+        {
+            if (!firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("AddTableSort");
+            }
+        }
+    }
+
+    private async void SetUserInfoActive(bool isShow)
+    {
+        if (isShow)
+        {
+            showUserInfo = true;
+        }
+        else
+        {
+            showUserInfo = false;
+        }
+        StateHasChanged();
+    }
+
+    private string BrokerToString(BrokerType transactionBroker)
+    {
+        return transactionBroker switch
+        {
+            BrokerType.TinkoffBroker => "Tinkoff Broker",
+            _ => "Unknown broker"
+        };
     }
 }

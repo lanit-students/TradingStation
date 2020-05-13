@@ -108,7 +108,7 @@
     private LineDataset<TimeTuple<decimal>> tempDataSet;
     private DateTime lastTime;
 
-    private string tinkoffToken = "";
+    private string tinkoffToken = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
     private int countInPortfolio = 1;
     private int lotsToTrade = 1;
     private decimal price = 0;
@@ -126,17 +126,6 @@
     {
         if (firstRender)
         {
-            tinkoffToken = await Storage.GetItemAsync<string>("tinkoffToken");
-
-            if (tinkoffToken == null)
-            {
-                lineConfig.Options.Title.Text = new IndexableOption<string>("Access error");
-
-                await lineChartJs.Update();
-
-                return;
-            }
-
             IEnumerable<Candle> list = null;
 
             try
@@ -429,15 +418,6 @@
         return result;
     }
 
-    private async Task SetToken()
-    {
-        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
-        var modalResult = await formModal.Result;
-        tinkoffToken = (string)modalResult.Data;
-
-        await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
-    }
-
     protected override async Task OnInitializedAsync()
     {
         errorOccured = false;
@@ -446,12 +426,6 @@
 
         try
         {
-            tinkoffToken = await Storage.GetItemAsync<string>("tinkoffToken");
-
-            if (tinkoffToken == null)
-            {
-                await SetToken();
-            }
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
             currency = instrument.Currency;
             userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };
