@@ -147,5 +147,19 @@ namespace OperationService.Controllers
             var result = await command.Execute(userId);
             return result;
         }
+
+        [Route("transactions/get")]
+        [HttpGet]
+        public async Task<IEnumerable<Transaction>> GetTransactions(
+            [FromServices] ICommand<GetUserTransactionsRequest, IEnumerable<Transaction>> command,
+            [FromQuery] Guid userId
+        )
+        {
+            return await command.Execute(
+                new GetUserTransactionsRequest
+                {
+                    UserId = userId
+                });
+        }
     }
 }
