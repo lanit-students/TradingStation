@@ -3,7 +3,6 @@
 @inject ISessionStorageService Storage
 @inject NavigationManager Navigation
 @attribute [Authorize]
-
 <div class="container">
     <div class="row">
         <div class="col-md">
@@ -15,6 +14,7 @@
                     <label class="input-group-text">Instrument</label>
                 </div>
                 <select @onchange="@UpdateInstruments" class="custom-select">
+                    <option value="" selected="selected" hidden="hidden">@curInstrument</option>
                     @foreach (var instrument in instrumentOptions)
                     {
                         <option value=@instrument>@instrument</option>
@@ -24,10 +24,10 @@
                     <label class="input-group-text">Page size</label>
                 </div>
                 <select @onchange="@UpdatePageSize" class="custom-select">
-                    <option value=10>10</option>
+                    <option value=5>5</option>
+                    <option selected="selected" value=10>10</option>
                     <option value=20>20</option>
                     <option value=50>50</option>
-                    <option value=100>100</option>
                 </select>
             </div>
         </div>
@@ -60,22 +60,58 @@
                             <td>@instrument.Name</td>
                             <td>@instrument.Currency</td>
                             <td>@instrument.CountInLot</td>
-                            <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
+                            <td>
+                                <button class=" btn btn-light"
+                                        @onclick="@(() => OpenInstrument(instrument))">
+                                    Open instrument
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
-            <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
+
+                    <div class="btn-group-sm">
+                    <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
+                           class="btn btn-primary" @onclick="@PreviousPage" />
+
+                    <input class="btn btn-outline-primary col-sm-1" value="@pageIndex" />
+
+                    @if (pageIndex < lastPageIndex)
+                    {
+                        <input class="btn btn-light btn-sm col-sm-1" type=" @(nextDisabled ? "hidden" : "button" )"
+                               readonly="readonly" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
+
+                        @if (pageIndex + 1 < lastPageIndex)
+                        {
+                            <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+
+                            @if (pageIndex + 2 < lastPageIndex)
+                            {
+                                <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
+
+                                <input class=" btn btn-light btn-sm col-sm-1" readonly="readonly" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
+                            }
+                        }
+                        <input type=" @(nextDisabled ? "hidden" : "button" )"
+                               class="btn btn-primary" value="Next" @onclick="@NextPage" />
+                    }
+                    <input type="button" readonly="readonly"
+                           class="btn btn-secondary" value="Go to " @onclick="@(() => MoveTo(pageToMove))" />
+                    <input type="number" class="text-right col-sm-2" @bind-value="@pageToMove" />
+                    </div>
+
+            <br>
+            <input type="@(pageToMove <= lastPageIndex && pageToMove >= 0 ? "hidden" : "text")" class="col-4 text-center"
+                   readonly ="readonly" value="Sorry, but you have to go to an existing page">
         }
         else
         {
-            <h3 class="m-lg-5">@errorMessage</h3>
-        }
-    </div>
+            <h3 class=" m-lg-5">
+                    @errorMessage</h3>
+                }
 </div>
-
-
+</div>
 @code {
     private IEnumerable<Instrument> marketInstruments;
     private List<string> instrumentOptions;
@@ -83,10 +119,15 @@
     private bool areInstrumentsLoading;
     private bool errorOccured;
     private string errorMessage;
-
+    private string curInstrument;
+    private int pageToMove = 0;
     private int pageIndex;
+    private int[] pagesToShow;
+    private int lastPageIndex;
     private int pageSize = 10;
-    private string token;
+    private const int CIndexesToShow = 3;
+    private bool pageEnable = true;
+    private string token = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
 
     private void UpdatePageSize(ChangeEventArgs e)
     {
@@ -95,6 +136,14 @@
         pageSize = int.Parse(e.Value.ToString());
 
         pageIndex = oldSize * pageIndex / pageSize;
+        pageToMove = pageIndex;
+
+        lastPageIndex = marketInstruments.Count() / pageSize;
+
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] = pageIndex + i;
+        }
 
         StateHasChanged();
     }
@@ -104,6 +153,7 @@
         try
         {
             pageIndex = 0;
+            pageToMove = 0;
             selectedInstrument = e.Value.ToString();
             areInstrumentsLoading = true;
 
@@ -114,6 +164,13 @@
             areInstrumentsLoading = false;
 
             marketInstruments = result;
+
+            lastPageIndex = marketInstruments.Count() / pageSize;
+
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = i;
+            }
         }
         catch (Exception)
         {
@@ -125,18 +182,28 @@
         }
     }
 
-    private async Task SetToken()
-    {
-        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
-        var modalResult = await formModal.Result;
-        token = (string)modalResult.Data;
-
-        Storage.SetItemAsync("tinkoffToken", token);
-    }
-
     private void PreviousPage()
     {
         --pageIndex;
+        --pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] -= 1;
+        }
+        StateHasChanged();
+    }
+
+    private void MoveTo(int page)
+    {
+        if(page >= 0 && page <= lastPageIndex)
+        {
+            pageIndex = page;
+            pageToMove = page;
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = page + i;
+            }
+        }
         StateHasChanged();
     }
 
@@ -146,11 +213,16 @@
     private void NextPage()
     {
         ++pageIndex;
+        ++pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] += 1;
+        }
         StateHasChanged();
     }
 
     private bool nextDisabled =>
-            (pageIndex + 1) * pageSize > marketInstruments.Count();
+            pageIndex < lastPageIndex;
 
     protected override async Task OnInitializedAsync()
     {
@@ -159,9 +231,9 @@
         marketInstruments = new List<Instrument>();
 
         instrumentOptions = new List<string>()
-{
-            "Currency",
+        {
             "Bond",
+            "Currency",
             "Stock"
         };
 
@@ -169,18 +241,32 @@
 
         try
         {
-            token = await Storage.GetItemAsync<string>("tinkoffToken");
-
-            if (token == null)
+            var instrument = await Storage.GetItemAsync<Instrument>("instrument");
+            InstrumentType typeToGet;
+            if (instrument == null)
             {
-                await SetToken();
+                typeToGet = InstrumentType.Bond;
             }
-
-            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Currency);
+            else
+            {
+                typeToGet = instrument.Type;
+            }
+            curInstrument = typeToGet.ToString();
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, typeToGet);
 
             marketInstruments = result;
 
             areInstrumentsLoading = false;
+
+            pageIndex = 0;
+            lastPageIndex = marketInstruments.Count() / pageSize;
+
+            pagesToShow = new int[CIndexesToShow];
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = i;
+            }
+
         }
         catch (Exception)
         {
@@ -197,3 +283,4 @@
         Navigation.NavigateTo("/instrumentInfo");
     }
 }
+
