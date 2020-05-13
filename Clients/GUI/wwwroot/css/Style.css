@@ -8,12 +8,10 @@
 
 .currencies {
     width: 150px;
-    min-height: 100vh;
     color: #fff;
+    height: 100%;
     background: #f2f2f2;
     padding: 1px;
-    align-items: center;
-    transition: 0.5s width;
 }
 
 .сurrencyBar {

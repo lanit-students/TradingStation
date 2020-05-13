@@ -1,4 +1,5 @@
-﻿<p class="badge-dark" style="margin-bottom:1px">CURRENCY RATE</p>
+﻿<div class="d-none d-sm-block d-sm-none d-md-block">
+<p class="badge-dark" style="margin-bottom:1px">CURRENCY RATE</p>
 @if (Rates != null)
 {
     @foreach (var r in Rates)
@@ -15,7 +16,7 @@
         <span class="sr-only">Loading...</span>
     </div>
 }
-
+</div>
 @code {
     [Parameter]
     public List<string> Codes { get; set; }
