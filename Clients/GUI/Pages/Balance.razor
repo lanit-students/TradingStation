@@ -60,13 +60,11 @@
 </div>
 
 @code {
-    private decimal price = 100;
     private bool errorOccured = false;
     private string errorMessage = "";
     private decimal cash = 100;
     private Currency currency = Currency.Rub;
     private UserBalance userBalance;
-    private UserBalance oldBalance;
     private bool isPageLoading = false;
     private Dictionary<Currency, decimal> balanceInCurrencies;
 
@@ -148,4 +146,3 @@
         }
     }
 }
-

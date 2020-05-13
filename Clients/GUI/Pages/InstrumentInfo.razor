@@ -32,18 +32,10 @@
             }
             else if (!errorOccured)
             {
-                <div>
-                    <div class="form-row input-group-prepend">
-                        <label class="col-3">Current balance </label>
-                        <input type="text" disabled="disabled" class="col-3" @bind-value=@currency>
-                        <input type="number" disabled="disabled" class="col-3" @bind-value=@currentBalance>
-                    </div>
-                    <br>
-                    <div class="form-row input-group-prepend">
-                        <label class="col-3">Update balance</label>
-                        <input type="number" class="col-3" @bind-value=@cash>
-                        <button class="btn btn-primary col-3" value="Update" @onclick="@UpdateBalance">Update</button>
-                    </div>
+                <div class="form-row input-group-prepend">
+                    <label class="col-3">Current balance </label>
+                    <input type="text" disabled="disabled" class="col-3" @bind-value=@currency>
+                    <input type="number" disabled="disabled" class="col-3" @bind-value=@currentBalance>
                 </div>
                 <br>
 
@@ -120,6 +112,7 @@
     private decimal currentBalance = 0;
     private UserBalance userBalance;
     private UserBalance oldBalance;
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
