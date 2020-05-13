@@ -160,6 +160,7 @@ body {
     }
 
 .spinner-container {
+    z-index: 999;
     position: fixed;
     top: 0;
     left: 0;
@@ -224,5 +225,4 @@ body {
                 transform: rotate(360deg);
                 background: #29d;
             }
-        }
 

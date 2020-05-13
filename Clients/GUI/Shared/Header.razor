@@ -68,12 +68,13 @@
 
 
 @code {
-	private string defaultImgSrc = "Picture/Avatar.svg";
+    private string defaultImgSrc = "Picture/Avatar.svg";
     private string imgSrc = "Picture/Avatar.svg";
 
     private void SignOut()
     {
         Storage.ClearAsync();
+        NavigationManager.NavigateTo("/");
         AuthenticationProvider.MarkSignedOut();
     }
 

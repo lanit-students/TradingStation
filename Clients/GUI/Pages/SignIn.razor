@@ -18,8 +18,6 @@
         <input type="submit" class="form-control button btn-primary" value="Sign in" />
     </EditForm>
 
-
-
 @code {
     [CascadingParameter] private Task<AuthenticationState> authState { get; set; }
 
@@ -46,7 +44,7 @@
             Storage.SetItemAsync("token", userToken.Body);
 
             AuthenticationProvider.MarkSignedIn();
-            NavigationManager.NavigateTo("/userinfo");
+            NavigationManager.NavigateTo("/");
         }
         catch (Exception e) when (
                 e is ForbiddenException

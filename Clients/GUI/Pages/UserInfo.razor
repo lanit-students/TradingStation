@@ -31,24 +31,24 @@
                     </div>
                 </EditForm>
             </div>
-        <div class=" = col-sm-7">
+        <div class=" = col-md-6">
             <EditForm Model="@user">
                 <DataAnnotationsValidator />
                 <div class="form-group">
                     <label for="Name">Name:</label>
-                    <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
+                    <InputText class="form-control col-8" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
                 </div>
                 <div class="form-group">
                     <label for="Surname">Surname:</label>
-                    <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
+                    <InputText class="form-control col-8" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
                 </div>
                 <div class="form-group">
                     <label for="Birthday">Birthday:</label>
-                    <InputDate class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
+                    <InputDate class="form-control col-8" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
                 </div>
                 <div class="form-group">
                     <label for="Email">Email:</label>
-                    <InputText class="form-control col-4" disabled="true" @bind-Value="@user.Email" />
+                    <InputText class="form-control col-8" disabled="true" @bind-Value="@user.Email" />
                 </div>
                 <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
                     <label for="OldPassword">Enter old password: </label>
@@ -234,7 +234,7 @@
         }
     }
 
-    
+
 
     private string GetDefaultImage()
     {

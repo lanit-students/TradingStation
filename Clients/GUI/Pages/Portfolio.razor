@@ -17,13 +17,13 @@
             else if (!errorOccured)
             {
                 <p>Total price: @TotalPortfolioPrice()</p>
-                <table class="table table-bordered">
+                <table class="table table-bordered portfolio-table">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col">Figi</th>
                             <th scope="col">Name</th>
                             <th scope="col">Provider</th>
-                            <th scope="col">Count</th>
+                            <th scope="col">Count on hand</th>
                             <th scope="col">Price</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -32,12 +32,12 @@
                         @foreach (InstrumentData instrument in searchedPortfolio.Skip(pageIndex * 20).Take(20))
                         {
                             <tr>
-                                <td>@instrument.Figi</td>
-                                <td>@instrument.Name</td>
-                                <td>@GetBrokerName(instrument.Broker)</td>
-                                <td>@instrument.Count</td>
-                                <td><p class="text-center">@GetInstrumentPriceField(instrument.Figi)</p></td>
-                                <td><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
+                                <td class="align-middle">@instrument.Figi</td>
+                                <td class="align-middle">@instrument.Name</td>
+                                <td class="align-middle">@GetBrokerName(instrument.Broker)</td>
+                                <td class="align-middle">@instrument.Count</td>
+                                <td class="align-middle">@GetInstrumentPriceField(instrument.Figi)</td>
+                                <td class="align-middle"><button class=" btn btn-primary" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
                             </tr>
                         }
                     </tbody>
