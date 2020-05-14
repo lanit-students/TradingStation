@@ -75,6 +75,7 @@ namespace OperationService
                 x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
                 x.AddRequestClient<UserBalance>(databaseUri);
 				x.AddRequestClient<GetCandlesRequest>(brokerUri);
+                x.AddRequestClient<GetUserTransactions>(databaseUri);
                 x.AddConsumer<CandleConsumer>();
 
                 x.AddRequestClient<CreateBotRequest>(databaseUri);
@@ -92,8 +93,7 @@ namespace OperationService
             services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
             services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetUserBalanceCommand>();
             services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateUserBalanceCommand>();
-
-
+            services.AddTransient<ICommand<GetUserTransactionsRequest, IEnumerable<Transaction>>, GetUserTransactionsCommand>();
             services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
 			services.AddTransient<ICommand<CreateBotRequest, bool>, CreateBotCommand>();
 

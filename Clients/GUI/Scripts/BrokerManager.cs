@@ -77,5 +77,19 @@ namespace GUI.Scripts
 
             return await client.ExecuteAsync(request);
         }
+
+        public static async Task<IEnumerable<Transaction>> GetTransactions(Guid userId)
+        {
+            const string url = "https://localhost:5009/operations/transactions/get";
+
+            var queryParams = new Dictionary<string, string>
+            {
+                { "userId", userId.ToString() }
+            };
+
+            var client = new RestClient<object, IEnumerable<Transaction>>(url, RestRequestType.GET, queryParams : queryParams);
+
+            return await client.ExecuteAsync();
+        }
     }
 }
