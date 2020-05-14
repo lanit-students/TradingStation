@@ -1,4 +1,5 @@
-﻿using DTO.MarketBrokerObjects;
+﻿using Automatonymous;
+using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,27 +13,29 @@ namespace OperationService.Bots.BotRules
     {
         private ICommand<TradeRequest, bool> command;
 
-        private Guid Id { get; set; }
+        private Guid id;
 
-        private OperationType Type { get; set; }
+        private OperationType type;
 
-        private Trigger Trigger { get; set; }
+        private Trigger trigger;
 
         public BotRule([FromServices] ICommand<TradeRequest, bool> command)
         {
             this.command = command;
         }
 
-        public void Execute(List<string> figis, TradeRequest request)
+        private void Execute(object sender, string e)
+        {
+            // do sth with figi (e is figi of instrument which got triggered)
+        }
+
+        public void Start(List<string> figis, TradeRequest request)
         {
             foreach (string figi in figis)
             {
-                if (!Trigger.Check(figi))
-                    continue;
-                else
-                {
-                    command.Execute(request);
-                }
+                trigger = new PriceFiveMinutesBeforeTrigger();
+
+                trigger.Triggered += Execute;
             }
         }
     }

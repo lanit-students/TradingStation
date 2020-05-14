@@ -10,6 +10,6 @@ namespace OperationService.Bots.Utils
 
         public int TriggerValue { get; set; }
 
-        public abstract bool Check(string figi);
+        public virtual event EventHandler<string> Triggered;
     }
 }
