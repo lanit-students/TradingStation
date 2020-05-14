@@ -56,6 +56,13 @@ namespace GUI.Scripts
             return await client.ExecuteAsync();
         }
 
+        public static async Task<Instrument> GetInstrument(string figi, string tinkoffToken)
+        {
+            var instruments = await GetInstruments(BrokerType.TinkoffBroker, tinkoffToken, InstrumentType.Any);
+
+            return instruments.FirstOrDefault(x => x.Figi == figi);
+        }
+
         public static async Task<List<InstrumentData>> GetPortfolio(UserToken userToken, string tinkoffToken)
         {
             const string url = "https://localhost:5009/operations/getportfolio";

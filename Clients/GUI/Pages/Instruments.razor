@@ -74,35 +74,35 @@
                 </tbody>
             </table>
 
-                    <div class="btn-group-sm">
-                    <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
-                           class="btn btn-primary" @onclick="@PreviousPage" />
+            <div class="btn-group-sm">
+            <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
+                   class="btn btn-primary" @onclick="@PreviousPage" />
 
-                    <input class="btn btn-outline-primary col-sm-1" value="@pageIndex" />
+            <input class="btn btn-outline-primary col-sm-1" value="@pageIndex" />
 
-                    @if (pageIndex < lastPageIndex)
+            @if (pageIndex < lastPageIndex)
+            {
+                <input class="btn btn-light btn-sm col-sm-1" type=" @(nextDisabled ? "hidden" : "button" )"
+                       readonly="readonly" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
+
+                @if (pageIndex + 1 < lastPageIndex)
+                {
+                    <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+
+                    @if (pageIndex + 2 < lastPageIndex)
                     {
-                        <input class="btn btn-light btn-sm col-sm-1" type=" @(nextDisabled ? "hidden" : "button" )"
-                               readonly="readonly" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
+                        <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
 
-                        @if (pageIndex + 1 < lastPageIndex)
-                        {
-                            <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
-
-                            @if (pageIndex + 2 < lastPageIndex)
-                            {
-                                <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
-
-                                <input class=" btn btn-light btn-sm col-sm-1" readonly="readonly" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
-                            }
-                        }
-                        <input type=" @(nextDisabled ? "hidden" : "button" )"
-                               class="btn btn-primary" value="Next" @onclick="@NextPage" />
+                        <input class=" btn btn-light btn-sm col-sm-1" readonly="readonly" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
                     }
-                    <input type="button" readonly="readonly"
-                           class="btn btn-secondary" value="Go to " @onclick="@(() => MoveTo(pageToMove))" />
-                    <input type="number" class="text-right col-sm-2" @bind-value="@pageToMove" />
-                    </div>
+                }
+                <input type=" @(nextDisabled ? "hidden" : "button" )"
+                       class="btn btn-primary" value="Next" @onclick="@NextPage" />
+            }
+            <input type="button" readonly="readonly"
+                   class="btn btn-secondary" value="Go to " @onclick="@(() => MoveTo(pageToMove))" />
+            <input type="number" class="text-right col-sm-2" @bind-value="@pageToMove" />
+            </div>
 
             <br>
             <input type="@(pageToMove <= lastPageIndex && pageToMove >= 0 ? "hidden" : "text")" class="col-4 text-center"

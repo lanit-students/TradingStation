@@ -134,6 +134,8 @@
 
                 if (list.Any())
                 {
+                    price = list.Last().Close;
+
                     AddCandles(list);
 
                     await UpdateNameInstrument();

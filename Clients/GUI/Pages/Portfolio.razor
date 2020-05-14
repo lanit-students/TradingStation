@@ -5,6 +5,9 @@
 
     <div class="container">
         <div class="row">
+            <div style="margin-bottom:5vh;">
+                <h3>Portfolio</h3>
+            </div>
             @if (areInstrumentsLoading)
             {
                 <div class="spinner-container">
@@ -16,7 +19,19 @@
             }
             else if (!errorOccured)
             {
-                <p>Total price: @TotalPortfolioPrice()</p>
+                <div style="width:100%; margin-bottom:5vh;" class="d-flex">
+                    <div class="flex-fill">
+                        Total portfolio price:
+                    </div>
+                    @foreach (var currency in Enum.GetValues(typeof(Currency)).Cast<Currency>())
+                    {
+                        <div class="flex-fill">
+                            @TotalPortfolioPriceByCurrency(currency)
+                            @currency.ToString().ToUpper()
+                        </div>
+                    }
+                </div>
+                <br />
                 <table class="table table-bordered portfolio-table">
                     <thead class="thead-light">
                         <tr>
@@ -29,7 +44,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (InstrumentData instrument in searchedPortfolio.Skip(pageIndex * 20).Take(20))
+                        @foreach (InstrumentData instrument in searchedPortfolio.Skip(pageIndex * pageSize).Take(pageSize))
                         {
                             <tr>
                                 <td class="align-middle">@instrument.Figi</td>
@@ -42,8 +57,40 @@
                         }
                     </tbody>
                 </table>
-                <input type="@(prevDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-3" value="Previous" @onclick="@PreviousPage" />
-                <input type="@(nextDisabled ? "hidden" : "button")" class="btn btn-primary m-1 ml-auto mr-3" value="Next" @onclick="@NextPage" />
+
+                <div class="btn-group-sm">
+                    <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
+                           class="btn btn-primary" @onclick="@PreviousPage" />
+
+                    <input class="btn btn-outline-primary col-sm-1" value="@pageIndex" />
+
+                    @if (pageIndex < lastPageIndex)
+                    {
+                        <input class="btn btn-light btn-sm col-sm-1" type=" @(nextDisabled ? "hidden" : "button" )"
+                               readonly="readonly" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
+
+                        @if (pageIndex + 1 < lastPageIndex)
+                        {
+                            <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+
+                            @if (pageIndex + 2 < lastPageIndex)
+                            {
+                                <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
+
+                                <input class=" btn btn-light btn-sm col-sm-1" readonly="readonly" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
+                            }
+                        }
+                        <input type=" @(nextDisabled ? "hidden" : "button" )"
+                               class="btn btn-primary" value="Next" @onclick="@NextPage" />
+                    }
+                    <input type="button" readonly="readonly"
+                           class="btn btn-secondary" value="Go to " @onclick="@(() => MoveTo(pageToMove))" />
+                    <input type="number" class="text-right col-sm-2" @bind-value="@pageToMove" />
+                </div>
+
+                <br>
+                <input type="@(pageToMove <= lastPageIndex && pageToMove >= 0 ? "hidden" : "text")" class="col-4 text-center"
+                       readonly="readonly" value="Sorry, but you have to go to an existing page">
             }
             else
             {
@@ -60,12 +107,36 @@
     private bool areInstrumentsLoading = true;
     private bool errorOccured;
     private string errorMessage;
+    private int pageToMove = 0;
     private int pageIndex;
+    private int[] pagesToShow;
+    private int lastPageIndex;
+    private int pageSize = 5;
+    private const int CIndexesToShow = 3;
     private Dictionary<string, (Currency, decimal)> priceTrackers;
 
     private void PreviousPage()
     {
         --pageIndex;
+        --pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] -= 1;
+        }
+        StateHasChanged();
+    }
+
+    private void MoveTo(int page)
+    {
+        if (page >= 0 && page <= lastPageIndex)
+        {
+            pageIndex = page;
+            pageToMove = page;
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = page + i;
+            }
+        }
         StateHasChanged();
     }
 
@@ -75,15 +146,21 @@
     private void NextPage()
     {
         ++pageIndex;
+        ++pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] += 1;
+        }
         StateHasChanged();
     }
 
     private bool nextDisabled =>
-            (pageIndex + 1) * 20 > portfolio.Count();
+            pageIndex < lastPageIndex;
 
-    private void OpenInstrument(InstrumentData instrument)
+    private async Task OpenInstrument(InstrumentData instrument)
     {
-        Storage.SetItemAsync("instrument", new Instrument() { Figi = instrument.Figi, Name = instrument.Name });
+        await Storage.SetItemAsync("instrument",
+            await BrokerManager.GetInstrument(instrument.Figi, tinkoffToken));
         Navigation.NavigateTo("/instrumentInfo");
     }
 
@@ -106,18 +183,17 @@
 
     private decimal TotalPortfolioPriceByCurrency(Currency currency)
     {
-        return priceTrackers.Where(x => x.Value.Item1 == currency).Select(x => x.Value.Item2).Sum();
-    }
+        decimal total = 0;
 
-    private string TotalPortfolioPrice()
-    {
-        return
-            TotalPortfolioPriceByCurrency(Currency.Rub).ToString() +
-            " Rub. " +
-            TotalPortfolioPriceByCurrency(Currency.Eur).ToString() +
-            " Eur " +
-            TotalPortfolioPriceByCurrency(Currency.Usd).ToString() +
-            " Usd";
+        foreach (var instrument in portfolio)
+        {
+            if (instrument.Currency == currency)
+            {
+                total += priceTrackers[instrument.Figi].Item2 * instrument.Count;
+            }
+        }
+
+        return total;
     }
 
     private string GetBrokerName(BrokerType broker)
@@ -167,6 +243,13 @@
                 }
 
                 areInstrumentsLoading = false;
+                lastPageIndex = portfolio.Count / pageSize;
+
+                pagesToShow = new int[CIndexesToShow];
+                for (int i = 0; i < CIndexesToShow; i++)
+                {
+                    pagesToShow[i] = i;
+                }
 
                 StateHasChanged();
             }
