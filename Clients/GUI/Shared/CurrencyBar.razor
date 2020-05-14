@@ -1,15 +1,15 @@
-﻿<div class="card text-center">
+﻿<div class="card text-center mt-5">
+    <div class="card-header">
+        Currency
+    </div>
     <div class="card-body">
-        <h6 class="card-title">CURRENCY RATE</h6>
         <p class="card-text">
             @if (Rates != null)
             {
                 @foreach (var r in Rates)
                 {
-                    <div class="text-center container-fluid" style="white-space:nowrap">
-                        <span class="item i-body">@r.Code</span>
-                        <span class="item i-body">@r.Value</span>
-                    </div>
+                    <a class="text-nowrap">@r.Code - @r.Value</a>
+                    
                 }
             }
             @if (Codes == null || Codes.Count == 0 || ErrorFromServer)
