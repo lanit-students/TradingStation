@@ -7,3 +7,9 @@
         $('#' + id).carousel({ interval: time });
     }
 }
+
+function AddTableSort() {
+    $(document).ready(function () {
+        $('#transactions').DataTable();
+    });
+}
