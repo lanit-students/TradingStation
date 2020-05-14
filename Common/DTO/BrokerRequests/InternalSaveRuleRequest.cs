@@ -5,6 +5,6 @@ namespace DTO.BrokerRequests
 {
     public class InternalSaveRuleRequest
     {
-        public BotRule Rule { get; set; }
+        public BotRuleData Rule { get; set; }
     }
 }

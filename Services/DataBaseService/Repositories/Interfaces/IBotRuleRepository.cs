@@ -5,6 +5,6 @@ namespace DataBaseService.Repositories.Interfaces
 {
     public interface IBotRuleRepository
     {
-        void SaveRuleForBot(BotRule rule);
+        void SaveRuleForBot(BotRuleData rule);
     }
 }

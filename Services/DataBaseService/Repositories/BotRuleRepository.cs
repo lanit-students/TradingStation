@@ -29,7 +29,7 @@ namespace DataBaseService.Repositories
             this.logger = logger;
         }
 
-        public void SaveRuleForBot(BotRule rule)
+        public void SaveRuleForBot(BotRuleData rule)
         {
             try
             {

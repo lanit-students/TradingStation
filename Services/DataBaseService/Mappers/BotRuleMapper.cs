@@ -6,7 +6,7 @@ namespace DataBaseService.Mappers
 {
     public class BotRuleMapper : IBotRuleMapper
     {
-        public DbBotRule MapToDbRule(BotRule rule)
+        public DbBotRule MapToDbRule(BotRuleData rule)
         {
             return new DbBotRule
             {
@@ -17,9 +17,9 @@ namespace DataBaseService.Mappers
             };
         }
 
-        public BotRule MapToRule(DbBotRule dbRule)
+        public BotRuleData MapToRule(DbBotRule dbRule)
         {
-            return new BotRule
+            return new BotRuleData
             {
                 Id = dbRule.Id,
                 OperationType = dbRule.OperationType,
