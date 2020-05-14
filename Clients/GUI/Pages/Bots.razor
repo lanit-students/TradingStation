@@ -6,46 +6,92 @@
 
 
 <div align="center" class="h3" min-width:>
-     <h3><b>Bots</b></h3>
+    <h3><b>Bots</b></h3>
 </div>
-<div class="container">
-            <div class="row row-margin-bottom">
-                @foreach (var bot in bots)
-                {
-                    <div class="col-md-6">
-                        <div class="lib-panel">
-                            <div class="row box-shadow">
-                                <div class="lib-row lib-header">
-                                    <a href="Example">@bot.Name</a>
-                                </div>
-                                <div class="lib-row lib-desc">
-                                    <p>Example</p>
-                                    <p>"Example"</p>
-                                    <p>"Example"</p>
-                                </div>
-                                <div class="lib-row lib-desk">
-                                    <p><button @onclick="() => Run(bot.Id)">Run</button>
-                                    <button @onclick="() => Disable(bot.Id)">Disable</button></p>
-                                    <button @onclick="() => Edit(bot.Id)">Edit rules</button>
-                                    <p><button @onclick="() => Delete(bot.Id)">Delete</button></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-</div>
-<a style="color: red; display: @(isHidden ? "none" : "block")" class="mb-1"> Can't create bot with empty name</a>
-<button @onclick="Create">Create</button>
+@if (isPageLoading)
+{
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+}
+else if (!isErrorOccured)
+{
+    <div class="text-center">
+        <button class="btn-primary" value="Create new bot" @onclick="Create">Create new bot</button>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row row-margin-bottom">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="width: 15%" scope="col">Name</th>
+                        <th style="width: 15%" scope="col">Is active</th>
+                        <th style="width: 45%"scope="col">Rules</th>
+                        <th style="width: 25%"scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bot in bots)
+                    {
+                        <tr>
+                            <td>@bot.Name</td>
+                            <td>@bot.IsRunning</td>
+                            <td>
+                                @if (bot.Rules == null)
+                                {
+                                <label>There no rules yet</label>
+                                }
+                                else
+                                {
+                                    foreach (var rule in bot.Rules)
+                                    {
+                                        <label>@rule.ToString()</label>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-light" @onclick="@(() => RunOrDisable(bot, bot.IsRunning))">
+                                    @(bot.IsRunning ? "Disable" : "Run")</button>
+                                <button class="btn btn-light" @onclick="@(() => Edit(bot.Id))">Edit</button>
+                                <button class="btn btn-light" @onclick="@(() => Delete(bot.Id))">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+          </div>      
+        </div>
+}
+else
+{
+   <h3 class="m-lg-5">@errorMessage</h3>
+}
 
 
 @code {
 
-    List<BotData> bots;
+    [Parameter]
+    public List<BotData> bots { get; set; }
     private UserToken userToken;
-    private bool isHidden;
+    //private bool isHidden;
+    private bool isPageLoading = true;
+    private bool isErrorOccured = false;
+    private string errorMessage = "";
 
-    public async void Create()
+    private void RunOrDisable(BotData bot, bool isRunning)
+    {
+        if (isRunning)
+        {
+            Disable(bot);
+        }
+        else
+        {
+            Run(bot);
+        }
+    }
+
+    private async void Create()
     {
         try
         {
@@ -60,83 +106,87 @@
                     UserId = userToken.UserId
                 };
                 await BotManager.CreateBot(userToken, request);
+                bots = await BotManager.GetBots(userToken);
             }
             else
             {
-                isHidden = false;
+                //isHidden = false;
             }
-        }
-        catch(Exception)
-        {
-
-        }
-    }
-
-    public async void Delete(Guid id)
-    {
-        try
-        {
-            var request = new DeleteBotRequest()
-            {
-                ID = id
-            };
-            await BotManager.DeleteBot(userToken, request);
-        }
-        catch(Exception)
-        {
-
-        }
-    }
-
-    public async void Run(Guid id)
-    {
-        try
-        {
-            var request = new RunBotRequest()
-            {
-                ID = id
-            };
-            await BotManager.RunBot(userToken, request);
         }
         catch (Exception)
         {
-
+            Modal.Show<EmptyModal>("Sorry, we can't create bot now. Try again later");
         }
     }
 
-    public async void Disable(Guid id)
+    private async void Delete(Guid id)
     {
+        var request = new DeleteBotRequest() { ID = id };
         try
         {
-            var request = new DisableBotRequest()
-            {
-                ID = id
-            };
-            await BotManager.DisableBot(userToken, request);
+            await BotManager.DeleteBot(userToken, request);
+            bots = await BotManager.GetBots(userToken);
         }
-        catch(Exception)
+        catch (Exception)
         {
-
+            Modal.Show<EmptyModal>("Sorry, we can't delete bot now. Try again later");
         }
     }
 
-    public void Edit(Guid id)
+    private async void Run(BotData bot)
+    {
+        var request = new RunBotRequest() { ID = bot.Id };
+        try
+        {
+            await BotManager.RunBot(userToken, request);
+            bots = await BotManager.GetBots(userToken);
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't enable bot now. Try again later");
+        }
+    }
+
+    private async void Disable(BotData bot)
+    {
+        var request = new DisableBotRequest() { ID = bot.Id };
+        try
+        {
+            await BotManager.DisableBot(userToken, request);
+            bots = await BotManager.GetBots(userToken);
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't disable bot now. Try again later");
+        }
+    }
+
+    private void OpenBot(BotData bot)
+    {
+
+    }
+
+    private void Edit(Guid id)
     {
         Modal.Show<GUI.Pages.EditBot>();
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        isPageLoading = true;
         userToken = new UserToken();
         bots = new List<BotData>();
-        isHidden = true;
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
-        userToken.Body = await Storage.GetItemAsync<string>("token");
-        bots = await BotManager.GetBots(userToken);
-        isHidden = true;
+        try
+        {
+            userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+            userToken.Body = await Storage.GetItemAsync<string>("token");
+            bots = await BotManager.GetBots(userToken);
+            isPageLoading = false;
+        }
+        catch
+        {
+            isErrorOccured = true;
+            errorMessage = "Sorry, we can't load bots. Try again later";
+        }
     }
 }
