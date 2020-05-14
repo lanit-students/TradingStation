@@ -28,7 +28,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Confirmation(secretToken);
+        try
+        {
+            await Confirmation(secretToken);
+        }
+        catch(Exception)
+        {
+            result=false;
+        }
     }
 }
 
