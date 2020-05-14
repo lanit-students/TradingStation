@@ -25,11 +25,11 @@ namespace UserService.Controllers
         {
             logger.LogInformation("Create user request received from GUI to UserService");
             return await command.Execute(request);
-        }
+         }
 
         [Route("confirm")]
         [HttpGet]
-        public async Task<string> ConfirmUser([FromServices] IConfirmUserCommand command, [FromQuery] Guid secretToken)
+        public async Task<bool> ConfirmUser([FromServices] IConfirmUserCommand command, [FromQuery] Guid secretToken)
         {
             logger.LogInformation("Confirm user request received from Email to UserService");
             return await command.Execute(secretToken);

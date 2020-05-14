@@ -15,6 +15,7 @@
             <ValidationMessage For="() => userInput.Password" />
         </div>
         <a style="color: red; display: @(isHidden ? "none" : "block")" class="mb-1"> Wrong login or password</a>
+        <a style="color: red; display: @(isActive ? "none" : "block")" class="mb-1"> User wasn't confirm or deleted.</a>
         <input type="submit" class="form-control button btn-primary" value="Sign in" />
     </EditForm>
 
@@ -25,6 +26,7 @@
 
     private SignInViewModel userInput;
     bool isHidden = true;
+    bool isActive = true;
 
     private async Task TrySignIn()
     {
@@ -51,8 +53,16 @@
                 || e is NotFoundException
                 || e is InternalServerException)
         {
-            userInput.Password = "";
-            isHidden = false;
+            if (e is ForbiddenException)
+            {
+                userInput.Password = "";
+                isActive = false;
+            }
+            else
+            {
+                userInput.Password = "";
+                isHidden = false;
+            }
         }
     }
 
