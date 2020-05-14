@@ -11,9 +11,9 @@ namespace DataBaseService.Database.Models
     {
         public Guid Id { get; set; }
 
-        public Guid IdBot { get; set; }
+        public Guid BotId { get; set; }
 
-        public Guid IdRule { get; set; }
+        public Guid RuleId { get; set; }
     }
 
     public class DbLinkBotsWithRulesConfiguration : IEntityTypeConfiguration<DbLinkBotsWithRules>
@@ -28,12 +28,12 @@ namespace DataBaseService.Database.Models
                 .HasColumnName("Id")
                 .IsRequired();
             builder
-                .Property(p => p.IdBot)
-                .HasColumnName("IdBot")
+                .Property(p => p.BotId)
+                .HasColumnName("BotId")
                 .IsRequired();
             builder
-                .Property(p => p.IdRule)
-                .HasColumnName("IdRule")
+                .Property(p => p.RuleId)
+                .HasColumnName("RuleId")
                 .IsRequired();
         }
     }

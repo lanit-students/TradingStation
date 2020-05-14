@@ -4,16 +4,10 @@ using System.Text;
 
 namespace DTO
 {
-    public class BotRuleData
+    public class LinkBotWithRule
     {
         public Guid Id { get; set; }
-
         public Guid BotId { get; set; }
-
-        public int OperationType { get; set; }
-
-        public int TimeMarker { get; set; }
-
-        public int TriggerValue { get; set; }
+        public Guid RuleId { get; set; }
     }
 }

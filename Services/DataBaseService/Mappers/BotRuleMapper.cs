@@ -27,5 +27,26 @@ namespace DataBaseService.Mappers
                 TriggerValue = dbRule.TriggerValue
             };
         }
+
+        public DbLinkBotsWithRules MapToDbLink(LinkBotWithRule link)
+        {
+            return new DbLinkBotsWithRules
+            {
+                Id = link.Id,
+                BotId = link.BotId,
+                RuleId = link.RuleId
+            };
+        }
+
+        public LinkBotWithRule MapToLink(DbLinkBotsWithRules dbLink)
+        {
+            return new LinkBotWithRule
+            {
+                Id = dbLink.Id,
+                BotId = dbLink.BotId,
+                RuleId = dbLink.RuleId
+            };
+        }
+
     }
 }

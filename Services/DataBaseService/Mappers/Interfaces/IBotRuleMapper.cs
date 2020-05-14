@@ -8,5 +8,9 @@ namespace DataBaseService.Mappers.Interfaces
         DbBotRule MapToDbRule(BotRuleData rule);
 
         BotRuleData MapToRule(DbBotRule dbRule);
+
+        DbLinkBotsWithRules MapToDbLink(LinkBotWithRule link);
+
+        LinkBotWithRule MapToLink(DbLinkBotsWithRules dbLink);
     }
 }

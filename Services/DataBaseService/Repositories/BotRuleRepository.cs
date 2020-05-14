@@ -33,6 +33,14 @@ namespace DataBaseService.Repositories
         {
             try
             {
+                var link = new LinkBotWithRule
+                {
+                    Id = Guid.NewGuid(),
+                    BotId = rule.BotId,
+                    RuleId = rule.Id
+                };
+
+                dbContext.LinkBotsWithRules.Add(mapper.MapToDbLink(link));
                 dbContext.BotRules.Add(mapper.MapToDbRule(rule));
                 dbContext.SaveChanges();
             }
