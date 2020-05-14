@@ -24,7 +24,7 @@
     <div class="col-md-6">
         <div class="form-row input-group-prepend">
             <label class="col-9 text-right">Current balance:  @currentBalance  @currency</label>
-            <input type="button" class="btn-link col-md-3" value="Increase balance" @onclick="GoToBalancePage">
+            <input type="button" class="btn-l col-md-3" value="Increase balance" @onclick="GoToBalancePage">
         </div>
         <br>
         <h3 align="center">@instrument.Name</h3>
@@ -106,11 +106,9 @@
     private bool isInstrumentLoading = false;
     private Instrument instrument;
     private string errorMessage = "";
-    private decimal cash = 100;
     private Currency currency = Currency.Rub;
     private decimal currentBalance = 0;
     private UserBalance userBalance;
-    private UserBalance oldBalance;
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -260,54 +258,6 @@
             Currency.Usd => userBalance.BalanceInUsd,
             Currency.Eur => userBalance.BalanceInEur
         };
-    }
-
-    private void IncreaseBalanceInCorrectCurrency()
-    {
-        switch (currency)
-        {
-            case Currency.Rub:
-                userBalance.BalanceInRub += cash;
-                break;
-            case Currency.Usd:
-                userBalance.BalanceInUsd += cash;
-                break;
-            case Currency.Eur:
-                userBalance.BalanceInEur += cash;
-                break;
-            default:
-                errorMessage = "This currency is disabled to trade";
-                errorOccured = true;
-                break;
-        }
-        cash = 0;
-    }
-
-    private async Task UpdateBalance()
-    {
-        oldBalance = (UserBalance)userBalance.Clone();
-        IncreaseBalanceInCorrectCurrency();
-        var request = new UpdateUserBalanceRequest()
-        {
-            UserId = userBalance.UserId,
-            BalanceInRub = userBalance.BalanceInRub,
-            BalanceInUsd = userBalance.BalanceInUsd,
-            BalanceInEur = userBalance.BalanceInEur
-        };
-        try
-        {
-            var result = await BrokerManager.UpdateUserBalance(request);
-            if (result == true)
-            {
-                UpdateBalanceVariable();
-            }
-        }
-        catch
-        {
-            userBalance = oldBalance;
-            errorOccured = true;
-            errorMessage = "Can't update balance, try again later.";
-        }
     }
 
     private async Task GetCountFromPortfolio()
