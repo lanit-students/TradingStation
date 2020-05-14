@@ -71,10 +71,8 @@ else
 
 @code {
 
-    [Parameter]
-    public List<BotData> bots { get; set; }
+    public List<BotData> bots;
     private UserToken userToken;
-    //private bool isHidden;
     private bool isPageLoading = true;
     private bool isErrorOccured = false;
     private string errorMessage = "";
@@ -106,11 +104,12 @@ else
                     UserId = userToken.UserId
                 };
                 await BotManager.CreateBot(userToken, request);
-                bots = await BotManager.GetBots(userToken);
+                bots = BotManager.GetBots(userToken).Result;
+                StateHasChanged();
             }
             else
             {
-                //isHidden = false;
+                Modal.Show<EmptyModal>("Sorry, we can't create bot without a name.");
             }
         }
         catch (Exception)
@@ -119,13 +118,14 @@ else
         }
     }
 
-    private async void Delete(Guid id)
+    private void Delete(Guid id)
     {
         var request = new DeleteBotRequest() { ID = id };
         try
         {
-            await BotManager.DeleteBot(userToken, request);
-            bots = await BotManager.GetBots(userToken);
+            BotManager.DeleteBot(userToken, request);
+            bots = BotManager.GetBots(userToken).Result;
+            StateHasChanged();
         }
         catch (Exception)
         {
@@ -139,7 +139,8 @@ else
         try
         {
             await BotManager.RunBot(userToken, request);
-            bots = await BotManager.GetBots(userToken);
+            bots = BotManager.GetBots(userToken).Result;
+            StateHasChanged();
         }
         catch (Exception)
         {
@@ -153,7 +154,8 @@ else
         try
         {
             await BotManager.DisableBot(userToken, request);
-            bots = await BotManager.GetBots(userToken);
+            bots = BotManager.GetBots(userToken).Result;
+            StateHasChanged();
         }
         catch (Exception)
         {
@@ -189,4 +191,22 @@ else
             errorMessage = "Sorry, we can't load bots. Try again later";
         }
     }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (!firstRender)
+    //    {
+    //        try
+    //        {
+    //            bots = await BotManager.GetBots(userToken);
+    //        }
+    //        catch
+    //        {
+    //            isErrorOccured = true;
+    //            errorMessage = "Sorry, we can't load bots. Try again later";
+    //        }
+
+    //    }
+    //}
+
 }
