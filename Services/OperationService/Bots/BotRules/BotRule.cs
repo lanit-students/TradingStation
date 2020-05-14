@@ -31,6 +31,7 @@ namespace OperationService.Bots.BotRules
                     continue;
                 else
                 {
+                    request.Figi = figi;
                     command.Execute(request);
                 }
             }
