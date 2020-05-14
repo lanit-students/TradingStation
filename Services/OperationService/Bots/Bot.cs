@@ -1,4 +1,4 @@
-﻿using DTO;
+﻿using OperationService.Bots.BotRules;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +14,13 @@ namespace OperationService.Bots
 
         public List<BotRule> Rules { get; set; }
 
-        public void Run() { }
+        public void Run(List<string> figis)
+        {
+            foreach (var rule in Rules)
+            {
+                rule.Execute(figis);
+            }
+        }
 
         public void Stop() { }
     }
