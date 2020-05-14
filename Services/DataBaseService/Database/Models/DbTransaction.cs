@@ -21,7 +21,7 @@ namespace DataBaseService.Database.Models
         public DateTime Date { get; set; }
 
         [DataType(DataType.Time)]
-        public DateTime Time { get; set; }
+        public TimeSpan Time { get; set; }
     }
 
     public class DbTransactionConfiguration : IEntityTypeConfiguration<DbTransaction>

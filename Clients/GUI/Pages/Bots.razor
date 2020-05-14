@@ -1,0 +1,142 @@
+﻿@page "/bots"
+@inject NavigationManager NavManager
+@inject IModalService Modal
+@inject ISessionStorageService Storage
+@attribute [Authorize]
+
+
+<div align="center" class="h3" min-width:>
+     <h3><b>Bots</b></h3>
+</div>
+<div class="container">
+            <div class="row row-margin-bottom">
+                @foreach (var bot in bots)
+                {
+                    <div class="col-md-6">
+                        <div class="lib-panel">
+                            <div class="row box-shadow">
+                                <div class="lib-row lib-header">
+                                    <a href="Example">@bot.Name</a>
+                                </div>
+                                <div class="lib-row lib-desc">
+                                    <p>Example</p>
+                                    <p>"Example"</p>
+                                    <p>"Example"</p>
+                                </div>
+                                <div class="lib-row lib-desk">
+                                    <p><button @onclick="() => Run(bot.Id)">Run</button>
+                                    <button @onclick="() => Disable(bot.Id)">Disable</button></p>
+                                    <button @onclick="() => Edit(bot.Id)">Edit rules</button>
+                                    <p><button @onclick="() => Delete(bot.Id)">Delete</button></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+</div>
+<a style="color: red; display: @(isHidden ? "none" : "block")" class="mb-1"> Can't create bot with empty name</a>
+<button @onclick="Create">Create</button>
+
+
+@code {
+
+    List<BotData> bots;
+    private UserToken userToken;
+    private bool isHidden;
+
+    public async void Create()
+    {
+        try
+        {
+            var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
+            var modalResult = await formModal.Result;
+            var name = (string)modalResult.Data;
+            if (name != "")
+            {
+                var request = new CreateBotRequest()
+                {
+                    Name = name,
+                    UserId = userToken.UserId
+                };
+                await BotManager.CreateBot(userToken, request);
+            }
+            else
+            {
+                isHidden = false;
+            }
+        }
+        catch(Exception)
+        {
+
+        }
+    }
+
+    public async void Delete(Guid id)
+    {
+        try
+        {
+            var request = new DeleteBotRequest()
+            {
+                ID = id
+            };
+            await BotManager.DeleteBot(userToken, request);
+        }
+        catch(Exception)
+        {
+
+        }
+    }
+
+    public async void Run(Guid id)
+    {
+        try
+        {
+            var request = new RunBotRequest()
+            {
+                ID = id
+            };
+            await BotManager.RunBot(userToken, request);
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+
+    public async void Disable(Guid id)
+    {
+        try
+        {
+            var request = new DisableBotRequest()
+            {
+                ID = id
+            };
+            await BotManager.DisableBot(userToken, request);
+        }
+        catch(Exception)
+        {
+
+        }
+    }
+
+    public void Edit(Guid id)
+    {
+        Modal.Show<GUI.Pages.EditBot>();
+    }
+
+    protected override void OnInitialized()
+    {
+        userToken = new UserToken();
+        bots = new List<BotData>();
+        isHidden = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+        userToken.Body = await Storage.GetItemAsync<string>("token");
+        bots = await BotManager.GetBots(userToken);
+        isHidden = true;
+    }
+}
