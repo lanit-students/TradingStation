@@ -7,14 +7,14 @@
 }
 
 .currencies {
-    width: 200px;
+    width: 180px;
     font-size: 1.2rem;
     height: 100%;
     background: #f2f2f2;
 }
 
 .сurrencyBar {
-    width: 100px;
+    width: 80px;
     height: 100px;
     color: black;
     background: #0366d6;
