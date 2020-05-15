@@ -33,7 +33,11 @@ namespace CBIntegration
             var rates = new List<ExchangeRate>();
             for (int i = 0; i < data.Currencies.Count; i++)
             {
-                rates.Add(new ExchangeRate { Code = data[i].CharCode, Value = data[i].ValueInDigits });
+                rates.Add(new ExchangeRate
+                {
+                    Code = data[i].CharCode, 
+                    Value = decimal.Round(data[i].ValueInDigits,2)
+                });
             }
             return rates;
         }
