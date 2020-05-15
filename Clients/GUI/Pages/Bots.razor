@@ -77,19 +77,19 @@ else
     private bool isErrorOccured = false;
     private string errorMessage = "";
 
-    private void RunOrDisable(BotData bot, bool isRunning)
+    private async Task RunOrDisable(BotData bot, bool isRunning)
     {
         if (isRunning)
         {
-            Disable(bot);
+            await Disable(bot);
         }
         else
         {
-            Run(bot);
+            await Run(bot);
         }
     }
 
-    private async void Create()
+    private async Task Create()
     {
         try
         {
@@ -104,7 +104,7 @@ else
                     UserId = userToken.UserId
                 };
                 await BotManager.CreateBot(userToken, request);
-                bots = BotManager.GetBots(userToken).Result;
+                bots = await BotManager.GetBots(userToken);
                 StateHasChanged();
             }
             else
@@ -118,13 +118,13 @@ else
         }
     }
 
-    private void Delete(Guid id)
+    private async Task Delete(Guid id)
     {
         var request = new DeleteBotRequest() { ID = id };
         try
         {
-            BotManager.DeleteBot(userToken, request);
-            bots = BotManager.GetBots(userToken).Result;
+            await BotManager.DeleteBot(userToken, request);
+            bots = await BotManager.GetBots(userToken);
             StateHasChanged();
         }
         catch (Exception)
@@ -133,13 +133,13 @@ else
         }
     }
 
-    private async void Run(BotData bot)
+    private async Task Run(BotData bot)
     {
         var request = new RunBotRequest() { ID = bot.Id };
         try
         {
             await BotManager.RunBot(userToken, request);
-            bots = BotManager.GetBots(userToken).Result;
+            bot.IsRunning = true;
             StateHasChanged();
         }
         catch (Exception)
@@ -148,13 +148,13 @@ else
         }
     }
 
-    private async void Disable(BotData bot)
+    private async Task Disable(BotData bot)
     {
         var request = new DisableBotRequest() { ID = bot.Id };
         try
         {
             await BotManager.DisableBot(userToken, request);
-            bots = BotManager.GetBots(userToken).Result;
+            bot.IsRunning = false;
             StateHasChanged();
         }
         catch (Exception)
@@ -191,22 +191,4 @@ else
             errorMessage = "Sorry, we can't load bots. Try again later";
         }
     }
-
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    if (!firstRender)
-    //    {
-    //        try
-    //        {
-    //            bots = await BotManager.GetBots(userToken);
-    //        }
-    //        catch
-    //        {
-    //            isErrorOccured = true;
-    //            errorMessage = "Sorry, we can't load bots. Try again later";
-    //        }
-
-    //    }
-    //}
-
 }
