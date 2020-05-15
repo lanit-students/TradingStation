@@ -7,13 +7,10 @@
 }
 
 .currencies {
-    width: 150px;
-    min-height: 100vh;
-    color: #fff;
+    width: 200px;
+    font-size: 1.2rem;
+    height: 100%;
     background: #f2f2f2;
-    padding: 1px;
-    align-items: center;
-    transition: 0.5s width;
 }
 
 .сurrencyBar {
@@ -21,7 +18,7 @@
     height: 100px;
     color: black;
     background: #0366d6;
-    font-size: 0.7rem;
+    font-size: 1.5rem;
     border: 1px solid #d7d7d7;
     border-radius: 5px;
     padding: 3px;
