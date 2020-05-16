@@ -13,29 +13,52 @@ namespace OperationService.Bots.BotRules
     {
         private ICommand<TradeRequest, bool> command;
 
-        private Guid id;
+        private string token;
+        private OperationType operationType;
+        private decimal moneyLimit;
 
-        private OperationType type;
+        private int timeInterval;
+        private decimal priceDifference;
 
-        private Trigger trigger;
-
-        public BotRule([FromServices] ICommand<TradeRequest, bool> command)
+        public BotRule(
+            string token,
+            int timeInterval,
+            decimal priceDifference,
+            OperationType type,
+            decimal transactionMoneyLimit,
+            [FromServices] ICommand<TradeRequest, bool> command)
         {
             this.command = command;
+            this.token = token;
+            this.timeInterval = timeInterval;
+            this.priceDifference = priceDifference;
+            operationType = type;
+            moneyLimit = transactionMoneyLimit;
         }
 
-        private void Execute(object sender, string e)
+        private void Execute(object sender, TriggerEventArgs e)
         {
-            // do sth with figi (e is figi of instrument which got triggered)
+            command.Execute(
+                new TradeRequest()
+                {
+                    UserId = Guid.Empty,
+                    Broker = BrokerType.TinkoffBroker,
+                    Token = token,
+                    Operation = operationType,
+                    Figi = e.Figi,
+                    Price = e.Price,
+                    Count = (int)(moneyLimit / e.Price),
+                    Currency = e.Currency
+                });
         }
 
         public void Start(List<string> figis, TradeRequest request)
         {
             foreach (string figi in figis)
             {
-                trigger = new PriceFiveMinutesBeforeTrigger();
-
-                trigger.Triggered += Execute;
+                //var trigger = new TimeDifferenceTrigger();
+                //
+                //trigger.Triggered += Execute;
             }
         }
     }
