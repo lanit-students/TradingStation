@@ -1,0 +1,148 @@
+﻿@page "/balance"
+@inject NavigationManager NavigationManager
+@inject ISessionStorageService Storage
+@inject IModalService Modal
+
+<h3 align="center">Balance</h3>
+<br>
+<div class="container">
+    @if (isPageLoading)
+    {
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    }
+    else if (!errorOccured)
+    {
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th style="width: 50%" scope="col" class="text-center">Currency</th>
+                    <th style="width: 50%" scope="col" class="text-center">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kvp in balanceInCurrencies)
+                {
+                    <tr>
+                        <td class="text-center">@kvp.Key</td>
+                        <td class="text-center">@kvp.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br>
+        <div class="form-row" style="height: 100px;">
+            <div class="col-4 mb-3">
+                <label for="selectCurrency">Select currency </label>
+                <select id="selectCurrency" @onchange="@UpdateCurrency" class="custom-select h-50">
+                    @foreach (var kvp in balanceInCurrencies)
+                    {
+                        <option>@kvp.Key</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label for="cashToIncrease">Enter value to increase balance</label>
+                <input id="cashToIncrease" type="number"  class="col-lg-12 h-50" @bind-value=@cash>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="updateButton">Press buttton to update balance </label>
+                <button id="updateButton" class="btn btn-primary col-12 h-50" value="Update balance" @onclick="@UpdateBalance">Update</button>
+            </div>
+        </div>
+    }
+    else
+    {
+    <h3 class="m-lg-5">@errorMessage</h3>
+    }
+
+</div>
+
+@code {
+    private bool errorOccured = false;
+    private string errorMessage = "";
+    private decimal cash = 100;
+    private Currency currency = Currency.Rub;
+    private UserBalance userBalance;
+    private bool isPageLoading = false;
+    private Dictionary<Currency, decimal> balanceInCurrencies;
+
+    private void UpdateCurrency(ChangeEventArgs e)
+    {
+        currency = (Currency)Enum.Parse(typeof(Currency), e.Value.ToString());
+    }
+
+    private void IncreaseBalanceInCorrectCurrency()
+    {
+        switch (currency)
+        {
+            case Currency.Rub:
+                userBalance.BalanceInRub += cash;
+                break;
+            case Currency.Usd:
+                userBalance.BalanceInUsd += cash;
+                break;
+            case Currency.Eur:
+                userBalance.BalanceInEur += cash;
+                break;
+            default:
+                Modal.Show<EmptyModal>("This currency is disabled to trade");
+                break;
+        }
+        cash = 0;
+    }
+
+    private async Task UpdateBalance()
+    {
+        var oldBalance = (UserBalance)userBalance.Clone();
+        IncreaseBalanceInCorrectCurrency();
+        var request = new UpdateUserBalanceRequest()
+        {
+            UserId = userBalance.UserId,
+            BalanceInRub = userBalance.BalanceInRub,
+            BalanceInUsd = userBalance.BalanceInUsd,
+            BalanceInEur = userBalance.BalanceInEur
+        };
+        try
+        {
+            var result = await BrokerManager.UpdateUserBalance(request);
+            if (result == true)
+            {
+                balanceInCurrencies[Currency.Rub] = userBalance.BalanceInRub;
+                balanceInCurrencies[Currency.Usd] = userBalance.BalanceInUsd;
+                balanceInCurrencies[Currency.Eur] = userBalance.BalanceInEur;
+            }
+        }
+        catch
+        {
+            userBalance = oldBalance;
+            Modal.Show<EmptyModal>("Can't update balance now, try again later");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorOccured = false;
+        isPageLoading = true;
+
+        try
+        {
+            var id = await Storage.GetItemAsync<Guid>("id");
+            userBalance = await BrokerManager.GetUserBalance(id);
+            balanceInCurrencies = new Dictionary<Currency, decimal>()
+            {
+                {Currency.Rub, userBalance.BalanceInRub },
+                {Currency.Usd, userBalance.BalanceInUsd },
+                {Currency.Eur, userBalance.BalanceInEur }
+            };
+            isPageLoading = false;
+        }
+        catch (Exception)
+        {
+            isPageLoading = false;
+            errorMessage = "Can't load balance, try again later";
+            errorOccured = true;
+        }
+    }
+}

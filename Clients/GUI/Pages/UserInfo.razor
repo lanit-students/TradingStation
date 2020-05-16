@@ -12,394 +12,526 @@
         <div class="tab-content" id="pills-tabContent-header">
             <div class="tab-pane fade show active" id="pills-home-header" role="tabpanel" aria-labelledby="pills-info-tab">
                 <h3>
-                        @if (showUserInfo)
-                        {
-                            <b>User Info</b>
-                        }
-                        else
-                        {
-                            <b>Transactions</b>
-                        }
+                    @if (pageToShow == "UserInfo")
+                    {
+                        <b>User Info</b>
+                    }
+                    else if (pageToShow == "Transactions")
+                    {
+                        <b>Transactions</b>
+                    }
+                    else
+                    {
+                        <b>Balance</b>
+                    }
                 </h3>
             </div>
         </div>
     </div>
     <nav class="navbar navbar-expand-sm" align="center">
         <ul class="navbar-nav m-auto text-lg-center">
-            <li class="nav-item"><a class="nav-link @(showUserInfo? "active" : "") " @onclick="@(()=> SetUserInfoActive(true))" data-toggle="pill" href="#userinfo">Personal Information</a></li>
-            <li class="nav-item"><a class="nav-link @(showUserInfo? "" : "active")" @onclick="@(()=> SetUserInfoActive(false))" data-toggle="pill" href="#transactions">Transactions</a></li>
+            <li class="nav-item">
+                <a class="nav-link @((pageToShow == "UserInfo") ? "active" : "") " @onclick="@(()=> SetUserInfoActive("UserInfo"))"
+                   data-toggle="pill" href="#userinfo">Personal Information</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @((pageToShow == "Transactions") ? "active" : "")" @onclick="@(()=> SetUserInfoActive("Transactions"))"
+                   data-toggle="pill" href="#transactions">Transactions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @((pageToShow == "Balance") ? "active" :  "")" @onclick="@(()=> SetUserInfoActive("Balance"))"
+                   data-toggle="pill" href="#balance">Balance</a>
+            </li>
         </ul>
     </nav>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active">
-            @if (showUserInfo)
+            @if (isPageLoading)
             {
-                <div class="row">
-                    <div class="form-group col-sm-5" align="center">
-                        <EditForm Model="@user">
-                            <p><img src=@imgSrc style="max-width: 200px; max-height: 200px;" alt="Avatar"></p>
-                            <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
-                                <br />
-                                <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary col-4">Select Image</label>
-                                <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" @onclick="ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
-                                <br />
-                                <button class="btn btn-secondary col-4" @onclick="Reset">Reset</button>
-                                <br />
-                            </div>
-                        </EditForm>
-                    </div>
-                    <div class=" = col-sm-7">
-                        <EditForm Model="@user">
-                            <DataAnnotationsValidator />
-                            <div class="form-group">
-                                <label for="Name">Name:</label>
-                                <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
-                            </div>
-                            <div class="form-group">
-                                <label for="Surname">Surname:</label>
-                                <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
-                            </div>
-                            <div class="form-group">
-                                <label for="Birthday">Birthday:</label>
-                                <InputDate class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
-                            </div>
-                            <div class="form-group">
-                                <label for="Email">Email:</label>
-                                <InputText class="form-control col-4" disabled="true" @bind-Value="@user.Email" />
-                            </div>
-                            <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
-                                <label for="OldPassword">Enter old password: </label>
-                                <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
-                                           disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
-                            </div>
-                            <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
-                                <label for="NewPassword">Enter new password: </label>
-                                <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
-                                           disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
-                            </div>
-                            <br />
-                            <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
-                                   class="form-control col-4 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
-                            <br />
-                            <input type="@(IsAvatarBeingChanged || IsPasswordBeingChanged || IsUserInfoBeingChanged ? "button" : "hidden")"
-                                   @onclick="@DiscardAllChanges" class="form-control col-4 button btn-primary" value="Discard all changes" />
-                            <br />
-                            <ValidationSummary />
-                            <h4 style="display: @(ErrorOccured ? "block" : "hidden"); color: red">@ErrorMessage</h4>
-                            <input type="button" @onclick="@EditInfoClickHandler" class="form-control col-4 button btn-primary" value="@(IsEditModeDisabled ? "Edit" : "Save changes")" />
-                        </EditForm>
-                    </div>
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
             }
             else
             {
-        <div class="row">
-            @if (errorMessage.Length != 0)
-            {
-                <h4>@errorMessage</h4>
-            }
-            else
-            {
-                <div class="table-responsive mr-5 mb-3">
-                    <table id="transactions" class="table table-bordered table-striped table-hover" width="100%">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">Figi</th>
-                            <th scope="col">Broker</th>
-                            <th scope="col">Count</th>
-                            <th scope="col">Currency</th>
-                            <th scope="col">Date Time</th>
-                            <th scope="col">Successful</th>
-                            <th scope="col">Operation</th>
-                            <th scope="col">Price</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (var transaction in lisTransactions)
+                @if (pageToShow == "UserInfo")
+                {
+                    <div class="row">
+                        <div class="form-group col-sm-5" align="center">
+                            <EditForm Model="@user">
+                                <p><img src=@imgSrc style="max-width: 200px; max-height: 200px;" alt="Avatar"></p>
+                                <div class="@(IsEditModeDisabled ? "invisible" : "visible")">
+                                    <br />
+                                    <label for="files" disabled="@IsEditModeDisabled" class="btn btn-primary col-4">Select Image</label>
+                                    <InputFile style="display: none" id="files" accept=".jpg, .jpeg, .png" @onclick="ChangeAvatarClickHandler" OnChange="ChangeAvatar" />
+                                    <br />
+                                    <button class="btn btn-secondary col-4" @onclick="Reset">Reset</button>
+                                    <br />
+                                </div>
+                            </EditForm>
+                        </div>
+                        <div class=" = col-sm-7">
+                            <EditForm Model="@user">
+                                <DataAnnotationsValidator />
+                                <div class="form-group">
+                                    <label for="Name">Name:</label>
+                                    <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.FirstName" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="Surname">Surname:</label>
+                                    <InputText class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="user.LastName" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="Birthday">Birthday:</label>
+                                    <InputDate class="form-control col-4" @onclick="UserInfoChangeHandler" disabled="@IsEditModeDisabled" @bind-Value="@user.Birthday" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="Email">Email:</label>
+                                    <InputText class="form-control col-4" disabled="true" @bind-Value="@user.Email" />
+                                </div>
+                                <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+                                    <label for="OldPassword">Enter old password: </label>
+                                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
+                                               disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.OldPassword" />
+                                </div>
+                                <div class="form-group" style="@(IsPasswordBeingChanged ? "" : "height: 0; color: transparent")">
+                                    <label for="NewPassword">Enter new password: </label>
+                                    <InputText type="@(IsPasswordBeingChanged ? "password" : "hidden")" class="@InputStyleClass"
+                                               disabled="@(!IsPasswordBeingChanged)" @bind-Value="@user.NewPassword" />
+                                </div>
+                                <br />
+                                <input type="@(IsEditModeDisabled ? "hidden" : "button")" @onclick="@ChangePasswordClickHandler"
+                                       class="form-control col-4 button btn-primary" value="@(IsPasswordBeingChanged ? "Cancel changing password" : "Change password")" />
+                                <br />
+                                <input type="@(IsAvatarBeingChanged || IsPasswordBeingChanged || IsUserInfoBeingChanged ? "button" : "hidden")"
+                                       @onclick="@DiscardAllChanges" class="form-control col-4 button btn-primary" value="Discard all changes" />
+                                <br />
+                                <ValidationSummary />
+                                <h4 style="display: @(ErrorOccured ? "block" : "hidden"); color: red">@ErrorMessage</h4>
+                                <input type="button" @onclick="@EditInfoClickHandler" class="form-control col-4 button btn-primary" value="@(IsEditModeDisabled ? "Edit" : "Save changes")" />
+                            </EditForm>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        @if (errorMessage.Length != 0)
                         {
-                            <tr class="align-items-center">
-                                <td>@transaction.Figi</td>
-                                <td>@BrokerToString(transaction.Broker)</td>
-                                <td>@transaction.Count</td>
-                                <td>@transaction.Currency</td>
-                                <td>@transaction.DateTime</td>
-                                <td>@(transaction.IsSuccess ? "Yes" : "No")</td>
-                                <td>@transaction.Operation</td>
-                                <td>@transaction.Price</td>
-                            </tr>
+                            <h4>@errorMessage</h4>
                         }
-                        </tbody>
-                    </table>
-                    </div>
+                        
+                        else if (pageToShow == "Transactions")
+                        {
+                        <div class="table-responsive mr-5 mb-3">
+                            <table id="transactions" class="table table-bordered table-striped table-hover" width="100%">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Figi</th>
+                                        <th scope="col">Broker</th>
+                                        <th scope="col">Count</th>
+                                        <th scope="col">Currency</th>
+                                        <th scope="col">Date Time</th>
+                                        <th scope="col">Successful</th>
+                                        <th scope="col">Operation</th>
+                                        <th scope="col">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var transaction in listTransactions)
+                                    {
+                                        <tr class="align-items-center">
+                                            <td>@transaction.Figi</td>
+                                            <td>@BrokerToString(transaction.Broker)</td>
+                                            <td>@transaction.Count</td>
+                                            <td>@transaction.Currency</td>
+                                            <td>@transaction.DateTime</td>
+                                            <td>@(transaction.IsSuccess ? "Yes" : "No")</td>
+                                            <td>@transaction.Operation</td>
+                                            <td>@transaction.Price</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
 
-                    }
+                        }
+                        else if (pageToShow == "Balance")
+                        {
+                        <div class="container">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="width: 50%" scope="col" class="text-center">Currency</th>
+                                        <th style="width: 50%" scope="col" class="text-center">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var kvp in balanceInCurrencies)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@kvp.Key</td>
+                                            <td class="text-center">@kvp.Value</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <br>
+                            <div class="form-row" style="height: 100px;">
+                                <div class="col-4 mb-3">
+                                    <label for="selectCurrency">Select currency </label>
+                                    <select id="selectCurrency" @onchange="@UpdateCurrency" class="custom-select h-50">
+                                        @foreach (var kvp in balanceInCurrencies)
+                                        {
+                                            <option>@kvp.Key</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-lg-4 mb-3">
+                                    <label for="cashToIncrease">Enter value to increase balance</label>
+                                    <input id="cashToIncrease" type="number" class="col-lg-12 h-50" @bind-value=@cash>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="updateButton">Press buttton to update balance </label>
+                                    <button id="updateButton" class="btn btn-primary col-12 h-50" value="Update balance" @onclick="@UpdateBalance">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        
+                        </div>
+                        }
+                        }
+                    </div>
                 </div>
-            }
-        </div>
-    </div>
 </div>
 
-@code {
+        @code {
 
 
-    private bool IsEditModeDisabled { get; set; }
-    private bool IsUserInfoBeingChanged { get; set; }
-    private bool IsPasswordBeingChanged { get; set; }
-    private bool IsAvatarBeingChanged { get; set; }
-    private bool PopupVisible { get; set; }
-    private string ErrorMessage { get; set; }
-    private string InputStyleClass { get; set; }
-    private bool ErrorOccured { get; set; }
-    private UserInfoViewModel user;
-    private UserInfoViewModel oldUser;
-    private UserToken userToken;
-    private bool showLoading = false;
-    private string imgSrc = "";
-    private const int CMaxSizeOfImageInBytes = 2097152;
-    private const string CDefaultImagePath = "\\wwwroot\\images\\withoutAvatar.png";
-    private bool showUserInfo = true;
-    private string errorMessage = "";
-    private IEnumerable<Transaction> lisTransactions = new List<Transaction>();
+            private bool IsEditModeDisabled { get; set; }
+            private bool IsUserInfoBeingChanged { get; set; }
+            private bool IsPasswordBeingChanged { get; set; }
+            private bool IsAvatarBeingChanged { get; set; }
+            private bool PopupVisible { get; set; }
+            private string ErrorMessage { get; set; }
+            private string InputStyleClass { get; set; }
+            private bool ErrorOccured { get; set; }
+            private UserInfoViewModel user;
+            private UserInfoViewModel oldUser;
+            private UserToken userToken;
+            private bool showLoading = false;
+            private string imgSrc = "";
+            private const int CMaxSizeOfImageInBytes = 2097152;
+            private const string CDefaultImagePath = "\\wwwroot\\images\\withoutAvatar.png";
+            private string pageToShow = "UserInfo";
+            private string errorMessage = "";
+            private IEnumerable<Transaction> listTransactions = new List<Transaction>();
 
-    private async Task EditInfoClickHandler()
-    {
-        if (IsEditModeDisabled)
-        {
-            oldUser = (UserInfoViewModel)user.Clone();
-            IsEditModeDisabled = false;
-            InputStyleClass = "form-control col-4";
-        }
-        else
-        {
-            try
+            private decimal cash = 100;
+            private Currency currency = Currency.Rub;
+            private UserBalance userBalance;
+            private bool isPageLoading = false;
+            private Dictionary<Currency, decimal> balanceInCurrencies;
+
+            private async Task EditInfoClickHandler()
             {
-                var userInfo = new UserInfoRequest()
+                if (IsEditModeDisabled)
                 {
-                    UserId = userToken.UserId,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Birthday = user.Birthday
-                };
-
-                var request = new EditUserRequest()
-                {
-                    UserInfo = userInfo,
-                    PasswordRequest = null,
-                    AvatarRequest = null
-                };
-
-                if (IsPasswordBeingChanged && user.OldPassword != null && user.NewPassword != null)
-                {
-                    var passwordRequest = new PasswordChangeRequest()
-                    {
-                        OldPassword = user.OldPassword,
-                        NewPassword = user.NewPassword
-                    };
-
-                    request.PasswordRequest = passwordRequest;
+                    oldUser = (UserInfoViewModel)user.Clone();
+                    IsEditModeDisabled = false;
+                    InputStyleClass = "form-control col-4";
                 }
-                if (IsAvatarBeingChanged)
+                else
                 {
-                    var avatarRequest = new AvatarChangeRequest()
+                    try
                     {
-                        Avatar = user.Avatar,
-                        AvatarExtension = user.AvatarExtension
-                    };
-                    request.AvatarRequest = avatarRequest;
+                        var userInfo = new UserInfoRequest()
+                        {
+                            UserId = userToken.UserId,
+                            Email = user.Email,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Birthday = user.Birthday
+                        };
+
+                        var request = new EditUserRequest()
+                        {
+                            UserInfo = userInfo,
+                            PasswordRequest = null,
+                            AvatarRequest = null
+                        };
+
+                        if (IsPasswordBeingChanged && user.OldPassword != null && user.NewPassword != null)
+                        {
+                            var passwordRequest = new PasswordChangeRequest()
+                            {
+                                OldPassword = user.OldPassword,
+                                NewPassword = user.NewPassword
+                            };
+
+                            request.PasswordRequest = passwordRequest;
+                        }
+                        if (IsAvatarBeingChanged)
+                        {
+                            var avatarRequest = new AvatarChangeRequest()
+                            {
+                                Avatar = user.Avatar,
+                                AvatarExtension = user.AvatarExtension
+                            };
+                            request.AvatarRequest = avatarRequest;
+                        }
+
+
+                        await UserEditor.EditUser(userToken, request);
+
+                        await UpdateUserModel();
+                    }
+                    catch (Exception e) when (
+                        e is ForbiddenException ||
+                        e is NotFoundException ||
+                        e is ValidationException)
+                    {
+                        ErrorMessage = e.Message;
+                        ErrorOccured = true;
+                    }
+
+                    Modal.Show<Modals.EmptyModal>("Changes saved");
+                    IsEditModeDisabled = true;
+                    IsPasswordBeingChanged = false;
+                    IsAvatarBeingChanged = false;
+                    IsUserInfoBeingChanged = false;
                 }
-
-
-                await UserEditor.EditUser(userToken, request);
-
-                await UpdateUserModel();
-            }
-            catch (Exception e) when (
-                e is ForbiddenException ||
-                e is NotFoundException ||
-                e is ValidationException)
-            {
-                ErrorMessage = e.Message;
-                ErrorOccured = true;
             }
 
-            Modal.Show<Modals.EmptyModal>("Changes saved");
-            IsEditModeDisabled = true;
-            IsPasswordBeingChanged = false;
-            IsAvatarBeingChanged = false;
-            IsUserInfoBeingChanged = false;
-        }
-    }
-
-    private void UserInfoChangeHandler()
-    {
-        IsUserInfoBeingChanged = true;
-    }
-
-    private void ChangePasswordClickHandler()
-    {
-        IsPasswordBeingChanged ^= true;
-    }
-
-    private void ChangeAvatarClickHandler()
-    {
-        IsAvatarBeingChanged = true;
-    }
-
-    private async Task ChangeAvatar(IFileListEntry[] files)
-    {
-        showLoading = true;
-        ErrorMessage = "";
-        var file = files[^1];
-        if (file != null)
-        {
-            if (file.Size > CMaxSizeOfImageInBytes)
+            private void UserInfoChangeHandler()
             {
-                ErrorMessage = "File is too big. Max size of image is 2 MB";
+                IsUserInfoBeingChanged = true;
+            }
+
+            private void ChangePasswordClickHandler()
+            {
+                IsPasswordBeingChanged ^= true;
+            }
+
+            private void ChangeAvatarClickHandler()
+            {
+                IsAvatarBeingChanged = true;
+            }
+
+            private async Task ChangeAvatar(IFileListEntry[] files)
+            {
+                showLoading = true;
+                ErrorMessage = "";
+                var file = files[^1];
+                if (file != null)
+                {
+                    if (file.Size > CMaxSizeOfImageInBytes)
+                    {
+                        ErrorMessage = "File is too big. Max size of image is 2 MB";
+                        showLoading = false;
+                        return;
+                    }
+                    using var ms = new MemoryStream();
+                    await file.Data.CopyToAsync(ms);
+                    user.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
+                    user.Avatar = ms.ToArray();
+                    imgSrc = AvatarGetter.GetUserImage(user.Avatar, user.AvatarExtension);
+                }
                 showLoading = false;
-                return;
             }
-            using var ms = new MemoryStream();
-            await file.Data.CopyToAsync(ms);
-            user.AvatarExtension = Path.GetExtension(file.Name).TrimStart('.');
-            user.Avatar = ms.ToArray();
-            imgSrc = AvatarGetter.GetUserImage(user.Avatar, user.AvatarExtension);
-        }
-        showLoading = false;
-    }
 
-    private async Task UpdateUserModel()
-    {
-        try
-        {
-            var requestResult = await UserGetter.GetUserById(userToken);
-
-            user = new UserInfoViewModel()
+            private async Task UpdateUserModel()
             {
-                FirstName = requestResult.FirstName,
-                LastName = requestResult.LastName,
-                Birthday = requestResult.Birthday,
-                Email = requestResult.Email,
-                Avatar = requestResult.Avatar,
-                AvatarExtension = requestResult.AvatarExtension
+                try
+                {
+                    var requestResult = await UserGetter.GetUserById(userToken);
 
-            };
-            if (user.Avatar != null)
-                imgSrc = AvatarGetter.GetUserImage(user.Avatar, user.AvatarExtension);
-            else
+                    user = new UserInfoViewModel()
+                    {
+                        FirstName = requestResult.FirstName,
+                        LastName = requestResult.LastName,
+                        Birthday = requestResult.Birthday,
+                        Email = requestResult.Email,
+                        Avatar = requestResult.Avatar,
+                        AvatarExtension = requestResult.AvatarExtension
+
+                    };
+                    if (user.Avatar != null)
+                        imgSrc = AvatarGetter.GetUserImage(user.Avatar, user.AvatarExtension);
+                    else
+                        imgSrc = GetDefaultImage();
+                }
+                catch (NotFoundException)
+                {
+                    ErrorMessage = "Unable to get user information";
+                }
+                catch (Exception)
+                {
+                    ErrorMessage = "Error occured";
+                    ErrorOccured = true;
+                }
+            }
+
+            private string GetDefaultImage()
+            {
+                var imagePath = System.IO.Directory.GetCurrentDirectory() + CDefaultImagePath;
+                var file = File.ReadAllBytes(imagePath);
+                var ext = imagePath.Substring(imagePath.IndexOf('.') + 1);
+                var base64 = Convert.ToBase64String(file);
+                return String.Format("data:image/{0};base64,{1}", ext, base64);
+            }
+
+            private void Reset()
+            {
+                ErrorMessage = "";
+                IsAvatarBeingChanged = true;
+                user.Avatar = null;
+                user.AvatarExtension = null;
                 imgSrc = GetDefaultImage();
-        }
-        catch (NotFoundException)
-        {
-            ErrorMessage = "Unable to get user information";
-        }
-        catch (Exception)
-        {
-            ErrorMessage = "Error occured";
-            ErrorOccured = true;
-        }
-    }
+            }
 
-    private string GetDefaultImage()
-    {
-        var imagePath = System.IO.Directory.GetCurrentDirectory() + CDefaultImagePath;
-        var file = File.ReadAllBytes(imagePath);
-        var ext = imagePath.Substring(imagePath.IndexOf('.') + 1);
-        var base64 = Convert.ToBase64String(file);
-        return String.Format("data:image/{0};base64,{1}", ext, base64);
-    }
-
-    private void Reset()
-    {
-        ErrorMessage = "";
-        IsAvatarBeingChanged = true;
-        user.Avatar = null;
-        user.AvatarExtension = null;
-        imgSrc = GetDefaultImage();
-    }
-
-    private async Task DiscardAllChanges()
-    {
-        user = (UserInfoViewModel)oldUser.Clone();
-        await UpdateUserModel();
-        IsEditModeDisabled = true;
-        IsPasswordBeingChanged = false;
-        IsAvatarBeingChanged = false;
-        IsUserInfoBeingChanged = false;
-        Modal.Show<Modals.EmptyModal>("Changes discarded");
-    }
-
-    protected override void OnInitialized()
-    {
-        userToken = new UserToken();
-        user = new UserInfoViewModel();
-        ErrorOccured = false;
-        ErrorMessage = "";
-        PopupVisible = false;
-        IsEditModeDisabled = true;
-        IsUserInfoBeingChanged = false;
-        IsPasswordBeingChanged = false;
-        IsAvatarBeingChanged = false;
-        InputStyleClass = "input-group-text";
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            lisTransactions = await BrokerManager.GetTransactions(await Storage.GetItemAsync<Guid>("id"));
-        }
-        catch (BaseException e)
-        {
-            errorMessage = e.Message;
-        }
-        catch (Exception e)
-        {
-            errorMessage = "The server cannot process your request.";
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (showUserInfo)
-        {
-            userToken.UserId = await Storage.GetItemAsync<Guid>("id");
-            userToken.Body = await Storage.GetItemAsync<string>("token");
-
-            if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
+            private async Task DiscardAllChanges()
             {
+                user = (UserInfoViewModel)oldUser.Clone();
                 await UpdateUserModel();
+                IsEditModeDisabled = true;
+                IsPasswordBeingChanged = false;
+                IsAvatarBeingChanged = false;
+                IsUserInfoBeingChanged = false;
+                Modal.Show<Modals.EmptyModal>("Changes discarded");
+            }
+
+            protected override void OnInitialized()
+            {
+                userToken = new UserToken();
+                user = new UserInfoViewModel();
+                ErrorOccured = false;
+                ErrorMessage = "";
+                PopupVisible = false;
+                IsEditModeDisabled = true;
+                IsUserInfoBeingChanged = false;
+                IsPasswordBeingChanged = false;
+                IsAvatarBeingChanged = false;
+                InputStyleClass = "input-group-text";
+            }
+
+            protected override async Task OnInitializedAsync()
+            {
+                ErrorOccured = false;
+                isPageLoading = true;
+
+                try
+                {
+                    listTransactions = await BrokerManager.GetTransactions(await Storage.GetItemAsync<Guid>("id"));
+                    userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };
+                    userBalance = await BrokerManager.GetUserBalance(userBalance.UserId);
+                    balanceInCurrencies = new Dictionary<Currency, decimal>()
+                    {
+                        {Currency.Rub, userBalance.BalanceInRub },
+                        {Currency.Usd, userBalance.BalanceInUsd },
+                        {Currency.Eur, userBalance.BalanceInEur }
+                    };
+                    isPageLoading = false;
+                }
+                catch (BaseException e)
+                {
+                    errorMessage = e.Message;
+                }
+                catch (Exception e)
+                {
+                    errorMessage = "The server cannot process your request.";
+                }
+            }
+
+            protected override async Task OnAfterRenderAsync(bool firstRender)
+            {
+                if (pageToShow == "UserInfo")
+                {
+                    userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+                    userToken.Body = await Storage.GetItemAsync<string>("token");
+
+                    if (IsEditModeDisabled && string.IsNullOrEmpty(user.FirstName))
+                    {
+                        await UpdateUserModel();
+                        StateHasChanged();
+                    }
+                }
+                else
+                {
+                    if (!firstRender)
+                    {
+                        await JSRuntime.InvokeVoidAsync("AddTableSort");
+                    }
+                }
+            }
+
+            private async void SetUserInfoActive(string page)
+            {
+                pageToShow = page;
                 StateHasChanged();
             }
-        }
-        else
-        {
-            if (!firstRender)
+
+            private string BrokerToString(BrokerType transactionBroker)
             {
-                await JSRuntime.InvokeVoidAsync("AddTableSort");
+                return transactionBroker switch
+                {
+                    BrokerType.TinkoffBroker => "Tinkoff Broker",
+                    _ => "Unknown broker"
+                };
             }
-        }
-    }
 
-    private async void SetUserInfoActive(bool isShow)
-    {
-        if (isShow)
-        {
-            showUserInfo = true;
-        }
-        else
-        {
-            showUserInfo = false;
-        }
-        StateHasChanged();
-    }
+            private void UpdateCurrency(ChangeEventArgs e)
+            {
+                currency = (Currency)Enum.Parse(typeof(Currency), e.Value.ToString());
+            }
 
-    private string BrokerToString(BrokerType transactionBroker)
-    {
-        return transactionBroker switch
-        {
-            BrokerType.TinkoffBroker => "Tinkoff Broker",
-            _ => "Unknown broker"
-        };
-    }
-}
+            private void IncreaseBalanceInCorrectCurrency()
+            {
+                switch (currency)
+                {
+                    case Currency.Rub:
+                        userBalance.BalanceInRub += cash;
+                        break;
+                    case Currency.Usd:
+                        userBalance.BalanceInUsd += cash;
+                        break;
+                    case Currency.Eur:
+                        userBalance.BalanceInEur += cash;
+                        break;
+                    default:
+                        Modal.Show<EmptyModal>("This currency is disabled to trade");
+                        break;
+                }
+                cash = 0;
+            }
+
+            private async Task UpdateBalance()
+            {
+                var oldBalance = (UserBalance)userBalance.Clone();
+                IncreaseBalanceInCorrectCurrency();
+                var request = new UpdateUserBalanceRequest()
+                {
+                    UserId = userBalance.UserId,
+                    BalanceInRub = userBalance.BalanceInRub,
+                    BalanceInUsd = userBalance.BalanceInUsd,
+                    BalanceInEur = userBalance.BalanceInEur
+                };
+                try
+                {
+                    var result = await BrokerManager.UpdateUserBalance(request);
+                    if (result == true)
+                    {
+                        balanceInCurrencies[Currency.Rub] = userBalance.BalanceInRub;
+                        balanceInCurrencies[Currency.Usd] = userBalance.BalanceInUsd;
+                        balanceInCurrencies[Currency.Eur] = userBalance.BalanceInEur;
+                    }
+                }
+                catch
+                {
+                    userBalance = oldBalance;
+                    Modal.Show<EmptyModal>("Can't update balance now, try again later");
+                }
+            }
+
+        }
