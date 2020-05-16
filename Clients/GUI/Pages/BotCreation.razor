@@ -1,0 +1,145 @@
+﻿@inject IModalService modal
+@inject NavigationManager NavigationManager
+@inject ISessionStorageService Storage
+
+<h3>BotCreation</h3>
+<div style="width: 330px;">
+    <EditForm EditContext="@editContext" OnValidSubmit="@CreateBot">
+        <DataAnnotationsValidator />
+        <Wizard Id="Wizard">
+            <WizardStep Name="Bot creation">
+                <div class="form-group mt-5">
+                    <label for="Name">Name:</label>
+                    <InputText class="form-control" @bind-Value="userInput.Name" placeholder="Name" />
+                    <ValidationMessage For="@(() => userInput.Name)" />
+                </div>
+                @if (errorServerMessage.Length != 0)
+                {
+                    <label style="color: red;"> @errorServerMessage </label>
+                    <br />
+                }
+            </WizardStep>
+            <WizardStep Name="Bot rules">
+                <div>
+                    <label>Here have to be checkboxes, I think</label>
+                </div>
+                <ValidationSummary />
+
+                @if (errorServerMessage.Length != 0)
+                {
+                    <label style="color: red;"> @errorServerMessage </label>
+                    <br />
+                }
+                @if (showLoading)
+                {
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                }
+            </WizardStep>
+        </Wizard>
+    </EditForm>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    private BotCreationModel userInput;
+    private EditContext editContext;
+    private bool showLoading = false;
+    private string errorServerMessage = "";
+    private List<BotRuleData> initialRules;
+    private UserToken userToken;
+
+    private void InitializeBotRules()
+    {
+        var ruleBuy = new BotRuleData()
+        {
+            OperationType = OperationType.Buy,
+            MoneyLimitPercents = 20,
+            TimeMarker = new DateTime(0, 0, 0, 0, 10, 0),
+            TriggerValue = 20,
+            Description = "This rule is suppose to buy instrument when money limit in percents will be less than trigger value." +
+            "Bot will check with period Time marker"
+        };
+        var ruleSell = new BotRuleData()
+        {
+            OperationType = OperationType.Buy,
+            MoneyLimitPercents = 20,
+            TimeMarker = new DateTime(0, 0, 0, 0, 10, 0),
+            TriggerValue = 20,
+            Description = "This rule is suppose to sell instrument when money limit in percents will be more than trigger value." +
+            "Bot will check with period Time marker"
+        };
+        initialRules = new List<BotRuleData>() { ruleBuy, ruleSell };
+    }
+    private bool HasError()
+    {
+        return !editContext.Validate();
+    }
+
+    public async Task CreateBot()
+    {
+        errorServerMessage = "";
+
+        showLoading = true;
+
+        if (HasError())
+        {
+            showLoading = false;
+            return;
+        }
+        // When rules will be ready
+            // 
+            //var request = new CreateBotRequest
+            //{
+            //    Name = userInput.Name,
+            //    UserId = await Storage.GetItemAsync<Guid>("id"),
+            //    Rules = userInput.Rules
+            //};
+
+            var request = new CreateBotRequest
+            {
+                Name = userInput.Name,
+                UserId = userToken.UserId
+            };
+
+        try
+        {
+            await BotManager.CreateBot(userToken, request);
+
+            BlazoredModal.Close();
+
+        }
+        catch (BadRequestException)
+        {
+            errorServerMessage = "Something went wrong during bot creation";
+        }
+        catch (Exception)
+        {
+            errorServerMessage = "The server cannot process your request.";
+        }
+        finally
+        {
+            showLoading = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        userToken = new UserToken()
+        {
+            UserId = await Storage.GetItemAsync<Guid>("id"),
+            Body = await Storage.GetItemAsync<string>("token")
+        };
+
+        userInput = new BotCreationModel();
+
+        InitializeBotRules();
+
+        editContext = new EditContext(userInput);
+
+        BlazoredModal.SetTitle("Create bot");
+    }
+}
+

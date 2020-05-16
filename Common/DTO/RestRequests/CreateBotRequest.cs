@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DTO.RestRequests
 {
@@ -6,5 +7,6 @@ namespace DTO.RestRequests
     {
         public string Name { get; set; }
         public Guid UserId { get; set; }
+        public List<BotRuleData> Rules { get; set; }
     }
 }
