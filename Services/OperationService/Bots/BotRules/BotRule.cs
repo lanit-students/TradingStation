@@ -17,8 +17,8 @@ namespace OperationService.Bots.BotRules
         private OperationType operationType;
         private decimal moneyLimit;
 
-        private int timeInterval;
-        private decimal priceDifference;
+        private int timeMarker;
+        private decimal triggerValue;
 
         public BotRule(
             string token,
@@ -30,8 +30,8 @@ namespace OperationService.Bots.BotRules
         {
             this.command = command;
             this.token = token;
-            this.timeInterval = timeInterval;
-            this.priceDifference = priceDifference;
+            timeMarker = timeInterval;
+            triggerValue = priceDifference;
             operationType = type;
             moneyLimit = transactionMoneyLimit;
         }
