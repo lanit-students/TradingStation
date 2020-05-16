@@ -12,6 +12,7 @@ namespace DataBaseService.Mappers
             {
                 Id = rule.Id,
                 OperationType = rule.OperationType,
+                MoneyLimitPercents = rule.MoneyLimitPercents,
                 TimeMarker = rule.TimeMarker,
                 TriggerValue = rule.TriggerValue
             };
@@ -23,6 +24,7 @@ namespace DataBaseService.Mappers
             {
                 Id = dbRule.Id,
                 OperationType = dbRule.OperationType,
+                MoneyLimitPercents = dbRule.MoneyLimitPercents,
                 TimeMarker = dbRule.TimeMarker,
                 TriggerValue = dbRule.TriggerValue
             };

@@ -10,6 +10,8 @@ namespace DataBaseService.Database.Models
 
         public int OperationType { get; set; }
 
+        public int MoneyLimitPercents { get; set; }
+
         public int TimeMarker { get; set; }
 
         public int TriggerValue { get; set; }
@@ -24,6 +26,10 @@ namespace DataBaseService.Database.Models
                 builder
                     .Property(p => p.Id)
                     .HasColumnName("Id")
+                    .IsRequired();
+                builder
+                    .Property(p => p.MoneyLimitPercents)
+                    .HasColumnName("MoneyLimitPercents")
                     .IsRequired();
                 builder
                     .Property(p => p.OperationType)

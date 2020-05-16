@@ -8,6 +8,8 @@ namespace DTO
 
         public Guid BotId { get; set; }
 
+        public int MoneyLimitPercents { get; set; }
+
         public int OperationType { get; set; }
 
         public int TimeMarker { get; set; }
