@@ -14,7 +14,6 @@ namespace OperationService.Bots.BotRules
 
         private string token;
         private OperationType operationType;
-        private decimal moneyLimit;
 
         private int timeMarker;
         private decimal triggerValue;
@@ -24,7 +23,6 @@ namespace OperationService.Bots.BotRules
             int timeInterval,
             decimal priceDifference,
             OperationType type,
-            decimal transactionMoneyLimit,
             [FromServices] ICommand<TradeRequest, bool> command)
         {
             this.command = command;
@@ -32,7 +30,6 @@ namespace OperationService.Bots.BotRules
             timeMarker = timeInterval;
             triggerValue = priceDifference;
             operationType = type;
-            moneyLimit = transactionMoneyLimit;
         }
 
         private void Execute(object sender, TriggerEventArgs e)
@@ -40,13 +37,15 @@ namespace OperationService.Bots.BotRules
             command.Execute(
                 new TradeRequest()
                 {
+                    // TODO: get user id
                     UserId = Guid.Empty,
                     Broker = BrokerType.TinkoffBroker,
                     Token = token,
                     Operation = operationType,
                     Figi = e.Figi,
                     Price = e.Price,
-                    Count = (int)(moneyLimit / e.Price),
+                    // TODO: add count logic
+                    Count = 1,
                     Currency = e.Currency
                 });
         }
