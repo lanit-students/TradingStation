@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
-using Kernel.LoggingEngine;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Interfaces;
 

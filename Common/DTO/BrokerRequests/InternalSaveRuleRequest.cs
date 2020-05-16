@@ -1,7 +1,4 @@
-﻿using DTO.MarketBrokerObjects;
-using System;
-
-namespace DTO.BrokerRequests
+﻿namespace DTO.BrokerRequests
 {
     public class InternalSaveRuleRequest
     {

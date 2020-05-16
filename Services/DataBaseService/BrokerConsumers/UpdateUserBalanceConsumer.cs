@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using DataBaseService.Repositories.Interfaces;
-using DTO;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;

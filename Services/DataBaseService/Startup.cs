@@ -18,7 +18,6 @@ using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
-using DTO.BrokerRequests;
 using Kernel.LoggingEngine;
 using Microsoft.Extensions.Logging;
 

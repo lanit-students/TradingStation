@@ -1,5 +1,4 @@
 ﻿using DataBaseService.Database;
-using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
