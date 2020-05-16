@@ -28,15 +28,7 @@ namespace OperationService.Commands
 
         public async Task<List<InstrumentData>> Execute(GetPortfolioRequest request)
         {
-            try
-            {
-                return await GetPortfolio(request);
-            }
-            catch
-            {
-                // tratata
-                throw new InternalServerException();
-            }
+            return await GetPortfolio(request);
         }
     }
 }
