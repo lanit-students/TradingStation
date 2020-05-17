@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Sockets;
 using System.Threading;
 using UserService.Interfaces;
 

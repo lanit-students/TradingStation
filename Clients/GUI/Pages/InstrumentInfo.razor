@@ -15,21 +15,18 @@
 
 <div class="container">
     <div class="row">
-        <ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="400" Height="300" />
-        <div class="col-md-6">
-            <div style="width:100%" class="d-flex">
-                <div class="flex-fill">
-                    <label class="text-right">Current balance:  @currentBalance  @currency</label>
-                </div>
-                <div class="flex-fill">
-                    <input type="button" class="btn-l col-md-3" value="Increase balance" @onclick="GoToBalancePage">
-                </div>
-            </div>
+        <div class="col-md">
+            <ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="400" Height="300" />
+        </div>
+        <div class="col-md">
+            <label class="text-right">Current balance:  @currentBalance  @currency</label>
+        </div>
+        <div class="col-md">
+            <input style="width:100%" type="button" class="btn-l" value="Increase balance" @onclick="GoToBalancePage">
         </div>
     </div>
     <div class="row">
-        <h3 align="center">@instrument.Name</h3>
-        <br>
+        <span style="padding:20px;"/>
         <div class="container">
             @if (isInstrumentLoading)
             {
@@ -75,11 +72,11 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="sellButton"> Sell instrument </label>
-                        <input class="btn btn-primary col-md-11" id="sellButton" value="Sell" @onclick="@Sell" />
+                        <input class="btn btn-primary col-md-11" disabled="@errorOccured" id="sellButton" value="Sell" @onclick="@Sell" />
                     </div>
                     <div class="form-group col-md-2">
                         <label for="buyButton"> Buy instrument </label>
-                        <input class="btn btn-primary col-md-11" id="buyButton" value="Buy" @onclick="@Buy" />
+                        <input class="btn btn-primary col-md-11" disabled="@errorOccured" id="buyButton" value="Buy" @onclick="@Buy" />
                     </div>
                 </div>
             }
@@ -126,17 +123,21 @@
                 {
                     price = list.Last().Close;
 
+                    StateHasChanged();
+
                     AddCandles(list);
 
                     await UpdateNameInstrument();
                 }
                 else
                 {
+                    errorOccured = true;
                     ChangeTitle("Exchange doesn't work");
                 }
             }
-            catch (InternalServerException e)
+            catch (InternalServerException)
             {
+                errorOccured = true;
                 ChangeTitle("Figi not found");
             }
         }
@@ -151,6 +152,7 @@
     {
         lineConfig.Options.Title.Text = new IndexableOption<string>(title);
         await lineChartJs.Update();
+        StateHasChanged();
     }
 
     private void OnReceivedMessage(Candle candle)

@@ -141,7 +141,16 @@ namespace DataBaseService.Repositories
 
         public List<InstrumentData> GetPortfolio(GetPortfolioRequest request)
         {
-            return dbContext.Portfolios.Where(p => p.UserId == request.UserId).Select(p => mapper.MapToInstrument(p)).ToList();
+            var portfolio = dbContext.Portfolios.Where(p => p.UserId == request.UserId);
+
+            if (portfolio == null)
+            {
+                var exception = new NotFoundException("Portfolio not found");
+                logger.LogWarning(exception, $"{Guid.NewGuid()}_Portfolio of user {request.UserId} not found");
+                throw exception;
+            }
+
+            return portfolio.Select(p => mapper.MapToInstrument(p)).ToList();
         }
 
         public UserBalance GetUserBalance(GetUserBalanceRequest request)

@@ -62,7 +62,7 @@
                     <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
                            class="btn btn-primary" @onclick="@PreviousPage" />
 
-                    <input class="btn btn-outline-primary col-sm-1" value="@pageIndex" />
+                    <input class="btn btn-outline-primary col-sm-1" readonly="readonly" value="@pageIndex" />
 
                     @if (pageIndex < lastPageIndex)
                     {
@@ -238,8 +238,18 @@
 
                 foreach (var instrument in portfolio)
                 {
-                    priceTrackers[instrument.Figi] = (instrument.Currency, 0);
-                    await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, 30, tinkoffToken);
+                    var candles = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, 30, tinkoffToken);
+
+                    priceTrackers[instrument.Figi] = (instrument.Currency, candles.Count() > 0 ? candles.Last().Close : 0);
+
+                    if (candles.Count() > 0)
+                    {
+                        priceTrackers[instrument.Figi] = (instrument.Currency, candles.Last().Close);
+                    }
+                    else
+                    {
+                        priceTrackers[instrument.Figi] = (instrument.Currency, 0);
+                    }
                 }
 
                 areInstrumentsLoading = false;

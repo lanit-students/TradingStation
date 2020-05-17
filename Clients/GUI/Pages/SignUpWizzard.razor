@@ -84,8 +84,8 @@
     private EditContext editContext;
     private bool showLoading = false;
     private string errorServerMessage = "";
-    private string avatar = "/Picture/Avatar.svg";
-    private const string DefaultMessage = "/Picture/Avatar.svg";
+    private string avatar = "/images/avatar.svg";
+    private const string DefaultMessage = "/images/avatar.svg";
     private const int CMaxSizeOfImageInBytes = 2097152;
 
     private bool HasError()
@@ -98,7 +98,7 @@
         errorServerMessage = "";
 
         showLoading = true;
-        
+
         if (HasError())
         {
             showLoading = false;
@@ -151,7 +151,7 @@
     async Task HandleSelection(IFileListEntry[] files)
     {
         showLoading = true;
-        
+
         var file = files[^1];
 
         if (file != null)
