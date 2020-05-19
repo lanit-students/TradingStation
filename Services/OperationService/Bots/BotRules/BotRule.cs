@@ -63,6 +63,7 @@ namespace OperationService.Bots.BotRules
                        timeMarker,
                        triggerValue,
                        token,
+                       request.Currency,
                        candlesCommand
                     );
 

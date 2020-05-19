@@ -18,6 +18,7 @@ namespace OperationService.Bots
                 rule.Start(figis, request);
             }
         }
+
         public void Stop() { }
     }
 }

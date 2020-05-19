@@ -16,6 +16,7 @@ namespace OperationService.Bots.Utils
         private IEnumerable<Candle> candles;
         private int timeMarker;
         private decimal triggerValue;
+        private Currency currency;
 
         public override event EventHandler<TriggerEventArgs> Triggered;
 
@@ -24,6 +25,7 @@ namespace OperationService.Bots.Utils
             int timeMarker,
             decimal triggerValue,
             string token,
+            Currency currency,
             ICommand<GetCandlesRequest, IEnumerable<Candle>> command)
         {
             this.timeMarker = timeMarker;
@@ -68,7 +70,7 @@ namespace OperationService.Bots.Utils
                     Figi = candle.Figi,
                     Price = candle.Close,
                     // TODO: add correct currency
-                    Currency = Currency.Eur
+                    Currency = currency
                 };
 
                 Triggered(this, args);
