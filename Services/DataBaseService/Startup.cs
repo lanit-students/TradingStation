@@ -65,14 +65,14 @@ namespace DataBaseService
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<GetPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetTransactionConsumer>(serviceProvider);
-                    
+
                     ep.ConfigureConsumer<CreateBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<RunBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<DisableBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<BotInfoConsumer>(serviceProvider);
-
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -122,6 +122,7 @@ namespace DataBaseService
                 x.AddConsumer<GetInstrumentFromPortfolioConsumer>();
                 x.AddConsumer<GetUserBalanceConsumer>();
                 x.AddConsumer<UpdateUserBalanceConsumer>();
+                x.AddConsumer<GetPortfolioConsumer>();
                 x.AddConsumer<AddLogConsumer>();
                 x.AddConsumer<GetTransactionConsumer>();
 				x.AddConsumer<CreateBotConsumer>();

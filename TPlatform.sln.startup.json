@@ -21,6 +21,15 @@
         "OperationService": {},
         "UserService": {}
       }
+    },
+    "Back end": {
+      "Projects": {
+        "AuthenticationService": {},
+        "BrokerService": {},
+        "DataBaseService": {},
+        "OperationService": {},
+        "UserService": {}
+      }
     }
   }
 }

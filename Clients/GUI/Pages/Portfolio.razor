@@ -1,0 +1,274 @@
+﻿@page "/portfolio"
+@inject NavigationManager Navigation
+@inject ISessionStorageService Storage
+@attribute [Authorize]
+
+    <div class="container">
+        <div class="row">
+            <div style="margin-bottom:5vh;">
+                <h3>Portfolio</h3>
+            </div>
+            @if (areInstrumentsLoading)
+            {
+                <div class="spinner-container">
+                    <div class="spinner-frame">
+                        <div class="spinner-cover"></div>
+                        <div class="spinner-bar"></div>
+                    </div>
+                </div>
+            }
+            else if (!errorOccured)
+            {
+                <div style="width:100%; margin-bottom:5vh;" class="d-flex">
+                    <div class="flex-fill">
+                        Total portfolio price:
+                    </div>
+                    @foreach (var currency in Enum.GetValues(typeof(Currency)).Cast<Currency>())
+                    {
+                        <div class="flex-fill">
+                            @TotalPortfolioPriceByCurrency(currency)
+                            @currency.ToString().ToUpper()
+                        </div>
+                    }
+                </div>
+                <br />
+                <table class="table table-bordered portfolio-table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Figi</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Provider</th>
+                            <th scope="col">Count on hand</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (InstrumentData instrument in searchedPortfolio.Skip(pageIndex * pageSize).Take(pageSize))
+                        {
+                            <tr>
+                                <td class="align-middle">@instrument.Figi</td>
+                                <td class="align-middle">@instrument.Name</td>
+                                <td class="align-middle">@GetBrokerName(instrument.Broker)</td>
+                                <td class="align-middle">@instrument.Count</td>
+                                <td class="align-middle">@GetInstrumentPriceField(instrument.Figi)</td>
+                                <td class="align-middle"><button class=" btn btn-light" @onclick="@(() => OpenInstrument(instrument))">Open instrument</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="btn-group-sm">
+                    <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
+                           class="btn btn-primary" @onclick="@PreviousPage" />
+
+                    <input class="btn btn-outline-primary col-sm-1" readonly="readonly" value="@pageIndex" />
+
+                    @if (pageIndex < lastPageIndex)
+                    {
+                        <input class="btn btn-light btn-sm col-sm-1" type=" @(nextDisabled ? "hidden" : "button" )"
+                               readonly="readonly" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
+
+                        @if (pageIndex + 1 < lastPageIndex)
+                        {
+                            <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+
+                            @if (pageIndex + 2 < lastPageIndex)
+                            {
+                                <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
+
+                                <input class=" btn btn-light btn-sm col-sm-1" readonly="readonly" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
+                            }
+                        }
+                        <input type=" @(nextDisabled ? "hidden" : "button" )"
+                               class="btn btn-primary" value="Next" @onclick="@NextPage" />
+                    }
+                    <input type="button" readonly="readonly"
+                           class="btn btn-secondary" value="Go to " @onclick="@(() => MoveTo(pageToMove))" />
+                    <input type="number" class="text-right col-sm-2" @bind-value="@pageToMove" />
+                </div>
+
+                <br>
+                <input type="@(pageToMove <= lastPageIndex && pageToMove >= 0 ? "hidden" : "text")" class="col-4 text-center"
+                       readonly="readonly" value="Sorry, but you have to go to an existing page">
+            }
+            else
+            {
+                <h3 class="m-lg-5 text-center">@errorMessage</h3>
+            }
+        </div>
+    </div>
+
+@code {
+    private UserToken userToken;
+    private List<InstrumentData> portfolio;
+    private List<InstrumentData> searchedPortfolio;
+    private string tinkoffToken;
+    private bool areInstrumentsLoading = true;
+    private bool errorOccured;
+    private string errorMessage;
+    private int pageToMove = 0;
+    private int pageIndex;
+    private int[] pagesToShow;
+    private int lastPageIndex;
+    private int pageSize = 7;
+    private const int CIndexesToShow = 3;
+    private Dictionary<string, (Currency, decimal)> priceTrackers;
+
+    private void PreviousPage()
+    {
+        --pageIndex;
+        --pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] -= 1;
+        }
+        StateHasChanged();
+    }
+
+    private void MoveTo(int page)
+    {
+        if (page >= 0 && page <= lastPageIndex)
+        {
+            pageIndex = page;
+            pageToMove = page;
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = page + i;
+            }
+        }
+        StateHasChanged();
+    }
+
+    private bool prevDisabled =>
+            pageIndex == 0;
+
+    private void NextPage()
+    {
+        ++pageIndex;
+        ++pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] += 1;
+        }
+        StateHasChanged();
+    }
+
+    private bool nextDisabled =>
+            pageIndex < lastPageIndex;
+
+    private async Task OpenInstrument(InstrumentData instrument)
+    {
+        await Storage.SetItemAsync("instrument",
+            await BrokerManager.GetInstrument(instrument.Figi, tinkoffToken));
+        Navigation.NavigateTo("/instrumentInfo");
+    }
+
+    private string GetInstrumentPriceField(string figi)
+    {
+        try
+        {
+            if (priceTrackers[figi].Item2 == 0)
+            {
+                return "Unavailable";
+            }
+
+            return priceTrackers[figi].Item2.ToString() + " " + priceTrackers[figi].Item1.ToString();
+        }
+        catch
+        {
+            return "Unavailable";
+        }
+    }
+
+    private decimal TotalPortfolioPriceByCurrency(Currency currency)
+    {
+        decimal total = 0;
+
+        foreach (var instrument in portfolio)
+        {
+            if (instrument.Currency == currency)
+            {
+                total += priceTrackers[instrument.Figi].Item2 * instrument.Count;
+            }
+        }
+
+        return total;
+    }
+
+    private string GetBrokerName(BrokerType broker)
+    {
+        return broker switch
+        {
+            BrokerType.TinkoffBroker => "Tinkoff",
+            _ => "Unknown"
+        };
+    }
+
+    private void OnReceivedMessage(Candle candle)
+    {
+        priceTrackers[candle.Figi] = (priceTrackers[candle.Figi].Item1, candle.Close);
+
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        userToken = new UserToken();
+        portfolio = new List<InstrumentData>();
+        searchedPortfolio = new List<InstrumentData>();
+        priceTrackers = new Dictionary<string, (Currency, decimal)>();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                areInstrumentsLoading = true;
+                userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+                userToken.Body = await Storage.GetItemAsync<string>("token");
+                tinkoffToken = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
+
+                await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
+
+                portfolio = await BrokerManager.GetPortfolio(userToken, tinkoffToken);
+                searchedPortfolio = portfolio;
+
+                foreach (var instrument in portfolio)
+                {
+                    var candles = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, 30, tinkoffToken);
+
+                    priceTrackers[instrument.Figi] = (instrument.Currency, candles.Count() > 0 ? candles.Last().Close : 0);
+
+                    if (candles.Count() > 0)
+                    {
+                        priceTrackers[instrument.Figi] = (instrument.Currency, candles.Last().Close);
+                    }
+                    else
+                    {
+                        priceTrackers[instrument.Figi] = (instrument.Currency, 0);
+                    }
+                }
+
+                areInstrumentsLoading = false;
+                lastPageIndex = portfolio.Count / pageSize;
+
+                pagesToShow = new int[CIndexesToShow];
+                for (int i = 0; i < CIndexesToShow; i++)
+                {
+                    pagesToShow[i] = i;
+                }
+
+                StateHasChanged();
+            }
+            catch
+            {
+                areInstrumentsLoading = false;
+                errorOccured = true;
+                errorMessage = "Can't load portfolio, try again later";
+            }
+        }
+    }
+}
