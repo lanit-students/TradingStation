@@ -2,8 +2,7 @@
 @inject NavigationManager NavigationManager
 @inject ISessionStorageService Storage
 
-<h3>BotCreation</h3>
-<div style="width: 330px;">
+<div style="width: 500px;">
     <EditForm EditContext="@editContext" OnValidSubmit="@CreateBot">
         <DataAnnotationsValidator />
         <Wizard Id="Wizard">
@@ -20,8 +19,37 @@
                 }
             </WizardStep>
             <WizardStep Name="Bot rules">
+                <br>
                 <div>
-                    <label>Here have to be checkboxes, I think</label>
+                    @foreach(var rule in initialRules)
+                    {
+                    <div class="form-check">
+                        <br>
+                        <input class="form-check-input" type="checkbox" @bind-value="@rule.IsChoosen">
+                        <label class="form-check-label">@rule.Description</label>
+                        @if (rule.IsChoosen)
+                        {
+                            <div>
+                                <label>Parameters:</label>
+                                <div class="form-row input-group-prepend">
+                                    <br>
+                                    <label class="col-8 ">Percentage of the user's balance</label>
+                                    <input @bind-value="@rule.MoneyLimitPercents" type="number" class="col-4">
+                                </div>
+                                <div class="form-row input-group-prepend">
+                                    <label class="col-8 ">Trigger value to trade</label>
+                                    <input  @bind-value="@rule.TriggerValue" type="number" class="col-4">
+                                </div>
+                                <div class="form-row input-group-prepend">
+                                    <label class="col-8 ">Time interval</label>
+                                    <input @bind-value="@rule.TimeMarker" type="@(@rule.IsChoosen ? "time" : "hidden")" class="col-4">
+                                </div>
+                            </div>
+                            <br>
+                        }
+
+                    </div>
+                    }
                 </div>
                 <ValidationSummary />
 
@@ -36,6 +64,7 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                 }
+                <br>
             </WizardStep>
         </Wizard>
     </EditForm>
@@ -48,31 +77,54 @@
     private EditContext editContext;
     private bool showLoading = false;
     private string errorServerMessage = "";
-    private List<BotRuleData> initialRules;
+    private List<BotRuleModel> initialRules;
     private UserToken userToken;
 
     private void InitializeBotRules()
     {
-        var ruleBuy = new BotRuleData()
+        var ruleBuy = new BotRuleModel()
         {
+            IsChoosen = false,
             OperationType = OperationType.Buy,
             MoneyLimitPercents = 20,
-            TimeMarker = new DateTime(0, 0, 0, 0, 10, 0),
+            TimeMarker = new TimeSpan(0, 10, 0),
             TriggerValue = 20,
-            Description = "This rule is suppose to buy instrument when money limit in percents will be less than trigger value." +
-            "Bot will check with period Time marker"
+            Description = "This rule involves buying the instrument when the price is lower than the selected value." +
+            "Transactions can be made within the selected percentage of the user's balance" +
+            "The bot checks the pricing policies with the selected time interval"
         };
-        var ruleSell = new BotRuleData()
+        var ruleSell = new BotRuleModel()
         {
-            OperationType = OperationType.Buy,
+            IsChoosen = false,
+            OperationType = OperationType.Sell,
             MoneyLimitPercents = 20,
-            TimeMarker = new DateTime(0, 0, 0, 0, 10, 0),
+            TimeMarker = new TimeSpan(0, 10, 0),
             TriggerValue = 20,
-            Description = "This rule is suppose to sell instrument when money limit in percents will be more than trigger value." +
-            "Bot will check with period Time marker"
+            Description = "This rule involves selling the instrument when the price is higher than the selected value." +
+            "Transactions can be made within the selected percentage of the user's balance" +
+            "The bot checks the pricing policies with the selected time interval"
         };
-        initialRules = new List<BotRuleData>() { ruleBuy, ruleSell };
+        initialRules = new List<BotRuleModel>() { ruleBuy, ruleSell };
     }
+
+    private void MapRules()
+    {
+        userInput.Rules = new List<BotRuleData>();
+        foreach (var rule in initialRules)
+        {
+            if (rule.IsChoosen)
+            {
+                userInput.Rules.Add(new BotRuleData()
+            {
+                OperationType = rule.OperationType,
+                MoneyLimitPercents = rule.MoneyLimitPercents,
+                TriggerValue = rule.TriggerValue,
+                TimeMarker = rule.TimeMarker
+            });
+            }
+        }
+    }
+
     private bool HasError()
     {
         return !editContext.Validate();
@@ -89,20 +141,24 @@
             showLoading = false;
             return;
         }
-        // When rules will be ready
-            // 
-            //var request = new CreateBotRequest
-            //{
-            //    Name = userInput.Name,
-            //    UserId = await Storage.GetItemAsync<Guid>("id"),
-            //    Rules = userInput.Rules
-            //};
 
-            var request = new CreateBotRequest
-            {
-                Name = userInput.Name,
-                UserId = userToken.UserId
-            };
+        MapRules();
+
+        // When rules will be ready
+        //var request = new CreateBotRequest
+        //{
+        //    Name = userInput.Name,
+        //    UserId = await Storage.GetItemAsync<Guid>("id"),
+        //    Rules = userInput.Rules
+        //};
+
+        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+        userToken.Body = await Storage.GetItemAsync<string>("token");
+        var request = new CreateBotRequest
+        {
+            Name = userInput.Name,
+            UserId = userToken.UserId
+        };
 
         try
         {
@@ -125,13 +181,9 @@
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        userToken = new UserToken()
-        {
-            UserId = await Storage.GetItemAsync<Guid>("id"),
-            Body = await Storage.GetItemAsync<string>("token")
-        };
+        userToken = new UserToken();
 
         userInput = new BotCreationModel();
 

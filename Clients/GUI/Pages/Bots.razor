@@ -16,31 +16,29 @@
 }
 else if (!isErrorOccured)
 {
-    <div >
-        <button class="btn-primary" value="Create new bot" @onclick="Create">Create new bot</button>
-    </div>
-    <br>
     <div class="container">
         <div class="row row-margin-bottom">
+        <button class="btn-primary" value="Create new bot" @onclick="@(() => Modal.Show<GUI.Pages.BotCreation>())">Create new bot</button>
+            <br><br>
             <table class="table table-bordered">
                 <thead class="thead-light">
                     <tr>
                         <th style="width: 15%" scope="col">Name</th>
                         <th style="width: 15%" scope="col">Is active</th>
-                        <th style="width: 45%"scope="col">Rules</th>
-                        <th style="width: 25%"scope="col">Actions</th>
+                        <th style="width: 45%" scope="col">Rules</th>
+                        <th style="width: 25%" scope="col" colspan="3">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var bot in bots)
                     {
                         <tr>
-                            <td>@bot.Name</td>
-                            <td>@bot.IsRunning</td>
-                            <td>
+                            <td class="align-middle">@bot.Name</td>
+                            <td class="align-middle">@bot.IsRunning</td>
+                            <td class="align-middle">
                                 @if (bot.Rules == null)
                                 {
-                                <label>There no rules yet</label>
+                                    <label>There no rules yet</label>
                                 }
                                 else
                                 {
@@ -50,17 +48,16 @@ else if (!isErrorOccured)
                                     }
                                 }
                             </td>
-                            <td>
-                                <button class="btn btn-light" @onclick="@(() => RunOrDisable(bot, bot.IsRunning))">
-                                    @(bot.IsRunning ? "Disable" : "Run")</button>
-                                <button class="btn btn-light" @onclick="@(() => Edit(bot.Id))">Edit</button>
-                                <button class="btn btn-light" @onclick="@(() => Delete(bot.Id))">Delete</button>
+                            <td><button class="btn btn-light" @onclick="@(() => RunOrDisable(bot, bot.IsRunning))">
+                                    @(bot.IsRunning ? "Disable" : "Run")</button></td>
+                            <td><button class="btn btn-light" @onclick="@(() => Edit(bot.Id))">Edit</button></td>
+                            <td><button class="btn btn-light" @onclick="@(() => Delete(bot.Id))">Delete</button>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-          </div>      
+        </div>      
         </div>
 }
 else
@@ -93,24 +90,9 @@ else
     {
         try
         {
-            var formModal = Modal.Show<CreateBotModal>("Enter Bot Name");
-            var modalResult = await formModal.Result;
-            var name = (string)modalResult.Data;
-            if (name != "")
-            {
-                var request = new CreateBotRequest()
-                {
-                    Name = name,
-                    UserId = userToken.UserId
-                };
-                await BotManager.CreateBot(userToken, request);
-                bots = await BotManager.GetBots(userToken);
-                StateHasChanged();
-            }
-            else
-            {
-                Modal.Show<EmptyModal>("Sorry, we can't create bot without a name.");
-            }
+            Modal.Show<BotCreation>();
+
+            StateHasChanged();
         }
         catch (Exception)
         {
@@ -161,11 +143,6 @@ else
         {
             Modal.Show<EmptyModal>("Sorry, we can't disable bot now. Try again later");
         }
-    }
-
-    private void OpenBot(BotData bot)
-    {
-
     }
 
     private void Edit(Guid id)
