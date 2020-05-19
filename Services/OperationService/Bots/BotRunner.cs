@@ -5,13 +5,9 @@ using System.Collections.Generic;
 
 namespace OperationService.Bots
 {
-    public class Bot
+    public class BotRunner
     {
-        public Guid Id { get; set; }
-
         public Guid UserId { get; set; }
-
-        public bool IsRunning { get; set; }
 
         public List<BotRule> Rules { get; set; }
 
@@ -19,7 +15,7 @@ namespace OperationService.Bots
         {
             foreach (var rule in Rules)
             {
-                rule.Execute(figis, request);
+                rule.Start(figis, request);
             }
         }
         public void Stop() { }

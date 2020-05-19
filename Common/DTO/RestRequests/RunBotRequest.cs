@@ -4,6 +4,6 @@ namespace DTO.RestRequests
 {
     public class RunBotRequest
     {
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
     }
 }

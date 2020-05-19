@@ -21,10 +21,12 @@ namespace OperationService.Bots.Utils
 
         public TimeDifferenceTrigger(
             string figi,
+            int timeMarker,
             decimal triggerValue,
             string token,
-            [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> command)
+            ICommand<GetCandlesRequest, IEnumerable<Candle>> command)
         {
+            this.timeMarker = timeMarker;
             this.triggerValue = triggerValue;
 
             var request = new GetCandlesRequest()
