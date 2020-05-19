@@ -17,7 +17,7 @@ namespace GUITestsEngine.Tests
             FirstName = "Test",
             LastName = "Test",
             Birthday = DateTime.Today.AddYears(-20),
-            Email = $"{Guid.NewGuid()}@gmail.com",
+            Email = "den89181827071@gmail.com",
             Password = "password"
         };
 
@@ -36,16 +36,20 @@ namespace GUITestsEngine.Tests
             }
 
             var driver = new ChromeDriver();
+
             driver.Navigate().GoToUrl("https://localhost:44335/");
+
             Thread.Sleep(5000);
 
-            WebDriverWrapper.FindElementByClass(driver, "a", "Sign In").Click();
+            WebDriverWrapper.FindElementByClass(driver, "button", "Sign In").Click();
+
+            Thread.Sleep(5000);
 
             var fields = new List<string>() { request.Email, request.Password };
-
-            WebDriverWrapper.SubmitForm(driver,fields);
+            WebDriverWrapper.SubmitForm(driver, fields);
 
             Thread.Sleep(5000);
+
             var testResult = driver.Url == "https://localhost:44335/userinfo";
             driver.Close();
 

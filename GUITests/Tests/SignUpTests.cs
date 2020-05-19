@@ -17,7 +17,7 @@ namespace GUITestsEngine.Tests
             "Name",
             "Surname",
             "01.01.2000",
-            $"{Guid.NewGuid()}@gmail.com",
+            "den89181827071@mail.ru",
             "password",
             "password"
         };
@@ -25,11 +25,24 @@ namespace GUITestsEngine.Tests
         private void FillSignUpForm(ChromeDriver driver, List<string> input)
         {
             driver.Navigate().GoToUrl("https://localhost:44335/");
+
             Thread.Sleep(5000);
 
-            WebDriverWrapper.FindElementByClass(driver, "a", "Sign up").Click();
+            WebDriverWrapper.FindElementByClass(driver, "button", "Sign up").Click();
 
-            WebDriverWrapper.FillForm(driver, input);
+            Thread.Sleep(5000);
+
+            WebDriverWrapper.FillForm(driver, input.GetRange(0, 3));
+
+            Thread.Sleep(5000);
+
+            WebDriverWrapper.FindElementByClass(driver, "button", "Next").Click();
+
+            Thread.Sleep(5000);
+
+            WebDriverWrapper.FillForm(driver, input.GetRange(3, 3));
+
+            Thread.Sleep(5000);
 
             WebDriverWrapper.FindElementByClass(driver, "button", "Next").Click();
 
@@ -53,18 +66,8 @@ namespace GUITestsEngine.Tests
 
             Thread.Sleep(5000);
 
-            var input = new List<string>()
-            {
-                Path.GetFullPath(@"..\..\..\Resources\testPhoto.jpg").ToString(),
-                fields[3],
-                fields[4]
-            };
+            var testResult = driver.Url == "https://localhost:44335/signin";
 
-            WebDriverWrapper.SubmitForm(driver, input);
-
-            Thread.Sleep(5000);
-
-            var testResult = driver.Url == "https://localhost:44335/userinfo";
             driver.Close();
 
             if (!testResult)
@@ -79,7 +82,8 @@ namespace GUITestsEngine.Tests
             var driver = new ChromeDriver();
 
             FillSignUpForm(driver, new List<string>());
-            WebDriverWrapper.FindElementByClass(driver, "button", "Next").Click();
+
+            Thread.Sleep(5000);
 
             var errors = WebDriverWrapper.FindValidationErrors(driver);
 
@@ -90,7 +94,7 @@ namespace GUITestsEngine.Tests
             if (errors.Count != 4)
             {
                 throw new Exception();
-            }
+            }           
         }
     }
 }
