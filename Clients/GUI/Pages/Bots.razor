@@ -18,7 +18,7 @@ else if (!isErrorOccured)
 {
     <div class="container">
         <div class="row row-margin-bottom">
-        <button class="btn-primary" value="Create new bot" @onclick="@(() => Modal.Show<GUI.Pages.BotCreation>())">Create new bot</button>
+        <button class="btn-primary" value="Create new bot" @onclick="Create">Create new bot</button>
             <br><br>
             <table class="table table-bordered">
                 <thead class="thead-light">
@@ -50,9 +50,8 @@ else if (!isErrorOccured)
                             </td>
                             <td><button class="btn btn-light" @onclick="@(() => RunOrDisable(bot, bot.IsRunning))">
                                     @(bot.IsRunning ? "Disable" : "Run")</button></td>
-                            <td><button class="btn btn-light" @onclick="@(() => Edit(bot.Id))">Edit</button></td>
-                            <td><button class="btn btn-light" @onclick="@(() => Delete(bot.Id))">Delete</button>
-                            </td>
+                            <td><button class="btn btn-light" @onclick="@(() => Edit(bot))">Edit</button></td>
+                            <td><button class="btn btn-light" @onclick="@(() => Delete(bot.Id))">Delete</button></td>
                         </tr>
                     }
                 </tbody>
@@ -73,6 +72,16 @@ else
     private bool isPageLoading = true;
     private bool isErrorOccured = false;
     private string errorMessage = "";
+    private BotData currentBot;
+
+
+    private void MapRules()
+    {
+        if (bots != null)
+        {
+
+        }
+    }
 
     private async Task RunOrDisable(BotData bot, bool isRunning)
     {
@@ -90,9 +99,13 @@ else
     {
         try
         {
-            Modal.Show<BotCreation>();
-
-            StateHasChanged();
+            var formModal = Modal.Show<GUI.Pages.BotCreation>();
+            var result = await formModal.Result;
+            if (!result.Cancelled)
+            {
+                bots = await BotManager.GetBots(userToken);
+                StateHasChanged();
+            }
         }
         catch (Exception)
         {
@@ -145,9 +158,25 @@ else
         }
     }
 
-    private void Edit(Guid id)
+    private async Task Edit(BotData bot)
     {
-        Modal.Show<GUI.Pages.EditBot>();
+        try
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(BotEdition.CurrentBot), bot);
+            // Storage.SetItemAsync("botId", id);
+            var formModal = Modal.Show<GUI.Pages.BotEdition>("Edit bot", parameters);
+            var result = await formModal.Result;
+            if (!result.Cancelled)
+            {
+                bots = await BotManager.GetBots(userToken);
+                StateHasChanged();
+            }
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't edit bot now. Try again later");
+        }
     }
 
     protected override async Task OnInitializedAsync()

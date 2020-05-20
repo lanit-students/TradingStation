@@ -3,13 +3,16 @@
 @inject ISessionStorageService Storage
 
 <div style="width: 500px;">
-    <EditForm EditContext="@editContext" OnValidSubmit="@CreateBot">
+    <EditForm EditContext="@editContext" OnValidSubmit="@Edit">
         <DataAnnotationsValidator />
         <Wizard Id="Wizard">
-            <WizardStep Name="Name">
+            <WizardStep Name="Change name">
                 <div class="form-group mt-5">
-                    <label for="Name">Name:</label>
-                    <InputText class="form-control" @bind-Value="userInput.Name" placeholder="Name" />
+                    <label>Old name:</label>
+                    <input class="form-control" readonly="readonly" value="@CurrentBot.Name" />
+                    <br>
+                    <label>New name:</label>
+                    <InputText class="form-control" @bind-Value="userInput.Name" placeholder="New name" />
                     <ValidationMessage For="@(() => userInput.Name)" />
                 </div>
                 @if (errorServerMessage.Length != 0)
@@ -21,34 +24,34 @@
             <WizardStep Name="Bot rules">
                 <br>
                 <div>
-                    @foreach(var rule in initialRules)
+                    @foreach (var rule in initialRules)
                     {
-                    <div class="form-check">
-                        <br>
-                        <input class="form-check-input" type="checkbox" @bind-value="@rule.IsChoosen">
-                        <label class="form-check-label">@rule.Description</label>
-                        @if (rule.IsChoosen)
-                        {
-                            <div>
-                                <label>Parameters:</label>
-                                <div class="form-row input-group-prepend">
-                                    <br>
-                                    <label class="col-8 ">Percentage of the user's balance</label>
-                                    <input @bind-value="@rule.MoneyLimitPercents" type="number" class="col-4">
-                                </div>
-                                <div class="form-row input-group-prepend">
-                                    <label class="col-8 ">Trigger value to trade</label>
-                                    <input  @bind-value="@rule.TriggerValue" type="number" class="col-4">
-                                </div>
-                                <div class="form-row input-group-prepend">
-                                    <label class="col-8 ">Time interval</label>
-                                    <input @bind-value="@rule.TimeMarker" type="@(@rule.IsChoosen ? "time" : "hidden")" class="col-4">
-                                </div>
-                            </div>
+                        <div class="form-check">
                             <br>
-                        }
+                            <input class="form-check-input" type="checkbox" @bind-value="@rule.IsChoosen">
+                            <label class="form-check-label">@rule.Description</label>
+                            @if (rule.IsChoosen)
+                            {
+                                <div>
+                                    <label>Parameters:</label>
+                                    <div class="form-row input-group-prepend">
+                                        <br>
+                                        <label class="col-8 ">Percentage of the user's balance</label>
+                                        <input @bind-value="@rule.MoneyLimitPercents" type="number" class="col-4">
+                                    </div>
+                                    <div class="form-row input-group-prepend">
+                                        <label class="col-8 ">Trigger value to trade</label>
+                                        <input @bind-value="@rule.TriggerValue" type="number" class="col-4">
+                                    </div>
+                                    <div class="form-row input-group-prepend">
+                                        <label class="col-8 ">Time interval</label>
+                                        <input @bind-value="@rule.TimeMarker" type="@(@rule.IsChoosen ? "time" : "hidden")" class="col-4">
+                                    </div>
+                                </div>
+                                <br>
+                            }
 
-                    </div>
+                        </div>
                     }
                 </div>
                 <ValidationSummary />
@@ -72,7 +75,7 @@
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-
+    [Parameter] public BotData CurrentBot { get; set; }
     private BotModel userInput;
     private EditContext editContext;
     private bool showLoading = false;
@@ -82,10 +85,31 @@
 
     private void InitializeBotRules()
     {
-        var ruleBuy = new BotRuleModel(OperationType.Buy);
+        BotRuleModel ruleBuy = null;
+        BotRuleModel ruleSell = null;
+        if (CurrentBot.Rules != null)
+        {
+            foreach (var rule in CurrentBot.Rules)
+            {
+                if (rule.OperationType == OperationType.Buy)
+                {
+                    ruleBuy = new BotRuleModel(rule);
+                }
+                else
+                {
+                    ruleSell = new BotRuleModel(rule);
+                }
+            }
+        }
 
-        var ruleSell = new BotRuleModel(OperationType.Sell);
-        
+        if (ruleBuy == null)
+        {
+            ruleBuy = new BotRuleModel(OperationType.Buy);
+        }
+        if (ruleSell == null)
+        {
+            ruleSell = new BotRuleModel(OperationType.Sell);
+        }
         initialRules = new List<BotRuleModel>() { ruleBuy, ruleSell };
     }
 
@@ -112,7 +136,7 @@
         return !editContext.Validate();
     }
 
-    public async Task CreateBot()
+    public async Task Edit()
     {
         errorServerMessage = "";
 
@@ -130,23 +154,22 @@
         //var request = new CreateBotRequest
         //{
         //    Name = userInput.Name,
-        //    UserId = await Storage.GetItemAsync<Guid>("id"),
+        //    BotId = await Storage.GetItemAsync<Guid>("botId"),
         //    Rules = userInput.Rules
         //};
 
-        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
-        userToken.Body = await Storage.GetItemAsync<string>("token");
-        var request = new CreateBotRequest
+        var request = new EditBotRequest
         {
             Name = userInput.Name,
-            UserId = userToken.UserId
+            BotId = CurrentBot.Id
         };
 
         try
         {
-            await BotManager.CreateBot(userToken, request);
+            await BotManager.EditBot(userToken, request);
 
             BlazoredModal.Close(ModalResult.Ok($"Form was submitted successfully."));
+
         }
         catch (BadRequestException)
         {
@@ -172,7 +195,7 @@
 
         editContext = new EditContext(userInput);
 
-        BlazoredModal.SetTitle("Create bot");
+        BlazoredModal.SetTitle("Edit bot");
     }
 }
 

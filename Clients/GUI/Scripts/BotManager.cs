@@ -2,6 +2,7 @@
 using DTO.RestRequests;
 using Kernel;
 using Kernel.Enums;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -52,6 +53,16 @@ namespace GUI.Scripts
             var client = new RestClient<object, List<BotData>>(url, RestRequestType.GET, userToken);
 
             return await client.ExecuteAsync();
+        }
+
+        public static async Task<BotData> GetBot(UserToken userToken, Guid botId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static async Task EditBot(UserToken userToken, EditBotRequest request)
+        {
+            
         }
     }
 }
