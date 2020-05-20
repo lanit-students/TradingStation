@@ -16,7 +16,7 @@ namespace OperationService.Bots.Utils
         private IEnumerable<Candle> candles;
         private int timeMarker;
         private decimal triggerValue;
-        private Currency currency;
+        private HubConnection connection;
 
         public override event EventHandler<TriggerEventArgs> Triggered;
 
@@ -25,7 +25,6 @@ namespace OperationService.Bots.Utils
             int timeMarker,
             decimal triggerValue,
             string token,
-            Currency currency,
             ICommand<GetCandlesRequest, IEnumerable<Candle>> command)
         {
             this.timeMarker = timeMarker;
@@ -45,15 +44,15 @@ namespace OperationService.Bots.Utils
 
         private async Task BuildConnection(string figi, string token, Action<Candle> onReceived)
         {
-            var hubConnection = new HubConnectionBuilder()
+            connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:5009/CandleHub")
                 .Build();
 
-            hubConnection.On<Candle>("ReceiveMessage", onReceived.Invoke);
+            connection.On<Candle>("ReceiveMessage", onReceived.Invoke);
 
-            await hubConnection.StartAsync();
+            await connection.StartAsync();
 
-            await hubConnection.SendAsync("Subscribe", new GetCandlesRequest
+            await connection.SendAsync("Subscribe", new GetCandlesRequest
             {
                 Token = token,
                 Broker = BrokerType.TinkoffBroker,
@@ -69,8 +68,8 @@ namespace OperationService.Bots.Utils
                 {
                     Figi = candle.Figi,
                     Price = candle.Close,
-                    // TODO: add correct currency
-                    Currency = currency
+                    // TODO: add currency
+                    //Currency = currency
                 };
 
                 Triggered(this, args);
@@ -87,6 +86,11 @@ namespace OperationService.Bots.Utils
             }
 
             return (lastCandle.Close - oldPrice.Value) >= triggerValue;
+        }
+
+        public override void Disable()
+        {
+            connection.StopAsync();
         }
     }
 }

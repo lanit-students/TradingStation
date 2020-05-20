@@ -6,6 +6,8 @@ using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DataBaseService.Repositories
 {
@@ -45,6 +47,13 @@ namespace DataBaseService.Repositories
                 logger.LogWarning(e, $"Sometheing went wrong during save rule {rule.Id}");
                 throw new InternalServerException($"Sometheing went wrong during saving rule {rule.Id}", e);
             }
+        }
+
+        public List<BotRuleData> GetBotRules(Guid botId)
+        {
+            var ruleIds = dbContext.LinkBotsWithRules.Where(x => x.BotId == botId).Select(x => x.RuleId).ToList();
+
+            return dbContext.BotRules.Where(r => ruleIds.Contains(r.Id)).Select(r => mapper.MapToRule(r)).ToList();
         }
     }
 }

@@ -20,22 +20,30 @@ namespace OperationService.Bots.BotRules
 
         private int timeMarker;
         private decimal triggerValue;
+        private decimal maxBalancePercents;
+
+        private List<Trigger> triggers;
 
         public BotRule(
-            CreateBotRuleRequest request,
+            StartBotRuleRequest request,
             ICommand<TradeRequest, bool> tradeCommand,
             ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand)
         {
+            triggers = new List<Trigger>();
             this.tradeCommand = tradeCommand;
             this.candlesCommand = candlesCommand;
             userId = request.UserId;
             timeMarker = request.TimeMarker;
             triggerValue = request.TriggerValue;
             operationType = request.OperationType;
+            maxBalancePercents = request.MoneyLimitPercents;
         }
 
         private void Execute(object sender, TriggerEventArgs e)
         {
+            // TODO: get user's balance and apply max percents property
+            var balance = 10000;
+
             tradeCommand.Execute(
                 new TradeRequest()
                 {
@@ -45,17 +53,13 @@ namespace OperationService.Bots.BotRules
                     Operation = operationType,
                     Figi = e.Figi,
                     Price = e.Price,
-                    // TODO: add count logic
-                    Count = 1,
+                    Count = (int)(balance * maxBalancePercents / 100 / e.Price),
                     Currency = e.Currency
                 });
         }
 
-        public void Start(List<string> figis, TradeRequest request)
+        public void Start(List<string> figis)
         {
-            token = request.Token;
-            userId = request.UserId;
-
             foreach (var figi in figis)
             {
                 var trigger = new TimeDifferenceTrigger(
@@ -63,11 +67,19 @@ namespace OperationService.Bots.BotRules
                        timeMarker,
                        triggerValue,
                        token,
-                       request.Currency,
                        candlesCommand
                     );
 
                 trigger.Triggered += Execute;
+                triggers.Add(trigger);
+            }
+        }
+
+        public void Stop()
+        {
+            foreach (var trigger in triggers)
+            {
+                trigger.Disable();
             }
         }
     }
