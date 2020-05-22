@@ -16,31 +16,34 @@ namespace OperationService.Bots
         private static Dictionary<Guid, List<BotRule>> rules =  new Dictionary<Guid, List<BotRule>>();
 
         public static void Run(
-            List<BotRuleData> botRulesData, List<string> figis,
+            RunBotRequest request,
+            List<BotRuleData> botRulesData,
             ICommand<TradeRequest, bool> tradeCommand,
-            ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand)
+            ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
+            ICommand<GetUserBalanceRequest, UserBalance> balanceCommand)
         {
             var botRules = new List<BotRule>();
 
             var botId = botRulesData.First().Id;
 
-            foreach (var data in botRulesData)
+            foreach (var rule in botRulesData)
             {
                 botRules.Add(
                     new BotRule(
                             new StartBotRuleRequest()
                             {
-                                UserId = Guid.Empty,
+                                UserId = request.UserId,
                                 BotId = botId,
-                                Token = "",
+                                Token = request.Token,
                                 Broker = BrokerType.TinkoffBroker,
-                                TimeMarker = data.TimeMarker,
-                                TriggerValue = data.TriggerValue,
-                                OperationType = (OperationType)Enum.GetValues(typeof(OperationType)).GetValue(data.OperationType),
-                                MoneyLimitPercents = data.MoneyLimitPercents
+                                TimeMarker = rule.TimeMarker,
+                                TriggerValue = rule.TriggerValue,
+                                OperationType = (OperationType)Enum.GetValues(typeof(OperationType)).GetValue(rule.OperationType),
+                                MoneyLimitPercents = rule.MoneyLimitPercents
                             },
                             tradeCommand,
-                            candlesCommand
+                            candlesCommand,
+                            balanceCommand
                         )
                     );
             }
@@ -49,7 +52,7 @@ namespace OperationService.Bots
 
             foreach (var rule in rules[botId])
             {
-                rule.Start(figis);
+                rule.Start(request.Figis);
             }
         }
 
@@ -64,6 +67,8 @@ namespace OperationService.Bots
             {
                 rule.Stop();
             }
+
+            rules.Remove(botId);
         }
     }
 }

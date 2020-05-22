@@ -1,5 +1,6 @@
 ﻿using DTO;
 using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Interfaces;
 using Kernel;
@@ -8,11 +9,9 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OperationService.Bots;
-using OperationService.Bots.BotRules;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Tinkoff.Trading.OpenApi.Models;
 
 namespace OperationService.Commands
 {
@@ -22,17 +21,20 @@ namespace OperationService.Commands
         private readonly ILogger<RunBotCommand> logger;
         private ICommand<TradeRequest, bool> tradeCommand;
         private ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand;
+        private ICommand<GetUserBalanceRequest, UserBalance> balanceCommand;
 
         public RunBotCommand(
             [FromServices] IRequestClient<RunBotRequest> client,
             [FromServices] ILogger<RunBotCommand> logger,
             [FromServices] ICommand<TradeRequest, bool> tradeCommand,
-            [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand)
+            [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
+            [FromServices] ICommand<GetUserBalanceRequest, UserBalance> balanceCommand)
         {
             this.client = client;
             this.logger = logger;
             this.tradeCommand = tradeCommand;
             this.candlesCommand = candlesCommand;
+            this.balanceCommand = balanceCommand;
         }
 
         private async Task RunBot(RunBotRequest request)
@@ -43,7 +45,7 @@ namespace OperationService.Commands
 
             var rulesData = OperationResultHandler.HandleResponse(response.Message);
 
-            BotRunner.Run(rulesData, request.Figis, tradeCommand, candlesCommand);
+            BotRunner.Run(request, rulesData, tradeCommand, candlesCommand, balanceCommand);
         }
 
         public async Task<bool> Execute(RunBotRequest request)
@@ -56,7 +58,7 @@ namespace OperationService.Commands
             catch (Exception)
             {
                 var e = new NotFoundException("Not found bot to run");
-                logger.LogWarning(e, $"{e.Message}, botId: {request.Id}");
+                logger.LogWarning(e, $"{e.Message}, botId: {request.BotId}");
                 throw e;
             }
         }

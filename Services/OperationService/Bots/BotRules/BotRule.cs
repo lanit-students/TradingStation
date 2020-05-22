@@ -3,9 +3,11 @@ using DTO.BrokerRequests;
 using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Interfaces;
+using Kernel.CustomExceptions;
 using OperationService.Bots.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OperationService.Bots.BotRules
 {
@@ -13,6 +15,7 @@ namespace OperationService.Bots.BotRules
     {
         private ICommand<TradeRequest, bool> tradeCommand;
         private ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand;
+        private ICommand<GetUserBalanceRequest, UserBalance> balanceCommand;
 
         private Guid userId;
         private string token;
@@ -27,11 +30,13 @@ namespace OperationService.Bots.BotRules
         public BotRule(
             StartBotRuleRequest request,
             ICommand<TradeRequest, bool> tradeCommand,
-            ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand)
+            ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
+            ICommand<GetUserBalanceRequest, UserBalance> balanceCommand)
         {
             triggers = new List<Trigger>();
             this.tradeCommand = tradeCommand;
             this.candlesCommand = candlesCommand;
+            this.balanceCommand = balanceCommand;
             userId = request.UserId;
             timeMarker = request.TimeMarker;
             triggerValue = request.TriggerValue;
@@ -39,12 +44,25 @@ namespace OperationService.Bots.BotRules
             maxBalancePercents = request.MoneyLimitPercents;
         }
 
-        private void Execute(object sender, TriggerEventArgs e)
+        private async Task Execute(object sender, TriggerEventArgs e)
         {
-            // TODO: get user's balance and apply max percents property
-            var balance = 10000;
+            var userBalance = await balanceCommand.Execute(
+                new GetUserBalanceRequest()
+                {
+                    UserId = userId
+                });
 
-            tradeCommand.Execute(
+            var balance = e.Currency switch
+            {
+                Currency.Rub => userBalance.BalanceInRub,
+                Currency.Eur => userBalance.BalanceInEur,
+                Currency.Usd => userBalance.BalanceInUsd,
+                _ => throw new BadRequestException("Unsupported currency")
+            };
+
+            var maxPrice = balance * maxBalancePercents / 100;
+
+            await tradeCommand.Execute(
                 new TradeRequest()
                 {
                     UserId = userId,
@@ -53,7 +71,7 @@ namespace OperationService.Bots.BotRules
                     Operation = operationType,
                     Figi = e.Figi,
                     Price = e.Price,
-                    Count = (int)(balance * maxBalancePercents / 100 / e.Price),
+                    Count = (int)(maxPrice / e.Price),
                     Currency = e.Currency
                 });
         }
@@ -70,7 +88,11 @@ namespace OperationService.Bots.BotRules
                        candlesCommand
                     );
 
-                trigger.Triggered += Execute;
+                trigger.Triggered += async (s, e) =>
+                {
+                    await Execute(s, e);
+                };
+
                 triggers.Add(trigger);
             }
         }

@@ -29,9 +29,9 @@ namespace DataBaseService.BrokerConsumers
         private List<BotRuleData> RunBot(RunBotRequest request)
         {
             logger.LogInformation("Run bot request received from OperationService");
-            botRepository.RunBot(request.Id);
+            botRepository.RunBot(request.BotId);
 
-            var rules = botRuleRepository.GetBotRules(request.Id);
+            var rules = botRuleRepository.GetBotRules(request.BotId);
 
             return rules;
         }
