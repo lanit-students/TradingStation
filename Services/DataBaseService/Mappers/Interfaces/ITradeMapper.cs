@@ -10,5 +10,6 @@ namespace DataBaseService.Mappers.Interfaces
         Transaction MapToTransaction(DbTransaction Dbtransaction);
         DbUserBalance MapToDbUserBalance(UserBalance userBalance);
         UserBalance MapToUserBalance(DbUserBalance dbBrokerUser);
+        InstrumentData MapToInstrument(DbPortfolio dbPortfolio);
     }
 }

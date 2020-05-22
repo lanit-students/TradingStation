@@ -1,0 +1,31 @@
+﻿@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+    tr {
+        margin: 0 0 1rem 0;
+    }
+
+        tr:nth-child(odd) {
+            background: #d7d7d7;
+        }
+
+    td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .currencies {
+        display: none;
+    }
+}
