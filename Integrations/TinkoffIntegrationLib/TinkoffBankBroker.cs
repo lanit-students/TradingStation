@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DTO;
 using DTO.BrokerRequests;
@@ -35,39 +37,50 @@ namespace TinkoffIntegrationLib
             }
         }
 
-        public int Depth { get; set; }
+        private List<Instrument> ParseInstruments(List<MarketInstrument> marketInstruments, Tinkoff.Trading.OpenApi.Models.InstrumentType type)
+        {
+            var res = new ConcurrentBag<Instrument>();
+
+            Parallel.ForEach(marketInstruments,
+                instrument =>
+                {
+                    res.Add(
+                            new TinkoffInstrumentAdapter(
+                                type,
+                                instrument)
+                        );
+                });
+
+            return res.ToList();
+        }
 
         public IEnumerable<Instrument> GetInstruments(InstrumentType type)
         {
-            var instruments = new List<Instrument>();
+            if (type == InstrumentType.Any)
+            {
+                var bonds = context.MarketBondsAsync().Result.Instruments;
+                var currencies = context.MarketCurrenciesAsync().Result.Instruments;
+                var stocks = context.MarketStocksAsync().Result.Instruments;
+
+                return
+                    ParseInstruments(bonds, Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond)
+                    .Concat(ParseInstruments(currencies, Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency))
+                    .Concat(ParseInstruments(stocks, Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock));
+            }
 
             var tinkoffInstrumentType =
-                (Tinkoff.Trading.OpenApi.Models.InstrumentType) Enum.Parse(
+                (Tinkoff.Trading.OpenApi.Models.InstrumentType)Enum.Parse(
                     typeof(Tinkoff.Trading.OpenApi.Models.InstrumentType), type.ToString());
 
-            var instrumentsList = tinkoffInstrumentType switch
+            var instruments = tinkoffInstrumentType switch
             {
-                Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond => context.MarketBondsAsync().Result,
-                Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency => context.MarketCurrenciesAsync().Result,
-                Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock => context.MarketStocksAsync().Result,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Bond => context.MarketBondsAsync().Result.Instruments,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Currency => context.MarketCurrenciesAsync().Result.Instruments,
+                Tinkoff.Trading.OpenApi.Models.InstrumentType.Stock => context.MarketStocksAsync().Result.Instruments,
                 _ => throw new BadRequestException()
             };
 
-            Parallel.ForEach(instrumentsList.Instruments,
-                instrument =>
-                {
-                    try
-                    {
-                        instruments.Add(
-                            new TinkoffInstrumentAdapter(
-                                tinkoffInstrumentType,
-                                instrument)
-                        );
-                    }
-                    catch (Exception) { }
-                });
-
-            return instruments;
+            return ParseInstruments(instruments, tinkoffInstrumentType);
         }
 
         public Transaction Trade(InternalTradeRequest request)
@@ -88,11 +101,11 @@ namespace TinkoffIntegrationLib
             }
         }
 
-        public IEnumerable<Candle> SubscribeOnCandle(string Figi, Action<Candle> SendCandle)
+        public IEnumerable<Candle> SubscribeOnCandle(string Figi, int timeInterval, Action<Candle> SendCandle)
         {
             sendCandle = SendCandle;
 
-            var candles = GetCandles(DateTime.Now, Figi);
+            var candles = GetCandles(DateTime.Now, timeInterval, Figi);
 
             if (candles.Candles.Count == 0)
             {
@@ -104,7 +117,7 @@ namespace TinkoffIntegrationLib
                 {
                     days -= 1;
 
-                    candles = GetCandles(lastDate, Figi);
+                    candles = GetCandles(lastDate, timeInterval, Figi);
 
                     lastDate = lastDate.AddDays(-1);
                 }
@@ -124,9 +137,9 @@ namespace TinkoffIntegrationLib
             return candleList;
         }
 
-        private CandleList GetCandles(DateTime date, string Figi)
+        private CandleList GetCandles(DateTime date, int timeInterval, string Figi)
         {
-            return context.MarketCandlesAsync(Figi, date.AddMinutes(-15), date,
+            return context.MarketCandlesAsync(Figi, date.AddMinutes(-timeInterval), date,
                 CandleInterval.Minute).Result;
         }
 

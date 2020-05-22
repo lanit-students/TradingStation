@@ -38,7 +38,7 @@ namespace OperationService.Bots
                                 Broker = BrokerType.TinkoffBroker,
                                 TimeMarker = rule.TimeMarker,
                                 TriggerValue = rule.TriggerValue,
-                                OperationType = (OperationType)Enum.GetValues(typeof(OperationType)).GetValue(rule.OperationType),
+                                OperationType = rule.OperationType,
                                 MoneyLimitPercents = rule.MoneyLimitPercents
                             },
                             tradeCommand,

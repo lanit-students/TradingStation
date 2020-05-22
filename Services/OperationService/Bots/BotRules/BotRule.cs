@@ -37,6 +37,7 @@ namespace OperationService.Bots.BotRules
             this.tradeCommand = tradeCommand;
             this.candlesCommand = candlesCommand;
             this.balanceCommand = balanceCommand;
+            token = request.Token;
             userId = request.UserId;
             timeMarker = request.TimeMarker;
             triggerValue = request.TriggerValue;

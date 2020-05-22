@@ -10,7 +10,7 @@ namespace DTO.RestRequests
         public string Token { get; set; }
         public BrokerType Broker { get; set; }
         public int TimeMarker { get; set; }
-        public int TriggerValue { get; set; }
+        public decimal TriggerValue { get; set; }
         public OperationType OperationType { get; set; }
         public decimal MoneyLimitPercents { get; set; }
     }

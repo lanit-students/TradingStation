@@ -9,20 +9,12 @@ namespace DTO
 
         public Guid BotId { get; set; }
 
-        public int MoneyLimitPercents { get; set; }
+        public OperationType OperationType { get; set; }
 
-        public int OperationType { get; set; }
+        public int MoneyLimitPercents { get; set; }
 
         public int TimeMarker { get; set; }
 
-        public int TriggerValue { get; set; }
-
-        public OperationType OperationType { get; set; }
-
-        public decimal MoneyLimitPercents { get; set; }
-
-        public TimeSpan TimeMarker { get; set; }
-        
         public decimal TriggerValue { get; set; }
 
         public override string ToString()

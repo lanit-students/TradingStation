@@ -56,7 +56,7 @@ else if (!isErrorOccured)
                     }
                 </tbody>
             </table>
-        </div>      
+        </div>
         </div>
 }
 else
@@ -130,7 +130,7 @@ else
 
     private async Task Run(BotData bot)
     {
-        var request = new RunBotRequest() { ID = bot.Id };
+        var request = new RunBotRequest() { BotId = bot.Id };
         try
         {
             await BotManager.RunBot(userToken, request);

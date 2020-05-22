@@ -62,7 +62,7 @@ namespace GUI.Scripts
 
         public static async Task EditBot(UserToken userToken, EditBotRequest request)
         {
-            
+
         }
     }
 }

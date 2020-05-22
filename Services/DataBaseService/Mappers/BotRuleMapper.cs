@@ -1,6 +1,8 @@
 ﻿using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
 using DTO;
+using DTO.MarketBrokerObjects;
+using System;
 
 namespace DataBaseService.Mappers
 {
@@ -11,10 +13,11 @@ namespace DataBaseService.Mappers
             return new DbBotRule
             {
                 Id = rule.Id,
-                OperationType = rule.OperationType,
+                OperationType = (int)rule.OperationType,
                 MoneyLimitPercents = rule.MoneyLimitPercents,
                 TimeMarker = rule.TimeMarker,
-                TriggerValue = rule.TriggerValue
+                // TODO: make it decimal in db
+                TriggerValue = (int)rule.TriggerValue
             };
         }
 
@@ -23,7 +26,7 @@ namespace DataBaseService.Mappers
             return new BotRuleData
             {
                 Id = dbRule.Id,
-                OperationType = dbRule.OperationType,
+                OperationType = (OperationType)dbRule.OperationType,
                 MoneyLimitPercents = dbRule.MoneyLimitPercents,
                 TimeMarker = dbRule.TimeMarker,
                 TriggerValue = dbRule.TriggerValue

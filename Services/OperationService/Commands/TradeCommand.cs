@@ -3,6 +3,7 @@ using DTO.BrokerRequests;
 using DTO.RestRequests;
 using Interfaces;
 using Kernel;
+using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
