@@ -22,7 +22,7 @@ namespace Kernel
                 result.ErrorMessage = e.Message;
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 result.StatusCode = 500;
                 return result;

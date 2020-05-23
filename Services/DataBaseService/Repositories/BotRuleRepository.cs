@@ -51,6 +51,11 @@ namespace DataBaseService.Repositories
 
         public List<BotRuleData> GetBotRules(Guid botId)
         {
+            if (!dbContext.Bots.Select(x => x.Id).Contains(botId))
+            {
+                throw new NotFoundException();
+            }
+
             var ruleIds = dbContext.LinkBotsWithRules.Where(x => x.BotId == botId).Select(x => x.RuleId).ToList();
 
             return dbContext.BotRules.Where(r => ruleIds.Contains(r.Id)).Select(r => mapper.MapToRule(r)).ToList();

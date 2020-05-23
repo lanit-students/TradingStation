@@ -45,6 +45,7 @@ namespace OperationService.Commands
 
             var rulesData = OperationResultHandler.HandleResponse(response.Message);
 
+            // TODO mark bot stopped in case of error
             BotRunner.Run(request, rulesData, tradeCommand, candlesCommand, balanceCommand);
         }
 
@@ -55,9 +56,14 @@ namespace OperationService.Commands
                 await RunBot(request);
                 return true;
             }
-            catch (Exception)
+            catch (NotFoundException)
             {
                 var e = new NotFoundException("Not found bot to run");
+                logger.LogWarning(e, $"{e.Message}, botId: {request.BotId}");
+                throw e;
+            }
+            catch (BadRequestException e)
+            {
                 logger.LogWarning(e, $"{e.Message}, botId: {request.BotId}");
                 throw e;
             }

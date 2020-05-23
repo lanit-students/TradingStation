@@ -38,7 +38,7 @@ else if (!isErrorOccured)
                             <td class="align-middle">
                                 @if (bot.Rules == null)
                                 {
-                                    <label>There no rules yet</label>
+                                    <label>There are no rules yet</label>
                                 }
                                 else
                                 {
@@ -133,11 +133,17 @@ else
         var request = new RunBotRequest() { BotId = bot.Id };
         try
         {
+            var modal = Modal.Show<RunBotModal>();
+            var result = await modal.Result;
+            var figis = (List<string>)result.Data;
+            request.Figis = figis;
+            request.UserId = userToken.UserId;
+            request.Token = userToken.Body;
             await BotManager.RunBot(userToken, request);
             bot.IsRunning = true;
             StateHasChanged();
         }
-        catch (Exception)
+        catch (Exception e)
         {
             Modal.Show<EmptyModal>("Sorry, we can't enable bot now. Try again later");
         }
@@ -152,7 +158,7 @@ else
             bot.IsRunning = false;
             StateHasChanged();
         }
-        catch (Exception)
+        catch (Exception e)
         {
             Modal.Show<EmptyModal>("Sorry, we can't disable bot now. Try again later");
         }
@@ -191,7 +197,7 @@ else
             bots = await BotManager.GetBots(userToken);
             isPageLoading = false;
         }
-        catch
+        catch (Exception)
         {
             isErrorOccured = true;
             errorMessage = "Sorry, we can't load bots. Try again later";

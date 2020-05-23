@@ -148,7 +148,7 @@
         ChangeTitle(instrument.Name);
     }
 
-    private async void ChangeTitle(string title)
+    private async Task ChangeTitle(string title)
     {
         lineConfig.Options.Title.Text = new IndexableOption<string>(title);
         await lineChartJs.Update();

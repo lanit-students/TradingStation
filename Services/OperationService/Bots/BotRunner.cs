@@ -22,9 +22,24 @@ namespace OperationService.Bots
             ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
             ICommand<GetUserBalanceRequest, UserBalance> balanceCommand)
         {
+            if (botRulesData.Count == 0)
+            {
+                throw new BadRequestException("Provide bot with some rules before run.");
+            }
+
+            if (request.Figis.Count == 0)
+            {
+                throw new BadRequestException("Provide bot rule with figis before run.");
+            }
+
             var botRules = new List<BotRule>();
 
             var botId = botRulesData.First().Id;
+
+            if (rules.ContainsKey(botId))
+            {
+                throw new BadRequestException("Bot is already running.");
+            }
 
             foreach (var rule in botRulesData)
             {

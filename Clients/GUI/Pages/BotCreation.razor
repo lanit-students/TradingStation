@@ -139,7 +139,8 @@
         var request = new CreateBotRequest
         {
             Name = userInput.Name,
-            UserId = userToken.UserId
+            UserId = userToken.UserId,
+            Rules = userInput.Rules
         };
 
         try

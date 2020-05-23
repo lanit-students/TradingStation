@@ -26,11 +26,11 @@ namespace DataBaseService.Database.Models
                 .IsRequired();
             builder
                 .Property(p => p.BotId)
-                .HasColumnName("BotId")
+                .HasColumnName("IdBot")
                 .IsRequired();
             builder
                 .Property(p => p.RuleId)
-                .HasColumnName("RuleId")
+                .HasColumnName("IdRule")
                 .IsRequired();
         }
     }

@@ -33,6 +33,7 @@ namespace OperationService.Bots.Utils
             var request = new GetCandlesRequest()
             {
                 Broker = BrokerType.TinkoffBroker,
+                Interval = 60,
                 Token = token,
                 Figi = figi
             };
