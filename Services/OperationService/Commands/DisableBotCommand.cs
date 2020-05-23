@@ -6,6 +6,7 @@ using Kernel.CustomExceptions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OperationService.Bots;
 using System;
 using System.Threading.Tasks;
 
@@ -35,7 +36,11 @@ namespace OperationService.Commands
         {
             try
             {
-                return await DisableBot(request);
+                await DisableBot(request);
+
+                BotRunner.Stop(request.ID);
+
+                return true;
             }
             catch (Exception)
             {
