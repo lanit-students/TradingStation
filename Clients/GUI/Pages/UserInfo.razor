@@ -423,9 +423,11 @@
 
         try
         {
-            listTransactions = await BrokerManager.GetTransactions(await Storage.GetItemAsync<Guid>("id"));
-            userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };
-            userBalance = await BrokerManager.GetUserBalance(userBalance.UserId);
+            var userId = await Storage.GetItemAsync<Guid>("id");
+
+            listTransactions = await BrokerManager.GetTransactions(userId);
+            userBalance = new UserBalance() { UserId = userId };
+            userBalance = await BrokerManager.GetUserBalance(userId);
             balanceInCurrencies = new Dictionary<Currency, decimal>()
             {
                 {Currency.Rub, userBalance.BalanceInRub },
