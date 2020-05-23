@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 
 namespace GUI.Components
@@ -19,12 +18,6 @@ namespace GUI.Components
         /// </summary>
         [Parameter]
         public string Id { get; set; }
-
-        /// <summary>
-        /// Function to check that there are no errors
-        /// </summary>
-        [Parameter]
-        public Func<bool> HasError { get; set; }
 
         /// <summary>
         /// The ChildContent container for <see cref="WizardStep"/>
@@ -54,8 +47,7 @@ namespace GUI.Components
         /// Sets the <see cref="ActiveStep"/> to the previous Index
         /// </summary>
         protected internal void GoBack()
-        {   
-            if(HasError()) return;
+        {
             if (ActiveStepIx > 0)
                 SetActive(Steps[ActiveStepIx - 1]);
         }
@@ -65,7 +57,6 @@ namespace GUI.Components
         /// </summary>
         protected internal void GoNext()
         {
-            if (HasError()) return;
             if (ActiveStepIx < Steps.Count - 1)
                 SetActive(Steps[(Steps.IndexOf(ActiveStep) + 1)]);
         }
@@ -74,9 +65,8 @@ namespace GUI.Components
         /// Populates the <see cref="ActiveStep"/> the Sets the passed in <see cref="WizardStep"/> instance as the
         /// </summary>
         /// <param name="step">The WizardStep</param>
-        protected internal void SetActive(WizardStep step, bool isFirst = false)
+        protected internal void SetActive(WizardStep step)
         {
-            if(!isFirst && HasError()) return;
             ActiveStep = step;
             ActiveStepIx = StepsIndex(step);
             IsLastStep = ActiveStepIx == Steps.Count - 1;
@@ -107,7 +97,7 @@ namespace GUI.Components
         {
             if (firstRender)
             {
-                SetActive(Steps[0], true);
+                SetActive(Steps[0]);
                 StateHasChanged();
             }
         }

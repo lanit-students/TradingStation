@@ -21,7 +21,7 @@ namespace BrokerService.BrokerConsumers
 
         public IEnumerable<Candle> SubscribeOnCandle(GetCandlesRequest request)
         {
-            return BrokerFactory.Create(request.Broker, request.Token).SubscribeOnCandle(request.Figi, SendCandle);
+            return BrokerFactory.Create(request.Broker, request.Token).SubscribeOnCandle(request.Figi, request.Interval, SendCandle);
         }
 
         private void SendCandle(Candle candle)

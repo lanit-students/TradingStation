@@ -5,7 +5,6 @@ using FluentValidation;
 using DTO.NewsRequests.Currency;
 using DTO;
 using NewsService.Interfaces;
-using DTO.RestRequests;
 
 namespace NewsService.Controllers
 {
@@ -26,12 +25,9 @@ namespace NewsService.Controllers
         [HttpPost]
         public List<ExchangeRate> GetCurrencies(
             [FromServices] IGetCurrenciesCommand command,
-            [FromServices] IValidator<CurrencyRequest> validator,
             [FromServices] IEqualityComparer<string> comparer,
             [FromBody] CurrencyRequest requestParams)
         {
-            validator.ValidateAndThrow(requestParams);
-
             return command.Execute(requestParams, comparer);
         }
 

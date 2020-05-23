@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTO;
-using DTO.MarketBrokerObjects;
-using Interfaces;
 using DTO.BrokerRequests;
+using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
-using System;
+using Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,20 +15,20 @@ namespace OperationService.Controllers
     [Route("[controller]")]
     public class OperationsController : ControllerBase
     {
-        private readonly ILogger<OperationsController> logger;
+		private readonly ILogger<OperationsController> logger;
+
         public OperationsController([FromServices] ILogger<OperationsController> logger)
         {
             this.logger = logger;
         }
-        
+
         [Route("instruments/get")]
         [HttpGet]
         public async Task<IEnumerable<Instrument>> GetInstruments(
-                [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> command,
-                [FromQuery] BrokerType broker,
-                [FromQuery] string token,
-                [FromQuery] InstrumentType instrument
-            )
+            [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> command,
+            [FromQuery] BrokerType broker,
+            [FromQuery] string token,
+            [FromQuery] InstrumentType instrument)
         {
             return await command.Execute(
                 new GetInstrumentsRequest
@@ -67,6 +67,16 @@ namespace OperationService.Controllers
                });
         }
 
+        [Route("getportfolio")]
+        [HttpGet]
+        public async Task<List<InstrumentData>> GetPortfolio(
+            [FromServices] ICommand<GetPortfolioRequest, List<InstrumentData>> command,
+            [FromHeader] Guid userId
+            )
+        {
+            return await command.Execute(new GetPortfolioRequest() { UserId = userId });
+        }
+
         [Route("userBalance/get")]
         [HttpGet]
         public async Task<UserBalance> GetUserBalance(
@@ -89,14 +99,14 @@ namespace OperationService.Controllers
             return await command.Execute(request);
         }
 
-
         [Route("candles/get")]
         [HttpGet]
         public async Task<IEnumerable<Candle>> GetCandles(
             [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> command,
             [FromQuery] BrokerType broker,
             [FromQuery] string token,
-            [FromQuery] string figi
+            [FromQuery] string figi,
+            [FromQuery] int interval
         )
         {
             return await command.Execute(
@@ -104,7 +114,63 @@ namespace OperationService.Controllers
                 {
                     Broker = broker,
                     Token = token,
-                    Figi = figi
+                    Figi = figi,
+                    Interval = interval
+                });
+        }
+
+		[Route("bot/create")]
+        [HttpPost]
+        public async Task<bool> CreateBot([FromServices] ICommand<CreateBotRequest, bool> command, [FromBody] CreateBotRequest request)
+        {
+            logger.LogInformation("Create bot request received from GUI to OperationService");
+            return await command.Execute(request);
+        }
+
+        [Route("bot/delete")]
+        [HttpDelete]
+        public async Task<bool> DeleteBot([FromServices] ICommand<DeleteBotRequest, bool> command, [FromBody] DeleteBotRequest request)
+        {
+            logger.LogInformation("Delete bot request received from GUI to OperationService");
+            return await command.Execute(request);
+        }
+
+        [Route("bot/run")]
+        [HttpPut]
+        public async Task<bool> RunBot([FromServices] ICommand<RunBotRequest, bool> command, [FromBody] RunBotRequest request)
+        {
+            logger.LogInformation("Run bot request received from GUI to OperationService");
+            return await command.Execute(request);
+        }
+
+        [Route("bot/disable")]
+        [HttpPut]
+        public async Task<bool> DisableBot([FromServices] ICommand<DisableBotRequest, bool> command, [FromBody] DisableBotRequest request)
+        {
+            logger.LogInformation("Disable bot request received from GUI to OperationService");
+            return await command.Execute(request);
+        }
+
+        [Route("bot/get")]
+        [HttpGet]
+        public async Task<List<BotData>> GetBot([FromServices] ICommand<Guid, List<BotData>> command, [FromHeader] Guid userId)
+        {
+            logger.LogInformation("Get bots request received from GUI to OperationService");
+            var result = await command.Execute(userId);
+            return result;
+        }
+
+        [Route("transactions/get")]
+        [HttpGet]
+        public async Task<IEnumerable<Transaction>> GetTransactions(
+            [FromServices] ICommand<GetUserTransactionsRequest, IEnumerable<Transaction>> command,
+            [FromQuery] Guid userId
+        )
+        {
+            return await command.Execute(
+                new GetUserTransactionsRequest
+                {
+                    UserId = userId
                 });
         }
     }

@@ -63,10 +63,13 @@ namespace OperationService
 
             services.AddMassTransit(x =>
             {
-                var brokerUri = new Uri("rabbitmq://localhost/BrokerService");
+            	var brokerUri = new Uri("rabbitmq://localhost/BrokerService");
                 var databaseUri = new Uri("rabbitmq://localhost/DatabaseService");
 
                 x.AddBus(provider => CreateBus(provider));
+
+               	x.AddConsumer<CandleConsumer>();
+
                 x.AddRequestClient<GetInstrumentsRequest>(brokerUri);
                 x.AddRequestClient<InternalTradeRequest>(brokerUri);
                 x.AddRequestClient<Transaction>(databaseUri);
@@ -74,18 +77,35 @@ namespace OperationService
                 x.AddRequestClient<GetUserBalanceRequest>(databaseUri);
                 x.AddRequestClient<UserBalance>(databaseUri);
 				x.AddRequestClient<GetCandlesRequest>(brokerUri);
-                x.AddConsumer<CandleConsumer>();   
+                x.AddRequestClient<GetPortfolioRequest>(databaseUri);
+                x.AddRequestClient<GetUserTransactions>(databaseUri);
+                x.AddRequestClient<CreateBotRequest>(databaseUri);
+                x.AddRequestClient<DeleteBotRequest>(databaseUri);
+                x.AddRequestClient<RunBotRequest>(databaseUri);
+                x.AddRequestClient<DisableBotRequest>(databaseUri);
+                x.AddRequestClient<InternalGetBotsRequest>(databaseUri);
             });
 
             services.AddMassTransitHostedService();
 
             services.AddTransient<ICommand<GetInstrumentsRequest, IEnumerable<Instrument>>, GetInstrumentsCommand>();
-            services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
+			services.AddTransient<ICommand<TradeRequest, bool>, TradeCommand>();
             services.AddTransient<ICommand<GetInstrumentFromPortfolioRequest, Instrument>, GetInstrumentFromPortfolioCommand>();
             services.AddTransient<ICommand<GetUserBalanceRequest, UserBalance>, GetUserBalanceCommand>();
             services.AddTransient<ICommand<UpdateUserBalanceRequest, bool>, UpdateUserBalanceCommand>();
-
+            services.AddTransient<ICommand<GetPortfolioRequest, List<InstrumentData>>, GetPortfolioCommand>();
+            services.AddTransient<ICommand<GetUserTransactionsRequest, IEnumerable<Transaction>>, GetUserTransactionsCommand>();
             services.AddTransient<ICommand<GetCandlesRequest, IEnumerable<Candle>>, GetCandlesCommand>();
+			services.AddTransient<ICommand<CreateBotRequest, bool>, CreateBotCommand>();
+
+            services.AddTransient<ICommand<DeleteBotRequest, bool>, DeleteBotCommand>();
+
+            services.AddTransient<ICommand<RunBotRequest, bool>, RunBotCommand>();
+
+            services.AddTransient<ICommand<DisableBotRequest, bool>, DisableBotCommand>();
+
+            services.AddTransient<ICommand<Guid, List<BotData>>, GetBotsCommand>();
+
 
             services.AddLogging(log =>
             {

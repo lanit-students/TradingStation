@@ -1,0 +1,200 @@
+﻿@page "/bots"
+@inject NavigationManager NavManager
+@inject IModalService Modal
+@inject ISessionStorageService Storage
+@attribute [Authorize]
+
+
+<div align="center" class="h3" min-width:>
+    <h3><b>Bots</b></h3>
+</div>
+@if (isPageLoading)
+{
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+}
+else if (!isErrorOccured)
+{
+    <div class="container">
+        <div class="row row-margin-bottom">
+        <button class="btn-primary" value="Create new bot" @onclick="Create">Create new bot</button>
+            <br><br>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="width: 15%" scope="col">Name</th>
+                        <th style="width: 15%" scope="col">Is active</th>
+                        <th style="width: 45%" scope="col">Rules</th>
+                        <th style="width: 25%" scope="col" colspan="3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bot in bots)
+                    {
+                        <tr>
+                            <td class="align-middle">@bot.Name</td>
+                            <td class="align-middle">@bot.IsRunning</td>
+                            <td class="align-middle">
+                                @if (bot.Rules == null)
+                                {
+                                    <label>There no rules yet</label>
+                                }
+                                else
+                                {
+                                    foreach (var rule in bot.Rules)
+                                    {
+                                        <label>@rule.ToString()</label>
+                                    }
+                                }
+                            </td>
+                            <td><button class="btn btn-light" @onclick="@(() => RunOrDisable(bot, bot.IsRunning))">
+                                    @(bot.IsRunning ? "Disable" : "Run")</button></td>
+                            <td><button class="btn btn-light" @onclick="@(() => Edit(bot))">Edit</button></td>
+                            <td><button class="btn btn-light" @onclick="@(() => Delete(bot.Id))">Delete</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>      
+        </div>
+}
+else
+{
+   <h3 class="m-lg-5">@errorMessage</h3>
+}
+
+
+@code {
+
+    public List<BotData> bots;
+    private UserToken userToken;
+    private bool isPageLoading = true;
+    private bool isErrorOccured = false;
+    private string errorMessage = "";
+    private BotData currentBot;
+
+
+    private void MapRules()
+    {
+        if (bots != null)
+        {
+
+        }
+    }
+
+    private async Task RunOrDisable(BotData bot, bool isRunning)
+    {
+        if (isRunning)
+        {
+            await Disable(bot);
+        }
+        else
+        {
+            await Run(bot);
+        }
+    }
+
+    private async Task Create()
+    {
+        try
+        {
+            var formModal = Modal.Show<GUI.Pages.BotCreation>();
+            var result = await formModal.Result;
+            if (!result.Cancelled)
+            {
+                bots = await BotManager.GetBots(userToken);
+                StateHasChanged();
+            }
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't create bot now. Try again later");
+        }
+    }
+
+    private async Task Delete(Guid id)
+    {
+        var request = new DeleteBotRequest() { ID = id };
+        try
+        {
+            await BotManager.DeleteBot(userToken, request);
+            bots = await BotManager.GetBots(userToken);
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't delete bot now. Try again later");
+        }
+    }
+
+    private async Task Run(BotData bot)
+    {
+        var request = new RunBotRequest() { ID = bot.Id };
+        try
+        {
+            await BotManager.RunBot(userToken, request);
+            bot.IsRunning = true;
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't enable bot now. Try again later");
+        }
+    }
+
+    private async Task Disable(BotData bot)
+    {
+        var request = new DisableBotRequest() { ID = bot.Id };
+        try
+        {
+            await BotManager.DisableBot(userToken, request);
+            bot.IsRunning = false;
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't disable bot now. Try again later");
+        }
+    }
+
+    private async Task Edit(BotData bot)
+    {
+        try
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(BotEdition.CurrentBot), bot);
+            // Storage.SetItemAsync("botId", id);
+            var formModal = Modal.Show<GUI.Pages.BotEdition>("Edit bot", parameters);
+            var result = await formModal.Result;
+            if (!result.Cancelled)
+            {
+                bots = await BotManager.GetBots(userToken);
+                StateHasChanged();
+            }
+        }
+        catch (Exception)
+        {
+            Modal.Show<EmptyModal>("Sorry, we can't edit bot now. Try again later");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        isPageLoading = true;
+        userToken = new UserToken();
+        bots = new List<BotData>();
+        try
+        {
+            userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+            userToken.Body = await Storage.GetItemAsync<string>("token");
+            bots = await BotManager.GetBots(userToken);
+            isPageLoading = false;
+        }
+        catch
+        {
+            isErrorOccured = true;
+            errorMessage = "Sorry, we can't load bots. Try again later";
+        }
+    }
+}

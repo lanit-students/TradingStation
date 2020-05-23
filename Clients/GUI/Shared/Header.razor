@@ -1,38 +1,102 @@
 ﻿@inject AuthStateProvider AuthenticationProvider
 @inject Blazored.SessionStorage.ISessionStorageService Storage
 @inject IModalService modal
-
+@inject NavigationManager NavigationManager
 
 <div class="header">
-    <a href="#"><img src="Picture/Logo.png"></a>
-    <a href="#">News</a>
-    <AuthorizeView>
-        <Authorized>
-            <a href="instruments">Instruments</a>
-        </Authorized>
-    </AuthorizeView>
-    <div class="header-right">
-        <AuthorizeView>
-            <NotAuthorized>
-                <a class="header_item" href="signup">Sign up</a>
-                <a> / </a>
-                <a class="header_item" @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</a>
-            </NotAuthorized>
-            <Authorized>
-                <a class="header_item" href="#" @onclick="@SignOut">Sign Out</a>
-                <a> / </a>
-                <a class="header_item" href="userinfo">User Info</a>
-            </Authorized>
-        </AuthorizeView>
-        <a href="#"><img src="Picture/Avatar.png"></a>
-    </div>
+     <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand pl-5" href="/">
+            <img src="images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">News</a>
+                </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/instruments">Instruments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/portfolio">Portfolio</a>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bots">Bots</a>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+            </ul>
+            <div class="navbar-nav ml-auto">
+                <AuthorizeView>
+                    <NotAuthorized Context="NotAuth">
+                        <button type="button" class="btn btn-outline-secondary mr-2" @onclick="@(() => modal.Show<GUI.Pages.SignIn>())">Sign In</button>
+
+                        <button type="button" class="btn btn-outline-secondary" @onclick="@(() => modal.Show<GUI.Pages.SignUpWizzard>())">Sign up</button>
+                    </NotAuthorized>
+                    <Authorized>
+                        @{
+                            LoadImageSrc();
+                        }
+                        <div class="btn-group dropleft">
+                            <a class="navbar-brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="@imgSrc" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="Avatar">
+                            </a>
+
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item align-items-center" href="userinfo">
+                                    User Info
+                                    <img src="@imgSrc" width="30" height="30" class="align-items-center rounded-circle" alt="Avatar">
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/" @onclick="SignOut">Sign out</a>
+                            </div>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </nav>
 </div>
 
+
 @code {
+    private string defaultImgSrc = "images/avatar.svg";
+    private string imgSrc = "images/avatar.svg";
+
     private void SignOut()
     {
         Storage.ClearAsync();
+        NavigationManager.NavigateTo("/");
         AuthenticationProvider.MarkSignedOut();
     }
-}
 
+    private async Task LoadImageSrc()
+    {
+        var userToken = new UserToken
+        {
+            Body = await Storage.GetItemAsync<string>("token"),
+            UserId = await Storage.GetItemAsync<Guid>("id")
+        };
+
+        if (userToken.Body == null)
+        {
+            return;
+        }
+
+        var requestResult = await UserGetter.GetUserById(userToken);
+
+        if (requestResult.Avatar != null)
+            imgSrc = AvatarGetter.GetUserImage(requestResult.Avatar, requestResult.AvatarExtension);
+        else
+            imgSrc = defaultImgSrc;
+        StateHasChanged();
+    }
+}

@@ -9,20 +9,24 @@
 @using ChartJs.Blazor.ChartJS.LineChart
 @using ChartJs.Blazor.Charts
 @using ChartJs.Blazor.Util
-@using GUI.Scripts
 @inject NavigationManager NavigationManager
 @inject ISessionStorageService Storage
 @inject IModalService Modal
 
-<div class="modal-body row">
-    <div class="col-md-6">
-        <div style="position: fixed; height:22vh; width:44vw">
-            <ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="300" Height="150" />
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <ChartJsLineChart @ref="lineChartJs" Config="@lineConfig" Width="400" Height="300" />
+        </div>
+        <div class="col-md">
+            <label class="text-right">Current balance:  @currentBalance  @currency</label>
+        </div>
+        <div class="col-md">
+            <input style="width:100%" type="button" class="btn-l" value="Increase balance" @onclick="GoToBalancePage">
         </div>
     </div>
-    <div class="col-md-6">
-        <h3 align="center">@instrument.Name</h3>
-        <br>
+    <div class="row">
+        <span style="padding:20px;"/>
         <div class="container">
             @if (isInstrumentLoading)
             {
@@ -32,21 +36,6 @@
             }
             else if (!errorOccured)
             {
-                <div>
-                    <div class="form-row input-group-prepend">
-                        <label class="col-3">Current balance </label>
-                        <input type="text" disabled="disabled" class="col-3" @bind-value=@currency>
-                        <input type="number" disabled="disabled" class="col-3" @bind-value=@currentBalance>
-                    </div>
-                    <br>
-                    <div class="form-row input-group-prepend">
-                        <label class="col-3">Update balance</label>
-                        <input type="number" class="col-3" @bind-value=@cash>
-                        <button class="btn btn-primary col-3" value="Update" @onclick="@UpdateBalance">Update</button>
-                    </div>
-                </div>
-                <br>
-
                 <table class="table table-bordered">
                     <thead class="thead-light">
                         <tr>
@@ -79,15 +68,15 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="price">Price</label>
-                        <input type="number" class="form-control" id="price" @bind-value=@price>
+                        <input type="number" disabled="disabled" class="form-control" id="price" @bind-value=@price>
                     </div>
                     <div class="form-group col-md-2">
                         <label for="sellButton"> Sell instrument </label>
-                        <input class="btn btn-primary col-md-11" id="sellButton" value="Sell" @onclick="@Sell" />
+                        <input class="btn btn-primary col-md-11" disabled="@errorOccured" id="sellButton" value="Sell" @onclick="@Sell" />
                     </div>
                     <div class="form-group col-md-2">
                         <label for="buyButton"> Buy instrument </label>
-                        <input class="btn btn-primary col-md-11" id="buyButton" value="Buy" @onclick="@Buy" />
+                        <input class="btn btn-primary col-md-11" disabled="@errorOccured" id="buyButton" value="Buy" @onclick="@Buy" />
                     </div>
                 </div>
             }
@@ -95,9 +84,7 @@
             {
                 <h3 class="m-lg-5">@errorMessage</h3>
             }
-
         </div>
-
     </div>
 </div>
 
@@ -109,54 +96,48 @@
     private LineDataset<TimeTuple<decimal>> tempDataSet;
     private DateTime lastTime;
 
-    private string tinkoffToken = "";
+    private string tinkoffToken = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
     private int countInPortfolio = 1;
     private int lotsToTrade = 1;
-    private decimal price = 100;
+    private decimal price = 0;
     private bool errorOccured = false;
     private bool isInstrumentLoading = false;
     private Instrument instrument;
     private string errorMessage = "";
-    private decimal cash = 100;
     private Currency currency = Currency.Rub;
     private decimal currentBalance = 0;
     private UserBalance userBalance;
-    private UserBalance oldBalance;
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            tinkoffToken = await Storage.GetItemAsync<string>("tinkoffToken");
-
-            if (tinkoffToken == null)
-            {
-                lineConfig.Options.Title.Text = new IndexableOption<string>("Access error");
-
-                await lineChartJs.Update();
-
-                return;
-            }
-
             IEnumerable<Candle> list = null;
 
             try
             {
-                list = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, tinkoffToken);
+                list = await HubConnector.SubscribeOnCandle(OnReceivedMessage, BrokerType.TinkoffBroker, instrument.Figi, 15, tinkoffToken);
 
                 if (list.Any())
                 {
+                    price = list.Last().Close;
+
+                    StateHasChanged();
+
                     AddCandles(list);
 
                     await UpdateNameInstrument();
                 }
                 else
                 {
+                    errorOccured = true;
                     ChangeTitle("Exchange doesn't work");
                 }
             }
-            catch (InternalServerException e)
+            catch (InternalServerException)
             {
+                errorOccured = true;
                 ChangeTitle("Figi not found");
             }
         }
@@ -171,12 +152,16 @@
     {
         lineConfig.Options.Title.Text = new IndexableOption<string>(title);
         await lineChartJs.Update();
+        StateHasChanged();
     }
 
     private void OnReceivedMessage(Candle candle)
     {
         if (lastTime == null || lastTime != candle.Time)
         {
+            price = candle.Close;
+            StateHasChanged();
+
             lastTime = candle.Time;
 
             tempDataSet.Add(new TimeTuple<decimal>(new Moment(candle.Time), candle.Close));
@@ -283,54 +268,6 @@
         };
     }
 
-    private void IncreaseBalanceInCorrectCurrency()
-    {
-        switch (currency)
-        {
-            case Currency.Rub:
-                userBalance.BalanceInRub += cash;
-                break;
-            case Currency.Usd:
-                userBalance.BalanceInUsd += cash;
-                break;
-            case Currency.Eur:
-                userBalance.BalanceInEur += cash;
-                break;
-            default:
-                errorMessage = "This currency is disabled to trade";
-                errorOccured = true;
-                break;
-        }
-        cash = 0;
-    }
-
-    private async Task UpdateBalance()
-    {
-        oldBalance = (UserBalance)userBalance.Clone();
-        IncreaseBalanceInCorrectCurrency();
-        var request = new UpdateUserBalanceRequest()
-        {
-            UserId = userBalance.UserId,
-            BalanceInRub = userBalance.BalanceInRub,
-            BalanceInUsd = userBalance.BalanceInUsd,
-            BalanceInEur = userBalance.BalanceInEur
-        };
-        try
-        {
-            var result = await BrokerManager.UpdateUserBalance(request);
-            if (result == true)
-            {
-                UpdateBalanceVariable();
-            }
-        }
-        catch
-        {
-            userBalance = oldBalance;
-            errorOccured = true;
-            errorMessage = "Can't update balance, try again later.";
-        }
-    }
-
     private async Task GetCountFromPortfolio()
     {
         var instrumentInfo = await BrokerManager.GetInstrumentFromPortfolio(userBalance.UserId, instrument.Figi);
@@ -427,37 +364,19 @@
         return result;
     }
 
-    private async Task SetToken()
+    private void GoToBalancePage()
     {
-        var formModal = Modal.Show<SetTinkoffTokenModal>("Enter Tinkoff token");
-        var modalResult = await formModal.Result;
-        tinkoffToken = (string)modalResult.Data;
-
-        await Storage.SetItemAsync("tinkoffToken", tinkoffToken);
+        NavigationManager.NavigateTo("/balance");
     }
 
     protected override async Task OnInitializedAsync()
     {
         errorOccured = false;
         isInstrumentLoading = true;
-        instrument = new Instrument()
-        {
-            Figi = "default",
-            Currency = Currency.Rub,
-            Name = "Load instrument",
-            CountInLot = 0,
-            Price = 0,
-            Type = InstrumentType.Currency
-        };
+        instrument = new Instrument();
 
         try
         {
-            tinkoffToken = await Storage.GetItemAsync<string>("tinkoffToken");
-
-            if (tinkoffToken == null)
-            {
-                await SetToken();
-            }
             instrument = await Storage.GetItemAsync<Instrument>("instrument");
             currency = instrument.Currency;
             userBalance = new UserBalance() { UserId = await Storage.GetItemAsync<Guid>("id") };

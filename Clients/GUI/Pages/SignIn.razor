@@ -1,35 +1,32 @@
-﻿@page "/signin"
-@inject AuthStateProvider AuthenticationProvider
+﻿@inject AuthStateProvider AuthenticationProvider
 @inject NavigationManager NavigationManager
 @inject ISessionStorageService Storage
 
-<h3 style="color: red; display: @(isHidden ? "none" : "block")"> Wrong login or password</h3>
-<div class="col-12">
-    <h3><b>Sign In</b></h3>
-    <hr />
     <EditForm Model="@userInput" OnValidSubmit="@TrySignIn">
         <DataAnnotationsValidator />
         <div class="form-group">
             <label for="Email">Email</label>
-            <InputText class="form-control col-3" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
+            <InputText class="form-control" @bind-Value="userInput.Email" placeholder="example@gmail.com" />
             <ValidationMessage For="() => userInput.Email" />
         </div>
-        <br />
         <div class="form-group">
             <label for="Password">Password</label>
-            <InputText class="form-control col-3" type="Password" @bind-Value="userInput.Password" placeholder="*****" />
+            <InputText class="form-control" type="Password" @bind-Value="userInput.Password" placeholder="*****" />
             <ValidationMessage For="() => userInput.Password" />
         </div>
-        <input type="submit" class="form-control col-1 button btn-primary" value="Sign in" />
+        <a style="color: red; display: @(isHidden ? "none" : "block")" class="mb-1"> Wrong login or password</a>
+        <a style="color: red; display: @(isActive ? "none" : "block")" class="mb-1"> User wasn't confirm or deleted.</a>
+        <input type="submit" class="form-control button btn-primary" value="Sign in" />
     </EditForm>
-</div>
-
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState> authState { get; set; }
+    [CascadingParameter] private Task<AuthenticationState> authState { get; set; }
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
     private SignInViewModel userInput;
     bool isHidden = true;
+    bool isActive = true;
 
     private async Task TrySignIn()
     {
@@ -45,24 +42,34 @@
 
             var userToken = await SignInner.SignIn(request);
 
-            Storage.SetItemAsync("id" ,userToken.UserId);
+            Storage.SetItemAsync("id", userToken.UserId);
             Storage.SetItemAsync("token", userToken.Body);
 
             AuthenticationProvider.MarkSignedIn();
-            NavigationManager.NavigateTo("/userinfo");
+            NavigationManager.NavigateTo("/");
         }
         catch (Exception e) when (
                 e is ForbiddenException
                 || e is NotFoundException
                 || e is InternalServerException)
         {
-            userInput.Password = "";
-            isHidden = false;
+            if (e is ForbiddenException)
+            {
+                userInput.Password = "";
+                isActive = false;
+            }
+            else
+            {
+                userInput.Password = "";
+                isHidden = false;
+            }
         }
     }
 
     protected async override Task OnInitializedAsync()
     {
+        BlazoredModal.SetTitle("Sign In");
+
         userInput = new SignInViewModel();
 
         var claims = (await authState).User;

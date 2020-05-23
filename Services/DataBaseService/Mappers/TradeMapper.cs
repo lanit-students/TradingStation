@@ -10,6 +10,7 @@ namespace DataBaseService.Mappers
     {
         public DbTransaction MapToDbTransaction(Transaction transaction)
         {
+            var time = new TimeSpan(transaction.DateTime.Hour, transaction.DateTime.Minute, transaction.DateTime.Second);
             return new DbTransaction
             {
                 Id = transaction.Id,
@@ -21,7 +22,7 @@ namespace DataBaseService.Mappers
                 Price = transaction.Price,
                 Currency = transaction.Currency.ToString(),
                 Date = transaction.DateTime.Date,
-                Time = transaction.DateTime, 
+                Time = time,
                 IsSuccess = transaction.IsSuccess
             };
         }
@@ -32,9 +33,9 @@ namespace DataBaseService.Mappers
                 dbTransaction.Date.Year,
                 dbTransaction.Date.Month,
                 dbTransaction.Date.Day,
-                dbTransaction.Time.Hour,
-                dbTransaction.Time.Minute,
-                dbTransaction.Time.Second
+                dbTransaction.Time.Hours,
+                dbTransaction.Time.Minutes,
+                dbTransaction.Time.Seconds
                 );
             return new Transaction
             {
@@ -70,6 +71,16 @@ namespace DataBaseService.Mappers
                 BalanceInRub = userBalance.BalanceInRub,
                 BalanceInUsd = userBalance.BalanceInUsd,
                 BalanceInEur = userBalance.BalanceInEur
+            };
+        }
+
+        public InstrumentData MapToInstrument(DbPortfolio dbPortfolio)
+        {
+            return new InstrumentData()
+            {
+                Figi = dbPortfolio.Figi,
+                Count = dbPortfolio.Count,
+                Broker = Enum.Parse<BrokerType>(dbPortfolio.Broker)
             };
         }
     }

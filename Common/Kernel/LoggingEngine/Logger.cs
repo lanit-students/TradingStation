@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Kernel.LoggingEngine
 {
-    public class Logger: ILogger
+    public class Logger : ILogger
     {
         private readonly IServiceProvider provider;
 
@@ -21,8 +21,8 @@ namespace Kernel.LoggingEngine
 
             var uri = new Uri("rabbitmq://localhost/DatabaseService_Logs");
 
-            var endpont =  await bus.GetSendEndpoint(uri);
-            await endpont.Send(log);
+            var endpoint = await bus.GetSendEndpoint(uri);
+            await endpoint.Send(log);
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -40,15 +40,18 @@ namespace Kernel.LoggingEngine
             if (formatter == null)
                 return;
 
+            var data = ErrorMessageFormatter.GetMessageData(formatter(state, exception));
+
             var message = new LogMessage
             {
-                Id = Guid.NewGuid(),
-                ParentId = null,
+                Id = data.Item1 ?? Guid.NewGuid(),
+                ParentId = data.Item2,
                 Level = logLevel,
-                Message = formatter(state, exception),
+                Message = data.Item3,
                 ServiceName = Assembly.GetEntryAssembly().GetName().Name,
                 Time = DateTime.UtcNow
             };
+
             AddLog(message);
         }
     }

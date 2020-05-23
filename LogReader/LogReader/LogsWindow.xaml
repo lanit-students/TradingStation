@@ -1,0 +1,49 @@
+﻿<Window x:Class="LogReader.LogsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converter="clr-namespace:LogReader.Utils"
+        xmlns:local="clr-namespace:LogReader"
+        mc:Ignorable="d"
+        Title="LogWindow" Height="720" Width="1080"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <converter:LevelColorSelector x:Key="LevelColorSelector"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="640"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Label Content="Select log level:" FontSize="30"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <ComboBox x:Name="LevelFilter" ItemsSource="{Binding Path=LogLevels}" SelectedValue="{Binding Path=SelectedLogLevel}" FontSize="30"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <TreeView x:Name="LogsTree" ItemsSource="{Binding Path=Logs}" Height="600" Padding="0,5,0,10">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
+                        <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 5">
+                            <TextBlock Text="{Binding Log.Time}"/>
+                            <TextBlock Text=" | "/>
+                            <TextBlock Text="{Binding Log.ServiceName}"/>
+                            <TextBlock Text=" | "/>
+                            <TextBlock Text="{Binding Log.Level}" Foreground="{Binding Log.Level, Converter={StaticResource LevelColorSelector}}"/>
+                            <TextBlock Text=" | "/>
+                            <TextBlock Text="{Binding Log.Message}"/>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </Grid>
+    </Grid>
+</Window>
