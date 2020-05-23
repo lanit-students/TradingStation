@@ -14,7 +14,7 @@ namespace DataBaseService.Database.Models
 
         public int TimeMarker { get; set; }
 
-        public int TriggerValue { get; set; }
+        public decimal TriggerValue { get; set; }
 
         public class DbPortfolioInstrumentsConfiguration : IEntityTypeConfiguration<DbBotRule>
         {

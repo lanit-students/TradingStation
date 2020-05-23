@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0009_CreatePortfoliosTable.sql" />  
+    <EmbeddedResource Include="Database\Migrations\Scripts\04.2020\0009_CreatePortfoliosTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +35,7 @@
     <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0004_AddMoneyLimitPercentsColumnToBotRule.sql" />
     <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0003_CreateLinkBotsWithRulesTable.sql" />
   	<EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0001_CreateBotsTable.sql" />
+    <EmbeddedResource Include="Database\Migrations\Scripts\05.2020\0005_AlterBotRulesTypes.sql" />
   </ItemGroup>
 
   <ItemGroup>

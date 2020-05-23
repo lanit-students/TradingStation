@@ -16,8 +16,7 @@ namespace DataBaseService.Mappers
                 OperationType = (int)rule.OperationType,
                 MoneyLimitPercents = rule.MoneyLimitPercents,
                 TimeMarker = rule.TimeMarker,
-                // TODO: make it decimal in db
-                TriggerValue = (int)rule.TriggerValue
+                TriggerValue = rule.TriggerValue
             };
         }
 
