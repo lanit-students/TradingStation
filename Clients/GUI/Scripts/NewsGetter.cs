@@ -9,7 +9,7 @@ namespace GUI.Scripts
     {
         public static IEnumerable<NewsItem> GetNews(string feedUrl)
         {
-            const string url = "https://localhost:5007/news/getnews";
+            const string url = "http://localhost:5006/news/getnews";
 
             var queryParams = new Dictionary<string, string>
             {
