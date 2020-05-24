@@ -137,7 +137,7 @@ else
         var request = new RunBotRequest() { BotId = bot.Id };
         try
         {
-            var modal = Modal.Show<RunBotModal>();
+            var modal = Modal.Show<GUI.Pages.BotRunning>();
             var result = await modal.Result;
             if (!result.Cancelled)
             {
