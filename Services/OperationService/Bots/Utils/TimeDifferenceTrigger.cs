@@ -1,5 +1,4 @@
 ﻿using DTO;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using DTO.BrokerRequests;
@@ -17,6 +16,7 @@ namespace OperationService.Bots.Utils
         private int timeMarker;
         private decimal triggerValue;
         private HubConnection connection;
+        private Currency currency;
 
         public override event EventHandler<TriggerEventArgs> Triggered;
 
@@ -25,10 +25,12 @@ namespace OperationService.Bots.Utils
             int timeMarker,
             decimal triggerValue,
             string token,
+            Currency currency,
             ICommand<GetCandlesRequest, IEnumerable<Candle>> command)
         {
             this.timeMarker = timeMarker;
             this.triggerValue = triggerValue;
+            this.currency = currency;
 
             var request = new GetCandlesRequest()
             {
@@ -69,8 +71,7 @@ namespace OperationService.Bots.Utils
                 {
                     Figi = candle.Figi,
                     Price = candle.Close,
-                    // TODO: add currency
-                    //Currency = currency
+                    Currency = currency
                 };
 
                 Triggered(this, args);

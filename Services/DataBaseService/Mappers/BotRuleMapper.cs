@@ -20,11 +20,12 @@ namespace DataBaseService.Mappers
             };
         }
 
-        public BotRuleData MapToRule(DbBotRule dbRule)
+        public BotRuleData MapToRule(DbBotRule dbRule, Guid botId)
         {
             return new BotRuleData
             {
                 Id = dbRule.Id,
+                BotId = botId,
                 OperationType = (OperationType)dbRule.OperationType,
                 MoneyLimitPercents = dbRule.MoneyLimitPercents,
                 TimeMarker = dbRule.TimeMarker,

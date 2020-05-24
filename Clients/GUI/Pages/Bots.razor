@@ -69,6 +69,7 @@ else
 
     public List<BotData> bots;
     private UserToken userToken;
+    private string tinkoffToken = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
     private bool isPageLoading = true;
     private bool isErrorOccured = false;
     private string errorMessage = "";
@@ -138,7 +139,7 @@ else
             var figis = (List<string>)result.Data;
             request.Figis = figis;
             request.UserId = userToken.UserId;
-            request.Token = userToken.Body;
+            request.Token = tinkoffToken;
             await BotManager.RunBot(userToken, request);
             bot.IsRunning = true;
             StateHasChanged();

@@ -20,21 +20,22 @@ namespace OperationService.Bots
             List<BotRuleData> botRulesData,
             ICommand<TradeRequest, bool> tradeCommand,
             ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
-            ICommand<GetUserBalanceRequest, UserBalance> balanceCommand)
+            ICommand<GetUserBalanceRequest, UserBalance> balanceCommand,
+            ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> instrumentsCommand)
         {
             if (botRulesData.Count == 0)
             {
                 throw new BadRequestException("Provide bot with some rules before run.");
             }
 
-            if (request.Figis.Count == 0)
+            if (request.Figis == null || request.Figis.Count == 0)
             {
                 throw new BadRequestException("Provide bot rule with figis before run.");
             }
 
             var botRules = new List<BotRule>();
 
-            var botId = botRulesData.First().Id;
+            var botId = botRulesData.First().BotId;
 
             if (rules.ContainsKey(botId))
             {
@@ -58,7 +59,8 @@ namespace OperationService.Bots
                             },
                             tradeCommand,
                             candlesCommand,
-                            balanceCommand
+                            balanceCommand,
+                            instrumentsCommand
                         )
                     );
             }

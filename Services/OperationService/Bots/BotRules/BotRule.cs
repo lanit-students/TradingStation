@@ -4,9 +4,11 @@ using DTO.MarketBrokerObjects;
 using DTO.RestRequests;
 using Interfaces;
 using Kernel.CustomExceptions;
+using MassTransit.Initializers;
 using OperationService.Bots.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OperationService.Bots.BotRules
@@ -16,6 +18,7 @@ namespace OperationService.Bots.BotRules
         private ICommand<TradeRequest, bool> tradeCommand;
         private ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand;
         private ICommand<GetUserBalanceRequest, UserBalance> balanceCommand;
+        private ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> instrumentsCommand;
 
         private Guid userId;
         private string token;
@@ -31,12 +34,14 @@ namespace OperationService.Bots.BotRules
             StartBotRuleRequest request,
             ICommand<TradeRequest, bool> tradeCommand,
             ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
-            ICommand<GetUserBalanceRequest, UserBalance> balanceCommand)
+            ICommand<GetUserBalanceRequest, UserBalance> balanceCommand,
+            ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> instrumentsCommand)
         {
             triggers = new List<Trigger>();
             this.tradeCommand = tradeCommand;
             this.candlesCommand = candlesCommand;
             this.balanceCommand = balanceCommand;
+            this.instrumentsCommand = instrumentsCommand;
             token = request.Token;
             userId = request.UserId;
             timeMarker = request.TimeMarker;
@@ -79,22 +84,40 @@ namespace OperationService.Bots.BotRules
 
         public void Start(List<string> figis)
         {
+            var instruments = instrumentsCommand.Execute(
+                new GetInstrumentsRequest()
+                {
+                    Broker = BrokerType.TinkoffBroker,
+                    Token = token,
+                    Type = InstrumentType.Any
+                }).Result;
+
             foreach (var figi in figis)
             {
-                var trigger = new TimeDifferenceTrigger(
+                try
+                {
+                    var currency = instruments.Where(x => x.Figi == figi).Select(x => x.Currency).First();
+
+                    var trigger = new TimeDifferenceTrigger(
                        figi,
                        timeMarker,
                        triggerValue,
                        token,
+                       currency,
                        candlesCommand
                     );
 
-                trigger.Triggered += async (s, e) =>
-                {
-                    await Execute(s, e);
-                };
+                    trigger.Triggered += async (s, e) =>
+                    {
+                        await Execute(s, e);
+                    };
 
-                triggers.Add(trigger);
+                    triggers.Add(trigger);
+                }
+                catch
+                {
+                    throw new BadRequestException();
+                }
             }
         }
 

@@ -58,7 +58,7 @@ namespace DataBaseService.Repositories
 
             var ruleIds = dbContext.LinkBotsWithRules.Where(x => x.BotId == botId).Select(x => x.RuleId).ToList();
 
-            return dbContext.BotRules.Where(r => ruleIds.Contains(r.Id)).Select(r => mapper.MapToRule(r)).ToList();
+            return dbContext.BotRules.Where(r => ruleIds.Contains(r.Id)).Select(r => mapper.MapToRule(r, botId)).ToList();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DataBaseService.Database.Models;
 using DTO;
+using System;
 
 namespace DataBaseService.Mappers.Interfaces
 {
@@ -7,7 +8,7 @@ namespace DataBaseService.Mappers.Interfaces
     {
         DbBotRule MapToDbRule(BotRuleData rule);
 
-        BotRuleData MapToRule(DbBotRule dbRule);
+        BotRuleData MapToRule(DbBotRule dbRule, Guid botId);
 
         DbLinkBotsWithRules MapToDbLink(LinkBotWithRule link);
 

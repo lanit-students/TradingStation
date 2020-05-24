@@ -48,8 +48,11 @@
         <div class="tab-pane fade show active">
             @if (isPageLoading)
             {
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
+                <div class="spinner-container">
+                    <div class="spinner-frame">
+                        <div class="spinner-cover"></div>
+                        <div class="spinner-bar"></div>
+                    </div>
                 </div>
             }
             else

@@ -22,19 +22,22 @@ namespace OperationService.Commands
         private ICommand<TradeRequest, bool> tradeCommand;
         private ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand;
         private ICommand<GetUserBalanceRequest, UserBalance> balanceCommand;
+        private ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> instrumentsCommand;
 
         public RunBotCommand(
             [FromServices] IRequestClient<RunBotRequest> client,
             [FromServices] ILogger<RunBotCommand> logger,
             [FromServices] ICommand<TradeRequest, bool> tradeCommand,
             [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
-            [FromServices] ICommand<GetUserBalanceRequest, UserBalance> balanceCommand)
+            [FromServices] ICommand<GetUserBalanceRequest, UserBalance> balanceCommand,
+            [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> instrumentsCommand)
         {
             this.client = client;
             this.logger = logger;
             this.tradeCommand = tradeCommand;
             this.candlesCommand = candlesCommand;
             this.balanceCommand = balanceCommand;
+            this.instrumentsCommand = instrumentsCommand;
         }
 
         private async Task RunBot(RunBotRequest request)
@@ -46,7 +49,7 @@ namespace OperationService.Commands
             var rulesData = OperationResultHandler.HandleResponse(response.Message);
 
             // TODO mark bot stopped in case of error
-            BotRunner.Run(request, rulesData, tradeCommand, candlesCommand, balanceCommand);
+            BotRunner.Run(request, rulesData, tradeCommand, candlesCommand, balanceCommand, instrumentsCommand);
         }
 
         public async Task<bool> Execute(RunBotRequest request)
