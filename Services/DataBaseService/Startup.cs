@@ -71,7 +71,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<RunBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<DisableBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<BotInfoConsumer>(serviceProvider);
-
+                    ep.ConfigureConsumer<GetBotRulesConsumer>(serviceProvider);
                     ep.ConfigureConsumer<SaveBotRuleConsumer>(serviceProvider);
                 });
 
@@ -135,6 +135,7 @@ namespace DataBaseService
                 x.AddConsumer<BotInfoConsumer>();
                 x.AddConsumer<SaveBotRuleConsumer>();
                 x.AddConsumer<AddLogConsumer>();
+                x.AddConsumer<GetBotRulesConsumer>();
             });
 
             services.AddMassTransitHostedService();

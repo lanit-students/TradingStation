@@ -17,7 +17,8 @@ namespace OperationService.Commands
 {
     public class RunBotCommand : ICommand<RunBotRequest, bool>
     {
-        private readonly IRequestClient<RunBotRequest> client;
+        private readonly IRequestClient<RunBotRequest> runClient;
+        private readonly IRequestClient<InternalGetBotRulesRequest> getRulesClient;
         private readonly ILogger<RunBotCommand> logger;
         private ICommand<TradeRequest, bool> tradeCommand;
         private ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand;
@@ -25,14 +26,17 @@ namespace OperationService.Commands
         private ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> instrumentsCommand;
 
         public RunBotCommand(
-            [FromServices] IRequestClient<RunBotRequest> client,
+            [FromServices] IRequestClient<RunBotRequest> runClient,
+            [FromServices] IRequestClient<InternalGetBotRulesRequest> getRulesClient,
             [FromServices] ILogger<RunBotCommand> logger,
             [FromServices] ICommand<TradeRequest, bool> tradeCommand,
             [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> candlesCommand,
             [FromServices] ICommand<GetUserBalanceRequest, UserBalance> balanceCommand,
             [FromServices] ICommand<GetInstrumentsRequest, IEnumerable<Instrument>> instrumentsCommand)
         {
-            this.client = client;
+
+            this.runClient = runClient;
+            this.getRulesClient = getRulesClient;
             this.logger = logger;
             this.tradeCommand = tradeCommand;
             this.candlesCommand = candlesCommand;
@@ -40,34 +44,36 @@ namespace OperationService.Commands
             this.instrumentsCommand = instrumentsCommand;
         }
 
-        private async Task RunBot(RunBotRequest request)
+        private async Task RunBot(InternalGetBotRulesRequest getRulesRequest, RunBotRequest runRequest)
         {
             logger.LogInformation("Response from Database Service RunBot method received");
 
-            var response = await client.GetResponse<OperationResult<List<BotRuleData>>>(request);
+            var response = await getRulesClient.GetResponse<OperationResult<List<BotRuleData>>>(getRulesRequest);
 
             var rulesData = OperationResultHandler.HandleResponse(response.Message);
 
-            // TODO mark bot stopped in case of error
-            BotRunner.Run(request, rulesData, tradeCommand, candlesCommand, balanceCommand, instrumentsCommand);
+            BotRunner.Run(runRequest, rulesData, tradeCommand, candlesCommand, balanceCommand, instrumentsCommand);
+
+            await runClient.GetResponse<OperationResult<bool>>(runRequest);
         }
 
-        public async Task<bool> Execute(RunBotRequest request)
+        public async Task<bool> Execute(RunBotRequest runRequest)
         {
+            var getRulesRequest = new InternalGetBotRulesRequest() { BotId = runRequest.BotId };
             try
             {
-                await RunBot(request);
+                await RunBot(getRulesRequest, runRequest);
                 return true;
             }
             catch (NotFoundException)
             {
                 var e = new NotFoundException("Not found bot to run");
-                logger.LogWarning(e, $"{e.Message}, botId: {request.BotId}");
+                logger.LogWarning(e, $"{e.Message}, botId: {runRequest.BotId}");
                 throw e;
             }
             catch (BadRequestException e)
             {
-                logger.LogWarning(e, $"{e.Message}, botId: {request.BotId}");
+                logger.LogWarning(e, $"{e.Message}, botId: {runRequest.BotId}");
                 throw e;
             }
         }

@@ -85,6 +85,7 @@ namespace OperationService
                 x.AddRequestClient<DisableBotRequest>(databaseUri);
                 x.AddRequestClient<InternalGetBotsRequest>(databaseUri);
                 x.AddRequestClient<InternalSaveRuleRequest>(databaseUri);
+                x.AddRequestClient<InternalGetBotRulesRequest>(databaseUri);
             });
 
             services.AddMassTransitHostedService();

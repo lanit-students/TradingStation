@@ -36,9 +36,9 @@ namespace OperationService.Commands
         {
             try
             {
-                await DisableBot(request);
-
                 BotRunner.Stop(request.ID);
+
+                await DisableBot(request);
 
                 return true;
             }
