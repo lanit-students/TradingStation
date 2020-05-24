@@ -136,13 +136,16 @@ else
         {
             var modal = Modal.Show<RunBotModal>();
             var result = await modal.Result;
-            var figis = (List<string>)result.Data;
-            request.Figis = figis;
-            request.UserId = userToken.UserId;
-            request.Token = tinkoffToken;
-            await BotManager.RunBot(userToken, request);
-            bot.IsRunning = true;
-            StateHasChanged();
+            if (!result.Cancelled)
+            {
+                var figis = (List<string>)result.Data;
+                request.Figis = figis;
+                request.UserId = userToken.UserId;
+                request.Token = tinkoffToken;
+                await BotManager.RunBot(userToken, request);
+                bot.IsRunning = true;
+                StateHasChanged();
+            }
         }
         catch (Exception e)
         {
