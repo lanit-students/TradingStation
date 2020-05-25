@@ -126,10 +126,6 @@ namespace OperationService
                 errorApp.Run(CustomExceptionHandler.HandleCustomException);
             });
 
-            app.UseHsts();
-
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();

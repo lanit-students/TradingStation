@@ -10,7 +10,7 @@ namespace GUI.Scripts
     {
         public static async Task<UserToken> SignIn(LoginRequest request)
         {
-            const string url = "https://localhost:5001/authentication/login";
+            const string url = "http://localhost:5000/authentication/login";
 
             var client = new RestClient<LoginRequest, UserToken>(url, RestRequestType.POST);
 

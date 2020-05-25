@@ -12,7 +12,7 @@ namespace GUI.Scripts
     {
         public static async Task<bool> UserConfirm(string secretToken)
         {
-            string url = $"https://localhost:5011/users/confirm?secretToken={secretToken}";
+            string url = $"http://localhost:5010/users/confirm?secretToken={secretToken}";
 
             var client = new RestClient<string, bool>(url, RestRequestType.GET);
 

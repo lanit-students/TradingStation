@@ -11,7 +11,7 @@ namespace GUI.Scripts
     {
         public static async Task CreateBot(UserToken userToken, CreateBotRequest request)
         {
-            const string url = "https://localhost:5009/operations/bot/create";
+            const string url = "http://localhost:5008/operations/bot/create";
 
             var client = new RestClient<CreateBotRequest, bool>(url, RestRequestType.POST, userToken);
 
@@ -20,7 +20,7 @@ namespace GUI.Scripts
 
         public static async Task DeleteBot(UserToken userToken, DeleteBotRequest request)
         {
-            const string url = "https://localhost:5009/operations/bot/delete";
+            const string url = "http://localhost:5008/operations/bot/delete";
 
             var client = new RestClient<DeleteBotRequest, bool>(url, RestRequestType.DELETE, userToken);
 
@@ -29,7 +29,7 @@ namespace GUI.Scripts
 
         public static async Task RunBot(UserToken userToken, RunBotRequest request)
         {
-            const string url = "https://localhost:5009/operations/bot/run";
+            const string url = "http://localhost:5008/operations/bot/run";
 
             var client = new RestClient<RunBotRequest, bool>(url, RestRequestType.PUT, userToken);
 
@@ -38,7 +38,7 @@ namespace GUI.Scripts
 
         public static async Task DisableBot(UserToken userToken, DisableBotRequest request)
         {
-            const string url = "https://localhost:5009/operations/bot/disable";
+            const string url = "http://localhost:5008/operations/bot/disable";
 
             var client = new RestClient<DisableBotRequest, bool>(url, RestRequestType.PUT, userToken);
 
@@ -47,7 +47,7 @@ namespace GUI.Scripts
 
         public static async Task<List<BotData>> GetBots(UserToken userToken)
         {
-            const string url = "https://localhost:5009/operations/bot/get";
+            const string url = "http://localhost:5008/operations/bot/get";
 
             var client = new RestClient<object, List<BotData>>(url, RestRequestType.GET, userToken);
 

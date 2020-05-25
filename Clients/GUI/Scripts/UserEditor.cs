@@ -17,7 +17,7 @@ namespace GUI.Scripts
         /// <param name="newPassword">Same as with oldPassword</param>
         public static async Task EditUser(UserToken userToken, EditUserRequest request)
         {
-            const string url = "https://localhost:5011/users/edit";
+            const string url = "http://localhost:5010/users/edit";
 
             var client = new RestClient<EditUserRequest, bool>(url, RestRequestType.PUT, userToken);
 
