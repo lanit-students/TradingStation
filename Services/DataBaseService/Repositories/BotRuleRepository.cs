@@ -2,6 +2,7 @@
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
+using DTO.RestRequests;
 using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -46,6 +47,33 @@ namespace DataBaseService.Repositories
             {
                 logger.LogWarning(e, $"Sometheing went wrong during save rule {rule.Id}");
                 throw new InternalServerException($"Sometheing went wrong during saving rule {rule.Id}", e);
+            }
+        }
+
+        public void DeleteRulesForBot(DeleteBotRequest request)
+        {
+            try
+            {
+                var links = dbContext.LinkBotsWithRules.Where(x => x.BotId == request.ID);
+                var rules = dbContext.BotRules.Where(x => links.Select(l => l.RuleId).Contains(x.Id));
+
+                foreach (var link in links)
+                {
+                    dbContext.LinkBotsWithRules.Remove(link);
+                }
+
+                dbContext.SaveChanges();
+
+                foreach (var rule in rules)
+                {
+                    dbContext.BotRules.Remove(rule);
+                }
+
+                dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new BadRequestException();
             }
         }
 

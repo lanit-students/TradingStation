@@ -87,5 +87,10 @@ namespace OperationService.Bots
 
             rules.Remove(botId);
         }
+
+        public static bool IsRunning(Guid botId)
+        {
+            return rules.ContainsKey(botId);
+        }
     }
 }
