@@ -33,11 +33,11 @@ namespace GUI.ViewModels
             Description = operation == OperationType.Buy ? CBuyDescription : CSellDescription;
         }
 
-        private const string CBuyDescription = "This rule involves buying the instrument when the price is lower than the selected value." +
-                    "Transactions can be made within the selected percentage of the user's balance" +
-                    "The bot checks the pricing policies with the selected time interval";
-        private const string CSellDescription = "This rule involves selling the instrument when the price is higher than the selected value." +
-            "Transactions can be made within the selected percentage of the user's balance" +
-            "The bot checks the pricing policies with the selected time interval";
+        private const string CBuyDescription = "This rule involves buying the instrument when the price is lower than the selected value.\n" +
+                    "Transactions can be made within the selected percentage of the user's balance\n" +
+                    "The bot checks the pricing policies with the selected time interval\n";
+        private const string CSellDescription = "This rule involves selling the instrument when the price is higher than the selected value.\n" +
+            "Transactions can be made within the selected percentage of the user's balance\n" +
+            "The bot checks the pricing policies with the selected time interval\n";
     }
 }

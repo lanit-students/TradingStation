@@ -31,16 +31,16 @@
     <nav class="navbar navbar-expand-sm" align="center">
         <ul class="navbar-nav m-auto text-lg-center">
             <li class="nav-item">
-                <a class="nav-link @((pageToShow == "UserInfo") ? "active" : "") " @onclick="@(()=> SetUserInfoActive("UserInfo"))"
-                   data-toggle="pill" href="#userinfo">Personal Information</a>
+                <a style="cursor:pointer;" class="nav-link @((pageToShow == "UserInfo") ? "active" : "") " @onclick="@(()=> SetUserInfoActive("UserInfo"))"
+                   data-toggle="pill">Personal Information</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @((pageToShow == "Transactions") ? "active" : "")" @onclick="@(()=> SetUserInfoActive("Transactions"))"
-                   data-toggle="pill" href="#transactions">Transactions</a>
+                <a style="cursor:pointer;" class="nav-link @((pageToShow == "Transactions") ? "active" : "")" @onclick="@(()=> SetUserInfoActive("Transactions"))"
+                   data-toggle="pill">Transactions</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @((pageToShow == "Balance") ? "active" :  "")" @onclick="@(()=> SetUserInfoActive("Balance"))"
-                   data-toggle="pill" href="#balance">Balance</a>
+                <a style="cursor:pointer;" class="nav-link @((pageToShow == "Balance") ? "active" :  "")" @onclick="@(()=> SetUserInfoActive("Balance"))"
+                   data-toggle="pill">Balance</a>
             </li>
         </ul>
     </nav>

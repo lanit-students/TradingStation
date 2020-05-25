@@ -18,6 +18,8 @@ namespace OperationService.Bots.Utils
         private HubConnection connection;
         private Currency currency;
 
+        private DateTime lastTransaction;
+
         public override event EventHandler<TriggerEventArgs> Triggered;
 
         public TimeDifferenceTrigger(
@@ -65,6 +67,11 @@ namespace OperationService.Bots.Utils
 
         private void OnMessageReceived(Candle candle)
         {
+            if ((DateTime.Now - lastTransaction).Seconds < 10)
+            {
+                return;
+            }
+
             if (Check(candle))
             {
                 var args = new TriggerEventArgs()
@@ -73,6 +80,8 @@ namespace OperationService.Bots.Utils
                     Price = candle.Close,
                     Currency = currency
                 };
+
+                lastTransaction = DateTime.Now;
 
                 Triggered(this, args);
             }
@@ -87,7 +96,14 @@ namespace OperationService.Bots.Utils
                 return false;
             }
 
-            return (lastCandle.Close - oldPrice.Value) >= triggerValue;
+            var percent = (lastCandle.Close - oldPrice.Value) / lastCandle.Close * 100;
+
+            if (triggerValue >= 0)
+            {
+                return percent >= triggerValue;
+            }
+
+            return percent <= triggerValue;
         }
 
         public override void Disable()

@@ -100,7 +100,7 @@
                 {
                     OperationType = rule.OperationType,
                     MoneyLimitPercents = rule.MoneyLimitPercents,
-                    TriggerValue = rule.TriggerValue,
+                    TriggerValue = rule.OperationType == OperationType.Buy ? -rule.TriggerValue : rule.TriggerValue,
                     TimeMarker = (int)rule.TimeMarker.TotalMinutes
                 });
             }
