@@ -17,11 +17,9 @@ using UserService.Validators;
 using DTO.RestRequests;
 using FluentValidation;
 using DTO.BrokerRequests;
-using DTO;
 using Microsoft.Extensions.Logging;
 using Kernel.LoggingEngine;
 using UserService.Utils;
-using AuthenticationService.Interfaces;
 
 namespace UserService
 {

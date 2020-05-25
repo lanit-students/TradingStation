@@ -46,7 +46,7 @@
             Storage.SetItemAsync("token", userToken.Body);
 
             AuthenticationProvider.MarkSignedIn();
-            NavigationManager.NavigateTo("/userinfo");
+            NavigationManager.NavigateTo("/");
         }
         catch (Exception e) when (
                 e is ForbiddenException

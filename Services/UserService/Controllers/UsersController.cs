@@ -1,14 +1,10 @@
 using DTO.RestRequests;
 using IDeleteUserUserService.Interfaces;
-using Kernel.CustomExceptions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using UserService.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.Net.Mail;
-using System.Net;
 
 namespace UserService.Controllers
 {

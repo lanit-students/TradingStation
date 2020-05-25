@@ -13,7 +13,7 @@ namespace GUI.Scripts
 {
     public static class HubConnector
     {
-        public static async Task<IEnumerable<Candle>> SubscribeOnCandle(Action<Candle> OnReceivedAction, BrokerType broker, string figi, string token)
+        public static async Task<IEnumerable<Candle>> SubscribeOnCandle(Action<Candle> OnReceivedAction, BrokerType broker, string figi, int interval, string token)
         {
             const string url = "http://localhost:5008/operations/candles/get";
 
@@ -21,7 +21,8 @@ namespace GUI.Scripts
             {
                 { "broker", broker.ToString() },
                 { "token", token },
-                { "figi", figi }
+                { "figi", figi },
+                { "interval", interval.ToString() }
             };
 
             var client = new RestClient<object, IEnumerable<Candle>>(url, RestRequestType.GET, queryParams: queryParams);

@@ -13,6 +13,7 @@ namespace Kernel
             try
             {
                 result.Data = func.Invoke(arg);
+                result.IsSuccess = true;
                 return result;
             }
             catch (BaseException e)
