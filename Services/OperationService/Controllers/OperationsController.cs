@@ -160,6 +160,15 @@ namespace OperationService.Controllers
             return result;
         }
 
+        [Route("bot/edit")]
+        [HttpPost]
+        public async Task<bool> EditBot([FromServices] ICommand<EditBotRequest, bool> command, [FromBody] EditBotRequest request)
+        {
+            logger.LogInformation("Edit bots request received from GUI to OperationService");
+            var result = await command.Execute(request);
+            return result;
+        }
+
         [Route("transactions/get")]
         [HttpGet]
         public async Task<IEnumerable<Transaction>> GetTransactions(

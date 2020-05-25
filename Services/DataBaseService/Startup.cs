@@ -142,10 +142,10 @@ namespace DataBaseService
 
             services.AddMassTransitHostedService();
 
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
+            //services.AddLogging(log =>
+            //{
+            //    log.ClearProviders();
+            //});
 
             services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
             {

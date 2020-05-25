@@ -48,17 +48,17 @@ namespace DataBaseService.Repositories
             // TODO: remove records from bot rules table also (task for one who implements rules)
         }
 
-        public void EditBot(BotData bot)
+        public void EditBot(InternalEditBotRequest request)
         {
-            var dbBot = dbContext.Bots.FirstOrDefault(b => b.Id == bot.Id);
+            var dbBot = dbContext.Bots.FirstOrDefault(b => b.Id == request.BotId);
             if (dbBot == null)
             {
                 var e = new NotFoundException("Not found bot to edit");
-                logger.LogWarning(e, $"{e.Message}, botId: {bot.Id}");
+                logger.LogWarning(e, $"{e.Message}, botId: {request.BotId}");
                 throw e;
             }
 
-            dbBot.Name = bot.Name;
+            dbBot.Name = request.Name;
             dbContext.SaveChanges();
         }
 

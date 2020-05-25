@@ -3,6 +3,7 @@ using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
+using DTO.BrokerRequests;
 using DTO.RestRequests;
 using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ namespace DataBaseService.Repositories
             }
         }
 
-        public void EditRuleForBot(BotRuleData rule)
+        public void EditRuleForBot(BotRuleData rule, Guid BotId)
         {
             try
             {

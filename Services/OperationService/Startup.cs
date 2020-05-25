@@ -82,6 +82,7 @@ namespace OperationService
                 x.AddRequestClient<CreateBotRequest>(databaseUri);
                 x.AddRequestClient<DeleteBotRequest>(databaseUri);
                 x.AddRequestClient<RunBotRequest>(databaseUri);
+                x.AddRequestClient<EditBotRequest>(databaseUri);
                 x.AddRequestClient<DisableBotRequest>(databaseUri);
                 x.AddRequestClient<InternalGetBotsRequest>(databaseUri);
                 x.AddRequestClient<InternalSaveRuleRequest>(databaseUri);
@@ -102,6 +103,8 @@ namespace OperationService
 
             services.AddTransient<ICommand<DeleteBotRequest, bool>, DeleteBotCommand>();
 
+            services.AddTransient<ICommand<EditBotRequest, bool>, EditBotCommand>();
+
             services.AddTransient<ICommand<RunBotRequest, bool>, RunBotCommand>();
 
             services.AddTransient<ICommand<DisableBotRequest, bool>, DisableBotCommand>();
@@ -110,10 +113,10 @@ namespace OperationService
 
             services.AddTransient<ICommand<InternalSaveRuleRequest, bool>, SaveBotRuleCommand>();
 
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
+            //services.AddLogging(log =>
+            //{
+            //    log.ClearProviders();
+            //});
 
             services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
             {

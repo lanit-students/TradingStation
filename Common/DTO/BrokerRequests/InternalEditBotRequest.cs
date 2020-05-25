@@ -6,8 +6,8 @@ namespace DTO.BrokerRequests
 {
     public class InternalEditBotRequest
     {
-       public BotData Bot { get; set; }
-
-       public BotRuleData Rule { get; set; }
+        public Guid BotId { get; set; }
+        public string Name { get; set; }
+        public List<BotRuleData> Rules { get; set; }
     }
 }

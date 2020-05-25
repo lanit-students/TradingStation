@@ -27,8 +27,11 @@ namespace DataBaseService.BrokerConsumers
         private bool EditBot(InternalEditBotRequest request)
         {
             logger.LogInformation("EditBot request received from Service");
-            botRepository.EditBot(request.Bot);
-            botRuleRepository.EditRuleForBot(request.Rule);
+            botRepository.EditBot(request);
+            foreach (var rule in request.Rules)
+            {
+                botRuleRepository.EditRuleForBot(rule, request.BotId);
+            }
             return true;
         }
 
@@ -38,6 +41,5 @@ namespace DataBaseService.BrokerConsumers
 
             await context.RespondAsync(response);
         }
-
     }
 }
