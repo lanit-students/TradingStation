@@ -4,6 +4,7 @@
     {
         Bond,
         Currency,
-        Stock
+        Stock,
+        Any
     }
 }

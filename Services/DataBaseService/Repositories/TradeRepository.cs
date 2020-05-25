@@ -95,7 +95,7 @@ namespace DataBaseService.Repositories
             {
                 var exception = new BadRequestException("Not enough instrument count to sell");
                 logger.LogWarning(exception,
-                    $"User {transaction.UserId} asked to sell more instruments {transaction.Figi} than he has");
+                    $"{Guid.NewGuid()}_User {transaction.UserId} asked to sell more instruments {transaction.Figi} than he has");
                 throw exception;
             }
             else
@@ -120,7 +120,7 @@ namespace DataBaseService.Repositories
             catch
             {
                 var exception = new BadRequestException("Transaction saving failed");
-                logger.LogWarning(exception, $"Couldn't save transaction of user {transaction.UserId}");
+                logger.LogWarning(exception, $"{Guid.NewGuid()}_Couldn't save transaction of user {transaction.UserId}");
                 throw exception;
             }
         }
@@ -137,6 +137,20 @@ namespace DataBaseService.Repositories
                 Figi = request.Figi,
                 TotalCount = instrument.Count,
             };
+        }
+
+        public List<InstrumentData> GetPortfolio(GetPortfolioRequest request)
+        {
+            var portfolio = dbContext.Portfolios.Where(p => p.UserId == request.UserId);
+
+            if (portfolio == null)
+            {
+                var exception = new NotFoundException("Portfolio not found");
+                logger.LogWarning(exception, $"{Guid.NewGuid()}_Portfolio of user {request.UserId} not found");
+                throw exception;
+            }
+
+            return portfolio.Select(p => mapper.MapToInstrument(p)).ToList();
         }
 
         public UserBalance GetUserBalance(GetUserBalanceRequest request)
@@ -172,13 +186,6 @@ namespace DataBaseService.Repositories
         {
             var dbUserTransactions = dbContext.Transactions
                 .Where(transaction => transaction.UserId == request.UserId);
-
-            if (!dbUserTransactions.Any())
-            {
-                var exception = new BadRequestException("No transactions for user");
-                logger.LogWarning(exception, $"No transactions for user {request.UserId}");
-                throw exception;
-            }
 
             var userTransactions = new List<Transaction>();
 

@@ -38,7 +38,7 @@ namespace OperationService.Controllers
                     Type = instrument
                 });
         }
-		
+
         [Route("trade")]
         [HttpPost]
         public async Task <bool> Trade (
@@ -65,6 +65,16 @@ namespace OperationService.Controllers
                    UserId = Guid.Parse(userId),
                    Figi = figi
                });
+        }
+
+        [Route("getportfolio")]
+        [HttpGet]
+        public async Task<List<InstrumentData>> GetPortfolio(
+            [FromServices] ICommand<GetPortfolioRequest, List<InstrumentData>> command,
+            [FromHeader] Guid userId
+            )
+        {
+            return await command.Execute(new GetPortfolioRequest() { UserId = userId });
         }
 
         [Route("userBalance/get")]
@@ -95,7 +105,8 @@ namespace OperationService.Controllers
             [FromServices] ICommand<GetCandlesRequest, IEnumerable<Candle>> command,
             [FromQuery] BrokerType broker,
             [FromQuery] string token,
-            [FromQuery] string figi
+            [FromQuery] string figi,
+            [FromQuery] int interval
         )
         {
             return await command.Execute(
@@ -103,7 +114,8 @@ namespace OperationService.Controllers
                 {
                     Broker = broker,
                     Token = token,
-                    Figi = figi
+                    Figi = figi,
+                    Interval = interval
                 });
         }
 

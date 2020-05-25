@@ -9,7 +9,6 @@ using System;
 using FluentValidation;
 using System.Threading.Tasks;
 using UserService.Interfaces;
-using UserService.Utils;
 using Microsoft.Extensions.Logging;
 
 namespace UserService.Commands
