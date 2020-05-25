@@ -125,7 +125,7 @@
                     OperationType = rule.OperationType,
                     MoneyLimitPercents = rule.MoneyLimitPercents,
                     TriggerValue = rule.TriggerValue,
-                    TimeMarker = rule.TimeMarker
+                    TimeMarker = (int)rule.TimeMarker.TotalMinutes
                 });
             }
         }

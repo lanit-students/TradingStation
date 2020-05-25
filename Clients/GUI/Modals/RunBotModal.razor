@@ -1,0 +1,60 @@
+﻿@inject IModalService Modal
+
+<table class="table table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th>Figis</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < figis.Count; ++i)
+        {
+            <tr>
+                <td class="align-middle">
+                    <input type="text" @bind="figis[i]" />
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="align-middle">
+                <input type="text" @onfocusout="Expand" @bind="input" />
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<button @onclick="Save" class="btn btn-primary">Save</button>
+
+@code {
+    [CascadingParameter]
+    private BlazoredModalInstance BlazoredModal { get; set; }
+
+    private List<string> figis;
+
+    private string input;
+
+    private void Expand()
+    {
+        if (figis.Count > 0 && string.IsNullOrEmpty(figis.Last()))
+        {
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(input))
+        {
+            figis.Add(input);
+            input = "";
+            StateHasChanged();
+        }
+    }
+
+    private void Save()
+    {
+        BlazoredModal.Close(ModalResult.Ok<List<string>>(figis));
+    }
+
+    protected override void OnInitialized()
+    {
+        figis = new List<string>();
+    }
+}

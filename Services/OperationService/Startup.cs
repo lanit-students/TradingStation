@@ -84,6 +84,8 @@ namespace OperationService
                 x.AddRequestClient<RunBotRequest>(databaseUri);
                 x.AddRequestClient<DisableBotRequest>(databaseUri);
                 x.AddRequestClient<InternalGetBotsRequest>(databaseUri);
+                x.AddRequestClient<InternalSaveRuleRequest>(databaseUri);
+                x.AddRequestClient<InternalGetBotRulesRequest>(databaseUri);
             });
 
             services.AddMassTransitHostedService();
@@ -106,6 +108,7 @@ namespace OperationService
 
             services.AddTransient<ICommand<Guid, List<BotData>>, GetBotsCommand>();
 
+            services.AddTransient<ICommand<InternalSaveRuleRequest, bool>, SaveBotRuleCommand>();
 
             services.AddLogging(log =>
             {

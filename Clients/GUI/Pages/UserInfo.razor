@@ -31,16 +31,16 @@
     <nav class="navbar navbar-expand-sm" align="center">
         <ul class="navbar-nav m-auto text-lg-center">
             <li class="nav-item">
-                <a class="nav-link @((pageToShow == "UserInfo") ? "active" : "") " @onclick="@(()=> SetUserInfoActive("UserInfo"))"
-                   data-toggle="pill" href="#userinfo">Personal Information</a>
+                <a style="cursor:pointer;" class="nav-link @((pageToShow == "UserInfo") ? "active" : "") " @onclick="@(()=> SetUserInfoActive("UserInfo"))"
+                   data-toggle="pill">Personal Information</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @((pageToShow == "Transactions") ? "active" : "")" @onclick="@(()=> SetUserInfoActive("Transactions"))"
-                   data-toggle="pill" href="#transactions">Transactions</a>
+                <a style="cursor:pointer;" class="nav-link @((pageToShow == "Transactions") ? "active" : "")" @onclick="@(()=> SetUserInfoActive("Transactions"))"
+                   data-toggle="pill">Transactions</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @((pageToShow == "Balance") ? "active" :  "")" @onclick="@(()=> SetUserInfoActive("Balance"))"
-                   data-toggle="pill" href="#balance">Balance</a>
+                <a style="cursor:pointer;" class="nav-link @((pageToShow == "Balance") ? "active" :  "")" @onclick="@(()=> SetUserInfoActive("Balance"))"
+                   data-toggle="pill">Balance</a>
             </li>
         </ul>
     </nav>
@@ -48,8 +48,11 @@
         <div class="tab-pane fade show active">
             @if (isPageLoading)
             {
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
+                <div class="spinner-container">
+                    <div class="spinner-frame">
+                        <div class="spinner-cover"></div>
+                        <div class="spinner-bar"></div>
+                    </div>
                 </div>
             }
             else
@@ -468,7 +471,7 @@
         }
     }
 
-    private async void SetUserInfoActive(string page)
+    private void SetUserInfoActive(string page)
     {
         pageToShow = page;
         StateHasChanged();

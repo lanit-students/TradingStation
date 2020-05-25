@@ -69,7 +69,7 @@ namespace TinkoffIntegrationLib
             }
 
             var tinkoffInstrumentType =
-                (Tinkoff.Trading.OpenApi.Models.InstrumentType) Enum.Parse(
+                (Tinkoff.Trading.OpenApi.Models.InstrumentType)Enum.Parse(
                     typeof(Tinkoff.Trading.OpenApi.Models.InstrumentType), type.ToString());
 
             var instruments = tinkoffInstrumentType switch

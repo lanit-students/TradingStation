@@ -11,10 +11,15 @@ namespace DataBaseService.BrokerConsumers
     public class DeleteBotConsumer : IConsumer<DeleteBotRequest>
     {
         private readonly IBotRepository botRepository;
+        private IBotRuleRepository botRuleRepository;
         private readonly ILogger logger;
 
-        public DeleteBotConsumer([FromServices] IBotRepository botRepository, [FromServices] ILogger<DeleteBotConsumer> logger)
+        public DeleteBotConsumer(
+            [FromServices] IBotRuleRepository botRuleRepository,
+            [FromServices] IBotRepository botRepository,
+            [FromServices] ILogger<DeleteBotConsumer> logger)
         {
+            this.botRuleRepository = botRuleRepository;
             this.botRepository = botRepository;
             this.logger = logger;
         }
@@ -22,6 +27,7 @@ namespace DataBaseService.BrokerConsumers
         private bool DeleteBot(DeleteBotRequest request)
         {
             logger.LogInformation("Delete bot request received from OperationService");
+            botRuleRepository.DeleteRulesForBot(request);
             botRepository.DeleteBot(request.ID);
             return true;
         }

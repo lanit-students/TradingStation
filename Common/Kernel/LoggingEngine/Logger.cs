@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Kernel.LoggingEngine
 {
@@ -15,7 +16,7 @@ namespace Kernel.LoggingEngine
             this.provider = provider;
         }
 
-        private async void AddLog(LogMessage log)
+        private async Task AddLog(LogMessage log)
         {
             var bus = provider.GetRequiredService<IBus>();
 
