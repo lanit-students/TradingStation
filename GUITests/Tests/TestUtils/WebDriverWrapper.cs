@@ -31,7 +31,7 @@ namespace GUITests.Tests.TestUtils
         {
             var inputs = FindElementsBySelector(driver, "input");
 
-            for (var i = 0; i < inputs.Count; ++i)
+            for (var i = 0; i < fields.Count; ++i)
             {
                 inputs[i].SendKeys(fields[i]);
             }

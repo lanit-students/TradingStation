@@ -17,14 +17,14 @@ namespace GUITestsEngine.Tests
             "Name",
             "Surname",
             "01.01.2000",
-            "den89181827071@mail.ru",
+            "den89181827071@gmail.com",
             "password",
             "password"
         };
 
         private void FillSignUpForm(ChromeDriver driver, List<string> input)
         {
-            driver.Navigate().GoToUrl("https://localhost:44335/");
+            driver.Navigate().GoToUrl("http://localhost:8080/");
 
             Thread.Sleep(5000);
 
@@ -66,7 +66,11 @@ namespace GUITestsEngine.Tests
 
             Thread.Sleep(5000);
 
-            var testResult = driver.Url == "https://localhost:44335/signin";
+            var errors = WebDriverWrapper.FindValidationErrors(driver);
+
+            Thread.Sleep(5000);
+
+            var testResult = driver.Url == "http://localhost:8080/" && errors.Count == 0;
 
             driver.Close();
 
@@ -81,7 +85,11 @@ namespace GUITestsEngine.Tests
         {
             var driver = new ChromeDriver();
 
-            FillSignUpForm(driver, new List<string>());
+            FillSignUpForm(driver, new List<string>() { "", "", "", "", "", "" });
+
+            Thread.Sleep(5000);
+
+            WebDriverWrapper.FindElementByClass(driver, "button", "Submit").Click();
 
             Thread.Sleep(5000);
 

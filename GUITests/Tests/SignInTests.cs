@@ -14,30 +14,17 @@ namespace GUITestsEngine.Tests
     {
         private CreateUserRequest request = new CreateUserRequest
         {
-            FirstName = "Test",
-            LastName = "Test",
-            Birthday = DateTime.Today.AddYears(-20),
-            Email = "den89181827071@gmail.com",
-            Password = "password"
+            Email = "den89181827071@mail.ru",
+            Password = "12345"
         };
 
         [Test]
-        public void SignInTest()
+        public void ValidSignInTest()
         {
-            const string url = "https://localhost:5011/users/create";
-
-            var client = new RestClient<CreateUserRequest, bool>(url, RestRequestType.POST);
-
-            var commandResult = client.Execute(request);
-
-            if (!commandResult)
-            {
-                throw new Exception();
-            }
 
             var driver = new ChromeDriver();
 
-            driver.Navigate().GoToUrl("https://localhost:44335/");
+            driver.Navigate().GoToUrl("http://localhost:8080/");
 
             Thread.Sleep(5000);
 
@@ -49,11 +36,40 @@ namespace GUITestsEngine.Tests
             WebDriverWrapper.SubmitForm(driver, fields);
 
             Thread.Sleep(5000);
+            
+            var testResult = driver.Url == "http://localhost:8080/";
 
-            var testResult = driver.Url == "https://localhost:44335/userinfo";
             driver.Close();
 
             if (!testResult)
+            {
+                throw new Exception();
+            }
+        }
+
+        [Test]
+        public void InvalidSignInTest()
+        {
+            var driver = new ChromeDriver();
+
+            driver.Navigate().GoToUrl("http://localhost:8080/");
+
+            Thread.Sleep(5000);
+
+            WebDriverWrapper.FindElementByClass(driver, "button", "Sign In").Click();
+
+            Thread.Sleep(5000);
+
+            var fields = new List<string>() { "", "" };
+            WebDriverWrapper.SubmitForm(driver, fields);
+
+            Thread.Sleep(5000);
+
+            var errors = WebDriverWrapper.FindValidationErrors(driver);
+
+            driver.Close();
+
+            if (errors.Count != 2)
             {
                 throw new Exception();
             }
