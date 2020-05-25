@@ -1,4 +1,5 @@
 ﻿using DataBaseService.Database;
+using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
@@ -48,6 +49,32 @@ namespace DataBaseService.Repositories
                 logger.LogWarning(e, $"Sometheing went wrong during save rule {rule.Id}");
                 throw new InternalServerException($"Sometheing went wrong during saving rule {rule.Id}", e);
             }
+        }
+
+        public void EditRuleForBot(BotRuleData rule)
+        {
+            try
+            {
+                var links = dbContext.LinkBotsWithRules.Where(x => x.BotId == rule.BotId);
+                var rules = dbContext.BotRules.Where(x => links.Select(l => l.RuleId).Contains(x.Id));
+
+                foreach (var r in rules)
+                {
+                    r.MoneyLimitPercents = rule.MoneyLimitPercents;
+                    r.OperationType=(int)rule.OperationType;
+                    r.TimeMarker = rule.TimeMarker;
+                    r.TriggerValue = rule.TriggerValue;
+                }
+
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var e = new NotFoundException("Not found rule to edit");
+                logger.LogWarning(ex, $"{e.Message}, ruleId: {rule.Id}, botId:{rule.BotId}");
+                throw e;
+            }
+
         }
 
         public void DeleteRulesForBot(DeleteBotRequest request)

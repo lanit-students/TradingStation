@@ -58,8 +58,8 @@ namespace DataBaseService
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
-
                     ep.ConfigureConsumer<ConfirmUserConsumer>(serviceProvider);
+
                     ep.ConfigureConsumer<TransactionConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
@@ -73,6 +73,7 @@ namespace DataBaseService
                     ep.ConfigureConsumer<BotInfoConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetBotRulesConsumer>(serviceProvider);
                     ep.ConfigureConsumer<SaveBotRuleConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<EditBotConsumer>(serviceProvider);
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -136,6 +137,7 @@ namespace DataBaseService
                 x.AddConsumer<SaveBotRuleConsumer>();
                 x.AddConsumer<AddLogConsumer>();
                 x.AddConsumer<GetBotRulesConsumer>();
+                x.AddConsumer<EditBotConsumer>();
             });
 
             services.AddMassTransitHostedService();

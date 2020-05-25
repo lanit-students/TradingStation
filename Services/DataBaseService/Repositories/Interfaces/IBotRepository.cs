@@ -11,6 +11,8 @@ namespace DataBaseService.Repositories.Interfaces
 
         void DeleteBot(Guid ID);
 
+        void EditBot(BotData bot);
+
         void RunBot(Guid ID);
 
         void StopBot(Guid ID);

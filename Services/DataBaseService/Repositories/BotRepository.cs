@@ -42,10 +42,24 @@ namespace DataBaseService.Repositories
             catch (Exception ex)
             {
                 var e = new NotFoundException("Not found bot to delete");
-                logger.LogWarning(e, $"{e.Message}, botId: {Id}");
+                logger.LogWarning(ex, $"{e.Message}, botId: {Id}");
                 throw e;
             }
             // TODO: remove records from bot rules table also (task for one who implements rules)
+        }
+
+        public void EditBot(BotData bot)
+        {
+            var dbBot = dbContext.Bots.FirstOrDefault(b => b.Id == bot.Id);
+            if (dbBot == null)
+            {
+                var e = new NotFoundException("Not found bot to edit");
+                logger.LogWarning(e, $"{e.Message}, botId: {bot.Id}");
+                throw e;
+            }
+
+            dbBot.Name = bot.Name;
+            dbContext.SaveChanges();
         }
 
         public void RunBot(Guid Id)
