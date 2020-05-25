@@ -10,7 +10,7 @@ namespace GUI.Scripts
     {
         public static async Task<UserInfoRequest> GetUserById(UserToken userToken)
         {
-            const string url = "https://localhost:5011/users/get";
+            const string url = "http://localhost:5010/users/get";
 
             var client = new RestClient<object, UserInfoRequest>(url, RestRequestType.GET, userToken);
 

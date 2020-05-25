@@ -85,7 +85,7 @@
         var ruleBuy = new BotRuleModel(OperationType.Buy);
 
         var ruleSell = new BotRuleModel(OperationType.Sell);
-        
+
         initialRules = new List<BotRuleModel>() { ruleBuy, ruleSell };
     }
 
@@ -100,8 +100,8 @@
                 {
                     OperationType = rule.OperationType,
                     MoneyLimitPercents = rule.MoneyLimitPercents,
-                    TriggerValue = rule.TriggerValue,
-                    TimeMarker = rule.TimeMarker
+                    TriggerValue = rule.OperationType == OperationType.Buy ? -rule.TriggerValue : rule.TriggerValue,
+                    TimeMarker = (int)rule.TimeMarker.TotalMinutes
                 });
             }
         }
@@ -139,7 +139,8 @@
         var request = new CreateBotRequest
         {
             Name = userInput.Name,
-            UserId = userToken.UserId
+            UserId = userToken.UserId,
+            Rules = userInput.Rules
         };
 
         try

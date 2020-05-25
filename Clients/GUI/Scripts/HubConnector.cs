@@ -15,7 +15,7 @@ namespace GUI.Scripts
     {
         public static async Task<IEnumerable<Candle>> SubscribeOnCandle(Action<Candle> OnReceivedAction, BrokerType broker, string figi, int interval, string token)
         {
-            const string url = "https://localhost:5009/operations/candles/get";
+            const string url = "http://localhost:5008/operations/candles/get";
 
             var queryParams = new Dictionary<string, string>
             {
@@ -37,7 +37,7 @@ namespace GUI.Scripts
             }
 
             var hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5009/CandleHub")
+                .WithUrl("http://localhost:5008/CandleHub")
                 .Build();
 
             hubConnection.On<Candle>("ReceiveMessage", OnReceivedAction.Invoke);
