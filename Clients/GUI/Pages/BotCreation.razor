@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="form-row input-group-prepend">
                                     <label class="col-8 ">Trigger value to trade</label>
-                                    <input  @bind-value="@rule.TriggerValue" type="number" class="col-4">
+                                    <input @bind-value="@rule.TriggerValue" type="number" placeholder="1.0" step="0.01" min="0" max="10" class="col-4">
                                 </div>
                                 <div class="form-row input-group-prepend">
                                     <label class="col-8 ">Time interval</label>
