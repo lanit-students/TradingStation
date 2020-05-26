@@ -98,10 +98,11 @@ namespace UserService
 
             services.AddMassTransitHostedService();
 
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
+            //services.AddLogging(log =>
+            //{
+            //    log.AddConsole();
+            //    log.ClearProviders();
+            //});
 
             services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
             {
@@ -118,8 +119,6 @@ namespace UserService
             });
 
             app.UseHsts();
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseMiddleware<CheckTokenMiddleware>();

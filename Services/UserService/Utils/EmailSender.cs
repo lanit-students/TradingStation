@@ -1,5 +1,6 @@
 ﻿using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
@@ -23,13 +24,18 @@ namespace UserService.Utils
             var from = new MailAddress("t.platform@mail.ru", "Trading Station");
             var to = new MailAddress(email);
             string secretToken = secretTokenEngine.GetToken(email).ToString();
+
             string link = $"https://localhost:44335/confirm/{secretToken}";
+#if RELEASE
+            link = $"http://51.136.121.223:8080/confirm/{secretToken}";
+#endif
             string htmlCode = $"<p>Please, click this <a href ={link}>link</a> to confirm registration.</p>";
             var m = new MailMessage(from, to);
             m.Subject = "Registration confirmation";
             m.Body = htmlCode;
             m.IsBodyHtml = true;
-            var smtp = new SmtpClient("smtp.mail.ru", 25);
+            var smtp = new SmtpClient("smtp.mail.ru", 587);
+            smtp.UseDefaultCredentials = false;
             smtp.Credentials = new NetworkCredential("t.platform@mail.ru", "t123plat");
             smtp.EnableSsl = true;
 
@@ -48,8 +54,15 @@ namespace UserService.Utils
                     Thread.Sleep(5000 * (++i));
                     flag = false;
                     logger.LogWarning(e, $"SmtpException thrown while trying to Send Email {email} to confirm");
-                    logger.LogWarning(e.Message);
-                    continue;
+                    logger.LogWarning(e.ToString());
+
+                    Console.WriteLine(e.ToString());
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e.ToString());
+
+                    Console.WriteLine(e.ToString());
                 }
             }
 
