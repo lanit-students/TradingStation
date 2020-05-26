@@ -17,6 +17,7 @@ namespace UserService.Utils
         {
             this.logger = logger;
         }
+
         public void SendEmail(string email, ISecretTokenEngine secretTokenEngine)
         {
             var from = new MailAddress("t.platform@mail.ru", "Trading Station");
