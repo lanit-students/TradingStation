@@ -29,7 +29,7 @@ namespace GUI.ViewModels
             OperationType = operation;
             MoneyLimitPercents = 20;
             TimeMarker = new TimeSpan(0, 10, 0);
-            TriggerValue = 20;
+            TriggerValue = 0.1m;
             Description = operation == OperationType.Buy ? CBuyDescription : CSellDescription;
         }
 

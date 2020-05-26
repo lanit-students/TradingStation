@@ -1,7 +1,9 @@
 ﻿using DataBaseService.Database;
+using DataBaseService.Database.Models;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
+using DTO.BrokerRequests;
 using DTO.RestRequests;
 using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +50,29 @@ namespace DataBaseService.Repositories
                 logger.LogWarning(e, $"Sometheing went wrong during save rule {rule.Id}");
                 throw new InternalServerException($"Sometheing went wrong during saving rule {rule.Id}", e);
             }
+        }
+
+        public void EditRuleForBot(BotRuleData rule, Guid BotId)
+        {
+            try
+            {
+                var link = dbContext.LinkBotsWithRules.FirstOrDefault(x => x.BotId == BotId);
+                var rules = dbContext.BotRules.FirstOrDefault(x => x.Id == link.RuleId);
+
+                rules.MoneyLimitPercents = rule.MoneyLimitPercents;
+                rules.OperationType=(int)rule.OperationType;
+                rules.TimeMarker = rule.TimeMarker;
+                rules.TriggerValue = rule.TriggerValue;
+
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var e = new NotFoundException("Not found rule to edit");
+                logger.LogWarning(ex, $"{e.Message}, ruleId: {rule.Id}, botId:{rule.BotId}");
+                throw e;
+            }
+
         }
 
         public void DeleteRulesForBot(DeleteBotRequest request)
