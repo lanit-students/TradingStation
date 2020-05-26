@@ -17,6 +17,7 @@ namespace UserService.Utils
         {
             this.logger = logger;
         }
+
         public void SendEmail(string email, ISecretTokenEngine secretTokenEngine)
         {
             var from = new MailAddress("t.platform@mail.ru", "Trading Station");
@@ -44,9 +45,10 @@ namespace UserService.Utils
                 }
                 catch (SmtpException e)
                 {
-                    Thread.Sleep(10000 * (++i));
+                    Thread.Sleep(5000 * (++i));
                     flag = false;
-                    logger.LogWarning(e, $"SmtpException thrown while trying to Send Eamil {email} to confirm");
+                    logger.LogWarning(e, $"SmtpException thrown while trying to Send Email {email} to confirm");
+                    logger.LogWarning(e.Message);
                     continue;
                 }
             }

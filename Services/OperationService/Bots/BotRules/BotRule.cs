@@ -114,7 +114,11 @@ namespace OperationService.Bots.BotRules
 
                     trigger.Triggered += async (s, e) =>
                     {
-                        await Execute(s, e);
+                        try
+                        {
+                            await Execute(s, e);
+                        }
+                        catch { }
                     };
 
                     triggers.Add(trigger);
