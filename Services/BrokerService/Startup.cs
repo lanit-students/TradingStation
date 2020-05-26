@@ -47,7 +47,7 @@ namespace BrokerService
                     ep.ConfigureConsumer<TradeConsumer>(serviceProvider);
                     ep.ConfigureConsumer<SubscribeOnCandleConsumer>(serviceProvider);
                 });
-                
+
             });
         }
 
@@ -59,18 +59,13 @@ namespace BrokerService
             services.AddMassTransit(x =>
             {
                 x.AddBus(provider => CreateBus(provider));
-             
+
                 x.AddConsumer<GetInstrumentsConsumer>();
                 x.AddConsumer<TradeConsumer>();
                 x.AddConsumer<SubscribeOnCandleConsumer>();
             });
 
             services.AddMassTransitHostedService();
-
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
 
             services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
             {
