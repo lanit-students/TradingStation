@@ -46,13 +46,8 @@ namespace UserService.Utils
                 {
                     Thread.Sleep(10000 * (++i));
                     flag = false;
-                    logger.LogWarning(e, "SmtpException thrown while trying to Send Eamil to confirm");
+                    logger.LogWarning(e, $"SmtpException thrown while trying to Send Eamil {email} to confirm");
                     continue;
-                }
-                finally
-                {
-                    flag = false;
-                    logger.LogWarning( "Not tipical exception thrown while trying to Send Eamil to confirm");
                 }
             }
 
