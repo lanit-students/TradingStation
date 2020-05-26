@@ -68,6 +68,11 @@ namespace OperationService.Bots.BotRules
 
             var maxPrice = balance * maxBalancePercents / 100;
 
+            if (maxPrice < e.Price)
+            {
+                return;
+            }
+
             await tradeCommand.Execute(
                 new TradeRequest()
                 {
