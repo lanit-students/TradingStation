@@ -16,7 +16,7 @@ namespace DataBaseService.Database.Models
         public decimal Price { get; set; }
         public string Currency { get; set; }
         public bool IsSuccess { get; set; }
-        
+
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
