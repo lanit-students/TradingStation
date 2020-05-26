@@ -18,7 +18,6 @@ using DataBaseService.Repositories.Interfaces;
 using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Database.Logs;
 using DataBaseService.Database.Logs.Interfaces;
-using DTO.BrokerRequests;
 using Kernel.LoggingEngine;
 using Microsoft.Extensions.Logging;
 
@@ -59,20 +58,22 @@ namespace DataBaseService
                     ep.ConfigureConsumer<LoginUserConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserByIdConsumer>(serviceProvider);
                     ep.ConfigureConsumer<EditUserConsumer>(serviceProvider);
-
                     ep.ConfigureConsumer<ConfirmUserConsumer>(serviceProvider);
+
                     ep.ConfigureConsumer<TransactionConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetInstrumentFromPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<UpdateUserBalanceConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetPortfolioConsumer>(serviceProvider);
                     ep.ConfigureConsumer<GetTransactionConsumer>(serviceProvider);
-
                     ep.ConfigureConsumer<CreateBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<DeleteBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<RunBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<DisableBotConsumer>(serviceProvider);
                     ep.ConfigureConsumer<BotInfoConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<GetBotRulesConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<SaveBotRuleConsumer>(serviceProvider);
+                    ep.ConfigureConsumer<EditBotConsumer>(serviceProvider);
                 });
 
                 cfg.ReceiveEndpoint($"{serviceName}_Logs", ep =>
@@ -108,9 +109,12 @@ namespace DataBaseService
 			services.AddTransient<ITradeRepository, TradeRepository>();
             services.AddTransient<IBotRepository, BotRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
+            services.AddTransient<IBotRuleRepository, BotRuleRepository>();
             services.AddTransient<IUserMapper, UserMapper>();
-			services.AddTransient<ITradeMapper, TradeMapper>();
+            services.AddTransient<ITradeMapper, TradeMapper>();
+            services.AddTransient<IBotRuleMapper, BotRuleMapper>();
             services.AddTransient<IBotMapper, BotMapper>();
+			services.AddTransient<ITradeMapper, TradeMapper>();
             services.AddTransient<ILogMapper, LogMapper>();
 
             services.AddMassTransit(x =>
@@ -130,15 +134,18 @@ namespace DataBaseService
                 x.AddConsumer<RunBotConsumer>();
                 x.AddConsumer<DisableBotConsumer>();
                 x.AddConsumer<BotInfoConsumer>();
-            
+                x.AddConsumer<SaveBotRuleConsumer>();
+                x.AddConsumer<AddLogConsumer>();
+                x.AddConsumer<GetBotRulesConsumer>();
+                x.AddConsumer<EditBotConsumer>();
             });
 
             services.AddMassTransitHostedService();
 
-            services.AddLogging(log =>
-            {
-                log.ClearProviders();
-            });
+            //services.AddLogging(log =>
+            //{
+            //    log.ClearProviders();
+            //});
 
             services.AddTransient<ILoggerProvider, LoggerProvider>(provider =>
             {

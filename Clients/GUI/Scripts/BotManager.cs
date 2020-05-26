@@ -62,7 +62,11 @@ namespace GUI.Scripts
 
         public static async Task EditBot(UserToken userToken, EditBotRequest request)
         {
-            
+            const string url = "https://localhost:5009/operations/bot/edit";
+
+            var client = new RestClient<EditBotRequest, bool>(url, RestRequestType.POST, userToken);
+
+            await client.ExecuteAsync(request);
         }
     }
 }

@@ -3,11 +3,13 @@ using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using DTO.RestRequests;
 using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace DataBaseService.Repositories
@@ -38,13 +40,27 @@ namespace DataBaseService.Repositories
                 dbContext.Bots.Remove(dbContext.Bots.FirstOrDefault(bot => bot.Id == Id));
                 dbContext.SaveChanges();
             }
-            catch
+            catch (Exception ex)
             {
                 var e = new NotFoundException("Not found bot to delete");
-                logger.LogWarning(e, $"{e.Message}, botId: {Id}");
+                logger.LogWarning(ex, $"{e.Message}, botId: {Id}");
                 throw e;
             }
             // TODO: remove records from bot rules table also (task for one who implements rules)
+        }
+
+        public void EditBot(EditBotRequest request)
+        {
+            var dbBot = dbContext.Bots.FirstOrDefault(b => b.Id == request.BotId);
+            if (dbBot == null)
+            {
+                var e = new NotFoundException("Not found bot to edit");
+                logger.LogWarning(e, $"{e.Message}, botId: {request.BotId}");
+                throw e;
+            }
+
+            dbBot.Name = request.Name;
+            dbContext.SaveChanges();
         }
 
         public void RunBot(Guid Id)

@@ -1,0 +1,291 @@
+﻿@inject IModalService Modal
+@inject ISessionStorageService Storage
+@inject NavigationManager Navigation
+@attribute [Authorize]
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <h3>Instruments</h3>
+        </div>
+        <div class="col-md float-right">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Type of instrument</label>
+                </div>
+                <select @onchange="@UpdateInstruments" class="custom-select">
+                    @foreach (var instrument in instrumentOptions)
+                    {
+                        <option value=@instrument>@instrument</option>
+                    }
+                </select>
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Search</label>
+                    <input type="text" value="@searchValue" @onchange="@Search">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (areInstrumentsLoading)
+        {
+            <div class="spinner-container">
+                <div class="spinner-frame">
+                    <div class="spinner-cover"></div>
+                    <div class="spinner-bar"></div>
+                </div>
+            </div>
+        }
+        else if (!errorOccured)
+        {
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Select instrument</th>
+                        <th scope="col">Figi</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Currency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var instrument in marketInstruments.Skip(pageIndex * pageSize).Take(pageSize))
+                    {
+                        <tr>
+                            <td><input type="checkbox" @onclick="@(() => AddOrDeleteFigi(instrument.Figi))"></td>
+                            <td class="align-middle">@instrument.Figi</td>
+                            <td class="align-middle">@instrument.Name</td>
+                            <td class="align-middle">@instrument.Currency</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="btn-group-sm">
+                <input type="@(prevDisabled ? "hidden" : "button")" readonly="readonly" value="Previous"
+                       class="btn btn-primary" @onclick="@PreviousPage" />
+
+                <input class="btn btn-outline-primary col-sm-1" value="@pageIndex" />
+
+                @if (pageIndex < lastPageIndex)
+                {
+                    <input class="btn btn-light btn-sm col-sm-1" type=" @(nextDisabled ? "hidden" : "button" )"
+                           readonly="readonly" value="@pagesToShow[1]" @onclick="@(() => MoveTo(pagesToShow[1]))" />
+
+                    @if (pageIndex + 1 < lastPageIndex)
+                    {
+                        <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="@pagesToShow[2]" @onclick="@(() => MoveTo(pagesToShow[2]))" />
+
+                        @if (pageIndex + 2 < lastPageIndex)
+                        {
+                            <input class="btn btn-light btn-sm col-sm-1" readonly="readonly" value="..." @onclick="@(() => MoveTo(pageIndex + 3))" />
+
+                            <input class=" btn btn-light btn-sm col-sm-1" readonly="readonly" value="@lastPageIndex" @onclick="@(() => MoveTo(lastPageIndex))" />
+                        }
+                    }
+                    <input type=" @(nextDisabled ? "hidden" : "button" )"
+                           class="btn btn-primary" value="Next" @onclick="@NextPage" />
+                }
+                <input type="button" readonly="readonly"
+                       class="btn btn-secondary" value="Go to " @onclick="@(() => MoveTo(pageToMove))" />
+                <input type="number" class="text-right col-sm-2" @bind-value="@pageToMove" />
+            </div>
+
+            <br>
+            <input type="@(pageToMove <= lastPageIndex && pageToMove >= 0 ? "hidden" : "text")" class="col-4 text-center"
+                   readonly="readonly" value="Sorry, but you have to go to an existing page">
+            <br>
+        }
+        else
+        {
+            <h3 class=" m-lg-5">
+                @errorMessage
+            </h3>
+        }
+    </div>
+</div>
+<div class="pull-right">
+    <button @onclick="Save" class="btn btn-primary">Save</button>
+</div>
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    private List<Instrument> marketInstruments;
+    private List<string> instrumentOptions;
+    private string selectedInstrument;
+    private bool areInstrumentsLoading;
+    private bool errorOccured;
+    private string errorMessage;
+    private string curInstrument;
+    private int pageToMove = 0;
+    private int pageIndex;
+    private int[] pagesToShow;
+    private int lastPageIndex;
+    private int pageSize = 10;
+    private const int CIndexesToShow = 3;
+    private bool pageEnable = true;
+    private string searchValue = "";
+    private List<string> figis;
+    private string token = "t.-lW-yXwRofmPWDrSqm9XpBO2K4WbTmHPkKPgRskRDlMqLCxzbP8efGmM3l6U1HU9ReMg5R0t3QqO86twfG3-vw";
+
+    private async Task Search(ChangeEventArgs e)
+    {
+        var str = e.Value.ToString();
+
+        areInstrumentsLoading = true;
+
+        var instrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), selectedInstrument);
+        var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, instrumentType);
+        marketInstruments = result.ToList();
+
+        marketInstruments = marketInstruments.FindAll(x =>
+            x.Figi.Contains(str) || x.Name.Contains(str) || x.Currency.ToString().Contains(str));
+
+        pageIndex = 0;
+        pageToMove = 0;
+        lastPageIndex = marketInstruments.Count() / pageSize;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] = i;
+        }
+
+        areInstrumentsLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task UpdateInstruments(ChangeEventArgs e)
+    {
+        try
+        {
+            pageIndex = 0;
+            pageToMove = 0;
+            selectedInstrument = e.Value.ToString();
+            areInstrumentsLoading = true;
+
+            var instrumentType = (InstrumentType)Enum.Parse(typeof(InstrumentType), selectedInstrument);
+
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, instrumentType);
+
+            areInstrumentsLoading = false;
+
+            marketInstruments = result.ToList();
+
+            lastPageIndex = marketInstruments.Count() / pageSize;
+
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = i;
+            }
+        }
+        catch (Exception)
+        {
+            areInstrumentsLoading = false;
+
+            errorOccured = true;
+
+            errorMessage = "Can't load instruments, try again later";
+        }
+    }
+
+    private void PreviousPage()
+    {
+        --pageIndex;
+        --pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] -= 1;
+        }
+        StateHasChanged();
+    }
+
+    private void MoveTo(int page)
+    {
+        if (page >= 0 && page <= lastPageIndex)
+        {
+            pageIndex = page;
+            pageToMove = page;
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = page + i;
+            }
+        }
+        StateHasChanged();
+    }
+
+    private bool prevDisabled =>
+            pageIndex == 0;
+
+    private void NextPage()
+    {
+        ++pageIndex;
+        ++pageToMove;
+        for (int i = 0; i < CIndexesToShow; i++)
+        {
+            pagesToShow[i] += 1;
+        }
+        StateHasChanged();
+    }
+
+    private bool nextDisabled =>
+            pageIndex < lastPageIndex;
+
+    private async Task AddOrDeleteFigi(string figi)
+    {
+        if (figis.Contains(figi))
+        {
+            figis.Remove(figi);
+        }
+        else
+        {
+            figis.Add(figi);
+        }
+    }
+
+    private void Save()
+    {
+        BlazoredModal.Close(ModalResult.Ok<List<string>>(figis));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorOccured = false;
+        pageIndex = 0;
+        marketInstruments = new List<Instrument>();
+        figis = new List<string>();
+        instrumentOptions = new List<string>()
+    {
+            "Bond",
+            "Currency",
+            "Stock"
+        };
+
+        areInstrumentsLoading = true;
+
+        try
+        {
+            var result = await BrokerManager.GetInstruments(BrokerType.TinkoffBroker, token, InstrumentType.Bond);
+
+            selectedInstrument = InstrumentType.Bond.ToString();
+            marketInstruments = result.ToList();
+
+            areInstrumentsLoading = false;
+
+            pageIndex = 0;
+            lastPageIndex = marketInstruments.Count() / pageSize;
+
+            pagesToShow = new int[CIndexesToShow];
+            for (int i = 0; i < CIndexesToShow; i++)
+            {
+                pagesToShow[i] = i;
+            }
+
+        }
+        catch (Exception)
+        {
+            areInstrumentsLoading = false;
+
+            errorMessage = "Can't load instruments, try again later";
+            errorOccured = true;
+        }
+    }
+}
+

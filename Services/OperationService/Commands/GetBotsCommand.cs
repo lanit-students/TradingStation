@@ -27,8 +27,8 @@ namespace OperationService.Commands
 
         private async Task<List<BotData>> GetBotsByUserId(InternalGetBotsRequest request)
         {
-            logger.LogInformation("Response from Database Service GetBotsByUserId method received");
             var response = await client.GetResponse<OperationResult<List<BotData>>>(request);
+            logger.LogInformation("Response from Database Service GetBotsByUserId method received");
             return OperationResultHandler.HandleResponse(response.Message);
         }
 

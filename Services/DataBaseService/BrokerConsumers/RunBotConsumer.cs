@@ -13,7 +13,9 @@ namespace DataBaseService.BrokerConsumers
         private readonly IBotRepository botRepository;
         private readonly ILogger logger;
 
-        public RunBotConsumer([FromServices] IBotRepository botRepository, [FromServices] ILogger<RunBotConsumer> logger)
+        public RunBotConsumer(
+            [FromServices] IBotRepository botRepository,
+            [FromServices] ILogger<RunBotConsumer> logger)
         {
             this.botRepository = botRepository;
             this.logger = logger;
@@ -22,7 +24,8 @@ namespace DataBaseService.BrokerConsumers
         private bool RunBot(RunBotRequest request)
         {
             logger.LogInformation("Run bot request received from OperationService");
-            botRepository.RunBot(request.ID);
+            botRepository.RunBot(request.BotId);
+
             return true;
         }
 
