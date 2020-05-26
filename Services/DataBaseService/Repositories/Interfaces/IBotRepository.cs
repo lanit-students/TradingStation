@@ -1,5 +1,6 @@
 ﻿using DTO;
 using DTO.BrokerRequests;
+using DTO.RestRequests;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +12,7 @@ namespace DataBaseService.Repositories.Interfaces
 
         void DeleteBot(Guid ID);
 
-        void EditBot(InternalEditBotRequest request);
+        void EditBot(EditBotRequest request);
 
         void RunBot(Guid ID);
 

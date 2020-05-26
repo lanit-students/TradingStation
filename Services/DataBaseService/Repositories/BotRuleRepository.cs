@@ -56,16 +56,13 @@ namespace DataBaseService.Repositories
         {
             try
             {
-                var links = dbContext.LinkBotsWithRules.Where(x => x.BotId == rule.BotId);
-                var rules = dbContext.BotRules.Where(x => links.Select(l => l.RuleId).Contains(x.Id));
+                var link = dbContext.LinkBotsWithRules.FirstOrDefault(x => x.BotId == BotId);
+                var rules = dbContext.BotRules.FirstOrDefault(x => x.Id == link.RuleId);
 
-                foreach (var r in rules)
-                {
-                    r.MoneyLimitPercents = rule.MoneyLimitPercents;
-                    r.OperationType=(int)rule.OperationType;
-                    r.TimeMarker = rule.TimeMarker;
-                    r.TriggerValue = rule.TriggerValue;
-                }
+                rules.MoneyLimitPercents = rule.MoneyLimitPercents;
+                rules.OperationType=(int)rule.OperationType;
+                rules.TimeMarker = rule.TimeMarker;
+                rules.TriggerValue = rule.TriggerValue;
 
                 dbContext.SaveChanges();
             }

@@ -3,6 +3,7 @@ using DataBaseService.Mappers.Interfaces;
 using DataBaseService.Repositories.Interfaces;
 using DTO;
 using DTO.BrokerRequests;
+using DTO.RestRequests;
 using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -48,7 +49,7 @@ namespace DataBaseService.Repositories
             // TODO: remove records from bot rules table also (task for one who implements rules)
         }
 
-        public void EditBot(InternalEditBotRequest request)
+        public void EditBot(EditBotRequest request)
         {
             var dbBot = dbContext.Bots.FirstOrDefault(b => b.Id == request.BotId);
             if (dbBot == null)

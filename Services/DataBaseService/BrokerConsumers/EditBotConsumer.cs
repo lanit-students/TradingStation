@@ -1,5 +1,6 @@
 ﻿using DataBaseService.Repositories.Interfaces;
 using DTO.BrokerRequests;
+using DTO.RestRequests;
 using Kernel;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DataBaseService.BrokerConsumers
 {
-    public class EditBotConsumer : IConsumer<InternalEditBotRequest>
+    public class EditBotConsumer : IConsumer<EditBotRequest>
     {
         private readonly IBotRepository botRepository;
         private readonly IBotRuleRepository botRuleRepository;
@@ -24,7 +25,7 @@ namespace DataBaseService.BrokerConsumers
             this.logger = logger;
         }
 
-        private bool EditBot(InternalEditBotRequest request)
+        private bool EditBot(EditBotRequest request)
         {
             logger.LogInformation("EditBot request received from Service");
             botRepository.EditBot(request);
@@ -35,7 +36,7 @@ namespace DataBaseService.BrokerConsumers
             return true;
         }
 
-        public async Task Consume(ConsumeContext<InternalEditBotRequest> context)
+        public async Task Consume(ConsumeContext<EditBotRequest> context)
         {
             var response = OperationResultWrapper.CreateResponse(EditBot, context.Message);
 

@@ -23,7 +23,7 @@ namespace OperationService.Commands
             this.logger = logger;
         }
 
-        private async Task<bool> EditBot(InternalEditBotRequest request)
+        private async Task<bool> EditBot(EditBotRequest request)
         {
             logger.LogInformation("Response from Database Service EditBot method received");
 
@@ -36,12 +36,7 @@ namespace OperationService.Commands
         {
             try
             {
-                return await EditBot(new InternalEditBotRequest
-                {
-                    Rules = request.Rules,
-                    BotId = request.BotId,
-                    Name = request.Name
-                });
+                return await EditBot(request);
             }
             catch (Exception)
             {
