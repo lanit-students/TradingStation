@@ -14,7 +14,7 @@ namespace OperationService
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>().UseUrls("http://localhost:5008");
+                    webBuilder.UseStartup<Startup>().UseUrls("http://*:5008");
                 });
     }
 }
