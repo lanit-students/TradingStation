@@ -47,7 +47,7 @@ namespace UserService.Utils
                 {
                     Thread.Sleep(5000 * (++i));
                     flag = false;
-                    logger.LogWarning(e, $"SmtpException thrown while trying to Send Eamil {email} to confirm");
+                    logger.LogWarning(e, $"SmtpException thrown while trying to Send Email {email} to confirm");
                     logger.LogWarning(e.Message);
                     continue;
                 }
