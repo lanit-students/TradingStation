@@ -1,6 +1,7 @@
 ﻿using Kernel.CustomExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace UserService.Utils
             var from = new MailAddress("t.platform@mail.ru", "Trading Station");
             var to = new MailAddress(email);
             string secretToken = secretTokenEngine.GetToken(email).ToString();
-            string link = $"https://localhost:44335//confirm/{secretToken}";
+            string link = $"https://localhost:44335/confirm/{secretToken}";
             string htmlCode = $"<p>Please, click this <a href ={link}>link</a> to confirm registration.</p>";
             var m = new MailMessage(from, to);
             m.Subject = "Registration confirmation";
@@ -33,19 +34,20 @@ namespace UserService.Utils
 
             var flag=true;
 
-            for (int i = 0, k = 1; i < k; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 try
                 {
                     flag = true;
                     smtp.Send(m);
+                    break;
                 }
-                catch (SmtpException)
+                catch (SmtpException e)
                 {
-                    Thread.Sleep(10000 * k);
+                    Thread.Sleep(10000 * (++i));
                     flag = false;
-                    if (k < 5)
-                        k++;
+                    logger.LogWarning(e, $"SmtpException thrown while trying to Send Eamil {email} to confirm");
+                    continue;
                 }
             }
 
