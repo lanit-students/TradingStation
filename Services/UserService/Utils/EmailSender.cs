@@ -33,19 +33,20 @@ namespace UserService.Utils
 
             var flag=true;
 
-            for (int i = 0, k = 1; i < k; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 try
                 {
                     flag = true;
                     smtp.Send(m);
+                    break;
                 }
-                catch (SmtpException)
+                catch (SmtpException e)
                 {
-                    Thread.Sleep(10000 * k);
+                    Thread.Sleep(10000 * (++i));
                     flag = false;
-                    if (k < 5)
-                        k++;
+                    logger.LogWarning(e, $"SmtpException thrown while trying to Send Eamil {email} to confirm");
+                    continue;
                 }
             }
 

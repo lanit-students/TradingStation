@@ -158,10 +158,14 @@
         //    Rules = userInput.Rules
         //};
 
+        userToken.UserId = await Storage.GetItemAsync<Guid>("id");
+        userToken.Body = await Storage.GetItemAsync<string>("token");
+
         var request = new EditBotRequest
         {
             Name = userInput.Name,
-            BotId = CurrentBot.Id
+            BotId = CurrentBot.Id,
+            Rules = userInput.Rules
         };
 
         try

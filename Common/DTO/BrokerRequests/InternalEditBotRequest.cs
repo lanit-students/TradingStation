@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace DTO.RestRequests
+namespace DTO.BrokerRequests
 {
-    public class EditBotRequest
+    public class InternalEditBotRequest
     {
         public Guid BotId { get; set; }
         public string Name { get; set; }
